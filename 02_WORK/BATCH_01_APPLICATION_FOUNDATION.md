@@ -15,6 +15,15 @@ Build the secure, maintainable application foundation for Awwab without implemen
 - Provider-agnostic internal AI service boundary; no AI provider integration in this batch
 - Responsive web application/PWA-first approach
 
+## Spark Compatibility Constraint
+Batch 1 must remain compatible with Firebase's no-cost Spark plan.
+
+For this phase, Next.js must be used as a **static/client-side application**. Do not use Next.js SSR, Server Actions, API routes, middleware that requires a server runtime, or other server-side Next.js features that would require Cloud Functions, Firebase App Hosting, or paid Google Cloud infrastructure.
+
+Firebase client SDKs for Authentication and Firestore are allowed. Firebase web configuration may be exposed to the client as intended by Firebase's web SDK model, but service-account credentials, private keys, admin credentials, and other secrets must never be shipped to the client or committed to Git.
+
+If a requirement discovered during implementation genuinely needs server-side execution, Claude must stop and report the conflict instead of silently introducing Blaze-only infrastructure.
+
 ## In Scope
 1. Create the initial Next.js + TypeScript application structure.
 2. Establish a clean, modular project structure suitable for the documented Awwab architecture.
@@ -27,14 +36,14 @@ Build the secure, maintainable application foundation for Awwab without implemen
    - placeholder assistant area for future conversation functionality
    - profile/settings entry points
 4. Add light/dark theme support.
-5. Integrate Firebase safely using the appropriate client/server boundaries and environment configuration.
-6. Implement Firebase Authentication with protected application routes.
+5. Integrate Firebase safely using the client-side Firebase SDK and environment configuration appropriate for a static deployment.
+6. Implement Firebase Authentication with protected application routes/content using client-side auth state.
 7. Establish the initial user/profile data model in Cloud Firestore needed by this batch.
 8. Enforce user data ownership and authorization with Firebase Authentication and Firestore Security Rules.
 9. Configure environment variables and secrets safely. No secrets or private keys may be committed.
 10. Implement appropriate loading, empty, error, and authentication states.
 11. Add baseline automated tests appropriate to the implemented functionality.
-12. Configure the project for Firebase Hosting deployment without introducing paid Google Cloud services.
+12. Configure the project for classic Firebase Hosting/static deployment without introducing paid Google Cloud services.
 13. Run production build and relevant tests/checks before declaring completion.
 
 ## Out of Scope
@@ -50,6 +59,7 @@ Build the secure, maintainable application foundation for Awwab without implemen
 - Proactive automation/background jobs
 - Native mobile or desktop applications
 - Production-scale observability beyond what is required for this foundation
+- Next.js server-side runtime features during the Spark phase
 
 ## Requirements
 - Follow the latest `CLAUDE.md`, master plan, product specification, and architecture documentation.
@@ -62,7 +72,8 @@ Build the secure, maintainable application foundation for Awwab without implemen
 - Validate trust-boundary inputs.
 - Do not fabricate user profile information or successful actions.
 - The application must remain usable on desktop and mobile-sized screens.
-- Keep the project compatible with the Firebase no-cost Spark plan where practical. Do not add paid Google Cloud dependencies without explicit approval.
+- Keep the project compatible with the Firebase no-cost Spark plan. Do not add paid Google Cloud dependencies without explicit approval.
+- Keep Next.js static/client-side for this batch; no SSR, Server Actions, API routes, or server-runtime dependencies.
 - Do not implement features outside this batch without explicit approval.
 
 ## Acceptance Criteria
@@ -71,7 +82,8 @@ Build the secure, maintainable application foundation for Awwab without implemen
 - Unauthenticated users cannot access protected application content.
 - Authenticated users can access their own profile foundation and cannot access another user's protected data.
 - Firestore Security Rules are present, reviewable, and enforce the documented ownership model.
-- Firebase configuration and deployment setup are reproducible.
+- Firebase configuration and classic Hosting deployment setup are reproducible on the Spark-compatible architecture.
+- The application can be statically built/deployed without requiring Cloud Functions or Firebase App Hosting.
 - No secrets are committed to Git.
 - Light/dark themes work correctly.
 - Responsive layout works at common desktop and mobile widths.
