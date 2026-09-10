@@ -13,17 +13,19 @@ Establish a shared product and engineering source of truth, finalize the initial
 - [x] Define initial architecture and security principles
 - [x] Review and approve foundation documents
 - [x] Decide initial technical stack
+- [x] Resolve Spark-compatible Next.js/Firebase deployment direction
 - [x] Define first implementation batch
-- [ ] Send approved implementation batch to Claude
+- [x] Send approved implementation batch to Claude
 
 ### Approved Technical Stack
 - Next.js + TypeScript
 - Tailwind CSS + shadcn/ui
 - Firebase Authentication + Cloud Firestore
-- Firebase Hosting
+- Firebase classic/static Hosting during the Spark phase
 - Provider-agnostic internal AI service layer
 - Responsive web/PWA first
-- Keep the initial project on Firebase's no-cost Spark plan where the required features and quotas permit
+- Keep the initial project on Firebase's no-cost Spark plan
+- Next.js must remain static/client-side during the Spark phase; no SSR, Server Actions, API routes, or server-runtime dependencies
 
 ### Approved Batch
 `02_WORK/BATCH_01_APPLICATION_FOUNDATION.md`
