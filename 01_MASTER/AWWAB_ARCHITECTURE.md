@@ -41,13 +41,14 @@ The reasoning layer decides what should happen; tools perform bounded operations
 ## Technology Decisions
 - **Application:** Next.js + TypeScript.
 - **UI:** Tailwind CSS + shadcn/ui.
-- **Data/Auth platform:** Supabase, using PostgreSQL as the primary database and Supabase Auth for authentication.
+- **Data/Auth platform:** Firebase Authentication + Cloud Firestore as the primary authentication and database platform; Firebase Hosting for the web application deployment target.
+- **Storage:** Firebase Storage may be introduced later when Awwab needs user-uploaded files or media and the selected Firebase plan supports the required usage.
 - **AI:** Provider-agnostic internal AI service layer; the initial provider can be selected independently without coupling the core domain architecture to it.
 - **Client strategy:** Responsive web application/PWA first; native mobile/desktop applications remain future options.
-- **Background jobs:** Add a durable managed job/scheduling system when proactive reminders and automation require it; do not introduce one before the first batch needs it.
+- **Background jobs:** Add a durable managed job/scheduling system when proactive reminders and automation require it; do not introduce one before the first batch needs it. Avoid paid Google Cloud infrastructure while the project is intended to remain on Firebase's no-cost Spark plan.
 - **Validation/testing:** Use typed boundaries and automated unit/integration/end-to-end testing appropriate to each feature.
 
 ### Why this stack
-This combination gives Awwab a strong foundation for structured personal data, authentication, AI/tool orchestration, calendar/task relationships, and future integrations while keeping the initial system manageable. PostgreSQL is preferred over a document-first database because Awwab will eventually need interconnected, queryable entities such as tasks, goals, schedules, memories, conversations, projects, and actions.
+This combination gives Awwab a practical foundation for structured personal data, authentication, AI/tool orchestration, calendar/task relationships, and future integrations while keeping the initial system manageable for a personal project. Cloud Firestore is intentionally chosen over introducing a separate PostgreSQL service at this stage because Awwab is initially a single-user personal assistant and Firebase provides authentication, database, hosting, and security tooling in one platform with a no-cost Spark plan. The architecture should still keep domain logic independent of Firebase-specific APIs where practical so a future database migration remains possible if Awwab's scale or data-model requirements justify it.
 
-The architecture remains modular: Supabase, the AI provider, and individual integrations are infrastructure components behind application-level interfaces rather than assumptions embedded throughout the product.
+The architecture remains modular: Firebase, the AI provider, and individual integrations are infrastructure components behind application-level interfaces rather than assumptions embedded throughout the product.
