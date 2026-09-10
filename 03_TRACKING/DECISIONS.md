@@ -23,7 +23,7 @@ Record important product and technical decisions here.
 - **Consequences:** Long-term features remain planned but are implemented only when their dependencies are ready.
 
 ### 2026-09-10 — Core technology stack
-- **Decision:** Use Next.js + TypeScript for the application, Tailwind CSS + shadcn/ui for the UI, Supabase/PostgreSQL for primary data and authentication, and an internal provider-agnostic AI service layer. Start as a responsive web application/PWA.
-- **Reason:** Awwab needs a strong foundation for structured personal data, authentication, AI/tool orchestration, tasks, schedules, memories, conversations, and future integrations. PostgreSQL is better suited than a document-first database for these interconnected entities.
-- **Alternatives considered:** Firebase/Firestore; a custom separate backend from the start; provider-specific AI architecture.
-- **Consequences:** The first implementation can stay relatively simple while preserving a path to more advanced agent, automation, voice, and integration capabilities. Supabase and the initial AI provider must remain behind application-level interfaces where practical to reduce unnecessary vendor lock-in.
+- **Decision:** Use Next.js + TypeScript for the application, Tailwind CSS + shadcn/ui for the UI, Firebase Authentication + Cloud Firestore for authentication and primary data, Firebase Hosting for deployment, and an internal provider-agnostic AI service layer. Start as a responsive web application/PWA.
+- **Reason:** Awwab is currently a personal single-user project and should minimize infrastructure complexity and cost. Firebase provides authentication, Firestore database, hosting, and security tooling within one ecosystem, with a no-cost Spark plan suitable for the initial workload.
+- **Alternatives considered:** Supabase/PostgreSQL; a custom separate backend from the start; provider-specific AI architecture.
+- **Consequences:** Batch 1 will use Firebase rather than Supabase. Domain logic should remain reasonably decoupled from Firebase-specific APIs so a future migration remains possible if Awwab's scale or data-model requirements justify it. Avoid paid Google Cloud infrastructure unless explicitly approved later.
