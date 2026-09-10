@@ -11,6 +11,7 @@
 - Foundation requirements and architecture reviewed.
 - Core technology stack selected and documented.
 - Batch 1 application-foundation scope defined and approved.
+- Spark-compatible Next.js/Firebase foundation constraint resolved and documented.
 
 ## Not Yet Started
 - Application implementation
@@ -28,11 +29,12 @@ Claude may begin implementation of **Batch 1 only**. No additional product featu
 - Next.js + TypeScript
 - Tailwind CSS + shadcn/ui
 - Firebase Authentication + Cloud Firestore
-- Firebase Hosting
+- Firebase Hosting using classic/static hosting for the Spark phase
 - Provider-agnostic internal AI service layer
 - Responsive web/PWA first
-- Initial project target: Firebase Spark/no-cost plan where supported
-- Durable background-job infrastructure to be introduced when required by a later batch
+- Initial project target: Firebase Spark/no-cost plan
+- Spark-phase Next.js runtime: static/client-side only; no SSR, Server Actions, API routes, or server-runtime dependencies
+- Durable background-job infrastructure to be introduced when required by a later batch and after an explicit infrastructure decision
 
 ## Current Approved Batch
 See `02_WORK/BATCH_01_APPLICATION_FOUNDATION.md`.
