@@ -1,6 +1,6 @@
 # Current Status
 
-**Status:** Foundation / Planning
+**Status:** Batch 1 approved — ready for implementation
 
 ## Completed
 - Awwab GitHub repository created.
@@ -10,18 +10,19 @@
 - Initial master plan, product specification, and architecture direction added.
 - Foundation requirements and architecture reviewed.
 - Core technology stack selected and documented.
+- Batch 1 application-foundation scope defined and approved.
 
 ## Not Yet Started
-- Application codebase
+- Application implementation
 - Production infrastructure
-- Database schema
+- Database schema implementation
 - Authentication implementation
 - AI provider integration
 - External integrations
 - Voice system
 
 ## Current Rule
-Do not begin application development until the first development batch is explicitly approved.
+Claude may begin implementation of **Batch 1 only**. No additional product features should be added without explicit approval.
 
 ## Current Technical Direction
 - Next.js + TypeScript
@@ -29,4 +30,7 @@ Do not begin application development until the first development batch is explic
 - Supabase + PostgreSQL + Supabase Auth
 - Provider-agnostic internal AI service layer
 - Responsive web/PWA first
-- Durable background-job infrastructure to be introduced when required by a development batch
+- Durable background-job infrastructure to be introduced when required by a later batch
+
+## Current Approved Batch
+See `02_WORK/BATCH_01_APPLICATION_FOUNDATION.md`.
