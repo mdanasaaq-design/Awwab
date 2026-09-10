@@ -19,9 +19,11 @@ Establish a shared product and engineering source of truth, finalize the initial
 ### Approved Technical Stack
 - Next.js + TypeScript
 - Tailwind CSS + shadcn/ui
-- Supabase + PostgreSQL + Supabase Auth
+- Firebase Authentication + Cloud Firestore
+- Firebase Hosting
 - Provider-agnostic internal AI service layer
 - Responsive web/PWA first
+- Keep the initial project on Firebase's no-cost Spark plan where the required features and quotas permit
 
 ### Approved Batch
 `02_WORK/BATCH_01_APPLICATION_FOUNDATION.md`
