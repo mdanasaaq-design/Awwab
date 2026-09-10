@@ -27,9 +27,11 @@ Claude may begin implementation of **Batch 1 only**. No additional product featu
 ## Current Technical Direction
 - Next.js + TypeScript
 - Tailwind CSS + shadcn/ui
-- Supabase + PostgreSQL + Supabase Auth
+- Firebase Authentication + Cloud Firestore
+- Firebase Hosting
 - Provider-agnostic internal AI service layer
 - Responsive web/PWA first
+- Initial project target: Firebase Spark/no-cost plan where supported
 - Durable background-job infrastructure to be introduced when required by a later batch
 
 ## Current Approved Batch
