@@ -1,31 +1,36 @@
 # Current Status
 
 **Date:** 2026-09-26  
-**Phase:** Foundation  
+**Phase:** Foundation — Technology Baseline Finalized  
 **Repository:** `mdanasaaq-design/Awwab`
 
-## State
-The repository was initially empty. Initial foundation documentation has now been established.
-
 ## Completed
-- Repository verified
-- Product requirements initialized
-- Architecture initialized
-- Security model initialized
-- Design direction initialized
-- Engineering rules initialized
-- Foundation task tracker initialized
+- Repository and foundation documentation verified
+- Firebase architecture validated
+- Web stack selected: React + TypeScript + Vite
+- Android stack selected: Kotlin + Jetpack Compose
+- Backend selected: Cloud Functions 2nd gen + Node.js 22 + TypeScript
+- Firebase Authentication, Firestore, FCM and App Check selected
+- Initial web hosting selected: Firebase Hosting
+- AI architecture kept provider-agnostic
 
-## Not yet verified
-- Firebase pricing/capabilities
-- Web framework
-- Android framework
+## Important billing finding
+Cloud Functions for Firebase requires the Blaze plan. Production setup must therefore include billing alerts and spend controls.
+
+## Not yet implemented
 - Firestore schema
-- Authentication implementation
-- CI configuration
+- Auth/session implementation
+- Trusted devices
+- Tool permissions
+- Approval workflow
+- Audit logging
+- AI/model provider
+- Firebase project configuration
+- CI/testing
 - Local builds
 - Android device testing
 - Deployment
+- Architecture-flow image
 
-## Next decision
-Complete technology and Firebase validation before creating application code.
+## Next milestone
+Define the concrete data/security model, then create the initial web and Android application shells.
