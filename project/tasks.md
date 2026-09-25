@@ -2,20 +2,38 @@
 
 ## Foundation
 - [x] Create repository foundation documentation
-- [ ] Validate current Firebase products, limits and pricing
-- [ ] Finalize web technology choice
-- [ ] Finalize Android technology choice
+- [x] Validate Firebase products, limits and pricing
+- [x] Finalize web technology
+- [x] Finalize Android technology
+- [x] Define Firebase service architecture
+- [x] Define backend runtime
+- [x] Define AI orchestration boundary
+- [x] Define initial security boundary
 - [ ] Define Firestore data model
 - [ ] Define authentication/session model
 - [ ] Define trusted-device model
-- [ ] Define AI orchestration boundary
 - [ ] Define tool permission model
 - [ ] Define approval workflow
 - [ ] Define audit-log model
-- [ ] Define environment strategy
+- [ ] Define environment strategy in detail
 - [ ] Define CI/testing strategy
 - [ ] Create initial web application shell
 - [ ] Create initial Android application shell
+- [ ] Create architecture-flow image
+
+## Technology baseline
+- [x] React + TypeScript + Vite
+- [x] Kotlin + Jetpack Compose
+- [x] Firebase Authentication
+- [x] Cloud Firestore
+- [x] Firebase Cloud Messaging
+- [x] Firebase App Check
+- [x] Cloud Functions 2nd gen + Node.js 22 + TypeScript
+- [x] Firebase Hosting
+- [x] Provider-agnostic AI architecture
+- [ ] Select AI/model provider
+- [ ] Establish development Firebase project
+- [ ] Establish production Firebase project
 
 ## Future
 - [ ] Authentication and shared data
