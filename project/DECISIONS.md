@@ -21,3 +21,20 @@ Sensitive credentials and privileged tool execution should remain behind secure 
 **Status:** Accepted
 
 Actions such as sending communications, destructive operations and production deployment require explicit confirmation unless a future documented policy provides a narrower safe authorization mechanism.
+
+
+## ADR-005 — Technology baseline
+**Status:** Accepted
+
+- Web: React + TypeScript + Vite
+- Android: Kotlin + Jetpack Compose
+- Backend: Firebase
+- Auth: Firebase Authentication
+- Database: Cloud Firestore
+- Notifications: Firebase Cloud Messaging
+- App protection: Firebase App Check
+- Server runtime: Firebase Cloud Functions 2nd gen with Node.js 22 + TypeScript
+- Initial web hosting: Firebase Hosting
+- AI: provider-agnostic backend orchestration
+
+Cloud Functions requires the Blaze billing plan, so production backend use must include budget alerts and spend controls.
