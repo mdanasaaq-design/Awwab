@@ -1,40 +1,70 @@
 # Awwab Architecture
 
-## Goal
-Keep Awwab modular so web and Android clients can evolve independently while sharing authenticated data and controlled backend capabilities.
+## Finalized technology direction
+- Web: React + TypeScript + Vite
+- Android: Kotlin + Jetpack Compose
+- Backend: Firebase
+- Authentication: Firebase Authentication
+- Data: Cloud Firestore
+- Notifications: Firebase Cloud Messaging
+- App protection: Firebase App Check
+- Privileged backend: Firebase Cloud Functions 2nd gen
+- Backend runtime: Node.js 22 + TypeScript
+- Initial web hosting: Firebase Hosting
+- AI: provider-agnostic orchestration behind the backend
 
 ## Layers
+
 ### 1. Client applications
-- Web/laptop client
-- Native Android client
+Web and native Android handle presentation, interaction and local UI state. They never contain unrestricted privileged credentials.
 
-Clients handle presentation, interaction and local UI state. They must not contain unrestricted privileged credentials.
+### 2. Identity
+Firebase Authentication provides user identity. A separate trusted-device/session model will be designed before implementation.
 
-### 2. Identity and authentication
-Planned components:
-- Firebase Authentication
-- Authenticated user identity
-- Trusted-device concept
-- Session controls
-- Permission checks
+### 3. Data
+Cloud Firestore is the primary synchronized application database. Initial logical areas include users, devices, preferences, projects, tasks, conversations, memories, automations, approvals and activity/audit records.
 
-### 3. Application backend
-Responsible for user configuration, tasks, notes, memory, automation state, activity history, secure server operations and access-controlled Firebase data.
+### 4. Backend
+Cloud Functions 2nd gen is the privileged server boundary for AI orchestration, tool execution, approval validation, scheduled/event-driven automation, notification dispatch, webhooks and audit logging.
 
-### 4. AI orchestration
-Responsible for intent interpretation, task planning, tool selection, approval requests, controlled execution, failure handling and result synthesis.
+### 5. AI orchestration
+Client request → authenticate/App Check → authorization → intent/context → tool selection → approval when sensitive → server-side execution → result/audit → client response.
 
-### 5. Tool integrations
-Potential integrations include GitHub, web research, files, calendar, notifications, Android-supported actions and build/test workflows. Each should expose narrowly scoped operations.
+The model provider remains replaceable and its credentials remain server-side.
 
-### 6. Automation
-Potential components include scheduled workflows, event triggers, recurring reports, monitoring, retry policies, approval queues and audit logs.
+### 6. Tools
+Potential scoped integrations include GitHub, web research, files, calendar, notifications, Android actions and build/test workflows.
 
-## Data boundary
-Personal data should be isolated by authenticated user identity. Firestore rules should enforce owner-level access, with privileged server operations separated from ordinary client operations.
+### 7. Automation
+Scheduled workflows, event triggers, recurring reports, monitoring, retries, approval queues and audit logs.
 
-## Security boundary
-Secrets, API keys and privileged credentials must remain outside client bundles. Sensitive actions should be mediated by backend authorization and explicit confirmation where required.
+## Security
+App Check will protect supported Firebase resources. Android can use Play Integrity and web can use reCAPTCHA Enterprise. Sensitive actions require explicit confirmation. Debug App Check tokens are development-only and must never be shipped in production.
 
-## Initial direction
-Technology choices will be finalized after validating current Firebase capabilities/costs and the practical requirements of web and Android clients.
+## Cost boundary
+Firestore has a qualifying free quota, but Cloud Functions for Firebase requires Blaze. Awwab must therefore use billing alerts/spend controls before production workloads.
+
+## Architecture flow
+
+```
+Web (React/TS/Vite) ─┐
+                     ├──> Firebase Auth + App Check
+Android (Kotlin/Compose) ─┘
+                           │
+                           v
+                    Cloud Functions 2nd gen
+                           │
+             ┌─────────────┼─────────────┐
+             v             v             v
+       AI Orchestrator  Firestore       FCM
+             │
+             v
+     Permission / Approval
+             │
+             v
+      Scoped Tool Adapters
+             │
+        ┌────┼─────┐
+        v    v     v
+      GitHub Research Future Tools
+```
