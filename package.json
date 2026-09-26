@@ -9,7 +9,9 @@
     "web:typecheck": "npm --prefix apps/web run typecheck",
     "functions:build": "npm --prefix backend/functions run build",
     "functions:typecheck": "npm --prefix backend/functions run typecheck",
-    "shared:typecheck": "tsc --noEmit packages/shared/src/contracts.ts"
+    "shared:typecheck": "tsc --noEmit packages/shared/src/contracts.ts",
+    "firebase:emulators": "firebase emulators:start --project demo-awwab",
+    "firebase:rules:test": "firebase emulators:exec --only firestore --project demo-awwab \"node --test tests/firestore.rules.test.js\""
   },
   "engines": {
     "node": "22"
@@ -18,5 +20,10 @@
     "apps/web",
     "backend/functions",
     "packages/shared"
-  ]
+  ],
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "5.0.2",
+    "firebase": "12.19.0",
+    "firebase-tools": "15.31.0"
+  }
 }
