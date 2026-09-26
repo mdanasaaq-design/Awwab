@@ -25,6 +25,8 @@
 - Backend user-profile initialization callable
 - Web trusted-device management UI
 - Narrowed bootstrap fallback handling to only expected `failed-precondition`
+- Authentication/device testing strategy
+- Root Functions typecheck command
 
 ## Security architecture
 - Firebase Auth is the primary identity system.
@@ -48,7 +50,7 @@
 
 ## Not yet validated
 - Local npm install/build/typecheck
-- Firebase emulator tests
+- Firebase Emulator Suite tests
 - Real Firebase sign-in
 - Firestore reads/writes against a project
 - App Check attestation
@@ -65,4 +67,4 @@
 - Device-management events are written to backend-controlled activity records.
 
 ## Next milestone
-Connect the development Firebase project and validate the authentication, profile, and complete device lifecycle against the Firebase emulator/project before expanding into assistant requests.
+Set up the dedicated development Firebase project and local environment, then run the documented typecheck/build and emulator/device-lifecycle validation before expanding into assistant requests.
