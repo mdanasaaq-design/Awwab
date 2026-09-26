@@ -15,7 +15,7 @@
 - [x] Define initial tool permission model
 - [x] Define approval workflow
 - [x] Define audit-log model
-- [ ] Define environment strategy in detail
+- [x] Define environment strategy in detail
 - [ ] Define CI/testing strategy
 - [x] Create initial web application shell
 - [x] Create initial Android application shell
@@ -32,8 +32,8 @@
 - [x] Firebase Hosting
 - [x] Provider-agnostic AI architecture
 - [ ] Select AI/model provider
-- [ ] Establish development Firebase project
-- [ ] Establish production Firebase project
+- [ ] Establish development Firebase project (requires Firebase console/account access)
+- [ ] Establish production Firebase project (after development validation)
 
 ## Future
 - [ ] Authentication and shared data
@@ -42,3 +42,7 @@
 - [ ] Voice/mobile experience
 - [ ] Integrations and automation
 - [ ] Advanced assistant
+
+- [x] Add Firebase client initialization and environment templates
+- [x] Tighten Firestore client/server write boundaries
+- [x] Add shared cross-platform contracts
