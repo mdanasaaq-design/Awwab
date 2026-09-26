@@ -18,3 +18,4 @@
 ### Validation boundary
 - Repository changes were made through GitHub.
 - No local build, emulator test, real Firebase project test, Android device test or deployment has been performed by the assistant.
+\n### Device trust\n- Added server-side device registration and first-device bootstrap.\n- Connected the web authenticated session to device registration.\n- Added backend-controlled audit events for device registration/bootstrapping.\n
