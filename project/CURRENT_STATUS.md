@@ -1,58 +1,54 @@
 # Current Status
 
 **Date:** 2026-09-26  
-**Phase:** Foundation — Initial Application Shells  
+**Phase:** Foundation — Authentication Boundary  
 **Repository:** `mdanasaaq-design/Awwab`
 
 ## Completed
 - Repository and foundation documentation
-- Firebase technology baseline
-- Web: React + TypeScript + Vite
-- Android: Kotlin + Jetpack Compose
-- Backend: Cloud Functions 2nd gen + Node.js 22 + TypeScript
-- Firebase Auth, Firestore, FCM and App Check
-- Initial web hosting: Firebase Hosting
-- Firestore user-scoped data model
-- Authentication/session model
+- Finalized technology baseline
+- Web React + TypeScript + Vite shell
+- Android Kotlin + Jetpack Compose shell
+- Firebase client initialization structure
+- Firebase Authentication web boundary
+- Environment-safe Firebase configuration
+- Firestore user-scoped data model and tightened client rules
+- Shared TypeScript security/application contracts
 - Trusted-device model
-- Initial tool permission boundary
 - Approval workflow model
-- Audit-log model
+- Backend-controlled audit/activity model
+- Cloud Functions 2nd gen TypeScript health callable
+- Web authentication state observer and sign-in/sign-out UI
+- Web App Check initialization path for reCAPTCHA Enterprise
 
 ## Security architecture
-- Firestore client access is owner-scoped.
-- Privileged server operations run through Cloud Functions.
-- Approval is explicit and server-validated.
-- Audit records are backend-controlled.
-- Firebase Auth remains the primary identity system.
-- Awwab device authorization is separate from the Firebase session.
+- Firebase Auth is the primary identity system.
+- Awwab device authorization remains separate from the Firebase session.
+- Firestore client writes are limited by collection purpose.
+- Devices, approvals, and audit/activity records are backend-controlled.
+- Privileged operations remain behind Cloud Functions.
 - App Check is an additional app-authenticity signal, not a replacement for authorization.
 
-## Not yet implemented
-- Firebase project configuration
-- Firestore Security Rules
-- Authentication UI/flows
-- Trusted-device UI/logic
-- Permission enforcement code
-- Approval execution code
-- Audit implementation
-- AI/model provider
-- CI/testing
-- Local builds
+## Pending external setup
+- Create the actual development Firebase project
+- Register Web and Android apps in that project
+- Enable the chosen Firebase Authentication provider(s)
+- Create Firestore in the development project
+- Register App Check providers and later enable enforcement after monitoring
+- Configure FCM
+- Add development environment values locally
+- Generate Android `google-services.json`
+
+## Not yet validated
+- Local npm install/build/typecheck
+- Firebase emulator tests
+- Real Firebase sign-in
+- Firestore reads/writes against a project
+- App Check attestation
+- Android Firebase integration/build
 - Android device testing
+- CI
 - Deployment
 
 ## Next milestone
-Create the initial Firebase project configuration and shared application foundation, then build the web and Android shells around the finalized contracts.
-
-
-## Initial implementation
-- React + TypeScript + Vite web shell committed.
-- Kotlin + Jetpack Compose Android shell committed.
-- Firebase CLI configuration template committed.
-- Initial owner-scoped Firestore Rules committed.
-- Cloud Functions 2nd gen TypeScript health callable committed.
-- No Firebase project credentials or signing credentials committed.
-
-## Validation boundary
-The code has been reviewed through GitHub repository contents only. Local npm/Gradle builds, Firebase emulator tests, Android device tests and deployment have **not** been performed by the assistant.
+Connect the created development Firebase project, then implement device registration/trust and the first authenticated Firestore profile/session flow.
