@@ -35,8 +35,17 @@
 - [ ] Establish development Firebase project (requires Firebase console/account access)
 - [ ] Establish production Firebase project (after development validation)
 
+## Authentication and shared data
+- [x] Implement server-side device registration
+- [x] Implement first-device bootstrap boundary
+- [x] Implement trusted-device approval/revocation
+- [x] Implement backend user-profile initialization
+- [ ] Connect development Firebase project
+- [ ] Validate authentication against Firebase
+- [ ] Validate device lifecycle against Firebase
+- [ ] Add first authenticated Firestore session/profile reads
+
 ## Future
-- [ ] Authentication and shared data
 - [ ] Basic assistant
 - [ ] Project intelligence
 - [ ] Voice/mobile experience
