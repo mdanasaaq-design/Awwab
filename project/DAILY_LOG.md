@@ -1,13 +1,12 @@
 # Awwab Daily Log
 
-## 2026-09-26 — Technology baseline finalized
+## 2026-09-26 — Initial application shells
 
-- Validated current Firebase pricing and core capabilities.
-- Confirmed Cloud Functions requires Blaze.
-- Selected React + TypeScript + Vite for web.
-- Selected Kotlin + Jetpack Compose for Android.
-- Selected Firebase Authentication, Firestore, FCM and App Check.
-- Selected Cloud Functions 2nd gen with Node.js 22 + TypeScript.
-- Selected Firebase Hosting for initial web deployment.
-- Kept AI/model provider selection separate and provider-agnostic.
-- No application code, local testing, device testing or deployment has been performed.
+- Validated current Vite, React, Android Compose and Firebase setup guidance.
+- Added the initial React + TypeScript + Vite web shell.
+- Added the initial Kotlin + Jetpack Compose Android shell.
+- Added Firebase project configuration templates.
+- Added initial owner-scoped Firestore Rules.
+- Added a minimal Cloud Functions 2nd gen TypeScript health callable.
+- Added environment examples without credentials.
+- No local build, emulator/device test or deployment has been performed by the assistant.
