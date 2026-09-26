@@ -15,6 +15,8 @@
 - Trusted-device approval and revocation.
 - Backend user-profile initialization.
 - Web trusted-device management UI.
+- Firebase Local Emulator Suite configuration.
+- Firestore Security Rules test harness with focused authorization coverage.
 
 ### Security
 - Tightened Firestore client write boundaries for device, approval and audit/activity collections.
@@ -27,3 +29,4 @@
 - No Firebase project credentials.
 - No production secrets.
 - No local build or deployment claim.
+- No claim that the new emulator tests have been executed yet.
