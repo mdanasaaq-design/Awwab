@@ -50,5 +50,5 @@
 - CI
 - Deployment
 
-## Next milestone
+## Device trust milestone\n- Web installations register through callable backend functions.\n- First-device bootstrap and pending-device registration are server-side.\n- Device registration events are written to backend-controlled activity records.\n\n## Next milestone
 Connect the created development Firebase project, then implement device registration/trust and the first authenticated Firestore profile/session flow.
