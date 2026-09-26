@@ -1,0 +1,20 @@
+{
+  "name": "@awwab/functions",
+  "private": true,
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "firebase-admin": "13.6.0",
+    "firebase-functions": "7.0.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.2"
+  }
+}
