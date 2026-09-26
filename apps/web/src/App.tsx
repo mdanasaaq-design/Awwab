@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import type { User } from "firebase/auth";
 import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
@@ -22,7 +22,7 @@ export function App() {
 
   useEffect(() => observeAuth(setUser), []);
 
-  async function handleSignIn(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSignIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setAuthError("");
     setLoading(true);
