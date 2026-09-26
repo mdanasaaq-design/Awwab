@@ -9,12 +9,12 @@
 - [x] Define backend runtime
 - [x] Define AI orchestration boundary
 - [x] Define initial security boundary
-- [ ] Define Firestore data model
-- [ ] Define authentication/session model
-- [ ] Define trusted-device model
-- [ ] Define tool permission model
-- [ ] Define approval workflow
-- [ ] Define audit-log model
+- [x] Define Firestore data model
+- [x] Define authentication/session model
+- [x] Define trusted-device model
+- [x] Define initial tool permission model
+- [x] Define approval workflow
+- [x] Define audit-log model
 - [ ] Define environment strategy in detail
 - [ ] Define CI/testing strategy
 - [ ] Create initial web application shell
