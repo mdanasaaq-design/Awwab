@@ -1,7 +1,7 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import { initializeApp, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider, type AppCheck } from "firebase/app-check";
 
 const config = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -12,15 +12,24 @@ const config = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-export const firebaseApp = initializeApp(config);
-export const auth = getAuth(firebaseApp);
-export const db = getFirestore(firebaseApp);
+const requiredConfig = Object.values(config);
+export const firebaseConfigured = requiredConfig.every(Boolean);
 
-const appCheckSiteKey = import.meta.env.VITE_FIREBASE_APP_CHECK_SITE_KEY;
+export let firebaseApp: FirebaseApp | undefined;
+export let auth: Auth | undefined;
+export let db: Firestore | undefined;
+export let appCheck: AppCheck | undefined;
 
-export const appCheck = appCheckSiteKey
-  ? initializeAppCheck(firebaseApp, {
+if (firebaseConfigured) {
+  firebaseApp = initializeApp(config);
+  auth = getAuth(firebaseApp);
+  db = getFirestore(firebaseApp);
+
+  const appCheckSiteKey = import.meta.env.VITE_FIREBASE_APP_CHECK_SITE_KEY;
+  if (appCheckSiteKey) {
+    appCheck = initializeAppCheck(firebaseApp, {
       provider: new ReCaptchaEnterpriseProvider(appCheckSiteKey),
       isTokenAutoRefreshEnabled: true,
-    })
-  : undefined;
+    });
+  }
+}
