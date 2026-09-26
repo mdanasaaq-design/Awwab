@@ -14,9 +14,34 @@ The assistant must not claim these checks passed unless their output is actually
 
 ## Firebase Emulator Suite
 
-The first backend validation should use the Firebase Emulator Suite where practical.
+A local emulator configuration is committed in `firebase.json`. The rules test suite uses the Firebase demo project ID `demo-awwab`, which is isolated from live Firebase resources.
 
-Required scenarios:
+Install dependencies, then run:
+
+```bash
+npm run firebase:rules:test
+```
+
+For interactive emulator work:
+
+```bash
+npm run firebase:emulators
+```
+
+The Emulator Suite is the preferred local path for Security Rules validation; Firebase documents `@firebase/rules-unit-testing` for mocked authentication contexts and rules assertions. citeturn2search0turn2search2
+
+Current automated rules coverage includes:
+- unauthenticated access rejection
+- owner profile read/write
+- cross-user profile isolation
+- project ownership isolation
+- client denial for device writes
+- client denial for approval/audit writes
+- owner-only approval/audit reads
+- conversation-message append/read restrictions
+- notification read/update versus client-create/delete restrictions
+
+Required backend callable scenarios remain separate and are not considered validated until the Functions emulator or a development Firebase project has actually been exercised.
 
 ### Authentication boundary
 - unauthenticated callable request is rejected
@@ -38,14 +63,6 @@ Required scenarios:
 - subsequent profile initialization is idempotent
 - profile fields are normalized by the backend
 
-### Firestore rules
-Test owner/non-owner access for each user-scoped collection, with special attention to:
-- devices
-- approvals
-- activity
-- notifications
-- conversation messages
-
 ## Real development project
 
 After emulator validation, repeat the critical smoke tests against the dedicated development Firebase project.
@@ -66,7 +83,7 @@ These are separate validation steps and must not be represented as complete unti
 
 ## CI
 
-CI should eventually run:
+The repository now has an executable local rules-test command. CI should eventually run:
 - dependency installation
 - TypeScript typechecks
 - web build
