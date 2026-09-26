@@ -3,20 +3,19 @@
 ## Unreleased
 
 ### Added
-- Foundation architecture and security documentation
-- Finalized technology baseline
-- Firestore data model and authentication/session model
-- React + TypeScript + Vite web shell
-- Kotlin + Jetpack Compose Android shell
-- Firebase configuration templates
-- Initial owner-scoped Firestore Rules
-- Cloud Functions 2nd gen TypeScript health callable
+- Initial Awwab foundation documentation.
+- React + TypeScript + Vite web shell.
+- Kotlin + Jetpack Compose Android shell.
+- Firebase client initialization structure.
+- Web Firebase Authentication boundary.
+- Web App Check initialization path.
+- Shared identity/security contracts.
+- Firebase setup and environment documentation.
 
-### Not verified
-- Local npm build
-- Local Gradle/Android build
-- Firebase emulator validation
-- Android device testing
-- Firebase deployment
+### Security
+- Tightened Firestore client write boundaries for device, approval and audit/activity collections.
 
-No production credentials or signing secrets are stored in the repository.
+### Not included
+- No Firebase project credentials.
+- No production secrets.
+- No local build or deployment claim.
