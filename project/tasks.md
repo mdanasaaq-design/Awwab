@@ -16,7 +16,7 @@
 - [x] Define approval workflow
 - [x] Define audit-log model
 - [x] Define environment strategy in detail
-- [ ] Define CI/testing strategy
+- [x] Define CI/testing strategy
 - [x] Create initial web application shell
 - [x] Create initial Android application shell
 - [ ] Create architecture-flow image
@@ -40,10 +40,13 @@
 - [x] Implement first-device bootstrap boundary
 - [x] Implement trusted-device approval/revocation
 - [x] Implement backend user-profile initialization
+- [x] Add local Firestore emulator configuration and rules test harness
 - [ ] Connect development Firebase project
 - [ ] Validate authentication against Firebase
 - [ ] Validate device lifecycle against Firebase
 - [ ] Add first authenticated Firestore session/profile reads
+- [ ] Execute local typecheck/build validation
+- [ ] Execute Firestore rules test suite
 
 ## Future
 - [ ] Basic assistant
