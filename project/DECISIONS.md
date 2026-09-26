@@ -38,3 +38,29 @@ Actions such as sending communications, destructive operations and production de
 - AI: provider-agnostic backend orchestration
 
 Cloud Functions requires the Blaze billing plan, so production backend use must include budget alerts and spend controls.
+
+
+## ADR-006 — User-scoped Firestore hierarchy
+**Status:** Accepted
+
+Personal application data will be primarily organized under `/users/{uid}/...`. Firestore Rules will enforce ownership using authenticated UID rather than granting broad access to authenticated users. citeturn0search6turn0search13
+
+## ADR-007 — Firebase Auth plus Awwab device authorization
+**Status:** Accepted
+
+Firebase Authentication remains the primary identity/session mechanism. Awwab adds a separate device authorization layer with pending, trusted and revoked states. Firebase's short-lived ID tokens and refresh-token lifecycle remain the underlying authentication mechanism. citeturn0search2
+
+## ADR-008 — Privileged actions through callable backend functions
+**Status:** Accepted
+
+Client-initiated privileged operations will use Cloud Functions callable endpoints where appropriate. Auth and App Check signals are validated server-side, followed by operation-specific authorization. citeturn0search3
+
+## ADR-009 — Approval as a server-validated security boundary
+**Status:** Accepted
+
+Sensitive actions require explicit approval. Approval records are not themselves authorization; the backend validates user, device, expiry, action type and exact payload before execution.
+
+## ADR-010 — Audit records are append-oriented
+**Status:** Accepted
+
+Activity/audit records are written by trusted backend operations for sensitive actions. Clients may read permitted history but do not receive unrestricted ability to rewrite audit history.
