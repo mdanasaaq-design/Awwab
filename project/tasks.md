@@ -17,8 +17,8 @@
 - [x] Define audit-log model
 - [ ] Define environment strategy in detail
 - [ ] Define CI/testing strategy
-- [ ] Create initial web application shell
-- [ ] Create initial Android application shell
+- [x] Create initial web application shell
+- [x] Create initial Android application shell
 - [ ] Create architecture-flow image
 
 ## Technology baseline
