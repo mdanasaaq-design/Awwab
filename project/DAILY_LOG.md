@@ -15,7 +15,17 @@
 - Added shared TypeScript contracts for core identity/security records.
 - Added Firebase project setup documentation and environment templates.
 
+### Device trust
+- Added server-side device registration and first-device bootstrap.
+- Connected the authenticated web session to device registration.
+- Added trusted-device-only approval and revocation callables.
+- Prevented revocation of the last trusted device.
+- Prevented revoked devices from self-reactivating.
+- Added backend-controlled audit events for device-management actions.
+- Added backend user-profile initialization.
+- Added web trusted-device management UI.
+- Narrowed bootstrap fallback handling to the expected failed-precondition case.
+
 ### Validation boundary
 - Repository changes were made through GitHub.
 - No local build, emulator test, real Firebase project test, Android device test or deployment has been performed by the assistant.
-\n### Device trust\n- Added server-side device registration and first-device bootstrap.\n- Connected the web authenticated session to device registration.\n- Added backend-controlled audit events for device registration/bootstrapping.\n
