@@ -78,3 +78,6 @@ h1 { font-size: clamp(30px, 4vw, 48px); margin: 8px 0 0; }
 .error { margin: 0; color: #f19a9a; font-size: 13px; }
 .signout { margin-top: 28px; width: 100%; border: 1px solid #2a3850; background: transparent; color: #aeb9ca; border-radius: 9px; padding: 10px; cursor: pointer; }
 .signout:hover { background: #17233a; color: #fff; }
+
+.header-status { display: grid; gap: 6px; justify-items: end; }
+.device-status { color: #7f8ca2; font-size: 11px; }
