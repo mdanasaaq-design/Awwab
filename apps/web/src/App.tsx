@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import type { User } from "firebase/auth";
 import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
+import { registerWebDevice } from "./device";
 
 const sections = [
   "Assistant",
@@ -18,9 +19,21 @@ export function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);\n  const [deviceStatus, setDeviceStatus] = useState("checking");
 
-  useEffect(() => observeAuth(setUser), []);
+  useEffect(() => {
+    return observeAuth((nextUser) => {
+      setUser(nextUser);
+      if (!nextUser) {
+        setDeviceStatus("signed out");
+        return;
+      }
+
+      void registerWebDevice()
+        .then((result) => setDeviceStatus(result.status))
+        .catch(() => setDeviceStatus("registration failed"));
+    });
+  }, []);
 
   async function handleSignIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -117,7 +130,7 @@ export function App() {
             <h1>How can I help?</h1>
             <p className="muted">Signed in as {user.email ?? user.uid}</p>
           </div>
-          <span className="status">Authenticated</span>
+          <div className="header-status"><span className="status">Authenticated</span><span className="device-status">Device: {deviceStatus}</span></div>
         </header>
 
         <section className="assistant-card">
