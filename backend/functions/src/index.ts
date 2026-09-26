@@ -60,6 +60,7 @@ export const registerDevice = onCall(async (request) => {
       { merge: true },
     );
 
+    await writeActivity(uid, deviceId, "device_seen", "success");
     return {
       ok: true,
       deviceId,
@@ -77,6 +78,7 @@ export const registerDevice = onCall(async (request) => {
     notificationTokenStatus: "not_registered",
   });
 
+  await writeActivity(uid, deviceId, "device_registered", "success");
   return { ok: true, deviceId, status: "pending" };
 });
 
@@ -103,5 +105,20 @@ export const bootstrapFirstDevice = onCall(async (request) => {
     notificationTokenStatus: "not_registered",
   });
 
+  await writeActivity(uid, deviceId, "device_bootstrapped", "success");
   return { ok: true, deviceId, status: "trusted" };
 });
+
+async function writeActivity(uid: string, deviceId: string, action: string, outcome: string) {
+  await db.collection(`users/${uid}/activity`).add({
+    eventType: "security",
+    actorType: "user",
+    deviceId,
+    tool: "device-management",
+    action,
+    targetType: "device",
+    targetReference: deviceId,
+    outcome,
+    createdAt: FieldValue.serverTimestamp(),
+  });
+}
