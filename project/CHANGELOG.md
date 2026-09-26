@@ -11,9 +11,17 @@
 - Web App Check initialization path.
 - Shared identity/security contracts.
 - Firebase setup and environment documentation.
+- Server-side device registration and first-device bootstrap.
+- Trusted-device approval and revocation.
+- Backend user-profile initialization.
+- Web trusted-device management UI.
 
 ### Security
 - Tightened Firestore client write boundaries for device, approval and audit/activity collections.
+- Restricted privileged device-management operations to trusted caller devices.
+- Prevented ordinary revocation of the last trusted device.
+- Prevented revoked devices from silently reactivating.
+- Added backend-controlled audit events for device-management actions.
 
 ### Not included
 - No Firebase project credentials.
