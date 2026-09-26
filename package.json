@@ -8,6 +8,7 @@
     "web:build": "npm --prefix apps/web run build",
     "web:typecheck": "npm --prefix apps/web run typecheck",
     "functions:build": "npm --prefix backend/functions run build",
+    "functions:typecheck": "npm --prefix backend/functions run typecheck",
     "shared:typecheck": "tsc --noEmit packages/shared/src/contracts.ts"
   },
   "engines": {
