@@ -16,8 +16,56 @@ service cloud.firestore {
       allow update: if isOwner(uid);
       allow delete: if false;
 
-      match /{document=**} {
+      match /devices/{deviceId} {
+        allow read: if isOwner(uid);
+        allow create, update, delete: if false;
+      }
+
+      match /projects/{projectId} {
         allow read, create, update, delete: if isOwner(uid);
+      }
+
+      match /tasks/{taskId} {
+        allow read, create, update, delete: if isOwner(uid);
+      }
+
+      match /conversations/{conversationId} {
+        allow read, create, update: if isOwner(uid);
+        allow delete: if false;
+
+        match /messages/{messageId} {
+          allow read, create: if isOwner(uid);
+          allow update, delete: if false;
+        }
+      }
+
+      match /memories/{memoryId} {
+        allow read, create, update, delete: if isOwner(uid);
+      }
+
+      match /automations/{automationId} {
+        allow read, create, update, delete: if isOwner(uid);
+      }
+
+      match /approvals/{approvalId} {
+        // Approval records are created and transitioned by trusted backend code.
+        allow read: if isOwner(uid);
+        allow create, update, delete: if false;
+      }
+
+      match /activity/{activityId} {
+        // Audit/activity records are append-oriented and backend-controlled.
+        allow read: if isOwner(uid);
+        allow create, update, delete: if false;
+      }
+
+      match /preferences/{preferenceId} {
+        allow read, create, update, delete: if isOwner(uid);
+      }
+
+      match /notifications/{notificationId} {
+        allow read, update: if isOwner(uid);
+        allow create, delete: if false;
       }
     }
 
