@@ -25,7 +25,21 @@ Device states:
 - `trusted`
 - `revoked`
 
-A newly authenticated installation starts as pending. The exact trusted-device enrollment UX will be finalized during implementation.
+A newly authenticated installation starts as pending, except for the explicit first-device bootstrap path.
+
+## Device enrollment and management
+The backend owns the device state transitions.
+
+- `bootstrapFirstDevice` may trust the first installation for an account. This is an intentional bootstrap assumption and must remain a narrow one-time path.
+- `registerDevice` creates later installations as `pending`.
+- A trusted device can approve a pending device.
+- A trusted device can revoke another trusted or pending device.
+- The last trusted device cannot be revoked, preventing an account from locking itself out through ordinary device management.
+- A revoked device cannot self-reactivate through `registerDevice`.
+- Privileged device-management calls require the caller's Firebase identity plus a caller `deviceId` whose server-side record is currently `trusted`.
+- The client never writes device documents directly.
+
+The device ID is an authorization reference, not an authentication credential. A future recovery mechanism must not rely on possession of a device ID alone.
 
 ## Sensitive actions
 For high-risk actions, require:
@@ -51,15 +65,13 @@ App Check is an additional app-instance authenticity signal, not a replacement f
 ## Rules principle
 Firestore client rules should follow ownership, not merely authentication. Firebase explicitly documents owner-scoped access patterns and warns against granting every signed-in user broad access. citeturn0search6turn0search13
 
-
 ## Device registration implementation
-
 The web and Android clients must generate an opaque installation-specific `deviceId` and send it to the backend through callable functions.
 
 - `registerDevice` creates a new device as `pending`.
 - Existing devices only update safe liveness metadata through the same backend boundary.
 - `bootstrapFirstDevice` can create the first device as `trusted` only when the account has no existing device.
-- Clients cannot directly create, update or delete device documents through Firestore Rules.
-- Future device approval should require an already trusted device or another explicit recovery/bootstrap mechanism.
+- `listDevices` returns sanitized device metadata only after validating the caller's trusted device state.
+- `approveDevice` and `revokeDevice` are trusted-device-only mutations.
+- Device-management actions write backend-controlled audit records.
 
-The device ID is an authorization reference, not an authentication credential.
