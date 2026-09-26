@@ -20,6 +20,11 @@
 - Cloud Functions 2nd gen TypeScript health callable
 - Web authentication state observer and sign-in/sign-out UI
 - Web App Check initialization path for reCAPTCHA Enterprise
+- Server-side device registration and first-device bootstrap
+- Trusted-device approval and revocation callables
+- Backend user-profile initialization callable
+- Web trusted-device management UI
+- Narrowed bootstrap fallback handling to only expected `failed-precondition`
 
 ## Security architecture
 - Firebase Auth is the primary identity system.
@@ -28,6 +33,8 @@
 - Devices, approvals, and audit/activity records are backend-controlled.
 - Privileged operations remain behind Cloud Functions.
 - App Check is an additional app-authenticity signal, not a replacement for authorization.
+- The last trusted device cannot be revoked through ordinary device management.
+- Revoked devices cannot self-reactivate.
 
 ## Pending external setup
 - Create the actual development Firebase project
@@ -50,5 +57,12 @@
 - CI
 - Deployment
 
-## Device trust milestone\n- Web installations register through callable backend functions.\n- First-device bootstrap and pending-device registration are server-side.\n- Device registration events are written to backend-controlled activity records.\n\n## Next milestone
-Connect the created development Firebase project, then implement device registration/trust and the first authenticated Firestore profile/session flow.
+## Device trust milestone
+- Web installations register through callable backend functions.
+- First-device bootstrap is a narrow one-time trust path.
+- Later installations begin as pending.
+- Trusted devices can approve or revoke devices through server-side authorization.
+- Device-management events are written to backend-controlled activity records.
+
+## Next milestone
+Connect the development Firebase project and validate the authentication, profile, and complete device lifecycle against the Firebase emulator/project before expanding into assistant requests.
