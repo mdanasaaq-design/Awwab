@@ -7,9 +7,15 @@
     "web:dev": "npm --prefix apps/web run dev",
     "web:build": "npm --prefix apps/web run build",
     "web:typecheck": "npm --prefix apps/web run typecheck",
-    "functions:build": "npm --prefix backend/functions run build"
+    "functions:build": "npm --prefix backend/functions run build",
+    "shared:typecheck": "tsc --noEmit packages/shared/src/contracts.ts"
   },
   "engines": {
     "node": "22"
-  }
+  },
+  "workspaces": [
+    "apps/web",
+    "backend/functions",
+    "packages/shared"
+  ]
 }
