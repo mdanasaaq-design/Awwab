@@ -26,6 +26,8 @@
 - Web trusted-device management UI
 - Narrowed bootstrap fallback handling to only expected `failed-precondition`
 - Authentication/device testing strategy
+- Local Firebase Emulator Suite configuration
+- Firestore Security Rules test harness and focused authorization coverage
 - Root Functions typecheck command
 
 ## Security architecture
@@ -50,7 +52,8 @@
 
 ## Not yet validated
 - Local npm install/build/typecheck
-- Firebase Emulator Suite tests
+- Firestore rules test suite execution
+- Backend callable/device lifecycle emulator execution
 - Real Firebase sign-in
 - Firestore reads/writes against a project
 - App Check attestation
@@ -67,4 +70,4 @@
 - Device-management events are written to backend-controlled activity records.
 
 ## Next milestone
-Set up the dedicated development Firebase project and local environment, then run the documented typecheck/build and emulator/device-lifecycle validation before expanding into assistant requests.
+Install dependencies locally and execute the rules suite plus web/Functions/shared typechecks and builds. Then create/connect the dedicated development Firebase project and validate the authenticated device lifecycle before expanding into assistant requests.
