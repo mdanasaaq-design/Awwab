@@ -50,3 +50,16 @@ App Check is an additional app-instance authenticity signal, not a replacement f
 
 ## Rules principle
 Firestore client rules should follow ownership, not merely authentication. Firebase explicitly documents owner-scoped access patterns and warns against granting every signed-in user broad access. citeturn0search6turn0search13
+
+
+## Device registration implementation
+
+The web and Android clients must generate an opaque installation-specific `deviceId` and send it to the backend through callable functions.
+
+- `registerDevice` creates a new device as `pending`.
+- Existing devices only update safe liveness metadata through the same backend boundary.
+- `bootstrapFirstDevice` can create the first device as `trusted` only when the account has no existing device.
+- Clients cannot directly create, update or delete device documents through Firestore Rules.
+- Future device approval should require an already trusted device or another explicit recovery/bootstrap mechanism.
+
+The device ID is an authorization reference, not an authentication credential.
