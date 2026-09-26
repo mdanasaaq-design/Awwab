@@ -1,36 +1,46 @@
 # Current Status
 
 **Date:** 2026-09-26  
-**Phase:** Foundation — Technology Baseline Finalized  
+**Phase:** Foundation — Data & Security Model Finalized  
 **Repository:** `mdanasaaq-design/Awwab`
 
 ## Completed
-- Repository and foundation documentation verified
-- Firebase architecture validated
-- Web stack selected: React + TypeScript + Vite
-- Android stack selected: Kotlin + Jetpack Compose
-- Backend selected: Cloud Functions 2nd gen + Node.js 22 + TypeScript
-- Firebase Authentication, Firestore, FCM and App Check selected
-- Initial web hosting selected: Firebase Hosting
-- AI architecture kept provider-agnostic
+- Repository and foundation documentation
+- Firebase technology baseline
+- Web: React + TypeScript + Vite
+- Android: Kotlin + Jetpack Compose
+- Backend: Cloud Functions 2nd gen + Node.js 22 + TypeScript
+- Firebase Auth, Firestore, FCM and App Check
+- Initial web hosting: Firebase Hosting
+- Firestore user-scoped data model
+- Authentication/session model
+- Trusted-device model
+- Initial tool permission boundary
+- Approval workflow model
+- Audit-log model
 
-## Important billing finding
-Cloud Functions for Firebase requires the Blaze plan. Production setup must therefore include billing alerts and spend controls.
+## Security architecture
+- Firestore client access is owner-scoped.
+- Privileged server operations run through Cloud Functions.
+- Approval is explicit and server-validated.
+- Audit records are backend-controlled.
+- Firebase Auth remains the primary identity system.
+- Awwab device authorization is separate from the Firebase session.
+- App Check is an additional app-authenticity signal, not a replacement for authorization.
 
 ## Not yet implemented
-- Firestore schema
-- Auth/session implementation
-- Trusted devices
-- Tool permissions
-- Approval workflow
-- Audit logging
-- AI/model provider
 - Firebase project configuration
+- Firestore Security Rules
+- Authentication UI/flows
+- Trusted-device UI/logic
+- Permission enforcement code
+- Approval execution code
+- Audit implementation
+- AI/model provider
 - CI/testing
 - Local builds
 - Android device testing
 - Deployment
-- Architecture-flow image
 
 ## Next milestone
-Define the concrete data/security model, then create the initial web and Android application shells.
+Create the initial Firebase project configuration and shared application foundation, then build the web and Android shells around the finalized contracts.
