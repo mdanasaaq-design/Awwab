@@ -3,19 +3,20 @@
 ## Unreleased
 
 ### Added
-- Initial Awwab foundation documentation
+- Foundation architecture and security documentation
 - Finalized technology baseline
-- Initial architecture-flow definition
+- Firestore data model and authentication/session model
+- React + TypeScript + Vite web shell
+- Kotlin + Jetpack Compose Android shell
+- Firebase configuration templates
+- Initial owner-scoped Firestore Rules
+- Cloud Functions 2nd gen TypeScript health callable
 
-### Technology
-- React + TypeScript + Vite
-- Kotlin + Jetpack Compose
-- Firebase Authentication
-- Cloud Firestore
-- Firebase Cloud Messaging
-- Firebase App Check
-- Cloud Functions 2nd gen
-- Node.js 22 + TypeScript
-- Firebase Hosting
+### Not verified
+- Local npm build
+- Local Gradle/Android build
+- Firebase emulator validation
+- Android device testing
+- Firebase deployment
 
-No application functionality has been implemented yet.
+No production credentials or signing secrets are stored in the repository.
