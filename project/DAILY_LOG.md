@@ -27,5 +27,8 @@
 - Narrowed bootstrap fallback handling to the expected failed-precondition case.
 
 ### Validation boundary
-- Repository changes were made through GitHub.
-- No local build, emulator test, real Firebase project test, Android device test or deployment has been performed by the assistant.
+- Added Firebase Emulator Suite configuration using isolated `demo-awwab` project mode.
+- Added executable Firestore Security Rules tests covering ownership and backend-controlled collections.
+- Added repository scripts for interactive emulators and rules-test execution.
+- Current changes were made through GitHub.
+- No local dependency installation, build, emulator test, real Firebase project test, Android device test or deployment has been performed by the assistant.
