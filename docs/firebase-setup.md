@@ -1,44 +1,69 @@
 # Firebase Project Setup
 
-The repository contains the Firebase-side structure, but the Firebase project itself must be created in the owner's Firebase/Google Cloud account.
+## Purpose
+
+Firebase is the current foundation. Development and production must remain separate.
 
 ## Development project
 
-Create a dedicated development Firebase project.
-
-1. Register a Web app.
-2. Register the Android app with package name `com.awwab.app`.
-3. Enable the authentication providers chosen for the first release.
-4. Create Cloud Firestore.
-5. Deploy/test `firestore.rules`.
-6. Register Web App Check.
-7. Register Android App Check.
-8. Enable Firebase Cloud Messaging.
+1. Register Web app.
+2. Register Android app as `com.awwab.app`.
+3. Enable selected Authentication providers.
+4. Create Firestore.
+5. Configure Rules.
+6. Configure Web App Check.
+7. Configure Android App Check.
+8. Enable FCM.
 9. Configure Functions for Node.js 22.
-10. Set the Firebase CLI development project alias locally.
-
-Do not commit service-account keys, signing keys, or local environment files.
-
-## Web
-
-Copy the Web Firebase configuration values into `apps/web/.env.local` using `apps/web/.env.example`.
-
-The client configuration is not an authorization boundary. Authentication and Firestore Rules remain authoritative.
-
-## Android
-
-Download the development project's `google-services.json` for `com.awwab.app` and place it at `apps/android/app/google-services.json`.
-
-The current repository ignores local Google-services configuration so an environment-specific file is not accidentally committed.
-
-## App Check
-
-For new web integrations, use reCAPTCHA Enterprise. Initially monitor App Check metrics before enabling enforcement.
+10. Configure Hosting if needed.
+11. Configure local CLI alias.
+12. Configure billing alerts/spend controls before paid backend workloads.
 
 ## Environment separation
 
-Use separate development and production Firebase projects. Never point local development at production data unintentionally.
+Use local/emulator, development Firebase and production Firebase. Never point local development at production data.
 
-## Current limitation
+Production requires separate project IDs, secrets, OAuth clients, App Check configuration, notification configuration, deployment credentials and monitoring/billing controls.
 
-There is no Firebase project-management connector available in this environment, so project creation, app registration, billing configuration, and console-side enforcement cannot be performed or claimed here.
+## Web
+
+Use `apps/web/.env.local` from `apps/web/.env.example`. Client Firebase configuration is not an authorization boundary.
+
+## Android
+
+Use development `google-services.json` locally at `apps/android/app/google-services.json`. Never commit signing credentials.
+
+## App Check
+
+Roll out progressively:
+1. observe
+2. identify legitimate clients
+3. fix attestation issues
+4. enable enforcement
+5. monitor rejection rates
+
+## Functions and billing
+
+Cloud Functions uses Blaze billing. Budget alerts and spend controls must exist before production autonomous workloads.
+
+## AI secrets
+
+Model/API credentials belong in a server-side secret mechanism, never in React bundles, APKs, Firestore documents or Git history.
+
+## Production checklist
+
+- backup/recovery
+- billing alerts
+- least-privilege IAM
+- App Check enforcement
+- Auth provider review
+- Rules review
+- Functions authorization review
+- secret rotation
+- monitoring
+- incident response
+
+References:
+- https://firebase.google.com/docs
+- https://firebase.google.com/docs/app-check
+- https://firebase.google.com/docs/functions

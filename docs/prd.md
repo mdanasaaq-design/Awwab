@@ -1,43 +1,92 @@
 # Awwab Product Requirements
 
-## Vision
-Awwab is a personal AI operating assistant that can understand commands, research information, manage productivity, work with software projects, synchronize relevant information across devices, and perform controlled actions through secure tools and automation.
+## Product definition
 
-## Principles
-- Build incrementally.
-- Treat mobile as a first-class client.
-- Keep sensitive credentials and privileged execution server-side.
-- Require explicit approval for sensitive actions.
-- Maintain an understandable activity trail.
-- Distinguish verified information from uncertainty.
-- Never create activity merely for contribution metrics.
+Awwab is a personal AI operating assistant whose job is to reduce cognitive and execution burden.
 
-## Target clients
-### Web/laptop
-Text conversation, project management, research, automation configuration, approval review, activity history, settings, and developer workflows.
+It combines conversation, memory, planning, research, tasks/projects, controlled tool use, automation, notifications, proactive assistance and multimodal interaction.
 
-### Android
-Text interaction, voice input, text-to-speech, notifications, personal workflows, and supported device actions subject to Android permissions and platform restrictions.
+The goal is not maximum autonomy. It is maximum useful capability within a trustworthy control boundary.
+
+## User outcomes
+
+Awwab should help the user:
+- understand information faster
+- plan complex work
+- remember useful context
+- organize commitments
+- research and compare options
+- operate software projects
+- automate repetitive workflows
+- stay accountable
+- notice deadlines and risks
+- reduce repeated manual work
+
+## Product principles
+
+Personal, proactive, accountable, context-aware, secure, modular, extensible, human-controlled, evidence-driven and cost-aware.
 
 ## Capability areas
-- Productivity: tasks, notes, reminders, routines, goals and summaries
-- Research: web research, documentation, comparisons and knowledge capture
-- Software projects: repository inspection, status, research, approved implementation and documentation
-- Voice/text interaction
-- Controlled integrations and automation
-- Persistent memory and activity history
 
-## Security
-Use authenticated identity, trusted-device/session controls, least-privilege permissions, audit logging and confirmation flows for sensitive actions. Voice recognition is not sufficient authorization for sensitive operations.
+### Assistant
+Natural-language interaction, intent understanding, planning and clarification.
 
-## Development phases
-1. Foundation
-2. Authentication and shared data
-3. Basic assistant
-4. Project intelligence
-5. Voice and mobile experience
-6. Integrations and automation
-7. Advanced assistant
+### Memory
+Durable preferences/facts with provenance, confidence, sensitivity and expiry.
 
-## First milestone
-Establish architecture, documentation, security boundaries, data-model direction, development workflow and project tracking before implementing assistant features.
+### Research
+Web/file research, source comparison, citation, synthesis and uncertainty handling.
+
+### Productivity
+Tasks, reminders, goals, routines, Today and follow-up.
+
+### Projects
+Repository/project context, documentation, status, development planning and approved workflows.
+
+### Tools
+Allowlisted integrations with explicit schemas, scopes, risk levels and verification.
+
+### Automation
+Scheduled/event-driven workflows with bounded permissions, retries, approvals and audit.
+
+### Proactivity
+Useful suggestions based on explicit commitments, deadlines, preferences and observable state.
+
+### Voice/multimodal
+STT, TTS, files, images and eventually richer device interaction.
+
+## Assistant quality contract
+
+For important requests, Awwab should state important assumptions, use tools when they improve correctness, cite external research, distinguish facts from inference, verify important side effects and expose uncertainty.
+
+## Safety contract
+
+Awwab must never invent successful actions, expose secrets, silently broaden permissions, treat untrusted content as system policy, execute sensitive actions solely because a model requested them, use voice as sole sensitive authorization, silently turn inference into a durable sensitive fact, or run unbounded autonomous loops.
+
+## Phases
+
+1. Foundation and validation
+2. Assistant core
+3. Memory/context
+4. Research/knowledge
+5. Tasks/projects
+6. Tool platform
+7. Automation/proactivity
+8. Voice/multimodal
+9. Advanced agent workflows
+10. Optimization/hardening
+
+## Early non-goals
+
+- unrestricted computer control
+- autonomous financial transactions
+- unrestricted shell access
+- self-modifying production code
+- autonomous security/account changes
+- premature microservices
+
+## Success metrics
+
+Task completion, verified outcome rate, correction rate, unnecessary clarification, factuality/citation quality, proactive suggestion acceptance, automation success, latency, cost per useful task, security-policy violations and user trust.
+
+Never optimize metrics in ways that reward fabricated success or unsafe autonomy.

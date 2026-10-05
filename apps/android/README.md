@@ -1,7 +1,31 @@
 # Awwab Android
 
-Native Kotlin + Jetpack Compose client shell.
+Native Kotlin + Jetpack Compose client for Awwab.
 
-Firebase Android integration, authentication, App Check, FCM and backend calls will be added after the Firebase project is created and registered.
+## Role
 
-Do not commit `google-services.json` or signing credentials.
+Android is a first-class surface optimized for quick assistant access, voice/text, Today view, notifications, approvals, quick actions and supported Android intents.
+
+## Security boundary
+
+The Android client is untrusted for privileged execution.
+
+- Never embed API keys or service-account credentials.
+- A device ID is not an authentication credential.
+- Never bypass Android permissions or sandbox rules.
+- Sensitive actions require backend authorization and, where required, explicit approval.
+- Voice is not sufficient authorization for sensitive operations.
+- Use App Check/Play Integrity where appropriate after development validation.
+
+## Lifecycle
+
+1. Firebase/Auth integration.
+2. Device registration and trust.
+3. Shared assistant request pipeline.
+4. Notifications and approval UX.
+5. Voice/TTS.
+6. Android-specific tools with explicit permission boundaries.
+
+Do not mark a capability complete until it is built and tested appropriately.
+
+Do not commit `google-services.json`, signing credentials or local secrets.

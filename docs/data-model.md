@@ -1,13 +1,15 @@
 # Awwab Data Model
 
-## Design goals
-- Keep every personal record scoped to one authenticated user.
-- Keep high-risk state behind backend-controlled collections.
-- Prefer predictable paths and small documents.
-- Avoid storing secrets, provider API keys or raw credentials in Firestore.
-- Keep audit records append-oriented and difficult for clients to modify.
+## Goals
 
-## Top-level structure
+- Strong per-user isolation.
+- Backend control over security-sensitive state.
+- Provenance for durable memory.
+- No secrets or raw provider credentials in Firestore.
+- Explicit retention and deletion behavior.
+- Predictable query patterns.
+
+## Core hierarchy
 
 ```
 /users/{uid}
@@ -15,157 +17,112 @@
 /users/{uid}/projects/{projectId}
 /users/{uid}/tasks/{taskId}
 /users/{uid}/conversations/{conversationId}
+/users/{uid}/conversations/{conversationId}/messages/{messageId}
 /users/{uid}/memories/{memoryId}
-/users/{uid}/automations/{automationId}
 /users/{uid}/approvals/{approvalId}
+/users/{uid}/automations/{automationId}
 /users/{uid}/activity/{activityId}
 /users/{uid}/preferences/{preferenceId}
 /users/{uid}/notifications/{notificationId}
+/users/{uid}/jobs/{jobId}
+/users/{uid}/connections/{connectionId}
 ```
 
-## User document
-`users/{uid}`
-- displayName
-- email
-- photoUrl
-- createdAt
-- updatedAt
-- status
-- timezone
-- locale
+## User
 
-No passwords, refresh tokens or provider secrets are stored here.
+displayName, email, photoUrl, createdAt, updatedAt, status, timezone, locale.
 
-## Device document
-`users/{uid}/devices/{deviceId}`
-- platform
-- appVersion
-- deviceName
-- createdAt
-- lastSeenAt
-- trusted
-- trustedAt
-- revokedAt
-- notificationTokenStatus
+Security-sensitive fields must be backend-controlled.
 
-A device record represents authorization state, not a copy of authentication credentials.
+## Device
 
-## Project document
-`users/{uid}/projects/{projectId}`
-- name
-- description
-- repository references
-- status
-- tags
-- createdAt
-- updatedAt
+deviceId, platform, appVersion, deviceName, createdAt, lastSeenAt, status, trustedAt, revokedAt, notificationTokenStatus.
 
-## Task document
-`users/{uid}/tasks/{taskId}`
+## Project
+
+name, description, repositoryReferences, status, tags, createdAt, updatedAt.
+
+## Task
+
+title, description, status, priority, dueAt, projectId, recurrence, createdAt, updatedAt, completedAt, source.
+
+Tasks should preserve provenance between user commitments and AI suggestions.
+
+## Conversation/message
+
+Conversation:
 - title
-- description
-- status
-- priority
-- dueAt
-- projectId
-- createdAt
-- updatedAt
-- completedAt
-
-## Conversation document
-`users/{uid}/conversations/{conversationId}`
-- title
-- createdAt
-- updatedAt
-- lastMessageAt
+- timestamps
 - archived
+- summaryReference
 
-Messages should be stored separately if volume requires it, for example:
-`/users/{uid}/conversations/{conversationId}/messages/{messageId}`.
+Message:
+- role
+- content
+- createdAt
+- model
+- toolCallReference
+- provenance
+- attachments
+- safetyMetadata
 
-## Memory document
-`users/{uid}/memories/{memoryId}`
+Assistant/tool messages must be distinguishable from user-authored messages.
+
+## Memory
+
+Fields:
 - type
 - content
-- source
+- source/sourceReference
 - confidence
 - importance
-- createdAt
-- updatedAt
+- sensitivity
+- createdAt/updatedAt
 - expiresAt
 - userVisible
+- confirmedByUser
 
-Memory is personal data. Client access must remain user-scoped.
+Classes:
+- explicit preference
+- stable profile fact
+- goal/commitment
+- project context
+- learned preference
+- temporary context
+- derived inference
 
-## Automation document
-`users/{uid}/automations/{automationId}`
-- name
-- enabled
-- triggerType
-- schedule
-- actionDefinition
-- timezone
-- lastRunAt
-- nextRunAt
-- createdAt
-- updatedAt
+Derived inferences must not silently become high-confidence sensitive facts.
 
-Actions are definitions, not credentials.
+## Automation
 
-## Approval document
-`users/{uid}/approvals/{approvalId}`
-- actionType
-- description
-- riskLevel
-- requestedAt
-- expiresAt
-- status
-- requestedByDeviceId
-- approvedAt
-- approvedByDeviceId
-- executionId
-- resultSummary
+name, enabled, trigger, conditions, actionDefinition, timezone, permissionScope, lastRunAt, nextRunAt, timestamps.
 
-Sensitive actions must not execute merely because an approval document exists; the backend validates ownership, expiry, status and the exact action payload before execution.
+Definitions are not credentials.
 
-## Activity/audit document
-`users/{uid}/activity/{activityId}`
-- eventType
-- actorType
-- deviceId
-- tool
-- action
-- targetType
-- targetReference
-- outcome
-- createdAt
-- correlationId
+## Approval
 
-Clients may read appropriate activity records but must not freely rewrite audit history.
+actionType, riskLevel, description, exactPayloadHash, requestedAt, expiresAt, status, requestedByDeviceId, approvedAt, approvedByDeviceId, executionId, resultSummary.
 
-## Preferences
-`users/{uid}/preferences/{preferenceId}`
-Use small named documents for settings that may change independently. Sensitive security settings are backend-controlled.
+Approval binds to the exact action.
 
-## Notifications
-`users/{uid}/notifications/{notificationId}`
-- type
-- title
-- body
-- deepLink
-- createdAt
-- readAt
-- expiresAt
+## Job
 
-FCM registration tokens are treated as sensitive device data and should not be exposed through broad queries.
+jobType, status, requestedAt, startedAt, completedAt, cancellationRequestedAt, progress, attemptCount, correlationId, resultReference, failureCode.
 
-## Security model
-Firestore Rules should use `request.auth.uid` to enforce user ownership. The client must never be granted a blanket "any authenticated user" rule.
+## Connection
 
-Cloud Functions server SDK operations bypass Firestore Security Rules, so privileged functions must perform their own authorization checks and operate under the service account/IAM boundary. citeturn0search0turn0search9
+provider, accountReference, scopes, status, createdAt, lastValidatedAt, revokedAt.
 
-## Query/index principle
-Design queries around known user ownership and common UI views first. Add composite indexes only when an actual query requires them.
+Do not store raw access tokens in ordinary application documents.
 
-## Data retention
-Retention periods for conversations, memories and activity logs remain configurable decisions. No automatic deletion policy is assumed yet.
+## Activity/audit
+
+eventType, actorType, actorId, deviceId, tool, action, targetType, targetReference, outcome, createdAt, correlationId, policyDecision, approvalId.
+
+Audit history is backend-controlled and append-oriented.
+
+## Data lifecycle
+
+Every new personal-data class must define purpose, access, mutation, retention, deletion, export, sensitivity and whether it can influence autonomous actions.
+
+Cloud Functions Admin SDK bypasses Firestore Rules, so privileged functions require their own authorization checks.
