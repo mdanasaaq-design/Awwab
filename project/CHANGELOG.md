@@ -1,32 +1,25 @@
 # Changelog
 
-## Unreleased
+## Unreleased — Agentic Architecture Upgrade
 
-### Added
-- Initial Awwab foundation documentation.
-- React + TypeScript + Vite web shell.
-- Kotlin + Jetpack Compose Android shell.
-- Firebase client initialization structure.
-- Web Firebase Authentication boundary.
-- Web App Check initialization path.
-- Shared identity/security contracts.
-- Firebase setup and environment documentation.
-- Server-side device registration and first-device bootstrap.
-- Trusted-device approval and revocation.
-- Backend user-profile initialization.
-- Web trusted-device management UI.
-- Firebase Local Emulator Suite configuration.
-- Firestore Security Rules test harness with focused authorization coverage.
+### Documentation
+- Reframed Awwab from a chatbot concept into a secure personal-agent platform.
+- Added agent runtime, capability, AI strategy, threat model, evaluation and roadmap documentation.
+- Added explicit implemented/validated/planned/proposed/blocked status language.
+- Added planning/execution separation, model routing, tool policy, approval binding and verification.
+- Added memory provenance and poisoning controls.
+- Added long-running jobs, cost controls and automation requirements.
+- Added agent-specific security threats and evaluation requirements.
 
-### Security
-- Tightened Firestore client write boundaries for device, approval and audit/activity collections.
-- Restricted privileged device-management operations to trusted caller devices.
-- Prevented ordinary revocation of the last trusted device.
-- Prevented revoked devices from silently reactivating.
-- Added backend-controlled audit events for device-management actions.
+### Product direction
+- Defined assistant quality contract.
+- Defined capability pillars.
+- Defined graduated autonomy.
+- Defined proactive-assistance principles.
+- Defined user-value metrics instead of vanity metrics.
 
-### Not included
-- No Firebase project credentials.
-- No production secrets.
-- No local build or deployment claim.
-- No claim that the new emulator tests have been executed yet.
+### Not claimed
+- No assistant request pipeline is implemented yet.
+- No production model provider has been selected.
+- No external integration is production-ready merely because it appears in architecture.
+- No Firebase, Android, CI or deployment validation is claimed unless observed and recorded.

@@ -1,73 +1,85 @@
 # Current Status
 
-**Date:** 2026-09-26  
-**Phase:** Foundation — Authentication Boundary  
+**Date:** 2026-10-05  
+**Phase:** Foundation — Agent Architecture and Validation  
 **Repository:** `mdanasaaq-design/Awwab`
 
-## Completed
-- Repository and foundation documentation
-- Finalized technology baseline
-- Web React + TypeScript + Vite shell
-- Android Kotlin + Jetpack Compose shell
-- Firebase client initialization structure
-- Firebase Authentication web boundary
-- Environment-safe Firebase configuration
-- Firestore user-scoped data model and tightened client rules
-- Shared TypeScript security/application contracts
-- Trusted-device model
-- Approval workflow model
-- Backend-controlled audit/activity model
-- Cloud Functions 2nd gen TypeScript health callable
-- Web authentication state observer and sign-in/sign-out UI
-- Web App Check initialization path for reCAPTCHA Enterprise
-- Server-side device registration and first-device bootstrap
-- Trusted-device approval and revocation callables
-- Backend user-profile initialization callable
-- Web trusted-device management UI
-- Narrowed bootstrap fallback handling to only expected `failed-precondition`
-- Authentication/device testing strategy
-- Local Firebase Emulator Suite configuration
-- Firestore Security Rules test harness and focused authorization coverage
-- Root Functions typecheck command
+## Executive state
 
-## Security architecture
-- Firebase Auth is the primary identity system.
-- Awwab device authorization remains separate from the Firebase session.
-- Firestore client writes are limited by collection purpose.
-- Devices, approvals, and audit/activity records are backend-controlled.
-- Privileged operations remain behind Cloud Functions.
-- App Check is an additional app-authenticity signal, not a replacement for authorization.
-- The last trusted device cannot be revoked through ordinary device management.
-- Revoked devices cannot self-reactivate.
+Awwab now has a substantially stronger product and architecture blueprint for becoming a serious personal AI assistant.
 
-## Pending external setup
-- Create the actual development Firebase project
-- Register Web and Android apps in that project
-- Enable the chosen Firebase Authentication provider(s)
-- Create Firestore in the development project
-- Register App Check providers and later enable enforcement after monitoring
-- Configure FCM
-- Add development environment values locally
-- Generate Android `google-services.json`
+The repository is **not** a finished 10/10 assistant. The documentation is a 10/10 target blueprint; implementation remains foundation-stage.
 
-## Not yet validated
-- Local npm install/build/typecheck
-- Firestore rules test suite execution
-- Backend callable/device lifecycle emulator execution
-- Real Firebase sign-in
-- Firestore reads/writes against a project
-- App Check attestation
-- Android Firebase integration/build
-- Android device testing
-- CI
-- Deployment
+This distinction is mandatory.
 
-## Device trust milestone
-- Web installations register through callable backend functions.
-- First-device bootstrap is a narrow one-time trust path.
-- Later installations begin as pending.
-- Trusted devices can approve or revoke devices through server-side authorization.
-- Device-management events are written to backend-controlled activity records.
+## Implemented
 
-## Next milestone
-Install dependencies locally and execute the rules suite plus web/Functions/shared typechecks and builds. Then create/connect the dedicated development Firebase project and validate the authenticated device lifecycle before expanding into assistant requests.
+- repository foundation
+- web React/TypeScript/Vite shell
+- Android Kotlin/Compose shell
+- Firebase client initialization
+- web Firebase Authentication boundary
+- environment-safe configuration
+- Firestore user-scoped model/rules
+- trusted-device model
+- approval workflow model
+- backend audit/activity model
+- Cloud Functions 2nd gen health callable
+- web auth UI
+- web App Check initialization path
+- server-side device registration/bootstrap
+- trusted-device approval/revocation
+- backend profile initialization
+- trusted-device web UI
+- emulator configuration and rules-test harness
+- focused Firestore Rules coverage
+- CI workflow definition
+- expanded product/architecture/security/testing documentation
+
+## Validated
+
+Validation infrastructure exists, but local build/test execution and real Firebase integration still require explicit observed results.
+
+## Highest-priority gaps
+
+1. Execute local typechecks/builds/rules tests.
+2. Validate backend callable/device lifecycle in emulator/development Firebase.
+3. Establish development Firebase.
+4. Harden Firestore profile-field writes.
+5. Review first-device bootstrap concurrency.
+6. Align shared contracts with backend DTOs.
+7. Implement assistant request pipeline.
+8. Add structured tool contracts and policy engine.
+9. Add model routing behind a provider interface.
+10. Add memory/context retrieval with provenance.
+11. Add research/citation pipeline.
+12. Add durable jobs for long-running work.
+13. Add evaluation harness and regression suite.
+14. Add controlled integrations.
+15. Add automation/proactivity only after execution is reliable.
+
+## Architectural risks
+
+- Firebase remains the current baseline and needs real workload/cost/security validation.
+- First-device bootstrap should be reviewed for concurrent calls.
+- Client profile writes should be narrowed to safe fields.
+- Shared contracts should match backend response shapes.
+- Automation definitions need server-side validation before execution.
+- Conversation roles/provenance need stronger boundaries before tool execution.
+
+## Next milestone — Assistant Core v0
+
+Build and validate:
+- authenticated assistant request endpoint
+- structured request/response contract
+- model-provider interface
+- context selection
+- tool registry
+- policy engine
+- approval gate
+- execution/verification skeleton
+- activity trace
+- basic web assistant UI
+- evaluation fixtures
+
+No unrestricted autonomous tool execution.

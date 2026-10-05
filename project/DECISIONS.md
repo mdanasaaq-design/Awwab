@@ -1,66 +1,84 @@
 # Architecture Decisions
 
-## ADR-001 — Firebase as planned backend
-**Status:** Proposed
+## ADR-001 — Firebase as current backend baseline
+**Status:** Accepted for foundation; subject to validation
 
-Firebase is the planned backend platform because the product requires authentication, synchronized personal data, notifications and secure server-side operations.
-
-This is not yet a final technology commitment. Current capabilities, pricing, limits and security requirements must be validated before implementation.
+Firebase is the current baseline because it provides authentication, synchronized data, messaging, App Check and server-side functions with low initial infrastructure overhead. It remains replaceable if real workload, cost, security or capability requirements justify a change.
 
 ## ADR-002 — Native Android client
-**Status:** Proposed
+**Status:** Accepted
 
-Awwab should have a first-class Android application rather than relying exclusively on a responsive website. The exact Android stack will be finalized during foundation validation.
+Awwab has a first-class native Android client using Kotlin + Jetpack Compose.
 
 ## ADR-003 — Backend-mediated privileged tools
 **Status:** Accepted
 
-Sensitive credentials and privileged tool execution should remain behind secure backend boundaries rather than being exposed to web or Android clients.
+Sensitive credentials and privileged tool execution remain behind backend boundaries.
 
 ## ADR-004 — Explicit approval for sensitive actions
 **Status:** Accepted
 
-Actions such as sending communications, destructive operations and production deployment require explicit confirmation unless a future documented policy provides a narrower safe authorization mechanism.
+Sensitive actions require explicit confirmation unless a future documented policy establishes a narrower safe authorization mechanism.
 
-
-## ADR-005 — Technology baseline
+## ADR-005 — Provider-agnostic AI orchestration
 **Status:** Accepted
 
-- Web: React + TypeScript + Vite
-- Android: Kotlin + Jetpack Compose
-- Backend: Firebase
-- Auth: Firebase Authentication
-- Database: Cloud Firestore
-- Notifications: Firebase Cloud Messaging
-- App protection: Firebase App Check
-- Server runtime: Firebase Cloud Functions 2nd gen with Node.js 22 + TypeScript
-- Initial web hosting: Firebase Hosting
-- AI: provider-agnostic backend orchestration
+Awwab exposes a model-provider interface rather than coupling product state to one vendor.
 
-Cloud Functions requires the Blaze billing plan, so production backend use must include budget alerts and spend controls.
-
-
-## ADR-006 — User-scoped Firestore hierarchy
+## ADR-006 — Planner/executor separation
 **Status:** Accepted
 
-Personal application data will be primarily organized under `/users/{uid}/...`. Firestore Rules will enforce ownership using authenticated UID rather than granting broad access to authenticated users. citeturn0search6turn0search13
+The model may propose a plan, but deterministic policy/execution code decides what can run. Authorization and side effects cannot depend on probabilistic model behavior.
 
-## ADR-007 — Firebase Auth plus Awwab device authorization
+## ADR-007 — User-scoped Firestore hierarchy
 **Status:** Accepted
 
-Firebase Authentication remains the primary identity/session mechanism. Awwab adds a separate device authorization layer with pending, trusted and revoked states. Firebase's short-lived ID tokens and refresh-token lifecycle remain the underlying authentication mechanism. citeturn0search2
+Personal data is primarily organized under `/users/{uid}/...` with ownership enforced by Rules and backend authorization.
 
-## ADR-008 — Privileged actions through callable backend functions
+## ADR-008 — Firebase Auth plus Awwab device authorization
 **Status:** Accepted
 
-Client-initiated privileged operations will use Cloud Functions callable endpoints where appropriate. Auth and App Check signals are validated server-side, followed by operation-specific authorization. citeturn0search3
+Firebase Authentication remains account identity. Awwab device state provides installation-level authorization.
 
-## ADR-009 — Approval as a server-validated security boundary
+## ADR-009 — Approval binds to exact action
 **Status:** Accepted
 
-Sensitive actions require explicit approval. Approval records are not themselves authorization; the backend validates user, device, expiry, action type and exact payload before execution.
+Approval binds to the exact target/action/payload or a cryptographic payload hash. It cannot be reused for a materially different action.
 
-## ADR-010 — Audit records are append-oriented
+## ADR-010 — Append-oriented audit
 **Status:** Accepted
 
-Activity/audit records are written by trusted backend operations for sensitive actions. Clients may read permitted history but do not receive unrestricted ability to rewrite audit history.
+Security-relevant activity is backend-controlled and append-oriented.
+
+## ADR-011 — Tool registry and policy engine
+**Status:** Accepted
+
+Tools must be registered with schemas, scopes, risk class, budgets and verification strategy.
+
+## ADR-012 — Graduated autonomy
+**Status:** Accepted
+
+Autonomy tiers:
+- Tier 0: answer
+- Tier 1: recommend
+- Tier 2: prepare/draft
+- Tier 3: execute reversible low-risk actions
+- Tier 4: execute approved high-impact actions
+- Tier 5: scheduled bounded autonomy
+
+Higher tiers require stronger controls.
+
+## ADR-013 — Evaluation as a product subsystem
+**Status:** Accepted
+
+Awwab continuously evaluates factuality, tool correctness, safety, reliability, latency and cost.
+
+## ADR-014 — MCP interoperability
+**Status:** Proposed/guarded
+
+MCP may be adopted for interoperability. It does not replace Awwab authorization, policy, approval or audit.
+
+## ADR-015 — No premature microservices
+**Status:** Accepted
+
+Keep modular interfaces before splitting infrastructure into separate services. Operational complexity must be justified.
