@@ -24,14 +24,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Cache npm downloads
+      - name: Cache installed workspace dependencies
+        id: deps-cache
         uses: actions/cache@v4
         with:
-          path: ~/.npm
-          key: npm-${{ runner.os }}-${{ hashFiles('package.json', 'apps/web/package.json', 'backend/functions/package.json', 'packages/shared/package.json') }}
-          restore-keys: |
-            npm-${{ runner.os }}-
+          path: |
+            node_modules
+            apps/web/node_modules
+            backend/functions/node_modules
+            packages/shared/node_modules
+          key: node-modules-${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package.json', 'apps/web/package.json', 'backend/functions/package.json', 'packages/shared/package.json') }}
       - name: Install dependencies
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: npm install --prefer-offline --no-audit --no-fund
       - name: Web typecheck
         run: npm run web:typecheck
@@ -48,14 +52,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Cache npm downloads
+      - name: Cache installed workspace dependencies
+        id: deps-cache
         uses: actions/cache@v4
         with:
-          path: ~/.npm
-          key: npm-${{ runner.os }}-${{ hashFiles('package.json', 'apps/web/package.json', 'backend/functions/package.json', 'packages/shared/package.json') }}
-          restore-keys: |
-            npm-${{ runner.os }}-
+          path: |
+            node_modules
+            apps/web/node_modules
+            backend/functions/node_modules
+            packages/shared/node_modules
+          key: node-modules-${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package.json', 'apps/web/package.json', 'backend/functions/package.json', 'packages/shared/package.json') }}
       - name: Install dependencies
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: npm install --prefer-offline --no-audit --no-fund
       - name: Functions typecheck
         run: npm run functions:typecheck
@@ -79,14 +87,18 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - name: Cache npm downloads
+      - name: Cache installed workspace dependencies
+        id: deps-cache
         uses: actions/cache@v4
         with:
-          path: ~/.npm
-          key: npm-${{ runner.os }}-${{ hashFiles('package.json', 'apps/web/package.json', 'backend/functions/package.json', 'packages/shared/package.json') }}
-          restore-keys: |
-            npm-${{ runner.os }}-
+          path: |
+            node_modules
+            apps/web/node_modules
+            backend/functions/node_modules
+            packages/shared/node_modules
+          key: node-modules-${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package.json', 'apps/web/package.json', 'backend/functions/package.json', 'packages/shared/package.json') }}
       - name: Install dependencies
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: npm install --prefer-offline --no-audit --no-fund
       - name: Firestore Security Rules tests
         run: npm run firebase:rules:test
