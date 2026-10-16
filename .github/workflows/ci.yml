@@ -8,6 +8,11 @@ on:
 permissions:
   contents: read
 
+# Keep only the newest run for a branch/PR to avoid spending runner time on stale pushes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 # Run independent checks in parallel and cache installed dependencies to skip
 # repeated workspace installs when package manifests are unchanged.
 env:
