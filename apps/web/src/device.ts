@@ -56,7 +56,7 @@ export async function registerWebDevice() {
   );
 
   try {
-    return await bootstrap(payload);
+    return (await bootstrap(payload)).data;
   } catch (error) {
     const code = (error as { code?: string }).code;
     if (code !== "functions/failed-precondition") {
@@ -67,7 +67,7 @@ export async function registerWebDevice() {
       functions,
       "registerDevice",
     );
-    return register(payload);
+    return (await register(payload)).data;
   }
 }
 
