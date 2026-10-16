@@ -1,14 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import type { User } from "firebase/auth";
-import {
-  approveDevice,
-  ensureUserProfile,
-  getAwwabDeviceId,
-  listDevices,
-  registerWebDevice,
-  revokeDevice,
-  type DeviceRecord,
-} from "./device";
+import type { DeviceRecord } from "./device";
 import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
 
@@ -60,6 +52,7 @@ export function App() {
   const [loading, setLoading] = useState(false);
   const [deviceStatus, setDeviceStatus] = useState("checking");
   const [devices, setDevices] = useState<DeviceRecord[]>([]);
+  const [currentDeviceId, setCurrentDeviceId] = useState("");
   const [deviceError, setDeviceError] = useState("");
   const [deviceBusy, setDeviceBusy] = useState("");
   const [activeSection, setActiveSection] = useState<SectionId>("assistant");
@@ -68,6 +61,7 @@ export function App() {
   async function refreshDevices() {
     try {
       setDeviceError("");
+      const { listDevices } = await import("./device");
       setDevices(await listDevices());
     } catch (error) {
       setDeviceError(error instanceof Error ? error.message : "Could not load devices.");
@@ -86,7 +80,11 @@ export function App() {
         return;
       }
 
-      void Promise.all([registerWebDevice(), ensureUserProfile()])
+      void import("./device")
+        .then(async ({ registerWebDevice, ensureUserProfile, getAwwabDeviceId }) => {
+          setCurrentDeviceId(getAwwabDeviceId());
+          return Promise.all([registerWebDevice(), ensureUserProfile()]);
+        })
         .then(([result]) => {
           setDeviceStatus("data" in result ? result.data.status : result.status);
           return refreshDevices();
@@ -116,6 +114,7 @@ export function App() {
     setDeviceBusy(deviceId);
     setDeviceError("");
     try {
+      const { approveDevice } = await import("./device");
       await approveDevice(deviceId);
       await refreshDevices();
     } catch (error) {
@@ -129,6 +128,7 @@ export function App() {
     setDeviceBusy(deviceId);
     setDeviceError("");
     try {
+      const { revokeDevice } = await import("./device");
       await revokeDevice(deviceId);
       await refreshDevices();
     } catch (error) {
@@ -198,7 +198,6 @@ export function App() {
     );
   }
 
-  const currentDeviceId = getAwwabDeviceId();
   const currentSection = sections.find((section) => section.id === activeSection) ?? sections[0];
 
   return (
