@@ -8,8 +8,8 @@ on:
 permissions:
   contents: read
 
-# Keep independent validation lanes parallel so feedback isn't blocked by the
-# slowest check. Cache npm's download cache because this repository has no lockfile.
+# Run independent checks in parallel and cache installed dependencies to skip
+# repeated workspace installs when package manifests are unchanged.
 env:
   NODE_VERSION: 22
 
