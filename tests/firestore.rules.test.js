@@ -185,10 +185,13 @@ test("notifications are readable/updatable by the owner but not client-created",
   const notification = doc(db, "users/alice/notifications/notification-1");
 
   await testEnv.withSecurityRulesDisabled(async (admin) => {
-    await setDoc(notification, {
-      title: "Server notification",
-      read: false,
-    });
+    await setDoc(
+      doc(admin.firestore(), "users/alice/notifications/notification-1"),
+      {
+        title: "Server notification",
+        read: false,
+      },
+    );
   });
 
   await assertSucceeds(getDoc(notification));
