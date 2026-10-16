@@ -88,7 +88,7 @@ export function App() {
 
       void Promise.all([registerWebDevice(), ensureUserProfile()])
         .then(([result]) => {
-          setDeviceStatus(result.status);
+          setDeviceStatus("data" in result ? result.data.status : result.status);
           return refreshDevices();
         })
         .catch((error) => {
