@@ -8,42 +8,85 @@ on:
 permissions:
   contents: read
 
-jobs:
-  validate:
-    runs-on: ubuntu-latest
+# Keep independent validation lanes parallel so feedback isn't blocked by the
+# slowest check. Cache npm's download cache because this repository has no lockfile.
+env:
+  NODE_VERSION: 22
 
+jobs:
+  web:
+    name: Web typecheck and build
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Cache npm downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('package.json', 'apps/web/package.json', 'backend/functions/package.json', 'packages/shared/package.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
       - name: Install dependencies
-        run: npm install
-
+        run: npm install --prefer-offline --no-audit --no-fund
       - name: Web typecheck
         run: npm run web:typecheck
-
       - name: Web build
         run: npm run web:build
 
+  backend:
+    name: Functions and shared typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Cache npm downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('package.json', 'apps/web/package.json', 'backend/functions/package.json', 'packages/shared/package.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+      - name: Install dependencies
+        run: npm install --prefer-offline --no-audit --no-fund
       - name: Functions typecheck
         run: npm run functions:typecheck
-
       - name: Functions build
         run: npm run functions:build
-
       - name: Shared contract typecheck
         run: npm run shared:typecheck
 
+  firestore-rules:
+    name: Firestore security rules tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
-
+      - name: Cache npm downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('package.json', 'apps/web/package.json', 'backend/functions/package.json', 'packages/shared/package.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+      - name: Install dependencies
+        run: npm install --prefer-offline --no-audit --no-fund
       - name: Firestore Security Rules tests
         run: npm run firebase:rules:test
