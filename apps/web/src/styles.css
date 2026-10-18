@@ -240,7 +240,13 @@ button:disabled { cursor: not-allowed; opacity: .56; }
 @media (max-width: 680px) {
   .app-shell { grid-template-columns: 1fr; }
   .sidebar { min-height: 0; padding: 15px 15px 9px; border-right: 0; border-bottom: 1px solid var(--line); }
-  .workspace-switcher, .sidebar-bottom, .nav-heading { display: none; }
+  .workspace-switcher, .nav-heading { display: none; }
+  .sidebar-bottom { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 7px; margin-top: 8px; padding-top: 6px; }
+  .connection-state { min-width: 0; padding: 6px 2px; border-top: 0; gap: 7px; }
+  .connection-state > span:last-child { min-width: 0; }
+  .connection-state small { overflow-wrap: anywhere; font-size: 9px; }
+  .signout { justify-self: end; min-height: 32px; padding: 6px 9px; }
+  .signout-error { grid-column: 1 / -1; margin: 0; }
   .primary-nav { display: flex; gap: 4px; margin-top: 17px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
   .nav-group { display: flex; flex: 0 0 auto; gap: 3px; }
   .nav-item { width: auto; min-height: 35px; padding: 7px 9px; white-space: nowrap; font-size: 10px; }
