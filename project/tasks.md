@@ -36,7 +36,10 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 ### Interaction and accessibility
 - [x] Implement bounded Phase 1 slice: keyboard-first quick switcher, skip link, focus handling, and truthful signed-in status label; CI passed. Acceptance criteria and evidence: [Phase 1 implementation](PHASE_1_IMPLEMENTATION.md).
 - [ ] Complete browser/manual interaction review and owner acceptance before treating this slice as fully accepted.
-- [ ] Phase 1B device-list loading, refreshing, empty, and error states. Acceptance criteria: [PHASE_1B_DEVICE_LOADING.md](PHASE_1B_DEVICE_LOADING.md); keep unchecked until CI and manual state review are recorded.
+- [x] Implement Phase 1C explicit device-revocation confirmation and focus handling; CI passed. Acceptance criteria/evidence: [PHASE_1C_DEVICE_REVOCATION_CONFIRMATION.md](PHASE_1C_DEVICE_REVOCATION_CONFIRMATION.md).
+- [ ] Complete Phase 1C browser/manual confirm, cancel, focus, and error review.
+- [x] Implement Phase 1B device-list loading, refreshing, empty, and error states; CI passed. Acceptance criteria/evidence: [PHASE_1B_DEVICE_LOADING.md](PHASE_1B_DEVICE_LOADING.md).
+- [ ] Complete Phase 1B browser/manual state review.
 - [ ] Design loading, empty, unavailable, error, success, confirmation, and retry states.
 - [ ] Review keyboard-only navigation, focus order, focus visibility, and escape/cancel behavior.
 - [ ] Review semantic labels, screen-reader behavior, contrast, scalable text, and reduced motion.
