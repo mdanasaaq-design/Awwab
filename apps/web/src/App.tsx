@@ -604,9 +604,9 @@ export function App() {
                   </article>
                 ))}
                 {!devicesLoading && !devices.length && !deviceError && (
-                  <div className="device-empty">
-                    <strong>No device records loaded.</strong>
-                    <p>Refresh the list to check the devices registered to this account.</p>
+                  <div className="device-empty" role="status" aria-live="polite">
+                    <strong>No devices are registered yet.</strong>
+                    <p>When a device is registered to this account, it will appear here.</p>
                   </div>
                 )}
               </div>
