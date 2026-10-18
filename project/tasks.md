@@ -71,7 +71,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [x] Phase 2C transactional last-trusted-device revocation merged in [PR #10](https://github.com/mdanasaaq-design/Awwab/pull/10); CI run 39117401427 passed concurrent, final-device, idempotent, and pending-device tests. Acceptance criteria/evidence: [PHASE_2C_LAST_DEVICE_REVOCATION.md](PHASE_2C_LAST_DEVICE_REVOCATION.md).
 - [ ] Review registration/approval/revocation idempotency and retry behavior.
 - [x] Phase 2D shared device callable DTOs and web generics merged in [PR #11](https://github.com/mdanasaaq-design/Awwab/pull/11); CI run 39117694957 passed. Acceptance criteria/evidence: [PHASE_2D_CONTRACT_ALIGNMENT.md](PHASE_2D_CONTRACT_ALIGNMENT.md).
-- [ ] Phase 2E: expand callable tests for unauthenticated callers, invalid IDs/platforms, registration idempotency, trusted-caller authorization, approval states, revocation states, profile initialization, and health. Acceptance criteria: [PHASE_2E_CALLABLE_COVERAGE.md](PHASE_2E_CALLABLE_COVERAGE.md); implementation and CI validation are in progress.
+- [x] Implement Phase 2E callable authorization/validation/state tests; CI run 39117914336 passed all four jobs. PR [#12](https://github.com/mdanasaaq-design/Awwab/pull/12) awaits merge. Acceptance criteria/evidence: [PHASE_2E_CALLABLE_COVERAGE.md](PHASE_2E_CALLABLE_COVERAGE.md).
 - [ ] Test audit behavior for successful and failed security transitions.
 - [ ] Review App Check configuration and staged enforcement; do not assume a configured client key means enforcement is active.
 
