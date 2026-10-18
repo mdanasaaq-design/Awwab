@@ -71,8 +71,11 @@ export function App() {
   );
 
   function openSwitcher() {
+    const activeElement = document.activeElement;
     switcherReturnFocusRef.current =
-      document.activeElement instanceof HTMLElement ? document.activeElement : switcherButtonRef.current;
+      activeElement instanceof HTMLElement && activeElement !== document.body
+        ? activeElement
+        : switcherButtonRef.current;
     setSwitcherQuery("");
     setSwitcherIndex(0);
     setSwitcherOpen(true);
