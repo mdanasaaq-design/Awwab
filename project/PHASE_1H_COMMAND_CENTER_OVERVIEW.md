@@ -1,6 +1,6 @@
 # Phase 1H — Command Center Operational Overview
 
-**Status:** Acceptance criteria recorded before implementation.  
+**Status:** Implemented directly on `main` in `apps/web/src/App.tsx` and `apps/web/src/styles.css`. Automated build and browser/manual review have not been run for this increment.  
 **Phase:** 1 — Web command-center UX  
 **Scope:** Add a compact, truthful operational overview to the signed-in Assistant landing page, using existing application state only. No new data sources, dependencies, backend changes, or external side effects.
 
