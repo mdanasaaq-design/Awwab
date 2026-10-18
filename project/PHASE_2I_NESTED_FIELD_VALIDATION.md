@@ -21,7 +21,7 @@ Phase 2G validates top-level project/task fields, enums, and timestamp integrity
 ## Acceptance criteria
 
 - [ ] Tags must be a list of at most 5 strings, each at most 64 characters.
-- [ ] Repository references must be a list of at most 20 strings, each at most 500 characters.
+- [ ] Repository references must be a list of at most 5 strings, each at most 500 characters.
 - [ ] Nested objects, numbers, or oversized strings in those lists are rejected.
 - [ ] A task may omit `projectId` or set it to null.
 - [ ] A non-null `projectId` must be a string naming an existing project under the same user's hierarchy.
