@@ -529,7 +529,7 @@ export function App() {
                     <div className="device-actions">
                       <span className={`device-badge ${device.status}`}>{device.status}</span>
                       {device.status === "pending" && (
-                        <button className="secondary" type="button" disabled={deviceBusy === device.deviceId} onClick={() => void handleApprove(device.deviceId)}>
+                        <button className="secondary" type="button" disabled={deviceBusy !== ""} onClick={() => void handleApprove(device.deviceId)}>
                           {deviceBusy === device.deviceId ? "Working…" : "Approve"}
                         </button>
                       )}
@@ -537,13 +537,13 @@ export function App() {
                         pendingRevokeDeviceId === device.deviceId ? (
                           <div className="device-revoke-confirmation" role="group" aria-label={`Confirm revoking ${device.deviceName}`}>
                             <span>Revoke access for this device?</span>
-                            <button className="danger" type="button" disabled={deviceBusy === device.deviceId} onClick={() => void handleRevoke(device.deviceId)}>
+                            <button className="danger" type="button" disabled={deviceBusy !== ""} onClick={() => void handleRevoke(device.deviceId)}>
                               {deviceBusy === device.deviceId ? "Revoking…" : "Confirm revoke"}
                             </button>
-                            <button className="secondary" type="button" disabled={deviceBusy === device.deviceId} onClick={() => setPendingRevokeDeviceId("")}>Cancel</button>
+                            <button className="secondary" type="button" disabled={deviceBusy !== ""} onClick={() => setPendingRevokeDeviceId("")}>Cancel</button>
                           </div>
                         ) : (
-                          <button className="danger" type="button" disabled={deviceBusy === device.deviceId} onClick={() => setPendingRevokeDeviceId(device.deviceId)}>Revoke</button>
+                          <button className="danger" type="button" disabled={deviceBusy !== ""} onClick={() => setPendingRevokeDeviceId(device.deviceId)}>Revoke</button>
                         )
                       )}
                     </div>
