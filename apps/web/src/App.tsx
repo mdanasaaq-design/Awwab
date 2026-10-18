@@ -100,6 +100,11 @@ export function App() {
   const switcherReturnFocusRef = useRef<HTMLElement | null>(null);
   const switcherWasOpenRef = useRef(false);
 
+  useEffect(() => {
+    const section = sections.find((item) => item.id === activeSection);
+    document.title = user ? `${section?.label ?? "Assistant"} · Awwab` : "Sign in · Awwab";
+  }, [user, activeSection]);
+
   const filteredSections = sections.filter((section) =>
     section.label.toLowerCase().includes(switcherQuery.trim().toLowerCase()),
   );
