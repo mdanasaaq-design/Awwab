@@ -61,7 +61,7 @@
 
 - **Priority:** P1
 - **Type:** Validation gap
-- **Status:** Callable authorization/input/state coverage implemented in PR #12; CI passed; merge pending. Real Auth/device lifecycle integration remains unverified.
+- **Status:** Callable emulator coverage merged in PR #12 and CI passed; full real Auth/device lifecycle remains unverified.
 - **Evidence:** The repository contains Firestore Rules tests; the reviewed task/status documents list backend callable emulator tests and real authentication/device lifecycle validation as outstanding.
 - **Impact:** A successful web build and Rules suite do not prove backend state transitions, authorization, audit events, or failure behavior work end-to-end.
 - **Mitigation:** PR [#12](https://github.com/mdanasaaq-design/Awwab/pull/12) extends the emulator suite for unauthenticated calls, invalid IDs/platforms, registration idempotency, trust checks, approval state, revoked-device reactivation, profile initialization, and health. CI run [39117914336](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117914336) passed. Full real Auth/device lifecycle validation remains outstanding.
@@ -177,6 +177,17 @@
 - **Plan:** Complete Phase 2 and capability-specific gates, then use the release checklist in Phase 8. Deployment requires separate explicit authorization.
 - **Acceptance:** All applicable release checks have observed evidence and the owner approves the exact deployment.
 - **Phase:** 8.
+
+### AWW-016 — App Check client initialization is optional and callable enforcement is not enabled
+
+- **Priority:** P1 before public production use
+- **Type:** Security/abuse-control validation gap
+- **Status:** Configuration audit and staged rollout documentation in PR #15; no enforcement change is made.
+- **Evidence:** `apps/web/src/firebase.ts` initializes App Check only when `VITE_FIREBASE_APP_CHECK_SITE_KEY` is present. The reviewed Functions v2 callable declarations do not set `enforceAppCheck: true`. No live development provider/token validation has been recorded.
+- **Impact:** App Check is not currently an additional server-side attestation gate for these callables. Existing Firebase Authentication and trusted-device checks remain separate controls; App Check enforcement must not be assumed active.
+- **Plan:** Keep enforcement disabled until a real development Web App/provider is configured, valid token behavior is observed, rejection metrics are reviewed, and a separate bounded enforcement change is approved. Validate Android separately.
+- **Acceptance:** Development client token issuance/acceptance and selected callable enforcement are observed with a rollback plan; production requires explicit owner authorization.
+- **Phase:** 2 — Foundation security and environment validation, then 8 — release readiness.
 
 ## Cross-cutting follow-ups
 
