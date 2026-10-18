@@ -1,6 +1,6 @@
 # Phase 2F — Firestore Collection Ownership and Narrow Client Mutations
 
-**Status:** Acceptance criteria recorded before implementation  
+**Status:** Implemented on branch; CI passed; merge pending  
 **Phase:** 2 — Foundation security and environment validation  
 **Branch:** `fix/phase-2-data-ownership-matrix`  
 **Risk:** AWW-007 and AWW-014
@@ -53,6 +53,14 @@ The root profile, device, approval, activity, and bootstrap-guard decisions are 
 - [ ] Firestore Rules emulator tests and all CI jobs pass.
 - [ ] Data model, security model, current status, tasks, and risk register reflect the ownership matrix.
 - [ ] No deployment is performed.
+
+## Implementation and validation record
+
+- Rules: `firestore.rules` now denies direct client writes to conversations/messages, automation definitions, preferences, and memory create/update; memory deletion remains owner-controlled.
+- Notifications are owner-readable and only the boolean `read` field can be updated.
+- Tests: `tests/firestore.rules.test.js` covers owner reads, forbidden writes, allowed memory deletion, notification read-only mutation, cross-user access, and default-deny paths.
+- CI: run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed all four jobs.
+- Projects/tasks remain owner CRUD and their field-level schema validation remains open.
 
 ## Test plan
 
