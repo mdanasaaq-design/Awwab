@@ -70,6 +70,12 @@ The blueprint describes the intended product. It must not be mistaken for implem
 
 The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_AND_RISKS.md).
 
+## Active implementation work
+
+- Phase 1 bounded navigation slice is in progress on [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5): keyboard-first quick switcher, skip link, focus management, and a clearer signed-in status label.
+- Acceptance criteria were recorded before the application edit in [PHASE_1_IMPLEMENTATION.md](PHASE_1_IMPLEMENTATION.md).
+- CI and browser interaction review are pending at the time of this update. No claim of Phase 1 completion is made.
+
 ## Next phases
 
 1. **Phase 0 — Planning/evidence baseline:** keep status, tasks, risks, and roadmap aligned.
