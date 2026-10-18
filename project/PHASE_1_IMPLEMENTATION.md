@@ -42,6 +42,10 @@ The current web shell has working section buttons, but no global way to jump dir
 - Automated CI result: passed on code commit `e70e63977a696cf288cfd48d66ec30901f527667` in run [39115777501](https://github.com/mdanasaaq-design/Awwab/actions/runs/39115777501): web typecheck/build, Functions/shared typecheck, and Firestore Rules tests all succeeded.
 - Browser/manual result: not yet observed in this environment.
 
+## Follow-on UX slice
+
+The same branch also includes [Phase 1B device loading-state work](PHASE_1B_DEVICE_LOADING.md), with its own acceptance criteria written before the device UI edit. The earlier CI result cited above predates that follow-on change; the latest branch CI must pass before the expanded change is considered validated.
+
 ## Contrast note
 
 The shared quiet-text token was raised from `#69717d` to `#858e9b`. The calculated WCAG contrast ratio for this token against the main canvas `#101216` is approximately **5.66:1**. This is a targeted token check, not a complete page-wide contrast audit; remaining hard-coded color pairs still require review.
