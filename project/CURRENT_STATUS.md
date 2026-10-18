@@ -72,9 +72,9 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 
 ## Active implementation work
 
-- Phase 1 command-center UX slices were merged through [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), [PR #6](https://github.com/mdanasaaq-design/Awwab/pull/6), and [PR #7](https://github.com/mdanasaaq-design/Awwab/pull/7). Their CI runs passed; browser/manual UX and owner acceptance checks remain outstanding, so Phase 1 is not marked complete.
-- Phase 2A profile write-boundary work is in progress on branch `fix/phase-2-profile-write-boundary`. Acceptance criteria were written before code in [PHASE_2A_PROFILE_WRITE_BOUNDARY.md](PHASE_2A_PROFILE_WRITE_BOUNDARY.md).
-- This change makes root profile documents backend-owned: the client may read its own profile but may not create, update, or delete it. Rules tests and CI for the current branch are pending.
+- Phase 1 command-center UX slices were merged in [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), [PR #6](https://github.com/mdanasaaq-design/Awwab/pull/6), and [PR #7](https://github.com/mdanasaaq-design/Awwab/pull/7). Automated CI passed for each; browser/manual interaction, responsive, and owner UX acceptance checks remain outstanding, so Phase 1 is not marked complete.
+- Phase 2A profile-write hardening was merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8). CI run [39116859040](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116859040) passed the Rules tests, web build, Functions build/typecheck, and shared contract typecheck. Root profile documents are now owner-read only from clients; AWW-001 and AWW-006 are resolved for the current schema.
+- Phase 2B atomic first-device bootstrap and callable emulator tests are in progress on branch `fix/phase-2-bootstrap-concurrency`. Acceptance criteria were recorded before implementation in [PHASE_2B_BOOTSTRAP_CONCURRENCY.md](PHASE_2B_BOOTSTRAP_CONCURRENCY.md). Current-branch CI is pending.
 - No Firebase deployment has been performed.
 
 ## Next phases
