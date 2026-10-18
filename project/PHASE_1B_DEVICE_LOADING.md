@@ -1,6 +1,6 @@
 # Phase 1B — Device List Loading and Empty States
 
-**Status:** Acceptance criteria recorded before implementation  
+**Status:** Implemented on the branch; CI passed; browser/manual review pending  
 **Phase:** 1 — Web command-center UX  
 **Branch:** `feat/phase-1-keyboard-navigation`  
 **Scope:** Correctly distinguish loading, empty, and failed device-list states in Settings.
@@ -29,6 +29,13 @@ The Settings view currently shows “No device records loaded” whenever the de
 - [ ] No new backend call, permission, or side effect is introduced.
 - [ ] Web typecheck/build CI passes.
 - [ ] The manual state checklist is recorded; browser interaction is not claimed unless observed.
+
+## Implementation and validation record
+
+- Code: `apps/web/src/App.tsx` and `apps/web/src/styles.css`.
+- Pull request: [#5](https://github.com/mdanasaaq-design/Awwab/pull/5).
+- CI: run [39116279874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116279874) passed on code commit `7923b0a535b92ac2d2b6d972cea533f80815f174` (web typecheck/build, Functions/shared typecheck, Firestore Rules tests).
+- Browser/manual verification has not been observed in this environment.
 
 ## Manual verification checklist
 
