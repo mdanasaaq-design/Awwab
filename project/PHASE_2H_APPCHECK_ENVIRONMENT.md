@@ -1,6 +1,6 @@
 # Phase 2H — App Check and Environment Readiness Audit
 
-**Status:** Acceptance criteria recorded before documentation changes  
+**Status:** Repository audit and documentation updates committed; live development validation remains outstanding  
 **Phase:** 2 — Foundation security and environment validation  
 **Branch:** `docs/phase-2-app-check-audit`
 
@@ -30,6 +30,13 @@
 - [ ] Development and production project IDs, OAuth clients, App Check configuration, secrets, and deployment credentials remain separate.
 - [ ] No enforcement option is enabled, no Firebase configuration is changed, and no deployment is performed in this slice.
 - [ ] Current status and task list record the audit and remaining live validation gate.
+
+## Implementation and evidence record
+
+- Updated `docs/firebase-setup.md` to distinguish optional client initialization from server enforcement and document the development-first rollout.
+- Added a current-state row to `project/CURRENT_STATUS.md` and tracked AWW-016 in `project/ISSUES_AND_RISKS.md`.
+- No application code, Firebase configuration, enforcement flag, secrets, or deployment changed.
+- Live provider registration, token observation, rejection metrics, and Android validation have not been performed.
 
 ## Rollout decision
 
