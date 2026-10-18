@@ -1,6 +1,6 @@
 # Phase 1 Implementation Slice — Keyboard-First Navigation
 
-**Status:** Acceptance criteria recorded before implementation  
+**Status:** Implementation committed to branch; CI and manual verification pending  
 **Phase:** 1 — Web command-center UX  
 **Branch:** `feat/phase-1-keyboard-navigation`  
 **Scope:** A small navigation/accessibility improvement. This is not the full Phase 1 exit review.
@@ -33,6 +33,13 @@ The current web shell has working section buttons, but no global way to jump dir
 - [ ] No assistant request, privileged action, or external side effect is enabled.
 - [ ] Web typecheck/build CI passes; manual interaction checklist is recorded in the phase test report.
 - [ ] Status/task/design documentation records exactly what changed and what was or was not tested.
+
+## Implementation record
+
+- Application changes: `apps/web/src/App.tsx`, `apps/web/src/main.tsx`, and new `apps/web/src/navigation.css`.
+- Pull request: [#5 — keyboard-first command navigation](https://github.com/mdanasaaq-design/Awwab/pull/5).
+- Automated CI result: pending; do not infer pass/fail until the run completes.
+- Browser/manual result: not yet observed in this environment.
 
 ## Manual verification checklist
 
