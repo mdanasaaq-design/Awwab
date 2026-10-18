@@ -18,7 +18,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [x] Add prioritized issue/risk register.
 - [x] Align roadmap and README documentation map with the phase plan.
 - [ ] Record a local Firestore emulator Rules test run.
-- [ ] Record backend callable test results.
+- [x] Record backend callable emulator test results (CI runs 39117195997, 39117401427, and 39117914336); full development-project lifecycle remains outstanding.
 - [ ] Record a full validation run on the repository's Node.js 22 baseline.
 - [ ] Record real Firebase Auth/device lifecycle validation.
 - [ ] Record Android build/test evidence.
@@ -61,7 +61,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 
 ### Rules and data ownership
 - [x] Phase 2A: make `/users/{uid}` backend-owned, allow owner read only, and test denied client writes. Merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8); CI run 39116859040 passed. Acceptance criteria/evidence: [PHASE_2A_PROFILE_WRITE_BOUNDARY.md](PHASE_2A_PROFILE_WRITE_BOUNDARY.md).
-- [ ] Create a collection/field/action ownership matrix for all documented Firestore collections.
+- [x] Implement Phase 2F collection ownership rules and emulator tests; CI run 39118165874 passed all four jobs. PR [#13](https://github.com/mdanasaaq-design/Awwab/pull/13) awaits merge. Acceptance criteria/evidence: [PHASE_2F_DATA_OWNERSHIP_RULES.md](PHASE_2F_DATA_OWNERSHIP_RULES.md). Projects/tasks field-level validation remains a follow-up.
 - [ ] Decide and document whether /jobs and /connections are backend-only or need narrow client reads.
 - [ ] Review client write permissions for projects, tasks, memories, automations, preferences, and notifications.
 - [ ] Add negative Rules tests for protected profile fields, unexpected keys, cross-user access, and disallowed state changes.
@@ -71,7 +71,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [x] Phase 2C transactional last-trusted-device revocation merged in [PR #10](https://github.com/mdanasaaq-design/Awwab/pull/10); CI run 39117401427 passed concurrent, final-device, idempotent, and pending-device tests. Acceptance criteria/evidence: [PHASE_2C_LAST_DEVICE_REVOCATION.md](PHASE_2C_LAST_DEVICE_REVOCATION.md).
 - [ ] Review registration/approval/revocation idempotency and retry behavior.
 - [x] Phase 2D shared device callable DTOs and web generics merged in [PR #11](https://github.com/mdanasaaq-design/Awwab/pull/11); CI run 39117694957 passed. Acceptance criteria/evidence: [PHASE_2D_CONTRACT_ALIGNMENT.md](PHASE_2D_CONTRACT_ALIGNMENT.md).
-- [x] Implement Phase 2E callable authorization/validation/state tests; CI run 39117914336 passed all four jobs. PR [#12](https://github.com/mdanasaaq-design/Awwab/pull/12) awaits merge. Acceptance criteria/evidence: [PHASE_2E_CALLABLE_COVERAGE.md](PHASE_2E_CALLABLE_COVERAGE.md).
+- [x] Phase 2E callable authorization/validation/state tests merged in [PR #12](https://github.com/mdanasaaq-design/Awwab/pull/12); CI run 39117914336 passed all four jobs. Acceptance criteria/evidence: [PHASE_2E_CALLABLE_COVERAGE.md](PHASE_2E_CALLABLE_COVERAGE.md).
 - [ ] Test audit behavior for successful and failed security transitions.
 - [ ] Review App Check configuration and staged enforcement; do not assume a configured client key means enforcement is active.
 

@@ -83,10 +83,10 @@
 
 - **Priority:** P1
 - **Type:** Contract ambiguity
-- **Status:** Confirmed difference between documentation and Rules; may be intentional.
+- **Status:** Explicitly designated backend-only in the Phase 2F ownership matrix; CI passed; merge pending.
 - **Evidence:** `docs/data-model.md` describes `/users/{uid}/jobs` and `/users/{uid}/connections`; `firestore.rules` has no specific match blocks for these paths and ends with default deny.
 - **Impact:** Client access will be denied unless backend-only access is intended. Future developers may assume documented collections are client-readable/writable.
-- **Plan:** Decide and document whether each collection is backend-only or needs narrow owner read access. Never loosen Rules by default.
+- **Mitigation:** PR [#13](https://github.com/mdanasaaq-design/Awwab/pull/13) documents jobs/connections/system as backend-only with default deny and adds Rules tests. CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed.
 - **Acceptance:** Every documented collection has an explicit owner/writer matrix and a Rules test for the intended behavior.
 - **Phase:** 2 — Foundation security.
 
@@ -160,10 +160,10 @@
 
 - **Priority:** P1
 - **Type:** Security/data integrity
-- **Status:** Review required.
+- **Status:** Partial mitigation implemented in PR #13; CI passed. Projects/tasks field-level schema remains an explicit follow-up.
 - **Evidence:** Rules allow the owner broad CRUD access to projects, tasks, memories, automations, and preferences, and allow owner updates to notifications. This may be intentional for some data, but each collection needs an explicit field/transition policy before server automation consumes it.
 - **Impact:** Future backend jobs may trust client-created or client-mutated records without validating schema, ownership, state transitions, or action definitions.
-- **Plan:** Build a collection/field/action ownership matrix. Validate all automation definitions server-side before any executor uses them.
+- **Mitigation:** PR [#13](https://github.com/mdanasaaq-design/Awwab/pull/13) tightens conversation, memory, automation, preference, and notification mutation rules. CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed. Projects/tasks remain owner CRUD but must not be trusted by any executor until their schemas and state transitions are separately enforced.
 - **Acceptance:** Each collection has tested read/create/update/delete permissions and field/state constraints aligned with its trust level.
 - **Phase:** 2, then 6 for automation.
 
