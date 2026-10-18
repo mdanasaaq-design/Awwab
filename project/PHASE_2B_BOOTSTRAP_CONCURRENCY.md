@@ -1,6 +1,6 @@
 # Phase 2B — Atomic First-Device Bootstrap and Callable Test Harness
 
-**Status:** Acceptance criteria recorded before implementation  
+**Status:** Implemented on branch; all CI checks passed; merge pending  
 **Phase:** 2 — Foundation security and environment validation  
 **Branch:** `fix/phase-2-bootstrap-concurrency`  
 **Risk:** AWW-002 (P0)
@@ -31,6 +31,13 @@
 - [ ] Existing Firestore Rules, web, Functions, and shared-contract checks pass.
 - [ ] The issue register and current status reflect observed results.
 - [ ] No Firebase deployment is performed.
+
+## Implementation and validation record
+
+- Backend: `backend/functions/src/index.ts` now transactionally creates the per-user guard, trusted device, and audit event.
+- Test: `tests/functions.callable.test.js` exercises unauthenticated access, competing bootstrap calls, repeat bootstrap, and legacy-device rejection through the emulators.
+- CI: run [39117086761](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117086761) passed all four jobs, including the new backend callable emulator test job.
+- No local emulator run or production deployment is claimed.
 
 ## Test plan
 
