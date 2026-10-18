@@ -49,7 +49,7 @@ The blueprint describes the intended product. It must not be mistaken for implem
 | Shared contract typecheck CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
 | Firestore Rules test CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
 | Local Firestore emulator Rules tests | No separate local result recorded in this status | **Not verified locally** |
-| Backend callable tests | Bootstrap and concurrent revocation callable emulator tests passed in CI run [39117401427](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117401427); broader callable coverage remains incomplete | **Partially validated** |
+| Backend callable tests | Bootstrap and concurrent revocation tests passed in CI run [39117401427](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117401427); broader auth/input/state tests are now in progress | **Partially validated** |
 | Real Firebase Auth/device lifecycle | No end-to-end result recorded | **Outstanding** |
 | Dedicated development Firebase setup | Not verified end-to-end | **Outstanding** |
 | Android build/integration tests | No observed result recorded | **Outstanding** |
@@ -72,11 +72,12 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 
 ## Active implementation work
 
-- Phase 1 command-center UX slices were merged in [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), [PR #6](https://github.com/mdanasaaq-design/Awwab/pull/6), and [PR #7](https://github.com/mdanasaaq-design/Awwab/pull/7). Automated CI passed for each; browser/manual interaction, responsive, and owner UX acceptance checks remain outstanding, so Phase 1 is not marked complete.
-- Phase 2A profile-write hardening was merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8); CI run [39116859040](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116859040) passed. AWW-001 and AWW-006 are resolved for the current root profile contract.
-- Phase 2B atomic bootstrap was merged in [PR #9](https://github.com/mdanasaaq-design/Awwab/pull/9); CI run [39117195997](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117195997) passed all four jobs. AWW-002 is resolved for the tested bootstrap invariant.
-- Phase 2C transactional last-device revocation was merged in [PR #10](https://github.com/mdanasaaq-design/Awwab/pull/10); CI run [39117401427](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117401427) passed all four jobs, including concurrent revocation coverage. AWW-003 is resolved for the tested invariant.
-- Phase 2D shared device callable contracts are implemented on branch `fix/phase-2-contract-alignment`, PR [#11](https://github.com/mdanasaaq-design/Awwab/pull/11). CI run [39117694957](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117694957) passed all four jobs, including the callable emulator suite. Merge is pending; the remaining planned `UserProfile` shape is explicitly documented as not being the current persisted-profile DTO.
+- Phase 1 command-center UX slices were merged in [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), [PR #6](https://github.com/mdanasaaq-design/Awwab/pull/6), and [PR #7](https://github.com/mdanasaaq-design/Awwab/pull/7). Automated CI passed for each; browser/manual interaction, responsive, and owner UX acceptance checks remain outstanding.
+- Phase 2A profile-write hardening was merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8); CI run [39116859040](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116859040) passed.
+- Phase 2B atomic bootstrap was merged in [PR #9](https://github.com/mdanasaaq-design/Awwab/pull/9); CI run [39117195997](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117195997) passed all four jobs.
+- Phase 2C transactional last-device revocation was merged in [PR #10](https://github.com/mdanasaaq-design/Awwab/pull/10); CI run [39117401427](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117401427) passed all four jobs.
+- Phase 2D shared device callable contracts were merged in [PR #11](https://github.com/mdanasaaq-design/Awwab/pull/11); CI run [39117694957](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117694957) passed all four jobs. The planned `UserProfile` interface remains separate from the current persisted-profile DTO.
+- Phase 2E broader callable authorization, invalid-input, idempotency, and state-transition tests are in progress on branch `test/phase-2-callable-coverage`. Acceptance criteria are in [PHASE_2E_CALLABLE_COVERAGE.md](PHASE_2E_CALLABLE_COVERAGE.md); current CI is pending.
 - No Firebase deployment has been performed.
 
 ## Next phases
