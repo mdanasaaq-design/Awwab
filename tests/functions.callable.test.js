@@ -65,6 +65,11 @@ test("first-device bootstrap is atomic and requires an authenticated first enrol
   assert.equal(unauthenticated.error.status, "UNAUTHENTICATED");
 
   const user = await createAuthUser("bootstrap-race");
+  const profile = await invokeCallable("ensureUserProfile", {}, user.idToken);
+  assert.equal(profile.ok, true, JSON.stringify(profile));
+  assert.equal(profile.result.ok, true);
+  assert.equal(profile.result.uid, user.localId);
+
   const deviceA = newDeviceId();
   const deviceB = newDeviceId();
 
@@ -79,10 +84,20 @@ test("first-device bootstrap is atomic and requires an authenticated first enrol
   assert.equal(failures.length, 1, JSON.stringify(competingResults));
 
   const winnerDeviceId = successes[0].result.deviceId;
+  assert.equal(successes[0].result.ok, true);
+  assert.equal(successes[0].result.status, "trusted");
+  assert.ok([deviceA, deviceB].includes(winnerDeviceId));
+
   const listed = await invokeCallable("listDevices", { deviceId: winnerDeviceId }, user.idToken);
   assert.equal(listed.ok, true, JSON.stringify(listed));
+  assert.equal(listed.result.ok, true);
+  assert.equal(listed.result.callerDeviceId, winnerDeviceId);
   assert.equal(listed.result.devices.length, 1);
   assert.equal(listed.result.devices[0].deviceId, winnerDeviceId);
+  assert.equal(listed.result.devices[0].platform, "web");
+  assert.equal(typeof listed.result.devices[0].createdAt, "string");
+  assert.equal(typeof listed.result.devices[0].lastSeenAt, "string");
+  assert.equal(typeof listed.result.devices[0].trustedAt, "string");
   assert.equal(listed.result.devices[0].status, "trusted");
 
   const repeatedBootstrap = await invokeCallable(
@@ -101,6 +116,9 @@ test("first-device bootstrap is atomic and requires an authenticated first enrol
     legacyUser.idToken,
   );
   assert.equal(registered.ok, true, JSON.stringify(registered));
+  assert.equal(registered.result.ok, true);
+  assert.equal(registered.result.deviceId, legacyDeviceId);
+  assert.equal(registered.result.status, "pending");
 
   const legacyBootstrap = await invokeCallable(
     "bootstrapFirstDevice",
@@ -122,6 +140,9 @@ test("concurrent revocations cannot remove the final trusted device", async () =
     user.idToken,
   );
   assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+  assert.equal(bootstrap.result.ok, true);
+  assert.equal(bootstrap.result.deviceId, deviceA);
+  assert.equal(bootstrap.result.status, "trusted");
 
   const registration = await invokeCallable(
     "registerDevice",
@@ -129,6 +150,9 @@ test("concurrent revocations cannot remove the final trusted device", async () =
     user.idToken,
   );
   assert.equal(registration.ok, true, JSON.stringify(registration));
+  assert.equal(registration.result.ok, true);
+  assert.equal(registration.result.deviceId, deviceB);
+  assert.equal(registration.result.status, "pending");
 
   const approval = await invokeCallable(
     "approveDevice",
@@ -136,6 +160,9 @@ test("concurrent revocations cannot remove the final trusted device", async () =
     user.idToken,
   );
   assert.equal(approval.ok, true, JSON.stringify(approval));
+  assert.equal(approval.result.ok, true);
+  assert.equal(approval.result.deviceId, deviceB);
+  assert.equal(approval.result.status, "trusted");
 
   const revocations = await Promise.all([
     invokeCallable("revokeDevice", { callerDeviceId: deviceA, targetDeviceId: deviceA }, user.idToken),
@@ -145,6 +172,8 @@ test("concurrent revocations cannot remove the final trusted device", async () =
   const successes = revocations.filter((result) => result.ok);
   const failures = revocations.filter((result) => !result.ok);
   assert.equal(successes.length, 1, JSON.stringify(revocations));
+  assert.equal(successes[0].result.ok, true);
+  assert.equal(successes[0].result.status, "revoked");
   assert.equal(failures.length, 1, JSON.stringify(revocations));
   assert.equal(failures[0].error.status, "FAILED_PRECONDITION");
 
@@ -184,6 +213,8 @@ test("concurrent revocations cannot remove the final trusted device", async () =
     user.idToken,
   );
   assert.equal(repeatedRevoke.ok, true, JSON.stringify(repeatedRevoke));
+  assert.equal(repeatedRevoke.result.ok, true);
+  assert.equal(repeatedRevoke.result.deviceId, revokedDeviceId);
   assert.equal(repeatedRevoke.result.status, "revoked");
 
   const pendingDeviceId = newDeviceId();
