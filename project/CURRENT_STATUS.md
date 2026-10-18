@@ -1,85 +1,94 @@
 # Current Status
 
-**Date:** 2026-10-05  
-**Phase:** Foundation — Agent Architecture and Validation  
-**Repository:** `mdanasaaq-design/Awwab`
+**Last reviewed:** 2026-10-18  
+**Repository:** `mdanasaaq-design/Awwab`  
+**Reviewed baseline:** `cffb22b829e76a859dd3029e482abd10e8314af5` — `feat(web): establish the Awwab command center`  
+**Current planning focus:** Web command-center UX first, then foundation hardening  
+**Deployment:** Not performed
 
 ## Executive state
 
-Awwab now has a substantially stronger product and architecture blueprint for becoming a serious personal AI assistant.
+Awwab has a documented product/architecture blueprint, a web command-center shell, a Firebase-backed authentication/device-management foundation, Firestore Rules tests, CI, and a minimal native Android shell.
 
-The repository is **not** a finished 10/10 assistant. The documentation is a 10/10 target blueprint; implementation remains foundation-stage.
+Awwab is **not yet a complete or production-ready personal AI assistant**. The current web UI explicitly states that the assistant runtime is not connected and keeps the composer disabled. Projects, tasks, research, automations, and activity are placeholder views rather than live workflows.
 
-This distinction is mandatory.
+The blueprint describes the intended product. It must not be mistaken for implemented capability.
 
-## Implemented
+## Current implementation
 
-- repository foundation
-- web React/TypeScript/Vite shell
-- Android Kotlin/Compose shell
-- Firebase client initialization
-- web Firebase Authentication boundary
-- environment-safe configuration
-- Firestore user-scoped model/rules
-- trusted-device model
-- approval workflow model
-- backend audit/activity model
-- Cloud Functions 2nd gen health callable
-- web auth UI
-- web App Check initialization path
-- server-side device registration/bootstrap
-- trusted-device approval/revocation
-- backend profile initialization
-- trusted-device web UI
-- emulator configuration and rules-test harness
-- focused Firestore Rules coverage
-- CI workflow definition
-- expanded product/architecture/security/testing documentation
+### Web
+- React + TypeScript + Vite workspace.
+- Email/password Firebase sign-in UI and Firebase client initialization.
+- Optional web App Check initialization when a site key is configured.
+- Command-center navigation and responsive styling baseline.
+- Device registration, first-device bootstrap, device listing, approval, revocation, and profile initialization callables wired from the web client.
+- Assistant composer is intentionally disabled; no assistant runtime is connected.
+- Projects, tasks, research, automations, and activity views have no live data connection.
+- Settings includes trusted-device management UI.
 
-## Validated
+### Backend and data
+- Firebase Cloud Functions 2nd gen with Node.js 22 baseline.
+- Firestore user-scoped hierarchy and default-deny fallback Rules.
+- Backend callable functions for health, device lifecycle, profile initialization, and security activity logging.
+- Firestore Rules test harness and tests.
+- Shared TypeScript contracts exist, but the contracts and callable DTOs need alignment.
+- Assistant request pipeline, model provider/router, tool registry/policy, approval/execution/verification pipeline, and durable job system are not implemented.
 
-Validation infrastructure exists, but local build/test execution and real Firebase integration still require explicit observed results.
+### Android
+- Native Kotlin + Jetpack Compose shell exists.
+- Current main activity is a minimal placeholder screen; assistant, Auth/device trust, notifications, approvals, and shared assistant workflows are not established as working.
+- Android build and device-level validation have not been verified in this audit.
 
-## Highest-priority gaps
+## Validation evidence
 
-1. Execute local typechecks/builds/rules tests.
-2. Validate backend callable/device lifecycle in emulator/development Firebase.
-3. Establish development Firebase.
-4. Harden Firestore profile-field writes.
-5. Review first-device bootstrap concurrency.
-6. Align shared contracts with backend DTOs.
-7. Implement assistant request pipeline.
-8. Add structured tool contracts and policy engine.
-9. Add model routing behind a provider interface.
-10. Add memory/context retrieval with provenance.
-11. Add research/citation pipeline.
-12. Add durable jobs for long-running work.
-13. Add evaluation harness and regression suite.
-14. Add controlled integrations.
-15. Add automation/proactivity only after execution is reliable.
+| Check | Evidence | State |
+|---|---|---|
+| Web TypeScript + production bundle | Local `npm run web:build` on 2026-10-18; `tsc -b && vite build` completed successfully | **Passed locally** |
+| Web typecheck/build CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
+| Functions typecheck/build CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
+| Shared contract typecheck CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
+| Firestore Rules test CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
+| Local Firestore emulator Rules tests | No separate local result recorded in this status | **Not verified locally** |
+| Backend callable tests | No callable emulator suite/result recorded | **Outstanding** |
+| Real Firebase Auth/device lifecycle | No end-to-end result recorded | **Outstanding** |
+| Dedicated development Firebase setup | Not verified end-to-end | **Outstanding** |
+| Android build/integration tests | No observed result recorded | **Outstanding** |
+| Production deploy/restore/monitoring | No deployment performed; release gates not complete | **Not started** |
 
-## Architectural risks
+**Runtime note:** The local workstation reported Node.js 24.19.0, while the repository and CI specify Node.js 22. The local web build passed on Node 24, but future full validation should use Node 22 for reproducibility.
 
-- Firebase remains the current baseline and needs real workload/cost/security validation.
-- First-device bootstrap should be reviewed for concurrent calls.
-- Client profile writes should be narrowed to safe fields.
-- Shared contracts should match backend response shapes.
-- Automation definitions need server-side validation before execution.
-- Conversation roles/provenance need stronger boundaries before tool execution.
+## Highest-priority risks
 
-## Next milestone — Assistant Core v0
+1. **Profile write boundary:** owner Rules allow broad create/update access to the profile document without field restrictions.
+2. **First-device bootstrap concurrency:** device existence is checked separately from trusted-device creation.
+3. **Last trusted device concurrency:** trusted-device count is checked separately from revocation.
+4. **Shared DTO drift:** shared contracts, web callable types, and backend response shapes are not fully aligned.
+5. **Backend test gap:** callable authorization/state-transition/failure tests are not established.
+6. **Data model / Rules ambiguity:** jobs and connections appear in the data model but do not have explicit client Rules matches; default deny applies.
+7. **Client-write ownership:** collection-level CRUD permissions need field/state-transition review before backend automation consumes those records.
+8. **Environment separation:** development Firebase and production readiness still need explicit validation.
 
-Build and validate:
-- authenticated assistant request endpoint
-- structured request/response contract
-- model-provider interface
-- context selection
-- tool registry
-- policy engine
-- approval gate
-- execution/verification skeleton
-- activity trace
-- basic web assistant UI
-- evaluation fixtures
+The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_AND_RISKS.md).
 
-No unrestricted autonomous tool execution.
+## Next phases
+
+1. **Phase 0 — Planning/evidence baseline:** keep status, tasks, risks, and roadmap aligned.
+2. **Phase 1 — Web command-center UX:** first product implementation phase. Improve information hierarchy, keyboard workflows, responsive layout, accessibility, and truthful capability states. Do not connect privileged actions in this phase.
+3. **Phase 2 — Foundation hardening:** resolve the security/contract risks above, add backend callable tests, and validate the emulator/development environment.
+4. **Phase 3 — Assistant Core v0:** introduce a narrow authenticated request pipeline with policy, approval, execution, verification, and audit.
+5. Continue with memory/research, productivity/project intelligence, controlled tools/automation, Android/multimodal, and release readiness only after prior gates pass.
+
+See [Phase Plan](PHASE_PLAN.md), [Tasks](tasks.md), and [Roadmap](../docs/roadmap.md).
+
+## Local workspace note
+
+The user's Windows workstation has a Git-connected clone nested inside a separate extracted project copy. The outer copy is not a Git repository and sampled root files differ from the clone. A separate local backup contains the prior untracked Firebase configuration and lockfile. Keep the Git clone as the working source and preserve the outer copy and backup until local housekeeping is handled as a separate, explicitly verified task. No local folder deletion or rename is authorized by this status update.
+
+## Operating rules
+
+- Repository code/docs are the source of truth; inspect current `main` before implementation.
+- Write acceptance criteria before editing application code.
+- Keep changes bounded and reviewable.
+- Do not commit local secrets or `.env.local`.
+- Do not claim success without observed evidence.
+- Do not deploy until Phase 8 and explicit owner authorization.
