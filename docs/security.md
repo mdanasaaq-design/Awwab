@@ -27,6 +27,8 @@ OWASP GenAI guidance and its Agentic Top 10 are living references for these risk
 
 Every privileged operation checks authenticated user, trusted device/session where required, tool scope, target ownership, action risk, approval and current policy/budget.
 
+Firestore client writes follow the collection ownership matrix in [the data model](data-model.md). Backend-owned state (device trust, conversation history, automation definitions, approvals, audit, notification content, jobs, connections, and bootstrap guard) is not directly writable by clients. Notification clients may update only the read flag. Projects/tasks remain owner-editable, but their field-level schema and state transitions must be hardened before any executor trusts those fields.
+
 ## Prompt injection
 
 Treat web pages, email, documents, repository files, GitHub issues/PRs, tool outputs and untrusted memories as data, not instructions.
