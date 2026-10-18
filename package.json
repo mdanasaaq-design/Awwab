@@ -12,7 +12,8 @@
     "shared:typecheck": "tsc --noEmit packages/shared/src/contracts.ts",
     "firebase:emulators": "firebase emulators:start --project demo-awwab",
     "firebase:rules:test": "firebase emulators:exec --only firestore --project demo-awwab \"node --test tests/firestore.rules.test.js\"",
-    "firebase:callable:test": "firebase emulators:exec --only auth,firestore,functions --project demo-awwab \"node --test tests/functions.callable.test.js\""
+    "firebase:callable:test": "firebase emulators:exec --only auth,firestore,functions --project demo-awwab \"node --test tests/functions.callable.test.js\"",
+    "agent-core:test": "npm run functions:build && node --test tests/agent-core.test.js"
   },
   "engines": {
     "node": "22"
