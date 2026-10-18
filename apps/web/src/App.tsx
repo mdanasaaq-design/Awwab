@@ -52,6 +52,7 @@ export function App() {
   const [loading, setLoading] = useState(false);
   const [deviceStatus, setDeviceStatus] = useState("checking");
   const [devices, setDevices] = useState<DeviceRecord[]>([]);
+  const [devicesLoading, setDevicesLoading] = useState(false);
   const [currentDeviceId, setCurrentDeviceId] = useState("");
   const [deviceError, setDeviceError] = useState("");
   const [deviceBusy, setDeviceBusy] = useState("");
@@ -170,12 +171,15 @@ export function App() {
   }
 
   async function refreshDevices() {
+    setDevicesLoading(true);
     try {
       setDeviceError("");
       const { listDevices } = await import("./device");
       setDevices(await listDevices());
     } catch (error) {
       setDeviceError(error instanceof Error ? error.message : "Could not load devices.");
+    } finally {
+      setDevicesLoading(false);
     }
   }
 
@@ -494,10 +498,19 @@ export function App() {
                   <h2>Trusted devices</h2>
                   <p className="settings-description">Approve new devices or revoke access you no longer trust.</p>
                 </div>
-                <button className="secondary" type="button" onClick={() => void refreshDevices()}>Refresh list</button>
+                <button className="secondary" type="button" disabled={devicesLoading} onClick={() => void refreshDevices()}>{devicesLoading ? "Refreshing…" : "Refresh list"}</button>
               </div>
               {deviceError && <p className="error" role="alert">{deviceError}</p>}
               <div className="device-list">
+                {devicesLoading && !devices.length && !deviceError && (
+                  <div className="device-empty" role="status" aria-live="polite">
+                    <strong>Loading trusted devices…</strong>
+                    <p>Checking the devices registered to this account.</p>
+                  </div>
+                )}
+                {devicesLoading && devices.length > 0 && (
+                  <p className="device-loading" role="status" aria-live="polite">Refreshing device list…</p>
+                )}
                 {devices.map((device) => (
                   <article className="device-row" key={device.deviceId}>
                     <div className="device-identity">
@@ -522,7 +535,7 @@ export function App() {
                     </div>
                   </article>
                 ))}
-                {!devices.length && !deviceError && (
+                {!devicesLoading && !devices.length && !deviceError && (
                   <div className="device-empty">
                     <strong>No device records loaded.</strong>
                     <p>Refresh the list to check the devices registered to this account.</p>
