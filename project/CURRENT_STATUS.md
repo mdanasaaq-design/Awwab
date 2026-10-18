@@ -82,6 +82,7 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 - Phase 2F collection ownership and narrow client mutation rules were merged in [PR #13](https://github.com/mdanasaaq-design/Awwab/pull/13); CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed all four jobs.
 - Phase 2G project/task field-level Rules were merged in [PR #14](https://github.com/mdanasaaq-design/Awwab/pull/14); CI run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed all four jobs. Nested list-element validation, cross-document consistency, and detailed status-transition policy remain open.
 - Phase 2H App Check/environment readiness audit is in progress on branch `docs/phase-2-app-check-audit`. Acceptance criteria and current configuration findings are in [PHASE_2H_APPCHECK_ENVIRONMENT.md](PHASE_2H_APPCHECK_ENVIRONMENT.md). This slice is documentation-only; no enforcement or deployment change is being made.
+- Phase 1F trusted-device successful-empty state copy/accessibility adjustment is committed on `fix/phase-1-device-empty-state-copy`; acceptance criteria were recorded before the application edit. CI and manual browser verification remain pending.
 - No Firebase deployment has been performed.
 
 ## Next phases
