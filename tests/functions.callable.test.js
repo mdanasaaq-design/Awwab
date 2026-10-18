@@ -233,4 +233,173 @@ test("concurrent revocations cannot remove the final trusted device", async () =
   );
   assert.equal(pendingRevoke.ok, true, JSON.stringify(pendingRevoke));
   assert.equal(pendingRevoke.result.status, "revoked");
+
+  const reRegisterRevoked = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDeviceId),
+    user.idToken,
+  );
+  assert.equal(reRegisterRevoked.ok, false);
+  assert.equal(reRegisterRevoked.error.status, "PERMISSION_DENIED");
+});
+
+test("protected callables validate authentication, inputs, and device state", async () => {
+  const health = await invokeCallable("health", {}, null);
+  assert.equal(health.ok, true, JSON.stringify(health));
+  assert.equal(health.result.ok, true);
+  assert.equal(health.result.service, "awwab-functions");
+
+  const user = await createAuthUser("callable-negative");
+  const validId = newDeviceId();
+  const unauthenticatedCalls = await Promise.all([
+    invokeCallable("registerDevice", bootstrapPayload(validId), null),
+    invokeCallable("listDevices", { deviceId: validId }, null),
+    invokeCallable("approveDevice", { callerDeviceId: validId, targetDeviceId: newDeviceId() }, null),
+    invokeCallable("revokeDevice", { callerDeviceId: validId, targetDeviceId: newDeviceId() }, null),
+    invokeCallable("ensureUserProfile", {}, null),
+  ]);
+  assert.ok(unauthenticatedCalls.every((result) => !result.ok && result.error.status === "UNAUTHENTICATED"));
+
+  const invalidId = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload("short"),
+    user.idToken,
+  );
+  assert.equal(invalidId.ok, false);
+  assert.equal(invalidId.error.status, "INVALID_ARGUMENT");
+
+  const invalidPlatform = await invokeCallable(
+    "registerDevice",
+    { ...bootstrapPayload(newDeviceId()), platform: "ios" },
+    user.idToken,
+  );
+  assert.equal(invalidPlatform.ok, false);
+  assert.equal(invalidPlatform.error.status, "INVALID_ARGUMENT");
+
+  const invalidListId = await invokeCallable("listDevices", { deviceId: "short" }, user.idToken);
+  assert.equal(invalidListId.ok, false);
+  assert.equal(invalidListId.error.status, "INVALID_ARGUMENT");
+
+  const invalidApproveId = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: "short", targetDeviceId: newDeviceId() },
+    user.idToken,
+  );
+  assert.equal(invalidApproveId.ok, false);
+  assert.equal(invalidApproveId.error.status, "INVALID_ARGUMENT");
+
+  const invalidRevokeId = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: "short", targetDeviceId: newDeviceId() },
+    user.idToken,
+  );
+  assert.equal(invalidRevokeId.ok, false);
+  assert.equal(invalidRevokeId.error.status, "INVALID_ARGUMENT");
+
+  const pendingDeviceId = newDeviceId();
+  const pendingRegistration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDeviceId),
+    user.idToken,
+  );
+  assert.equal(pendingRegistration.ok, true);
+  assert.equal(pendingRegistration.result.status, "pending");
+
+  const repeatedRegistration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDeviceId),
+    user.idToken,
+  );
+  assert.equal(repeatedRegistration.ok, true);
+  assert.equal(repeatedRegistration.result.deviceId, pendingDeviceId);
+  assert.equal(repeatedRegistration.result.status, "pending");
+
+  const pendingList = await invokeCallable(
+    "listDevices",
+    { deviceId: pendingDeviceId },
+    user.idToken,
+  );
+  assert.equal(pendingList.ok, false);
+  assert.equal(pendingList.error.status, "PERMISSION_DENIED");
+
+  const pendingApproval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: pendingDeviceId, targetDeviceId: newDeviceId() },
+    user.idToken,
+  );
+  assert.equal(pendingApproval.ok, false);
+  assert.equal(pendingApproval.error.status, "PERMISSION_DENIED");
+
+  const pendingRevokeAttempt = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: pendingDeviceId, targetDeviceId: pendingDeviceId },
+    user.idToken,
+  );
+  assert.equal(pendingRevokeAttempt.ok, false);
+  assert.equal(pendingRevokeAttempt.error.status, "PERMISSION_DENIED");
+
+  const trustedUser = await createAuthUser("callable-state");
+  const trustedDeviceId = newDeviceId();
+  const bootstrap = await invokeCallable(
+    "bootstrapFirstDevice",
+    bootstrapPayload(trustedDeviceId),
+    trustedUser.idToken,
+  );
+  assert.equal(bootstrap.ok, true);
+
+  const missingTargetId = newDeviceId();
+  const missingApproval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: trustedDeviceId, targetDeviceId: missingTargetId },
+    trustedUser.idToken,
+  );
+  assert.equal(missingApproval.ok, false);
+  assert.equal(missingApproval.error.status, "NOT_FOUND");
+
+  const selfApproval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: trustedDeviceId, targetDeviceId: trustedDeviceId },
+    trustedUser.idToken,
+  );
+  assert.equal(selfApproval.ok, false);
+  assert.equal(selfApproval.error.status, "INVALID_ARGUMENT");
+
+  const targetDeviceId = newDeviceId();
+  const targetRegistration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(targetDeviceId),
+    trustedUser.idToken,
+  );
+  assert.equal(targetRegistration.ok, true);
+
+  const approval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: trustedDeviceId, targetDeviceId },
+    trustedUser.idToken,
+  );
+  assert.equal(approval.ok, true);
+  assert.equal(approval.result.status, "trusted");
+
+  const duplicateApproval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: trustedDeviceId, targetDeviceId },
+    trustedUser.idToken,
+  );
+  assert.equal(duplicateApproval.ok, false);
+  assert.equal(duplicateApproval.error.status, "FAILED_PRECONDITION");
+
+  const missingRevoke = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: trustedDeviceId, targetDeviceId: missingTargetId },
+    trustedUser.idToken,
+  );
+  assert.equal(missingRevoke.ok, false);
+  assert.equal(missingRevoke.error.status, "NOT_FOUND");
+
+  const profileFirst = await invokeCallable("ensureUserProfile", {}, trustedUser.idToken);
+  const profileSecond = await invokeCallable("ensureUserProfile", {}, trustedUser.idToken);
+  assert.equal(profileFirst.ok, true);
+  assert.equal(profileSecond.ok, true);
+  assert.equal(profileFirst.result.uid, trustedUser.localId);
+  assert.equal(profileSecond.result.uid, trustedUser.localId);
 });
