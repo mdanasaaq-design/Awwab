@@ -72,9 +72,11 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 
 ## Active implementation work
 
-- Phase 1 bounded navigation slice is in progress on [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5): keyboard-first quick switcher, skip link, focus management, and a clearer signed-in status label.
-- Acceptance criteria were recorded before the application edit in [PHASE_1_IMPLEMENTATION.md](PHASE_1_IMPLEMENTATION.md).
-- CI run [39115777501](https://github.com/mdanasaaq-design/Awwab/actions/runs/39115777501) passed on code commit `e70e63977a696cf288cfd48d66ec30901f527667`: web typecheck/build, Functions/shared typecheck, and Firestore Rules tests. The quick switcher, skip-link target/focus, and secondary-text contrast refinements are included in that code baseline. Browser interaction review and owner acceptance remain outstanding, so this slice and Phase 1 are not marked complete. A follow-on Phase 1B slice now distinguishes device-list loading, refresh, empty, and error states; its acceptance criteria are in [PHASE_1B_DEVICE_LOADING.md](PHASE_1B_DEVICE_LOADING.md). CI for the expanded branch passed in [run 39116279874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116279874) on code commit `7923b0a535b92ac2d2b6d972cea533f80815f174`: web typecheck/build, Functions/shared typecheck, and Firestore Rules tests succeeded. Browser/manual interaction review and owner acceptance remain outstanding.
+- Phase 1 keyboard navigation, skip-link focus, contrast refinements, device loading/empty/error states, and explicit device-revocation confirmation were merged in [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), merge commit `da11c173c7fd9c60ba4eb5f38edede342300fff2`.
+- CI run [39116358003](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116358003) passed: web typecheck/build, Functions/shared typecheck, and Firestore Rules tests.
+- Browser/manual interaction checks and owner UX acceptance remain outstanding; Phase 1 is still in progress.
+- The next bounded UX slice is mobile account controls and sign-out failure handling, on branch `feat/phase-1-mobile-account-controls`. Acceptance criteria were written before implementation in [PHASE_1D_MOBILE_ACCOUNT_CONTROLS.md](PHASE_1D_MOBILE_ACCOUNT_CONTROLS.md); CI for this slice is pending.
+- Deployment has not been performed.
 
 ## Next phases
 
