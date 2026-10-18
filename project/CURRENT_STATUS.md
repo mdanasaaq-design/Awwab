@@ -65,7 +65,7 @@ The blueprint describes the intended product. It must not be mistaken for implem
 4. **Shared DTO drift:** shared contracts, web callable types, and backend response shapes are not fully aligned.
 5. **Backend test gap:** callable authorization/state-transition/failure tests are not established.
 6. **Data model / Rules ambiguity:** jobs and connections appear in the data model but do not have explicit client Rules matches; default deny applies.
-7. **Client-write ownership:** collection-level CRUD permissions need field/state-transition review before backend automation consumes those records.
+7. **Project/task data integrity:** PR #14 enforces top-level project/task schemas and timestamp/source integrity; list element validation, cross-document references, and detailed state-transition policy remain open.
 8. **Environment separation:** development Firebase and production readiness still need explicit validation.
 
 The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_AND_RISKS.md).
@@ -79,7 +79,7 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 - Phase 2D device callable DTO alignment was merged in [PR #11](https://github.com/mdanasaaq-design/Awwab/pull/11); the planned `UserProfile` interface remains a separate domain/schema gap.
 - Phase 2E callable authorization and state-transition coverage was merged in [PR #12](https://github.com/mdanasaaq-design/Awwab/pull/12); CI run [39117914336](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117914336) passed all four jobs.
 - Phase 2F collection ownership and narrow client mutation rules were merged in [PR #13](https://github.com/mdanasaaq-design/Awwab/pull/13); CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed all four jobs.
-- Phase 2G project/task field-level Rules are in progress on branch `fix/phase-2-project-task-rules`. Acceptance criteria are in [PHASE_2G_PROJECT_TASK_RULES.md](PHASE_2G_PROJECT_TASK_RULES.md); current-branch Rules tests are pending.
+- Phase 2G project/task field-level Rules are implemented on branch `fix/phase-2-project-task-rules`, PR [#14](https://github.com/mdanasaaq-design/Awwab/pull/14). CI run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed all four jobs, including project/task Rules tests. Merge is pending; nested list-element validation and cross-document consistency remain open.
 - No Firebase deployment has been performed.
 
 ## Next phases
