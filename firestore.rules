@@ -22,22 +22,7 @@ service cloud.firestore {
         && stringAtMost(values, 1, maxLength)
         && stringAtMost(values, 2, maxLength)
         && stringAtMost(values, 3, maxLength)
-        && stringAtMost(values, 4, maxLength)
-        && stringAtMost(values, 5, maxLength)
-        && stringAtMost(values, 6, maxLength)
-        && stringAtMost(values, 7, maxLength)
-        && stringAtMost(values, 8, maxLength)
-        && stringAtMost(values, 9, maxLength)
-        && stringAtMost(values, 10, maxLength)
-        && stringAtMost(values, 11, maxLength)
-        && stringAtMost(values, 12, maxLength)
-        && stringAtMost(values, 13, maxLength)
-        && stringAtMost(values, 14, maxLength)
-        && stringAtMost(values, 15, maxLength)
-        && stringAtMost(values, 16, maxLength)
-        && stringAtMost(values, 17, maxLength)
-        && stringAtMost(values, 18, maxLength)
-        && stringAtMost(values, 19, maxLength);
+        && stringAtMost(values, 4, maxLength);
     }
 
     function validProject(data) {
@@ -55,9 +40,9 @@ service cloud.firestore {
         && (!("description" in data)
           || (data.description is string && data.description.size() <= 4000))
         && (!("tags" in data)
-          || validStringList(data.tags, 20, 64))
+          || validStringList(data.tags, 5, 64))
         && (!("repositoryReferences" in data)
-          || validStringList(data.repositoryReferences, 20, 500));
+          || validStringList(data.repositoryReferences, 5, 500));
     }
 
     function validTask(data, uid) {
@@ -119,7 +104,7 @@ service cloud.firestore {
           && request.resource.data.createdAt == request.time
           && request.resource.data.updatedAt == request.time;
         allow update: if isOwner(uid)
-          && validTask(request.resource.data)
+          && validTask(request.resource.data, uid)
           && request.resource.data.source == resource.data.source
           && request.resource.data.createdAt == resource.data.createdAt
           && request.resource.data.updatedAt == request.time;
