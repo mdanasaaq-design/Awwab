@@ -233,6 +233,14 @@ test("concurrent revocations cannot remove the final trusted device", async () =
   );
   assert.equal(pendingRevoke.ok, true, JSON.stringify(pendingRevoke));
   assert.equal(pendingRevoke.result.status, "revoked");
+
+  const reRegisterRevoked = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDeviceId),
+    user.idToken,
+  );
+  assert.equal(reRegisterRevoked.ok, false);
+  assert.equal(reRegisterRevoked.error.status, "PERMISSION_DENIED");
 });
 
 test("protected callables validate authentication, inputs, and device state", async () => {
@@ -267,6 +275,26 @@ test("protected callables validate authentication, inputs, and device state", as
   );
   assert.equal(invalidPlatform.ok, false);
   assert.equal(invalidPlatform.error.status, "INVALID_ARGUMENT");
+
+  const invalidListId = await invokeCallable("listDevices", { deviceId: "short" }, user.idToken);
+  assert.equal(invalidListId.ok, false);
+  assert.equal(invalidListId.error.status, "INVALID_ARGUMENT");
+
+  const invalidApproveId = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: "short", targetDeviceId: newDeviceId() },
+    user.idToken,
+  );
+  assert.equal(invalidApproveId.ok, false);
+  assert.equal(invalidApproveId.error.status, "INVALID_ARGUMENT");
+
+  const invalidRevokeId = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: "short", targetDeviceId: newDeviceId() },
+    user.idToken,
+  );
+  assert.equal(invalidRevokeId.ok, false);
+  assert.equal(invalidRevokeId.error.status, "INVALID_ARGUMENT");
 
   const pendingDeviceId = newDeviceId();
   const pendingRegistration = await invokeCallable(
