@@ -1,6 +1,6 @@
 # Phase 2C — Preserve the Last Trusted Device Under Concurrent Revocation
 
-**Status:** Acceptance criteria recorded before implementation  
+**Status:** Implementation committed; CI validation pending  
 **Phase:** 2 — Foundation security and environment validation  
 **Branch:** `fix/phase-2-last-device-revocation`  
 **Risk:** AWW-003 (P0)
@@ -30,6 +30,12 @@
 - [ ] Callable emulator tests and existing Rules/web/Functions/shared CI checks pass.
 - [ ] Risk register and current status record the observed result.
 - [ ] No deployment is performed.
+
+## Implementation record
+
+- Backend change: `backend/functions/src/index.ts` moves trusted-count validation, target revocation, and audit creation into one transaction.
+- Callable test: `tests/functions.callable.test.js` now races two trusted-device revocations and verifies one trusted device remains, while checking final-device rejection, idempotent repeat, and pending-device revocation.
+- CI result: pending for the current branch.
 
 ## Test plan
 
