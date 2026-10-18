@@ -56,6 +56,7 @@ export function App() {
   const [currentDeviceId, setCurrentDeviceId] = useState("");
   const [deviceError, setDeviceError] = useState("");
   const [deviceBusy, setDeviceBusy] = useState("");
+  const [pendingRevokeDeviceId, setPendingRevokeDeviceId] = useState("");
   const [activeSection, setActiveSection] = useState<SectionId>("assistant");
   const [signOutBusy, setSignOutBusy] = useState(false);
   const [switcherOpen, setSwitcherOpen] = useState(false);
@@ -194,6 +195,7 @@ export function App() {
         setActiveSection("assistant");
         setSwitcherOpen(false);
         setDevicesLoading(false);
+        setPendingRevokeDeviceId("");
         return;
       }
 
@@ -249,6 +251,7 @@ export function App() {
     try {
       const { revokeDevice } = await import("./device");
       await revokeDevice(deviceId);
+      setPendingRevokeDeviceId("");
       await refreshDevices();
     } catch (error) {
       setDeviceError(error instanceof Error ? error.message : "Could not revoke device.");
@@ -531,9 +534,17 @@ export function App() {
                         </button>
                       )}
                       {device.status !== "revoked" && (
-                        <button className="danger" type="button" disabled={deviceBusy === device.deviceId} onClick={() => void handleRevoke(device.deviceId)}>
-                          {deviceBusy === device.deviceId ? "Working…" : "Revoke"}
-                        </button>
+                        pendingRevokeDeviceId === device.deviceId ? (
+                          <div className="device-revoke-confirmation" role="group" aria-label={`Confirm revoking ${device.deviceName}`}>
+                            <span>Revoke access for this device?</span>
+                            <button className="danger" type="button" disabled={deviceBusy === device.deviceId} onClick={() => void handleRevoke(device.deviceId)}>
+                              {deviceBusy === device.deviceId ? "Revoking…" : "Confirm revoke"}
+                            </button>
+                            <button className="secondary" type="button" disabled={deviceBusy === device.deviceId} onClick={() => setPendingRevokeDeviceId("")}>Cancel</button>
+                          </div>
+                        ) : (
+                          <button className="danger" type="button" disabled={deviceBusy === device.deviceId} onClick={() => setPendingRevokeDeviceId(device.deviceId)}>Revoke</button>
+                        )
                       )}
                     </div>
                   </article>
