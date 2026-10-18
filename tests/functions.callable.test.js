@@ -110,3 +110,96 @@ test("first-device bootstrap is atomic and requires an authenticated first enrol
   assert.equal(legacyBootstrap.ok, false);
   assert.equal(legacyBootstrap.error.status, "FAILED_PRECONDITION");
 });
+
+test("concurrent revocations cannot remove the final trusted device", async () => {
+  const user = await createAuthUser("revoke-race");
+  const deviceA = newDeviceId();
+  const deviceB = newDeviceId();
+
+  const bootstrap = await invokeCallable(
+    "bootstrapFirstDevice",
+    bootstrapPayload(deviceA),
+    user.idToken,
+  );
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  const registration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(deviceB),
+    user.idToken,
+  );
+  assert.equal(registration.ok, true, JSON.stringify(registration));
+
+  const approval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: deviceA, targetDeviceId: deviceB },
+    user.idToken,
+  );
+  assert.equal(approval.ok, true, JSON.stringify(approval));
+
+  const revocations = await Promise.all([
+    invokeCallable("revokeDevice", { callerDeviceId: deviceA, targetDeviceId: deviceA }, user.idToken),
+    invokeCallable("revokeDevice", { callerDeviceId: deviceB, targetDeviceId: deviceB }, user.idToken),
+  ]);
+
+  const successes = revocations.filter((result) => result.ok);
+  const failures = revocations.filter((result) => !result.ok);
+  assert.equal(successes.length, 1, JSON.stringify(revocations));
+  assert.equal(failures.length, 1, JSON.stringify(revocations));
+  assert.equal(failures[0].error.status, "FAILED_PRECONDITION");
+
+  const revokedDeviceId = successes[0].result.deviceId;
+  const remainingDeviceId = revokedDeviceId === deviceA ? deviceB : deviceA;
+  const listed = await invokeCallable(
+    "listDevices",
+    { deviceId: remainingDeviceId },
+    user.idToken,
+  );
+  assert.equal(listed.ok, true, JSON.stringify(listed));
+  assert.equal(listed.result.devices.length, 2);
+  assert.equal(
+    listed.result.devices.filter((device) => device.status === "trusted").length,
+    1,
+  );
+  assert.equal(
+    listed.result.devices.find((device) => device.status === "trusted").deviceId,
+    remainingDeviceId,
+  );
+  assert.equal(
+    listed.result.devices.find((device) => device.deviceId === revokedDeviceId).status,
+    "revoked",
+  );
+
+  const finalDeviceRevoke = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: remainingDeviceId, targetDeviceId: remainingDeviceId },
+    user.idToken,
+  );
+  assert.equal(finalDeviceRevoke.ok, false);
+  assert.equal(finalDeviceRevoke.error.status, "FAILED_PRECONDITION");
+
+  const repeatedRevoke = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: remainingDeviceId, targetDeviceId: revokedDeviceId },
+    user.idToken,
+  );
+  assert.equal(repeatedRevoke.ok, true, JSON.stringify(repeatedRevoke));
+  assert.equal(repeatedRevoke.result.status, "revoked");
+
+  const pendingDeviceId = newDeviceId();
+  const pendingRegistration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDeviceId),
+    user.idToken,
+  );
+  assert.equal(pendingRegistration.ok, true, JSON.stringify(pendingRegistration));
+  assert.equal(pendingRegistration.result.status, "pending");
+
+  const pendingRevoke = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: remainingDeviceId, targetDeviceId: pendingDeviceId },
+    user.idToken,
+  );
+  assert.equal(pendingRevoke.ok, true, JSON.stringify(pendingRevoke));
+  assert.equal(pendingRevoke.result.status, "revoked");
+});

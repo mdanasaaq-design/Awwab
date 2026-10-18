@@ -67,8 +67,8 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [ ] Add negative Rules tests for protected profile fields, unexpected keys, cross-user access, and disallowed state changes.
 
 ### Device lifecycle and backend
-- [x] Implement Phase 2B atomic first-device bootstrap and a callable emulator test for concurrent attempts, auth, repeat calls, and legacy devices; CI run 39117086761 passed. PR [#9](https://github.com/mdanasaaq-design/Awwab/pull/9) is awaiting merge. Acceptance criteria/evidence: [PHASE_2B_BOOTSTRAP_CONCURRENCY.md](PHASE_2B_BOOTSTRAP_CONCURRENCY.md).
-- [ ] Make last-trusted-device revocation safe under concurrent requests.
+- [x] Phase 2B atomic first-device bootstrap and callable emulator tests merged in [PR #9](https://github.com/mdanasaaq-design/Awwab/pull/9); CI run 39117195997 passed. Acceptance criteria/evidence: [PHASE_2B_BOOTSTRAP_CONCURRENCY.md](PHASE_2B_BOOTSTRAP_CONCURRENCY.md).
+- [ ] Phase 2C: make last-trusted-device revocation transaction-safe and test competing revoke calls in the callable emulator suite. Acceptance criteria: [PHASE_2C_LAST_DEVICE_REVOCATION.md](PHASE_2C_LAST_DEVICE_REVOCATION.md); CI pending.
 - [ ] Review registration/approval/revocation idempotency and retry behavior.
 - [ ] Align shared contracts, web callable DTOs, and backend responses.
 - [ ] Add callable tests for unauthenticated callers, invalid payloads, device authorization, registration, bootstrap, listing, approval, revocation, profile initialization, and activity logging.
