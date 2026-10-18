@@ -41,6 +41,10 @@ The shared `DeviceRecord` omits `deviceId` and requires timestamp strings that t
 
 Use the shared-contract typecheck and web/Functions builds for compile-time checks. Use the callable emulator suite to verify runtime response envelopes and device state transitions. Keep the existing negative authentication, bootstrap race, legacy-device, concurrent-revocation, and final-device tests passing.
 
+## Remaining contract gap
+
+The existing `UserProfile` interface remains a planned application-level shape and is not used as a DTO for the current root Firestore profile document. The current root document stores nullable `displayName`/`email` and backend timestamps. Do not use the planned interface as a persisted-profile contract until a separate schema/DTO decision and tests are made.
+
 ## Non-goals
 
 No API behavior change, Firestore schema migration, profile-edit workflow, or production deployment.
