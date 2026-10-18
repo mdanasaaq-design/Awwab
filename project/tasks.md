@@ -64,7 +64,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [x] Phase 2F collection ownership rules and emulator tests merged in [PR #13](https://github.com/mdanasaaq-design/Awwab/pull/13); CI run 39118165874 passed all four jobs. Acceptance criteria/evidence: [PHASE_2F_DATA_OWNERSHIP_RULES.md](PHASE_2F_DATA_OWNERSHIP_RULES.md).
 - [x] Decide that /jobs and /connections are backend-only with default deny; PR #13 merged and CI run 39118165874 passed.
 - [x] Review client write permissions for memories, automations, preferences, and notifications in Phase 2F; CI run 39118165874 passed.
-- [x] Implement Phase 2G project/task field allowlists, enums, immutable creation timestamps, and source provenance; CI run 39118461462 passed all four jobs. PR [#14](https://github.com/mdanasaaq-design/Awwab/pull/14) awaits merge. Acceptance criteria/evidence: [PHASE_2G_PROJECT_TASK_RULES.md](PHASE_2G_PROJECT_TASK_RULES.md). Nested list/cross-document checks remain follow-ups.
+- [x] Phase 2G project/task field allowlists, enums, immutable creation timestamps, and source provenance merged in [PR #14](https://github.com/mdanasaaq-design/Awwab/pull/14); CI run 39118461462 passed all four jobs. Acceptance criteria/evidence: [PHASE_2G_PROJECT_TASK_RULES.md](PHASE_2G_PROJECT_TASK_RULES.md). Nested list/cross-document checks remain follow-ups.
 - [ ] Add negative Rules tests for protected profile fields, unexpected keys, cross-user access, and disallowed state changes.
 
 ### Device lifecycle and backend
@@ -74,7 +74,8 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [x] Phase 2D shared device callable DTOs and web generics merged in [PR #11](https://github.com/mdanasaaq-design/Awwab/pull/11); CI run 39117694957 passed. Acceptance criteria/evidence: [PHASE_2D_CONTRACT_ALIGNMENT.md](PHASE_2D_CONTRACT_ALIGNMENT.md).
 - [x] Phase 2E callable authorization/validation/state tests merged in [PR #12](https://github.com/mdanasaaq-design/Awwab/pull/12); CI run 39117914336 passed all four jobs. Acceptance criteria/evidence: [PHASE_2E_CALLABLE_COVERAGE.md](PHASE_2E_CALLABLE_COVERAGE.md).
 - [ ] Test audit behavior for successful and failed security transitions.
-- [ ] Review App Check configuration and staged enforcement; do not assume a configured client key means enforcement is active.
+- [x] Audit current App Check initialization/enforcement and document the staged rollout; see [PHASE_2H_APPCHECK_ENVIRONMENT.md](PHASE_2H_APPCHECK_ENVIRONMENT.md). No enforcement was enabled.
+- [ ] Validate App Check with a real development web client/provider and observe callable acceptance/rejection before any enforcement change.
 
 ### Environment and validation
 - [ ] Establish a dedicated development Firebase project/environment and verify it end-to-end.

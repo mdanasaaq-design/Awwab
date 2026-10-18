@@ -52,6 +52,7 @@ The blueprint describes the intended product. It must not be mistaken for implem
 | Backend callable tests | Expanded auth/input/state callable emulator suite passed in CI run [39117914336](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117914336); real development-project/device lifecycle remains outstanding | **Partially validated** |
 | Real Firebase Auth/device lifecycle | No end-to-end result recorded | **Outstanding** |
 | Dedicated development Firebase setup | Not verified end-to-end | **Outstanding** |
+| App Check enforcement | Web client initialization is optional; callable declarations do not enable `enforceAppCheck`; no live provider/token check recorded | **Not enabled / not validated** |
 | Android build/integration tests | No observed result recorded | **Outstanding** |
 | Production deploy/restore/monitoring | No deployment performed; release gates not complete | **Not started** |
 
@@ -79,7 +80,8 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 - Phase 2D device callable DTO alignment was merged in [PR #11](https://github.com/mdanasaaq-design/Awwab/pull/11); the planned `UserProfile` interface remains a separate domain/schema gap.
 - Phase 2E callable authorization and state-transition coverage was merged in [PR #12](https://github.com/mdanasaaq-design/Awwab/pull/12); CI run [39117914336](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117914336) passed all four jobs.
 - Phase 2F collection ownership and narrow client mutation rules were merged in [PR #13](https://github.com/mdanasaaq-design/Awwab/pull/13); CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed all four jobs.
-- Phase 2G project/task field-level Rules are implemented on branch `fix/phase-2-project-task-rules`, PR [#14](https://github.com/mdanasaaq-design/Awwab/pull/14). CI run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed all four jobs, including project/task Rules tests. Merge is pending; nested list-element validation and cross-document consistency remain open.
+- Phase 2G project/task field-level Rules were merged in [PR #14](https://github.com/mdanasaaq-design/Awwab/pull/14); CI run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed all four jobs. Nested list-element validation, cross-document consistency, and detailed status-transition policy remain open.
+- Phase 2H App Check/environment readiness audit is in progress on branch `docs/phase-2-app-check-audit`. Acceptance criteria and current configuration findings are in [PHASE_2H_APPCHECK_ENVIRONMENT.md](PHASE_2H_APPCHECK_ENVIRONMENT.md). This slice is documentation-only; no enforcement or deployment change is being made.
 - No Firebase deployment has been performed.
 
 ## Next phases
