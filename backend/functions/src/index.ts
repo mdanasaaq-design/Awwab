@@ -224,36 +224,51 @@ export const revokeDevice = onCall(async (request) => {
   const targetDeviceId = requireDeviceId(data.targetDeviceId);
   await requireTrustedCaller(uid, callerDeviceId);
 
-  const { ref, snapshot } = await getDevice(uid, targetDeviceId);
-  const targetStatus = snapshot.get("status") as DeviceStatus | undefined;
-  if (targetStatus === "revoked") {
-    return { ok: true, deviceId: targetDeviceId, status: "revoked" };
-  }
+  const devicesRef = db.collection(`users/${uid}/devices`);
+  const targetRef = devicesRef.doc(targetDeviceId);
+  const activityRef = db.collection(`users/${uid}/activity`).doc();
 
-  if (targetStatus !== "trusted" && targetStatus !== "pending") {
-    throw new HttpsError("failed-precondition", "The device cannot be revoked from its current state.");
-  }
-
-  if (targetStatus === "trusted") {
-    const trustedSnapshot = await db
-      .collection(`users/${uid}/devices`)
-      .where("status", "==", "trusted")
-      .get();
-
-    if (trustedSnapshot.size <= 1) {
-      throw new HttpsError("failed-precondition", "The last trusted device cannot be revoked.");
+  await db.runTransaction(async (transaction) => {
+    const targetSnapshot = await transaction.get(targetRef);
+    if (!targetSnapshot.exists) {
+      throw new HttpsError("not-found", "Device not found.");
     }
-  }
 
-  await ref.set(
-    {
+    const targetStatus = targetSnapshot.get("status") as DeviceStatus | undefined;
+    if (targetStatus === "revoked") {
+      return;
+    }
+
+    if (targetStatus !== "trusted" && targetStatus !== "pending") {
+      throw new HttpsError("failed-precondition", "The device cannot be revoked from its current state.");
+    }
+
+    if (targetStatus === "trusted") {
+      const trustedSnapshot = await transaction.get(devicesRef.where("status", "==", "trusted"));
+      if (trustedSnapshot.size <= 1) {
+        throw new HttpsError("failed-precondition", "The last trusted device cannot be revoked.");
+      }
+    }
+
+    const timestamp = FieldValue.serverTimestamp();
+    transaction.update(targetRef, {
       status: "revoked",
-      revokedAt: FieldValue.serverTimestamp(),
+      revokedAt: timestamp,
       revokedByDeviceId: callerDeviceId,
-    },
-    { merge: true },
-  );
-  await writeActivity(uid, callerDeviceId, "device_revoked", "success", targetDeviceId);
+    });
+    transaction.create(activityRef, {
+      eventType: "security",
+      actorType: "device",
+      actorId: callerDeviceId,
+      deviceId: callerDeviceId,
+      tool: "device-management",
+      action: "device_revoked",
+      targetType: "device",
+      targetReference: targetDeviceId,
+      outcome: "success",
+      createdAt: timestamp,
+    });
+  });
 
   return { ok: true, deviceId: targetDeviceId, status: "revoked" };
 });
