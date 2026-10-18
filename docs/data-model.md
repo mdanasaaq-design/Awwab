@@ -122,6 +122,16 @@ eventType, actorType, actorId, deviceId, tool, action, targetType, targetReferen
 
 Audit history is backend-controlled and append-oriented.
 
+## Firestore client mutation matrix
+
+- **Backend-write-only:** root profile, devices, conversations/messages, automations, preferences, approvals, activity, notifications content, jobs, connections, and the system bootstrap guard.
+- **Owner-readable/deletable:** memories are owner-readable and owner-deletable; memory creation/updates are backend-controlled until provenance and classification validation is implemented.
+- **Owner read plus narrow update:** notifications are owner-readable and the client may change only the boolean `read` field.
+- **Owner CRUD for now:** projects and tasks remain owner CRUD, but their field-level schemas and allowed state transitions still require a separate hardening pass. Backend automation must not treat client-written fields as trusted until that contract is enforced.
+- **No client access:** jobs, connections, and system guard paths rely on the default-deny Rules.
+
+This matrix is enforced by `firestore.rules`; Rules tests are the executable source for each allowed and denied mutation.
+
 ## Data lifecycle
 
 Every new personal-data class must define purpose, access, mutation, retention, deletion, export, sensitivity and whether it can influence autonomous actions.
