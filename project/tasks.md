@@ -1,130 +1,173 @@
 # Awwab Tasks
 
-## P0 — Foundation and security
+**Last reviewed:** 2026-10-18  
+**Source of truth:** [Current Status](CURRENT_STATUS.md), [Phase Plan](PHASE_PLAN.md), [Issues and Risks](ISSUES_AND_RISKS.md)  
+**Priority rule:** The command-center UX is the first product implementation phase. Foundation hardening follows before real assistant execution or privileged integrations.
 
-### Repository and validation
-- [x] Create repository foundation documentation
-- [x] Define technology baseline
-- [x] Define initial security boundary
-- [x] Define Firestore data model
-- [x] Define authentication/session model
-- [x] Define trusted-device model
-- [x] Define approval workflow
-- [x] Define audit model
-- [x] Define environment strategy
-- [x] Define CI/testing strategy
-- [x] Add web shell
-- [x] Add Android shell
-- [x] Add emulator/rules test harness
-- [ ] Execute local typecheck/build validation
-- [ ] Execute Firestore Rules test suite
-- [ ] Execute backend callable emulator tests
-- [ ] Establish development Firebase
-- [ ] Validate real authentication/device lifecycle
-- [ ] Review Firestore profile-field restrictions
-- [ ] Review first-device bootstrap concurrency
-- [ ] Align shared contracts with backend DTOs
+Checkboxes mean only that the work is complete with evidence; planned or unexecuted validation stays unchecked.
 
-## P1 — Assistant Core v0
-- [ ] Define assistant request/response contracts
-- [ ] Implement authenticated assistant endpoint
-- [ ] Implement model-provider interface
-- [ ] Implement model router
-- [ ] Implement context selector
-- [ ] Implement conversation persistence
-- [ ] Implement structured plan representation
-- [ ] Implement tool registry
-- [ ] Implement policy engine
-- [ ] Implement approval gate
-- [ ] Implement execution boundary
-- [ ] Implement result verification
-- [ ] Implement activity trace/correlation IDs
-- [ ] Connect web Assistant UI
-- [ ] Add assistant core tests
+## Phase 0 — Planning and evidence baseline
 
-## P1 — Memory and context
-- [ ] Define memory write policy
-- [ ] Add memory provenance
-- [ ] Add confidence/sensitivity/expiry
-- [ ] Add retrieval ranking
-- [ ] Add user-visible memory controls
-- [ ] Add memory poisoning tests
-- [ ] Add context budget controls
+- [x] Repository/product/architecture/security blueprint exists.
+- [x] Web command-center shell exists.
+- [x] Firestore Rules test harness and CI workflow exist.
+- [x] Record local web production build success (2026-10-18).
+- [x] Record PR #3 CI results for web, functions/shared, and Firestore Rules (passed before merge, 2026-10-16).
+- [x] Refresh current status against the merged command-center baseline.
+- [x] Add phase-by-phase plan with observable acceptance criteria.
+- [x] Add prioritized issue/risk register.
+- [x] Align roadmap and README documentation map with the phase plan.
+- [ ] Record a local Firestore emulator Rules test run.
+- [ ] Record backend callable test results.
+- [ ] Record a full validation run on the repository's Node.js 22 baseline.
+- [ ] Record real Firebase Auth/device lifecycle validation.
+- [ ] Record Android build/test evidence.
 
-## P1 — Research
-- [ ] Define research tool contract
-- [ ] Web retrieval adapter
-- [ ] Source extraction
-- [ ] Citation model
-- [ ] Source quality ranking
-- [ ] Claim/evidence association
-- [ ] Research evaluation set
-- [ ] Prompt-injection isolation for retrieved content
+## Phase 1 — Web command-center UX (first product implementation phase)
 
-## P1 — Productivity
-- [ ] Tasks API
-- [ ] Today view
-- [ ] Reminders
-- [ ] Goals
-- [ ] Follow-up engine
-- [ ] Calendar integration design
-- [ ] User-controlled proactive suggestions
+### Design and information architecture
+- [ ] Review the existing command-center shell against the intended information-dense, calm, keyboard-friendly direction.
+- [ ] Define page hierarchy, navigation behavior, page titles, and consistent status language.
+- [ ] Define a small design-token/component baseline for typography, spacing, surfaces, borders, focus, and semantic states.
+- [ ] Specify the purpose and primary user workflow for Assistant, Projects, Tasks, Research, Automations, Activity, and Settings.
+- [ ] Decide whether a command/search palette and shortcuts solve real navigation problems before designing them.
+- [ ] Write acceptance criteria and capture a design/reference review before editing UI code.
 
-## P1 — Project intelligence
-- [ ] GitHub integration
-- [ ] Repository indexing strategy
-- [ ] Issue/PR context
-- [ ] Project memory
-- [ ] Code/document research
-- [ ] Approved implementation workflow
-- [ ] Verification before claiming changes succeeded
+### Interaction and accessibility
+- [ ] Design loading, empty, unavailable, error, success, confirmation, and retry states.
+- [ ] Review keyboard-only navigation, focus order, focus visibility, and escape/cancel behavior.
+- [ ] Review semantic labels, screen-reader behavior, contrast, scalable text, and reduced motion.
+- [ ] Review narrow mobile, tablet, and desktop layouts.
+- [ ] Ensure all visible controls are functional or clearly disabled with a reason.
+- [ ] Keep non-connected features honest; no fake data or false success states.
+- [ ] Add appropriate UI/accessibility checks where they provide repeatable value.
 
-## P2 — Tool platform
-- [ ] Versioned tool registry
-- [ ] Tool scopes
-- [ ] Tool risk classification
-- [ ] Tool input/output schemas
-- [ ] Timeouts/retries/idempotency
-- [ ] Per-tool budgets
-- [ ] Tool health monitoring
-- [ ] MCP interoperability assessment
+### Phase 1 exit
+- [ ] Owner accepts the visual/interaction direction.
+- [ ] UI acceptance criteria pass with observed evidence.
+- [ ] No new privileged actions or external side effects were enabled.
 
-## P2 — Automation
-- [ ] Job model
-- [ ] Scheduler
-- [ ] Event triggers
-- [ ] Kill switch
-- [ ] Retry/backoff
-- [ ] Approval policies
-- [ ] Execution history
-- [ ] Failure notifications
-- [ ] Cost limits
+## Phase 2 — Foundation security and environment validation
 
-## P2 — Proactivity
-- [ ] Opportunity/risk detectors
-- [ ] Relevance scoring
-- [ ] Notification budget
-- [ ] Quiet hours/preferences
-- [ ] Explainable suggestions
-- [ ] Dismiss/snooze/feedback
+### Rules and data ownership
+- [ ] Restrict writable fields on /users/{uid} and protect backend-owned metadata.
+- [ ] Create a collection/field/action ownership matrix for all documented Firestore collections.
+- [ ] Decide and document whether /jobs and /connections are backend-only or need narrow client reads.
+- [ ] Review client write permissions for projects, tasks, memories, automations, preferences, and notifications.
+- [ ] Add negative Rules tests for protected profile fields, unexpected keys, cross-user access, and disallowed state changes.
 
-## P2 — Voice and multimodal
-- [ ] STT
-- [ ] TTS
-- [ ] Voice conversation
-- [ ] File ingestion
-- [ ] Image understanding
-- [ ] Attachment provenance
-- [ ] Android voice UX
+### Device lifecycle and backend
+- [ ] Make first-device bootstrap safe under concurrent requests.
+- [ ] Make last-trusted-device revocation safe under concurrent requests.
+- [ ] Review registration/approval/revocation idempotency and retry behavior.
+- [ ] Align shared contracts, web callable DTOs, and backend responses.
+- [ ] Add callable tests for unauthenticated callers, invalid payloads, device authorization, registration, bootstrap, listing, approval, revocation, profile initialization, and activity logging.
+- [ ] Test audit behavior for successful and failed security transitions.
+- [ ] Review App Check configuration and staged enforcement; do not assume a configured client key means enforcement is active.
 
-## P3 — Advanced assistant
-- [ ] Long-running research jobs
-- [ ] Multi-agent experiments only where justified
-- [ ] Agent-to-agent interoperability assessment
-- [ ] Computer-use research in a sandbox
-- [ ] Advanced workflow planning
-- [ ] Personal knowledge graph only if retrieval needs justify it
+### Environment and validation
+- [ ] Establish a dedicated development Firebase project/environment and verify it end-to-end.
+- [ ] Keep development and production project IDs, secrets, OAuth clients, App Check settings, and deployment credentials separate.
+- [ ] Use Node.js 22 for reproducible validation.
+- [ ] Run web typecheck/build.
+- [ ] Run Functions typecheck/build.
+- [ ] Run shared contract typecheck.
+- [ ] Run Firestore Rules tests against the emulator.
+- [ ] Run backend callable emulator tests.
+- [ ] Record exact commands, environment, results, and unresolved failures in CURRENT_STATUS.md.
 
-## Rule
+### Phase 2 exit
+- [ ] Critical profile/device concurrency risks are closed or explicitly accepted by the owner.
+- [ ] Rules and callable tests cover positive and negative paths.
+- [ ] Development Firebase authentication/device lifecycle is verified.
+- [ ] No assistant execution is enabled until the required security gate passes.
 
-Do not begin P2/P3 autonomous features while P0 security/validation blockers remain unresolved.
+## Phase 3 — Assistant Core v0
+
+- [ ] Define versioned assistant request/response and error contracts.
+- [ ] Add authenticated assistant request endpoint.
+- [ ] Add provider-neutral model interface.
+- [ ] Add model routing policy based on task, quality, latency, cost, privacy, and availability.
+- [ ] Add scoped context selector and conversation persistence.
+- [ ] Add structured plan representation and bounded execution state.
+- [ ] Add allowlisted tool registry and deterministic policy engine.
+- [ ] Add approval gate bound to exact target/action/payload.
+- [ ] Add execution limits, timeout/retry policy, idempotency, and cancellation where possible.
+- [ ] Add side-effect-specific verification and activity trace/correlation IDs.
+- [ ] Connect the web composer only after endpoint/error behavior is real.
+- [ ] Add safe-task benchmark fixtures and security regression tests.
+
+### Phase 3 exit
+- [ ] Safe tasks complete end-to-end with verified outcomes and auditable evidence.
+- [ ] Unauthenticated/unauthorized actions fail closed.
+- [ ] No unrestricted arbitrary-code or high-impact action tool is exposed.
+
+## Phase 4 — Personal context and research
+
+- [ ] Define memory write/retention/delete/export policy.
+- [ ] Add provenance, confidence, sensitivity, expiry, and user confirmation where appropriate.
+- [ ] Add inspect/edit/delete controls for durable memory.
+- [ ] Add permission-scoped retrieval, ranking, and context budgets.
+- [ ] Define research tool contract and retrieval adapter.
+- [ ] Add source extraction/ranking and claim-to-evidence citation model.
+- [ ] Add uncertainty handling and research evaluation set.
+- [ ] Add memory-poisoning and indirect prompt-injection tests.
+
+### Phase 4 exit
+- [ ] Memory and research benchmarks pass agreed privacy, quality, and safety thresholds.
+
+## Phase 5 — Productivity and project intelligence
+
+- [ ] Implement tasks API and task lifecycle.
+- [ ] Design and implement Today, reminders, goals, and follow-up.
+- [ ] Add project/repository references, decisions, issues/PR context, and project status.
+- [ ] Add approved GitHub development workflow with bounded changes and verification.
+- [ ] Distinguish user commitments from AI recommendations.
+- [ ] Add useful empty/loading/error states for every connected view.
+- [ ] Add integration tests for a complete task workflow and a complete project workflow.
+
+### Phase 5 exit
+- [ ] Each shipped workflow is backed by real state and has verifiable success/failure outcomes.
+
+## Phase 6 — Tool platform, automation, and proactivity
+
+- [ ] Add versioned tool schemas, scopes, risk, data classification, timeout, retry, idempotency, budget, audit, and verification metadata.
+- [ ] Add durable job model, scheduler, cancellation, bounded retries, and execution history.
+- [ ] Add automation kill switch and per-automation limits.
+- [ ] Add explicit approval policies for high-impact actions.
+- [ ] Add relevance scoring, notification budgets, quiet hours, dismiss/snooze, and feedback.
+- [ ] Assess MCP only for a concrete interoperability need.
+- [ ] Add adversarial and failure-recovery tests before enabling scheduled execution.
+
+### Phase 6 exit
+- [ ] Automations can be audited, cancelled, bounded, verified, and recovered safely.
+
+## Phase 7 — Android and multimodal
+
+- [ ] Document and verify Android Gradle/JDK/SDK setup.
+- [ ] Establish repeatable Android build and test commands.
+- [ ] Integrate Auth and device trust through the shared server-side model.
+- [ ] Implement assistant requests, Today, notifications, approvals, and quick actions.
+- [ ] Validate permissions, lifecycle, App Check/Play Integrity, and notification behavior.
+- [ ] Evaluate voice/STT/TTS, file/image understanding, and attachment provenance.
+- [ ] Ensure voice is never the sole authorization for sensitive actions.
+
+### Phase 7 exit
+- [ ] Every shipped Android capability has device-level validation and the same backend security gates as web.
+
+## Phase 8 — Release readiness and deployment
+
+- [ ] Confirm production/development separation and least-privilege IAM.
+- [ ] Configure and verify secrets, billing alerts, spend controls, and monitoring.
+- [ ] Document backup/restore, rollback, and incident response.
+- [ ] Complete privacy, retention, export, and deletion decisions.
+- [ ] Run full applicable release regression and security review.
+- [ ] Review known issues and explicitly accept or resolve release-blocking risks.
+- [ ] Obtain explicit owner authorization for the specific production deployment.
+
+## Backlog discipline
+
+- Do not begin P2/P3 autonomy while P0 security/validation blockers remain open.
+- Do not mark a task complete because code exists; require appropriate evidence.
+- Split implementation into bounded pull requests with acceptance criteria written before editing.
+- Keep this file and CURRENT_STATUS.md synchronized when evidence changes.
