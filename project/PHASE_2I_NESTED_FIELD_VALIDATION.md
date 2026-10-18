@@ -11,8 +11,8 @@ Phase 2G validates top-level project/task fields, enums, and timestamp integrity
 
 ## Intended change
 
-- Validate that project tags are strings of at most 64 characters, with at most 20 entries.
-- Validate that repository references are strings of at most 500 characters, with at most 20 entries.
+- Validate that project tags are strings of at most 64 characters, with at most 5 entries.
+- Validate that repository references are strings of at most 500 characters, with at most 5 entries.
 - Require any non-null task `projectId` to reference an existing project document under the same `/users/{uid}` hierarchy.
 - Keep project references optional and allow tasks without a project.
 - Add Rules emulator tests for malformed list elements, list bounds, invalid references, and valid references.
@@ -20,7 +20,7 @@ Phase 2G validates top-level project/task fields, enums, and timestamp integrity
 
 ## Acceptance criteria
 
-- [ ] Tags must be a list of at most 20 strings, each at most 64 characters.
+- [ ] Tags must be a list of at most 5 strings, each at most 64 characters.
 - [ ] Repository references must be a list of at most 20 strings, each at most 500 characters.
 - [ ] Nested objects, numbers, or oversized strings in those lists are rejected.
 - [ ] A task may omit `projectId` or set it to null.
@@ -37,6 +37,9 @@ Phase 2G validates top-level project/task fields, enums, and timestamp integrity
 - CI result: pending for the current branch.
 
 ## Test plan
+
+The first emulator run exposed Firestore Rules' 1,000-expression evaluation limit when validating 20 list positions across two fields. The bounded list limit is therefore five entries per field in this version; the test suite verifies that the rule evaluation remains below the limit.
+
 
 Use the Firestore Rules emulator. Test valid lists, invalid list element types, oversized list items, over-limit list counts, a task referencing an existing project, a task without a project, and tasks referencing missing/other-user project IDs.
 
