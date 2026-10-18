@@ -260,6 +260,10 @@
     font-size: 9px;
   }
 
+  .quick-switcher-trigger > span {
+    display: none;
+  }
+
   .quick-switcher-trigger kbd {
     min-width: 17px;
     min-height: 17px;
