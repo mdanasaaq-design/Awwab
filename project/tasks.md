@@ -42,6 +42,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [ ] Complete Phase 1D browser/manual responsive and sign-out failure review.
 - [x] Implement Phase 1E safe sign-in error mapping and retry states; CI passed. Acceptance criteria/evidence: [PHASE_1E_AUTH_ERROR_STATES.md](PHASE_1E_AUTH_ERROR_STATES.md).
 - [ ] Complete Phase 1E browser/manual error and retry review.
+- [ ] Phase 1F trusted-device successful-empty copy and polite status announcement; acceptance criteria recorded in [PHASE_1F_DEVICE_EMPTY_STATE.md](PHASE_1F_DEVICE_EMPTY_STATE.md). Awaiting CI and manual review.
 - [x] Implement Phase 1B device-list loading, refreshing, empty, and error states; CI passed. Acceptance criteria/evidence: [PHASE_1B_DEVICE_LOADING.md](PHASE_1B_DEVICE_LOADING.md).
 - [ ] Complete Phase 1B browser/manual state review.
 - [ ] Design loading, empty, unavailable, error, success, confirmation, and retry states.
