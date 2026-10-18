@@ -2,7 +2,7 @@
 
 **Last reviewed:** 2026-10-18  
 **Repository:** `mdanasaaq-design/Awwab`  
-**Reviewed baseline:** `d9ea0ba12be11bdfe0a6634c7f68731b02da9a94` — `fix(web): clarify trusted-device empty state`  
+**Reviewed baseline:** `1e717a2b6838675c1a6f212673cf732b754de180` — `fix(web): keep browser title aligned with current section`  
 **Current planning focus:** Web command-center UX first, then foundation hardening  
 **Deployment:** Not performed
 
