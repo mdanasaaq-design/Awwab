@@ -84,6 +84,7 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 - Phase 2H App Check/environment readiness audit is in progress on branch `docs/phase-2-app-check-audit`. Acceptance criteria and current configuration findings are in [PHASE_2H_APPCHECK_ENVIRONMENT.md](PHASE_2H_APPCHECK_ENVIRONMENT.md). This slice is documentation-only; no enforcement or deployment change is being made.
 - Phase 1F trusted-device successful-empty state copy/accessibility adjustment was merged in [PR #19](https://github.com/mdanasaaq-design/Awwab/pull/19); all four CI jobs passed in [run 39126668502](https://github.com/mdanasaaq-design/Awwab/actions/runs/39126668502). Manual browser review remains pending.
 - Phase 1G browser document title/page context was merged in [PR #20](https://github.com/mdanasaaq-design/Awwab/pull/20); all four CI jobs passed in [run 39126859097](https://github.com/mdanasaaq-design/Awwab/actions/runs/39126859097). Manual browser review remains pending; acceptance criteria: [PHASE_1G_PAGE_CONTEXT.md](PHASE_1G_PAGE_CONTEXT.md).
+- Phase 1H command-center operational overview was implemented directly on `main` across `apps/web/src/App.tsx` and `apps/web/src/styles.css`; acceptance criteria are in [PHASE_1H_COMMAND_CENTER_OVERVIEW.md](PHASE_1H_COMMAND_CENTER_OVERVIEW.md). Build and browser/manual validation remain pending; no deployment was performed.
 - No Firebase deployment has been performed.
 
 ## Next phases
