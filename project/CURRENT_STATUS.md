@@ -73,9 +73,9 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 ## Active implementation work
 
 - Phase 1 keyboard navigation, skip-link focus, contrast refinements, device loading/empty/error states, and explicit device-revocation confirmation were merged in [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), merge commit `da11c173c7fd9c60ba4eb5f38edede342300fff2`.
-- CI run [39116358003](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116358003) passed: web typecheck/build, Functions/shared typecheck, and Firestore Rules tests.
-- Browser/manual interaction checks and owner UX acceptance remain outstanding; Phase 1 is still in progress.
-- The next bounded UX slice is mobile account controls and sign-out failure handling, on branch `feat/phase-1-mobile-account-controls`. Acceptance criteria were written before implementation in [PHASE_1D_MOBILE_ACCOUNT_CONTROLS.md](PHASE_1D_MOBILE_ACCOUNT_CONTROLS.md); CI for this slice is pending.
+- Mobile account controls and safe sign-out error handling were merged in [PR #6](https://github.com/mdanasaaq-design/Awwab/pull/6), merge commit `4c870519c480352d9844e242ea194e7b2ae7b88f`. CI run [39116508500](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116508500) passed all three jobs.
+- Browser/manual interaction, responsive, and owner UX acceptance checks remain outstanding; Phase 1 is still in progress.
+- The current bounded slice maps Firebase sign-in failures to safe user-facing messages, with criteria written before the code change in [PHASE_1E_AUTH_ERROR_STATES.md](PHASE_1E_AUTH_ERROR_STATES.md). It is on branch `feat/phase-1-auth-error-states`; CI is pending.
 - Deployment has not been performed.
 
 ## Next phases
