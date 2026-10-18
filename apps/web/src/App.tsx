@@ -57,6 +57,10 @@ export function App() {
   const [deviceError, setDeviceError] = useState("");
   const [deviceBusy, setDeviceBusy] = useState("");
   const [pendingRevokeDeviceId, setPendingRevokeDeviceId] = useState("");
+  const revokeButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const revokeConfirmButtonRef = useRef<HTMLButtonElement | null>(null);
+  const deviceListRef = useRef<HTMLDivElement | null>(null);
+  const previousPendingRevokeRef = useRef("");
   const [activeSection, setActiveSection] = useState<SectionId>("assistant");
   const [signOutBusy, setSignOutBusy] = useState(false);
   const [switcherOpen, setSwitcherOpen] = useState(false);
@@ -104,6 +108,24 @@ export function App() {
       (switcherReturnFocusRef.current ?? switcherButtonRef.current)?.focus();
     }
   }, [switcherOpen]);
+
+  useEffect(() => {
+    if (pendingRevokeDeviceId) {
+      previousPendingRevokeRef.current = pendingRevokeDeviceId;
+      revokeConfirmButtonRef.current?.focus();
+      return;
+    }
+
+    const previousDeviceId = previousPendingRevokeRef.current;
+    if (!previousDeviceId) return;
+    previousPendingRevokeRef.current = "";
+    const revokeButton = revokeButtonRefs.current[previousDeviceId];
+    if (revokeButton?.isConnected) {
+      revokeButton.focus();
+    } else {
+      deviceListRef.current?.focus();
+    }
+  }, [pendingRevokeDeviceId]);
 
   useEffect(() => {
     if (!user) return;
@@ -251,8 +273,8 @@ export function App() {
     try {
       const { revokeDevice } = await import("./device");
       await revokeDevice(deviceId);
-      setPendingRevokeDeviceId("");
       await refreshDevices();
+      setPendingRevokeDeviceId("");
     } catch (error) {
       setDeviceError(error instanceof Error ? error.message : "Could not revoke device.");
     } finally {
@@ -507,7 +529,7 @@ export function App() {
                 <button className="secondary" type="button" disabled={devicesLoading} onClick={() => void refreshDevices()}>{devicesLoading ? "Refreshing…" : "Refresh list"}</button>
               </div>
               {deviceError && <p className="error" role="alert">{deviceError}</p>}
-              <div className="device-list">
+              <div className="device-list" ref={deviceListRef} tabIndex={-1} role="region" aria-label="Trusted devices">
                 {devicesLoading && !devices.length && !deviceError && (
                   <div className="device-empty" role="status" aria-live="polite">
                     <strong>Loading trusted devices…</strong>
@@ -537,13 +559,13 @@ export function App() {
                         pendingRevokeDeviceId === device.deviceId ? (
                           <div className="device-revoke-confirmation" role="group" aria-label={`Confirm revoking ${device.deviceName}`}>
                             <span>Revoke access for this device?</span>
-                            <button className="danger" type="button" disabled={deviceBusy !== ""} onClick={() => void handleRevoke(device.deviceId)}>
+                            <button ref={revokeConfirmButtonRef} className="danger" type="button" disabled={deviceBusy !== ""} onClick={() => void handleRevoke(device.deviceId)}>
                               {deviceBusy === device.deviceId ? "Revoking…" : "Confirm revoke"}
                             </button>
                             <button className="secondary" type="button" disabled={deviceBusy !== ""} onClick={() => setPendingRevokeDeviceId("")}>Cancel</button>
                           </div>
                         ) : (
-                          <button className="danger" type="button" disabled={deviceBusy !== ""} onClick={() => setPendingRevokeDeviceId(device.deviceId)}>Revoke</button>
+                          <button ref={(element) => { revokeButtonRefs.current[device.deviceId] = element; }} className="danger" type="button" disabled={deviceBusy !== ""} onClick={() => setPendingRevokeDeviceId(device.deviceId)}>Revoke</button>
                         )
                       )}
                     </div>
