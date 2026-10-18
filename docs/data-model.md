@@ -46,7 +46,7 @@ Fields: `name`, `description`, `repositoryReferences`, `status`, `tags`, `create
 - Required client fields: `name`, `status`, `createdAt`, `updatedAt`.
 - Name is 1–160 characters; description is optional and at most 4,000 characters.
 - Status is `active` or `archived`.
-- Tags are optional lists of at most 20 strings, each at most 64 characters; repository references are optional lists of at most 20 strings, each at most 500 characters.
+- Tags are optional lists of at most 5 strings, each at most 64 characters; repository references are optional lists of at most 5 strings, each at most 500 characters.
 - Create timestamps must use server timestamps; `createdAt` is immutable and `updatedAt` must be a server timestamp on update.
 
 ## Task
