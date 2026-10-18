@@ -22,7 +22,8 @@
 }
 
 #main-content:focus {
-  outline: none;
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
 }
 
 .quick-switcher-trigger {
