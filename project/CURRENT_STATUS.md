@@ -2,7 +2,7 @@
 
 **Last reviewed:** 2026-10-18  
 **Repository:** `mdanasaaq-design/Awwab`  
-**Reviewed baseline:** `cffb22b829e76a859dd3029e482abd10e8314af5` — `feat(web): establish the Awwab command center`  
+**Reviewed baseline:** `d9ea0ba12be11bdfe0a6634c7f68731b02da9a94` — `fix(web): clarify trusted-device empty state`  
 **Current planning focus:** Web command-center UX first, then foundation hardening  
 **Deployment:** Not performed
 
@@ -82,7 +82,8 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 - Phase 2F collection ownership and narrow client mutation rules were merged in [PR #13](https://github.com/mdanasaaq-design/Awwab/pull/13); CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed all four jobs.
 - Phase 2G project/task field-level Rules were merged in [PR #14](https://github.com/mdanasaaq-design/Awwab/pull/14); CI run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed all four jobs. Nested list-element validation, cross-document consistency, and detailed status-transition policy remain open.
 - Phase 2H App Check/environment readiness audit is in progress on branch `docs/phase-2-app-check-audit`. Acceptance criteria and current configuration findings are in [PHASE_2H_APPCHECK_ENVIRONMENT.md](PHASE_2H_APPCHECK_ENVIRONMENT.md). This slice is documentation-only; no enforcement or deployment change is being made.
-- Phase 1F trusted-device successful-empty state copy/accessibility adjustment is committed on `fix/phase-1-device-empty-state-copy`; acceptance criteria were recorded before the application edit. CI and manual browser verification remain pending.
+- Phase 1F trusted-device successful-empty state copy/accessibility adjustment was merged in [PR #19](https://github.com/mdanasaaq-design/Awwab/pull/19); all four CI jobs passed in [run 39126668502](https://github.com/mdanasaaq-design/Awwab/actions/runs/39126668502). Manual browser review remains pending.
+- Phase 1G browser document title/page context is in progress on `fix/phase-1g-page-context`. Acceptance criteria were committed before the application edit in [PHASE_1G_PAGE_CONTEXT.md](PHASE_1G_PAGE_CONTEXT.md); CI and manual browser review are pending.
 - No Firebase deployment has been performed.
 
 ## Next phases
