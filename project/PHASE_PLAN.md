@@ -77,6 +77,8 @@ See [Current Status](CURRENT_STATUS.md), [Tasks](tasks.md), and [Issues and Risk
 - [ ] A bounded UI change has explicit screenshots/manual review criteria before implementation.
 - [ ] No new privileged or external side effects are enabled in this phase.
 
+**Implementation slice:** [Phase 1 keyboard navigation acceptance criteria and test checklist](PHASE_1_IMPLEMENTATION.md).
+
 **Exit gate:** Owner accepts the UX direction and the interface's behavior/state specification. Any automated visual/accessibility checks that are added must be reported with observed results.
 
 ### Phase 2 — Foundation security and environment validation
