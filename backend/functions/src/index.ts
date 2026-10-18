@@ -121,25 +121,50 @@ export const registerDevice = onCall(async (request) => {
 export const bootstrapFirstDevice = onCall(async (request) => {
   const uid = requireAuth(request);
   const parsed = parseDeviceInput(request.data);
-  const devices = await db.collection(`users/${uid}/devices`).limit(1).get();
+  const devicesRef = db.collection(`users/${uid}/devices`);
+  const bootstrapRef = db.doc(`users/${uid}/system/firstDeviceBootstrap`);
+  const deviceRef = devicesRef.doc(parsed.deviceId);
+  const activityRef = db.collection(`users/${uid}/activity`).doc();
 
-  if (!devices.empty) {
-    throw new HttpsError("failed-precondition", "A device already exists for this account.");
-  }
+  await db.runTransaction(async (transaction) => {
+    // All reads happen before writes. The per-user guard makes concurrent
+    // bootstrap attempts contend on the same document, even for different IDs.
+    const existingDevices = await transaction.get(devicesRef.limit(1));
+    const bootstrap = await transaction.get(bootstrapRef);
+    const existingDevice = await transaction.get(deviceRef);
 
-  const deviceRef = db.doc(`users/${uid}/devices/${parsed.deviceId}`);
-  await deviceRef.create({
-    platform: parsed.platform,
-    appVersion: parsed.appVersion,
-    deviceName: parsed.deviceName,
-    status: "trusted",
-    createdAt: FieldValue.serverTimestamp(),
-    lastSeenAt: FieldValue.serverTimestamp(),
-    trustedAt: FieldValue.serverTimestamp(),
-    notificationTokenStatus: "not_registered",
+    if (!existingDevices.empty || bootstrap.exists || existingDevice.exists) {
+      throw new HttpsError("failed-precondition", "A first trusted device has already been established.");
+    }
+
+    const timestamp = FieldValue.serverTimestamp();
+    transaction.create(bootstrapRef, {
+      deviceId: parsed.deviceId,
+      createdAt: timestamp,
+    });
+    transaction.create(deviceRef, {
+      platform: parsed.platform,
+      appVersion: parsed.appVersion,
+      deviceName: parsed.deviceName,
+      status: "trusted",
+      createdAt: timestamp,
+      lastSeenAt: timestamp,
+      trustedAt: timestamp,
+      notificationTokenStatus: "not_registered",
+    });
+    transaction.create(activityRef, {
+      eventType: "security",
+      actorType: "user",
+      deviceId: parsed.deviceId,
+      tool: "device-management",
+      action: "device_bootstrapped",
+      targetType: "device",
+      targetReference: parsed.deviceId,
+      outcome: "success",
+      createdAt: timestamp,
+    });
   });
 
-  await writeActivity(uid, parsed.deviceId, "device_bootstrapped", "success");
   return { ok: true, deviceId: parsed.deviceId, status: "trusted" };
 });
 
