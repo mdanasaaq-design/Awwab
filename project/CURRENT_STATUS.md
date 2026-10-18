@@ -73,7 +73,7 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 
 ## Active implementation work
 
-- A bounded Assistant Core foundation is being reviewed on branch [`feat/assistant-core-foundation`](https://github.com/mdanasaaq-design/Awwab/tree/feat/assistant-core-foundation): strict plan validation and trusted policy preflight only. It is not merged or CI-validated yet, has no provider/framework dependency, and cannot execute tools. See [phase acceptance criteria](PHASE_3_AGENT_CORE_FOUNDATION.md).
+- A bounded Assistant Core foundation is being reviewed on branch [`feat/assistant-core-foundation`](https://github.com/mdanasaaq-design/Awwab/tree/feat/assistant-core-foundation): strict plan validation and trusted policy preflight only. CI run [39125085569](https://github.com/mdanasaaq-design/Awwab/actions/runs/39125085569) passed all four jobs, including the new unit tests. PR #17 remains draft/unmerged; the module has no provider/framework dependency and cannot execute tools. See [phase acceptance criteria](PHASE_3_AGENT_CORE_FOUNDATION.md).
 
 - Phase 1 command-center UX slices were merged in [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), [PR #6](https://github.com/mdanasaaq-design/Awwab/pull/6), and [PR #7](https://github.com/mdanasaaq-design/Awwab/pull/7). Automated CI passed; browser/manual interaction, responsive, and owner UX acceptance checks remain outstanding.
 - Phase 2A profile-write hardening was merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8); CI run [39116859040](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116859040) passed.
