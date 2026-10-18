@@ -76,7 +76,7 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 - Phase 2A profile-write hardening was merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8); CI run [39116859040](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116859040) passed. AWW-001 and AWW-006 are resolved for the current root profile contract.
 - Phase 2B atomic bootstrap was merged in [PR #9](https://github.com/mdanasaaq-design/Awwab/pull/9); CI run [39117195997](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117195997) passed all four jobs. AWW-002 is resolved for the tested bootstrap invariant.
 - Phase 2C transactional last-device revocation was merged in [PR #10](https://github.com/mdanasaaq-design/Awwab/pull/10); CI run [39117401427](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117401427) passed all four jobs, including concurrent revocation coverage. AWW-003 is resolved for the tested invariant.
-- Phase 2D shared device callable contracts are in progress on branch `fix/phase-2-contract-alignment`. Acceptance criteria were recorded before implementation in [PHASE_2D_CONTRACT_ALIGNMENT.md](PHASE_2D_CONTRACT_ALIGNMENT.md). CI is pending.
+- Phase 2D shared device callable contracts are implemented on branch `fix/phase-2-contract-alignment`, PR [#11](https://github.com/mdanasaaq-design/Awwab/pull/11). CI run [39117694957](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117694957) passed all four jobs, including the callable emulator suite. Merge is pending; the remaining planned `UserProfile` shape is explicitly documented as not being the current persisted-profile DTO.
 - No Firebase deployment has been performed.
 
 ## Next phases
