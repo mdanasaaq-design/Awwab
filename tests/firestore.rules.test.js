@@ -53,7 +53,7 @@ test("a user can read their own backend-created profile but cannot write it", as
   const profileRef = doc(db, "users/alice");
 
   await testEnv.withSecurityRulesDisabled(async (admin) => {
-    await setDoc(profileRef.withConverter(undefined), {
+    await setDoc(doc(admin.firestore(), "users/alice"), {
       displayName: "Alice",
       email: "alice@example.com",
       createdAt: new Date("2026-01-01T00:00:00.000Z"),
