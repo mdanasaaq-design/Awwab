@@ -191,6 +191,8 @@ button:disabled { cursor: not-allowed; opacity: .56; }
 .device-identity strong { max-width: 360px; overflow-wrap: anywhere; color: #e0e3e7; font-size: 11px; font-weight: 500; }
 .device-identity span { color: #7f8792; font-size: 10px; text-transform: capitalize; }
 .device-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.device-revoke-confirmation { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; padding: 7px; border: 1px solid #53343a; border-radius: 7px; background: #211719; }
+.device-revoke-confirmation > span { color: #e1c0c2; font-size: 10px; }
 .device-badge { padding: 5px 7px; border: 1px solid #343941; border-radius: 5px; color: #b5bbc4; font: 9px var(--mono); text-transform: uppercase; letter-spacing: .02em; }
 .device-badge.trusted { border-color: #354637; color: #b9d0b3; }
 .device-badge.pending { border-color: #4c4131; color: #d9b98e; }
