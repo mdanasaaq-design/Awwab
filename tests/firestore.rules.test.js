@@ -47,23 +47,43 @@ test("unauthenticated clients cannot read user data", async () => {
   await assertFails(getDoc(doc(guest.firestore(), "users/alice")));
 });
 
-test("a user can create and read their own profile", async () => {
+test("a user can read their own backend-created profile but cannot write it", async () => {
   const alice = userContext("alice");
   const db = alice.firestore();
+  const profileRef = doc(db, "users/alice");
 
-  await assertSucceeds(
-    setDoc(doc(db, "users/alice"), {
+  await testEnv.withSecurityRulesDisabled(async (admin) => {
+    await setDoc(profileRef.withConverter(undefined), {
       displayName: "Alice",
-    }),
-  );
+      email: "alice@example.com",
+      createdAt: new Date("2026-01-01T00:00:00.000Z"),
+      updatedAt: new Date("2026-01-01T00:00:00.000Z"),
+      status: "active",
+      timezone: "UTC",
+      locale: "en",
+    });
+  });
 
-  const snapshot = await assertSucceeds(getDoc(doc(db, "users/alice")));
+  const snapshot = await assertSucceeds(getDoc(profileRef));
   assert.equal(snapshot.get("displayName"), "Alice");
+
+  await assertFails(setDoc(profileRef, { displayName: "Client overwrite" }));
+  await assertFails(updateDoc(profileRef, { displayName: "Client edit" }));
+  await assertFails(updateDoc(profileRef, { email: "forged@example.com" }));
+  await assertFails(updateDoc(profileRef, { createdAt: new Date() }));
+  await assertFails(updateDoc(profileRef, { status: "admin" }));
+  await assertFails(updateDoc(profileRef, { timezone: "Pacific/Auckland" }));
+  await assertFails(updateDoc(profileRef, { unexpectedField: true }));
+  await assertFails(deleteDoc(profileRef));
 });
 
 test("a user cannot read or write another user's profile", async () => {
   const alice = userContext("alice");
   const bob = userContext("bob");
+
+  await testEnv.withSecurityRulesDisabled(async (admin) => {
+    await setDoc(doc(admin.firestore(), "users/alice"), { displayName: "Alice" });
+  });
 
   await assertFails(getDoc(doc(alice.firestore(), "users/bob")));
   await assertFails(
