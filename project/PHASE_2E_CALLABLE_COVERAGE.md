@@ -1,6 +1,6 @@
 # Phase 2E — Broader Callable Authorization and Failure Tests
 
-**Status:** Acceptance criteria recorded before implementation  
+**Status:** Test implementation committed; CI validation pending  
 **Phase:** 2 — Foundation security and environment validation  
 **Branch:** `test/phase-2-callable-coverage`  
 **Risk:** AWW-005 (P1)
@@ -28,6 +28,12 @@ Extend the existing Node built-in emulator suite without adding a test framework
 - [ ] CI passes the web, Functions/shared, Rules, and callable emulator jobs.
 - [ ] Current status, task list, and risk register record the expanded coverage and remaining gaps.
 - [ ] No deployment is performed.
+
+## Implementation record
+
+- Test file: `tests/functions.callable.test.js`.
+- Coverage added for unauthenticated protected callables, invalid device IDs/platforms, registration idempotency, pending-device authorization denial, self/missing/duplicate approval, missing-target revocation, revoked-device reactivation denial, profile initialization idempotency, and health.
+- CI result: pending for the current branch.
 
 ## Test plan
 
