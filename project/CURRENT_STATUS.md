@@ -74,7 +74,7 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 
 - Phase 1 bounded navigation slice is in progress on [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5): keyboard-first quick switcher, skip link, focus management, and a clearer signed-in status label.
 - Acceptance criteria were recorded before the application edit in [PHASE_1_IMPLEMENTATION.md](PHASE_1_IMPLEMENTATION.md).
-- CI run [39115777501](https://github.com/mdanasaaq-design/Awwab/actions/runs/39115777501) passed on code commit `e70e63977a696cf288cfd48d66ec30901f527667`: web typecheck/build, Functions/shared typecheck, and Firestore Rules tests. The quick switcher, skip-link target/focus, and secondary-text contrast refinements are included in that code baseline. Browser interaction review and owner acceptance remain outstanding, so this slice and Phase 1 are not marked complete.
+- CI run [39115777501](https://github.com/mdanasaaq-design/Awwab/actions/runs/39115777501) passed on code commit `e70e63977a696cf288cfd48d66ec30901f527667`: web typecheck/build, Functions/shared typecheck, and Firestore Rules tests. The quick switcher, skip-link target/focus, and secondary-text contrast refinements are included in that code baseline. Browser interaction review and owner acceptance remain outstanding, so this slice and Phase 1 are not marked complete. A follow-on Phase 1B slice now distinguishes device-list loading, refresh, empty, and error states; its acceptance criteria are in [PHASE_1B_DEVICE_LOADING.md](PHASE_1B_DEVICE_LOADING.md). CI for the expanded latest branch is pending and must be observed before claiming that branch's checks passed.
 
 ## Next phases
 
