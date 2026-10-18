@@ -31,7 +31,7 @@ The current web shell has working section buttons, but no global way to jump dir
 - [ ] Keyboard focus remains visibly apparent; existing reduced-motion behavior is preserved.
 - [ ] Navigation works at desktop and mobile widths without adding horizontal overflow beyond the existing mobile navigation behavior.
 - [ ] No assistant request, privileged action, or external side effect is enabled.
-- [x] Web typecheck/build CI passes (run 39115570512); Functions/shared typecheck and Firestore Rules regression checks also passed.
+- [x] Web typecheck/build CI passes (run 39115777501); Functions/shared typecheck and Firestore Rules regression checks also passed.
 - [ ] Manual interaction checklist is completed and recorded.
 - [ ] Status/task/design documentation records exactly what changed and what was or was not tested.
 
@@ -39,8 +39,12 @@ The current web shell has working section buttons, but no global way to jump dir
 
 - Application changes: `apps/web/src/App.tsx`, `apps/web/src/main.tsx`, and new `apps/web/src/navigation.css`.
 - Pull request: [#5 — keyboard-first command navigation](https://github.com/mdanasaaq-design/Awwab/pull/5).
-- Automated CI result: passed on commit `7b8ad7c95b8a0a710f561d16427ae94106584a8b` in run [39115570512](https://github.com/mdanasaaq-design/Awwab/actions/runs/39115570512): web typecheck/build, Functions/shared typecheck, and Firestore Rules tests all succeeded.
+- Automated CI result: passed on code commit `e70e63977a696cf288cfd48d66ec30901f527667` in run [39115777501](https://github.com/mdanasaaq-design/Awwab/actions/runs/39115777501): web typecheck/build, Functions/shared typecheck, and Firestore Rules tests all succeeded.
 - Browser/manual result: not yet observed in this environment.
+
+## Contrast note
+
+The shared quiet-text token was raised from `#69717d` to `#858e9b`. The calculated WCAG contrast ratio for this token against the main canvas `#101216` is approximately **5.66:1**. This is a targeted token check, not a complete page-wide contrast audit; remaining hard-coded color pairs still require review.
 
 ## Manual verification checklist
 
