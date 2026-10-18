@@ -40,7 +40,8 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [ ] Complete Phase 1C browser/manual confirm, cancel, focus, and error review.
 - [x] Implement Phase 1D mobile account controls and sign-out failure state; CI passed. Acceptance criteria/evidence: [PHASE_1D_MOBILE_ACCOUNT_CONTROLS.md](PHASE_1D_MOBILE_ACCOUNT_CONTROLS.md).
 - [ ] Complete Phase 1D browser/manual responsive and sign-out failure review.
-- [ ] Phase 1E safe sign-in error mapping and retry states. Acceptance criteria: [PHASE_1E_AUTH_ERROR_STATES.md](PHASE_1E_AUTH_ERROR_STATES.md); keep unchecked until CI and manual error/retry review are recorded.
+- [x] Implement Phase 1E safe sign-in error mapping and retry states; CI passed. Acceptance criteria/evidence: [PHASE_1E_AUTH_ERROR_STATES.md](PHASE_1E_AUTH_ERROR_STATES.md).
+- [ ] Complete Phase 1E browser/manual error and retry review.
 - [x] Implement Phase 1B device-list loading, refreshing, empty, and error states; CI passed. Acceptance criteria/evidence: [PHASE_1B_DEVICE_LOADING.md](PHASE_1B_DEVICE_LOADING.md).
 - [ ] Complete Phase 1B browser/manual state review.
 - [ ] Design loading, empty, unavailable, error, success, confirmation, and retry states.
