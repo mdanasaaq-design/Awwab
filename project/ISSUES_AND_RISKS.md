@@ -28,10 +28,10 @@
 
 - **Priority:** P0
 - **Type:** Security/reliability risk
-- **Status:** Confirmed from code; race not yet reproduced.
+- **Status:** Mitigation implemented in PR #9; CI passed; merge pending.
 - **Evidence:** `bootstrapFirstDevice` queries for any device, then creates a trusted device in a separate operation.
 - **Impact:** Two concurrent bootstrap requests may both observe an empty collection and create separate trusted first devices.
-- **Plan:** In progress on branch `fix/phase-2-bootstrap-concurrency`: use a per-user guard and one transaction for the guard, trusted device, and audit event; add callable emulator concurrency tests.
+- **Mitigation:** PR [#9](https://github.com/mdanasaaq-design/Awwab/pull/9) uses a per-user guard and one transaction for the guard, trusted device, and audit event. Callable emulator test [39117086761](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117086761) passed concurrent bootstrap, unauthenticated, repeat-call, and legacy-device checks. Close after merge and continued regression coverage.
 - **Acceptance:** Concurrent bootstrap attempts result in exactly one valid first trusted device; all other attempts fail safely or return the same established result.
 - **Phase:** 2 — Foundation security.
 
