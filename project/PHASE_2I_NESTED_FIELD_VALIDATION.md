@@ -1,6 +1,6 @@
 # Phase 2I — Validate Project/Task List Elements and References
 
-**Status:** Acceptance criteria recorded before implementation  
+**Status:** Implementation committed; CI validation pending  
 **Phase:** 2 — Foundation security and environment validation  
 **Branch:** `fix/phase-2-nested-field-validation`  
 **Risk:** AWW-014
@@ -29,6 +29,12 @@ Phase 2G validates top-level project/task fields, enums, and timestamp integrity
 - [ ] Existing valid project/task CRUD and all previous Rules tests remain green.
 - [ ] Current status, task list, data model, and risk register record the result.
 - [ ] No deployment is performed.
+
+## Implementation record
+
+- Rules: `firestore.rules` validates project tag/reference list element types and maximum lengths, plus same-user existence for non-null task project references.
+- Tests: `tests/firestore.rules.test.js` covers valid lists, nested non-string entries, oversized items, over-limit lists, valid/missing/cross-user project references, and project-less tasks.
+- CI result: pending for the current branch.
 
 ## Test plan
 
