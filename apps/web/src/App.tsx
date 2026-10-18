@@ -193,9 +193,11 @@ export function App() {
         setDeviceStatus("signed out");
         setActiveSection("assistant");
         setSwitcherOpen(false);
+        setDevicesLoading(false);
         return;
       }
 
+      setDevicesLoading(true);
       void import("./device")
         .then(async ({ registerWebDevice, ensureUserProfile, getAwwabDeviceId }) => {
           setCurrentDeviceId(getAwwabDeviceId());
@@ -206,6 +208,7 @@ export function App() {
           return refreshDevices();
         })
         .catch((error) => {
+          setDevicesLoading(false);
           setDeviceStatus("registration failed");
           setDeviceError(error instanceof Error ? error.message : "Device setup failed.");
         });
