@@ -64,7 +64,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [x] Phase 2F collection ownership rules and emulator tests merged in [PR #13](https://github.com/mdanasaaq-design/Awwab/pull/13); CI run 39118165874 passed all four jobs. Acceptance criteria/evidence: [PHASE_2F_DATA_OWNERSHIP_RULES.md](PHASE_2F_DATA_OWNERSHIP_RULES.md).
 - [x] Decide that /jobs and /connections are backend-only with default deny; PR #13 merged and CI run 39118165874 passed.
 - [x] Review client write permissions for memories, automations, preferences, and notifications in Phase 2F; CI run 39118165874 passed.
-- [ ] Phase 2G: enforce project/task field allowlists, enums, immutable creation timestamps, and source provenance. Acceptance criteria: [PHASE_2G_PROJECT_TASK_RULES.md](PHASE_2G_PROJECT_TASK_RULES.md); CI pending.
+- [x] Implement Phase 2G project/task field allowlists, enums, immutable creation timestamps, and source provenance; CI run 39118461462 passed all four jobs. PR [#14](https://github.com/mdanasaaq-design/Awwab/pull/14) awaits merge. Acceptance criteria/evidence: [PHASE_2G_PROJECT_TASK_RULES.md](PHASE_2G_PROJECT_TASK_RULES.md). Nested list/cross-document checks remain follow-ups.
 - [ ] Add negative Rules tests for protected profile fields, unexpected keys, cross-user access, and disallowed state changes.
 
 ### Device lifecycle and backend
