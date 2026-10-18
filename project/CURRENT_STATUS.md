@@ -66,7 +66,7 @@ The blueprint describes the intended product. It must not be mistaken for implem
 4. **Shared DTO drift:** shared contracts, web callable types, and backend response shapes are not fully aligned.
 5. **Backend test gap:** callable authorization/state-transition/failure tests are not established.
 6. **Data model / Rules ambiguity:** jobs and connections appear in the data model but do not have explicit client Rules matches; default deny applies.
-7. **Project/task data integrity:** PR #14 enforces top-level project/task schemas and timestamp/source integrity; list element validation, cross-document references, and detailed state-transition policy remain open.
+7. **Project/task data integrity:** PR #14 enforces top-level project/task schemas; Phase 2I is adding list element validation and same-user project references. Detailed state-transition policy remains open.
 8. **Environment separation:** development Firebase and production readiness still need explicit validation.
 
 The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_AND_RISKS.md).
@@ -81,7 +81,8 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 - Phase 2E callable authorization and state-transition coverage was merged in [PR #12](https://github.com/mdanasaaq-design/Awwab/pull/12); CI run [39117914336](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117914336) passed all four jobs.
 - Phase 2F collection ownership and narrow client mutation rules were merged in [PR #13](https://github.com/mdanasaaq-design/Awwab/pull/13); CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed all four jobs.
 - Phase 2G project/task field-level Rules were merged in [PR #14](https://github.com/mdanasaaq-design/Awwab/pull/14); CI run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed all four jobs. Nested list-element validation, cross-document consistency, and detailed status-transition policy remain open.
-- Phase 2H App Check/environment readiness audit is in progress on branch `docs/phase-2-app-check-audit`. Acceptance criteria and current configuration findings are in [PHASE_2H_APPCHECK_ENVIRONMENT.md](PHASE_2H_APPCHECK_ENVIRONMENT.md). This slice is documentation-only; no enforcement or deployment change is being made.
+- Phase 2H App Check/environment readiness audit was merged in [PR #15](https://github.com/mdanasaaq-design/Awwab/pull/15). The web client initializes App Check only when configured; callable enforcement is not enabled by the reviewed declarations. Live provider/token validation remains outstanding; no enforcement or deployment change was made.
+- Phase 2I project/task nested-field validation is in progress on branch `fix/phase-2-nested-field-validation`. Acceptance criteria are in [PHASE_2I_NESTED_FIELD_VALIDATION.md](PHASE_2I_NESTED_FIELD_VALIDATION.md); current-branch Rules tests are pending.
 - No Firebase deployment has been performed.
 
 ## Next phases

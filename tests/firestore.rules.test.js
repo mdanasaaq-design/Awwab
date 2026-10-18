@@ -158,6 +158,27 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-non-string-tag"), {
+    name: "Non-string tag",
+    status: "active",
+    tags: ["valid", { forged: true }],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-long-reference"), {
+    name: "Long reference",
+    status: "active",
+    repositoryReferences: ["x".repeat(501)],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-too-many-tags"), {
+    name: "Too many tags",
+    status: "active",
+    tags: Array.from({ length: 6 }, (_, index) => `tag-${index}`),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
   await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-extra-field"), {
     name: "Unexpected field",
     status: "active",
@@ -178,7 +199,13 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
-  await assertSucceeds(deleteDoc(project));
+
+  await assertSucceeds(setDoc(doc(bobDb, "users/bob/projects/bob-project"), {
+    name: "Bob project",
+    status: "active",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
 
   const task = doc(aliceDb, "users/alice/tasks/task-1");
   await assertSucceeds(setDoc(task, {
@@ -187,6 +214,7 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     status: "todo",
     priority: "medium",
     source: "user",
+    projectId: "project-1",
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
@@ -249,6 +277,32 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-missing-project"), {
+    title: "Missing project",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: "missing-project",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-cross-user-project"), {
+    title: "Cross-user project reference",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: "bob-project",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/tasks/task-no-project"), {
+    title: "Task without project",
+    status: "todo",
+    priority: "low",
+    source: "user",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
   await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-invalid-source"), {
     title: "Forged provenance",
     status: "todo",
@@ -284,6 +338,8 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     updatedAt: serverTimestamp(),
   }));
   await assertSucceeds(deleteDoc(task));
+  await assertSucceeds(deleteDoc(doc(aliceDb, "users/alice/tasks/task-no-project")));
+  await assertSucceeds(deleteDoc(project));
 });
 
 test("client cannot directly mutate devices", async () => {

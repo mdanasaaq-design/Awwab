@@ -64,8 +64,9 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [x] Phase 2F collection ownership rules and emulator tests merged in [PR #13](https://github.com/mdanasaaq-design/Awwab/pull/13); CI run 39118165874 passed all four jobs. Acceptance criteria/evidence: [PHASE_2F_DATA_OWNERSHIP_RULES.md](PHASE_2F_DATA_OWNERSHIP_RULES.md).
 - [x] Decide that /jobs and /connections are backend-only with default deny; PR #13 merged and CI run 39118165874 passed.
 - [x] Review client write permissions for memories, automations, preferences, and notifications in Phase 2F; CI run 39118165874 passed.
-- [x] Phase 2G project/task field allowlists, enums, immutable creation timestamps, and source provenance merged in [PR #14](https://github.com/mdanasaaq-design/Awwab/pull/14); CI run 39118461462 passed all four jobs. Acceptance criteria/evidence: [PHASE_2G_PROJECT_TASK_RULES.md](PHASE_2G_PROJECT_TASK_RULES.md). Nested list/cross-document checks remain follow-ups.
-- [ ] Add negative Rules tests for protected profile fields, unexpected keys, cross-user access, and disallowed state changes.
+- [x] Phase 2G project/task field allowlists, enums, immutable creation timestamps, and source provenance merged in [PR #14](https://github.com/mdanasaaq-design/Awwab/pull/14); CI run 39118461462 passed all four jobs. Acceptance criteria/evidence: [PHASE_2G_PROJECT_TASK_RULES.md](PHASE_2G_PROJECT_TASK_RULES.md).
+- [ ] Phase 2I: validate list element types/bounds and require task project references to exist under the same user. Acceptance criteria: [PHASE_2I_NESTED_FIELD_VALIDATION.md](PHASE_2I_NESTED_FIELD_VALIDATION.md); CI pending.
+- [x] Add negative Rules tests for protected profile fields, unexpected keys, cross-user access, and disallowed top-level project/task state values (PRs #8 and #14; CI passed).
 
 ### Device lifecycle and backend
 - [x] Phase 2B atomic first-device bootstrap and callable emulator tests merged in [PR #9](https://github.com/mdanasaaq-design/Awwab/pull/9); CI run 39117195997 passed. Acceptance criteria/evidence: [PHASE_2B_BOOTSTRAP_CONCURRENCY.md](PHASE_2B_BOOTSTRAP_CONCURRENCY.md).
