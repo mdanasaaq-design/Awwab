@@ -1,6 +1,6 @@
 # Phase 1G — Page Context and Browser Title
 
-**State:** Acceptance criteria recorded before application-code edits.  
+**State:** Implemented and merged in [PR #20](https://github.com/mdanasaaq-design/Awwab/pull/20). CI passed; manual browser review remains pending.  
 **Scope:** Web presentation/accessibility only.
 
 ## Problem
@@ -15,8 +15,8 @@ The command-center shell updates its visible breadcrumb and page heading when th
 - [ ] Existing visible breadcrumbs, page headings, keyboard shortcuts, focus restoration, and navigation behavior remain unchanged.
 - [ ] The sign-in view has a clear Awwab-branded document title before and after authentication state changes.
 - [ ] No new dependency, backend/API, Firebase, auth-flow, assistant-runtime, or deployment changes.
-- [ ] Web typecheck and production build pass in CI.
-- [ ] Manual review of section switching and browser-tab title is recorded or explicitly left pending.
+- [x] Web typecheck and production build pass in CI; the full four-job workflow passed in [run 39126859097](https://github.com/mdanasaaq-design/Awwab/actions/runs/39126859097).
+- [x] Manual review is explicitly left pending; no authenticated browser session was exercised by this workflow.
 
 ## Validation plan
 
