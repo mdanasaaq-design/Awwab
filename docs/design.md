@@ -64,6 +64,7 @@ Target keyboard navigation, semantic labels, readable contrast, scalable text, s
 - The switcher must announce its dialog/search semantics, move focus into the dialog, keep keyboard focus within it while open, and restore focus on close.
 - Keyboard shortcuts must not interrupt normal typing in editable fields.
 - The top-bar status label describes sign-in state; it must not imply a deployment environment unless environment configuration actually establishes that state.
+- Device management must distinguish loading, successful empty results, and request errors. A failed refresh must not be presented as a successful empty list.
 
 ## Visual direction
 
