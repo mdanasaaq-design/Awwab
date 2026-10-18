@@ -10,6 +10,7 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  serverTimestamp,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -98,40 +99,191 @@ test("a user cannot read or write another user's profile", async () => {
   );
 });
 
-test("user-owned project data is isolated by uid", async () => {
+test("projects and tasks enforce owner schemas and timestamp integrity", async () => {
   const alice = userContext("alice");
   const bob = userContext("bob");
+  const aliceDb = alice.firestore();
+  const bobDb = bob.firestore();
+  const project = doc(aliceDb, "users/alice/projects/project-1");
 
-  await assertSucceeds(
-    setDoc(doc(alice.firestore(), "users/alice/projects/project-1"), {
-      name: "Alice project",
-    }),
-  );
-  await assertSucceeds(
-    getDoc(doc(alice.firestore(), "users/alice/projects/project-1")),
-  );
-  await assertFails(
-    getDoc(doc(bob.firestore(), "users/alice/projects/project-1")),
-  );
-  await assertFails(
-    setDoc(doc(bob.firestore(), "users/alice/projects/project-2"), {
-      name: "Bob cannot write here",
-    }),
-  );
+  await assertSucceeds(setDoc(project, {
+    name: "Alice project",
+    description: "A project description",
+    status: "active",
+    tags: ["work", "personal"],
+    repositoryReferences: ["https://github.com/example/repo"],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(getDoc(project));
+  await assertSucceeds(updateDoc(project, {
+    status: "archived",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(project, {
+    status: "deleted",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(project, {
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(project, {
+    unexpectedField: true,
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-empty-name"), {
+    name: "",
+    status: "active",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-invalid-tags"), {
+    name: "Invalid tags",
+    status: "active",
+    tags: "not-a-list",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-long-name"), {
+    name: "x".repeat(161),
+    status: "active",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-invalid-references"), {
+    name: "Invalid references",
+    status: "active",
+    repositoryReferences: { repository: "https://github.com/example/repo" },
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-extra-field"), {
+    name: "Unexpected field",
+    status: "active",
+    ownerUid: "bob",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-forged-time"), {
+    name: "Forged time",
+    status: "active",
+    createdAt: new Date("2020-01-01T00:00:00.000Z"),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(getDoc(doc(bobDb, "users/alice/projects/project-1")));
+  await assertFails(setDoc(doc(bobDb, "users/alice/projects/project-2"), {
+    name: "Bob cannot write here",
+    status: "active",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(deleteDoc(project));
 
-  await assertSucceeds(
-    setDoc(doc(alice.firestore(), "users/alice/tasks/task-1"), {
-      title: "Alice task",
-      status: "todo",
-    }),
-  );
-  await assertSucceeds(getDoc(doc(alice.firestore(), "users/alice/tasks/task-1")));
-  await assertFails(getDoc(doc(bob.firestore(), "users/alice/tasks/task-1")));
-  await assertFails(
-    setDoc(doc(bob.firestore(), "users/alice/tasks/task-2"), {
-      title: "Bob cannot write here",
-    }),
-  );
+  const task = doc(aliceDb, "users/alice/tasks/task-1");
+  await assertSucceeds(setDoc(task, {
+    title: "Alice task",
+    description: "A valid user-created task",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(getDoc(task));
+  await assertSucceeds(updateDoc(task, {
+    status: "in_progress",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    status: "running",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    source: "assistant",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-invalid-priority"), {
+    title: "Invalid priority",
+    status: "todo",
+    priority: "critical",
+    source: "user",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-empty-title"), {
+    title: "",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-long-title"), {
+    title: "x".repeat(201),
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-invalid-due"), {
+    title: "Invalid due date",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    dueAt: "tomorrow",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-invalid-project"), {
+    title: "Invalid project reference",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: 42,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-invalid-source"), {
+    title: "Forged provenance",
+    status: "todo",
+    priority: "medium",
+    source: "assistant",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-recurrence"), {
+    title: "Unsupported recurrence",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    recurrence: { frequency: "daily" },
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-forged-time"), {
+    title: "Forged timestamp",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    createdAt: new Date("2020-01-01T00:00:00.000Z"),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(getDoc(doc(bobDb, "users/alice/tasks/task-1")));
+  await assertFails(setDoc(doc(bobDb, "users/alice/tasks/task-2"), {
+    title: "Bob cannot write here",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(deleteDoc(task));
 });
 
 test("client cannot directly mutate devices", async () => {

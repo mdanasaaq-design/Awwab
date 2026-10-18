@@ -10,6 +10,52 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == uid;
     }
 
+    function validProject(data) {
+      return data.keys().hasOnly([
+          "name", "description", "repositoryReferences", "status",
+          "tags", "createdAt", "updatedAt"
+        ])
+        && data.keys().hasAll(["name", "status", "createdAt", "updatedAt"])
+        && data.name is string
+        && data.name.size() > 0
+        && data.name.size() <= 160
+        && data.status in ["active", "archived"]
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && (!("description" in data)
+          || (data.description is string && data.description.size() <= 4000))
+        && (!("tags" in data)
+          || (data.tags is list && data.tags.size() <= 20))
+        && (!("repositoryReferences" in data)
+          || (data.repositoryReferences is list && data.repositoryReferences.size() <= 20));
+    }
+
+    function validTask(data) {
+      return data.keys().hasOnly([
+          "title", "description", "status", "priority", "dueAt",
+          "projectId", "createdAt", "updatedAt", "completedAt", "source"
+        ])
+        && data.keys().hasAll([
+          "title", "status", "priority", "createdAt", "updatedAt", "source"
+        ])
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 200
+        && data.status in ["todo", "in_progress", "done", "blocked", "cancelled"]
+        && data.priority in ["low", "medium", "high", "urgent"]
+        && data.source in ["user", "assistant"]
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && (!("description" in data)
+          || (data.description is string && data.description.size() <= 4000))
+        && (!("dueAt" in data)
+          || data.dueAt == null || data.dueAt is timestamp)
+        && (!("projectId" in data)
+          || data.projectId == null || data.projectId is string)
+        && (!("completedAt" in data)
+          || data.completedAt == null || data.completedAt is timestamp);
+    }
+
     match /users/{uid} {
       // Root profile fields are backend-owned until a validated profile-edit API exists.
       allow read: if isOwner(uid);
@@ -21,11 +67,31 @@ service cloud.firestore {
       }
 
       match /projects/{projectId} {
-        allow read, create, update, delete: if isOwner(uid);
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid)
+          && validProject(request.resource.data)
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time;
+        allow update: if isOwner(uid)
+          && validProject(request.resource.data)
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.updatedAt == request.time;
+        allow delete: if isOwner(uid);
       }
 
       match /tasks/{taskId} {
-        allow read, create, update, delete: if isOwner(uid);
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid)
+          && validTask(request.resource.data)
+          && request.resource.data.source == "user"
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time;
+        allow update: if isOwner(uid)
+          && validTask(request.resource.data)
+          && request.resource.data.source == resource.data.source
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.updatedAt == request.time;
+        allow delete: if isOwner(uid);
       }
 
       match /conversations/{conversationId} {
