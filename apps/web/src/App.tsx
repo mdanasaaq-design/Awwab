@@ -63,6 +63,7 @@ export function App() {
   const previousPendingRevokeRef = useRef("");
   const [activeSection, setActiveSection] = useState<SectionId>("assistant");
   const [signOutBusy, setSignOutBusy] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
   const [switcherOpen, setSwitcherOpen] = useState(false);
   const [switcherQuery, setSwitcherQuery] = useState("");
   const [switcherIndex, setSwitcherIndex] = useState(0);
@@ -283,9 +284,12 @@ export function App() {
   }
 
   async function handleSignOut() {
+    setSignOutError("");
     setSignOutBusy(true);
     try {
       await signOutAwwab();
+    } catch {
+      setSignOutError("Could not sign out. Check your connection and try again.");
     } finally {
       setSignOutBusy(false);
     }
@@ -389,6 +393,7 @@ export function App() {
         </nav>
 
         <div className="sidebar-bottom">
+          {signOutError && <p className="error signout-error" role="alert">{signOutError}</p>}
           <div className="connection-state">
             <span className={deviceStatus === "trusted" ? "connection-dot good" : "connection-dot"} />
             <span>
