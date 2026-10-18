@@ -54,6 +54,10 @@ export interface EnsureUserProfileResponse {
   uid: string;
 }
 
+/**
+ * Planned application-level profile shape. This is not a DTO for the current root
+ * Firestore profile document; see docs/data-model.md for its backend-owned fields.
+ */
 export interface UserProfile {
   displayName: string;
   email: string;
