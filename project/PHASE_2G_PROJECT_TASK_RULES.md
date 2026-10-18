@@ -1,6 +1,6 @@
 # Phase 2G — Project and Task Field-Level Rules
 
-**Status:** Implementation committed; CI validation pending  
+**Status:** Implemented on branch; CI passed; merge pending  
 **Phase:** 2 — Foundation security and environment validation  
 **Branch:** `fix/phase-2-project-task-rules`  
 **Risk:** AWW-014 (P1)
@@ -57,7 +57,7 @@ The list fields are bounded and top-level types are checked here; their element 
 
 - Rules: `firestore.rules` now validates project/task allowed keys, required fields, size/type limits, enums, server timestamps, immutable creation timestamps, and task source provenance.
 - Tests: `tests/firestore.rules.test.js` includes valid writes plus negative cases for malformed fields, unsupported recurrence, forged timestamps, and cross-user access.
-- CI result: pending for the current branch.
+- CI: run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed all four jobs, including project/task Rules emulator tests.
 
 ## Test plan
 
