@@ -1,6 +1,6 @@
 # Phase 2D — Canonical Device Callable Contracts
 
-**Status:** Acceptance criteria recorded before implementation  
+**Status:** Implementation committed; CI validation pending  
 **Phase:** 2 — Foundation security and environment validation  
 **Branch:** `fix/phase-2-contract-alignment`  
 **Risk:** AWW-004 (P1)
@@ -29,6 +29,13 @@ The shared `DeviceRecord` omits `deviceId` and requires timestamp strings that t
 - [ ] Web, Functions, shared contract typecheck, Firestore Rules, and callable emulator CI checks pass.
 - [ ] Current status, task list, and risk register record the result and any remaining gaps.
 - [ ] No deployment is performed.
+
+## Implementation record
+
+- Shared contracts: `packages/shared/src/contracts.ts` now defines the serialized device record and device/profile callable success DTOs.
+- Web client: `apps/web/src/device.ts` consumes the shared response types instead of duplicate local device generics.
+- Runtime tests: `tests/functions.callable.test.js` asserts response envelopes and fields.
+- CI result: pending for the current branch.
 
 ## Test plan
 
