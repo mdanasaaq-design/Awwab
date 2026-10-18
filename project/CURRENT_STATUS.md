@@ -73,8 +73,9 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 ## Active implementation work
 
 - Phase 1 command-center UX slices were merged in [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), [PR #6](https://github.com/mdanasaaq-design/Awwab/pull/6), and [PR #7](https://github.com/mdanasaaq-design/Awwab/pull/7). Automated CI passed for each; browser/manual interaction, responsive, and owner UX acceptance checks remain outstanding, so Phase 1 is not marked complete.
-- Phase 2A profile-write hardening was merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8). CI run [39116859040](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116859040) passed the Rules tests, web build, Functions build/typecheck, and shared contract typecheck. Root profile documents are now owner-read only from clients; AWW-001 and AWW-006 are resolved for the current schema.
-- Phase 2B atomic first-device bootstrap and callable emulator tests are implemented on branch `fix/phase-2-bootstrap-concurrency`, PR [#9](https://github.com/mdanasaaq-design/Awwab/pull/9). CI run [39117086761](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117086761) passed all four jobs, including concurrent bootstrap tests. Merge is pending.
+- Phase 2A profile-write hardening was merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8); CI run [39116859040](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116859040) passed. AWW-001 and AWW-006 are resolved for the current root profile contract.
+- Phase 2B atomic bootstrap was merged in [PR #9](https://github.com/mdanasaaq-design/Awwab/pull/9); CI run [39117195997](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117195997) passed all four jobs, including the callable emulator race test. AWW-002 is resolved for the tested bootstrap invariant.
+- Phase 2C last-trusted-device revocation is in progress on branch `fix/phase-2-last-device-revocation`. Acceptance criteria were recorded before implementation in [PHASE_2C_LAST_DEVICE_REVOCATION.md](PHASE_2C_LAST_DEVICE_REVOCATION.md). The transaction and concurrency test are implemented; CI is pending.
 - No Firebase deployment has been performed.
 
 ## Next phases
