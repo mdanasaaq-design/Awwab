@@ -386,7 +386,7 @@ export function App() {
               aria-label="Open quick switcher (Ctrl or Command plus K)"
             >
               <span>Jump to…</span>
-              <kbd>⌘ K</kbd>
+              <kbd>Ctrl/⌘ K</kbd>
             </button>
             <span className="environment-label"><span className="connection-dot good" /> SIGNED IN</span>
             <span className="topbar-avatar" title={user.email ?? user.uid}>{(user.email?.[0] ?? "A").toUpperCase()}</span>
@@ -571,6 +571,8 @@ export function App() {
                 onChange={(event) => { setSwitcherQuery(event.target.value); setSwitcherIndex(0); }}
                 onKeyDown={handleSwitcherInputKeyDown}
                 placeholder="Search sections…"
+                role="combobox"
+                aria-expanded="true"
                 aria-label="Search navigation sections"
                 aria-autocomplete="list"
                 aria-controls="quick-switcher-options"
