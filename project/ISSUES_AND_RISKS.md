@@ -61,10 +61,10 @@
 
 - **Priority:** P1
 - **Type:** Validation gap
-- **Status:** Expanded auth/input/state coverage implemented in PR #12; CI pending.
+- **Status:** Callable authorization/input/state coverage implemented in PR #12; CI passed; merge pending. Real Auth/device lifecycle integration remains unverified.
 - **Evidence:** The repository contains Firestore Rules tests; the reviewed task/status documents list backend callable emulator tests and real authentication/device lifecycle validation as outstanding.
 - **Impact:** A successful web build and Rules suite do not prove backend state transitions, authorization, audit events, or failure behavior work end-to-end.
-- **Plan:** PR [#12](https://github.com/mdanasaaq-design/Awwab/pull/12) extends the emulator suite for unauthenticated calls, invalid IDs/platforms, registration idempotency, trust checks, approval state, revoked-device reactivation, profile initialization, and health. CI is pending; full real Auth/device lifecycle validation remains outstanding.
+- **Mitigation:** PR [#12](https://github.com/mdanasaaq-design/Awwab/pull/12) extends the emulator suite for unauthenticated calls, invalid IDs/platforms, registration idempotency, trust checks, approval state, revoked-device reactivation, profile initialization, and health. CI run [39117914336](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117914336) passed. Full real Auth/device lifecycle validation remains outstanding.
 - **Acceptance:** Emulator tests exercise positive and negative paths with observed results recorded in the status report.
 - **Phase:** 2 — Foundation security.
 
