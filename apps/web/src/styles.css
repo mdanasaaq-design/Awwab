@@ -224,6 +224,66 @@ button:disabled { cursor: not-allowed; opacity: .56; }
 .sign-in-button { width: 100%; margin-top: 3px; }
 .auth-footnote { margin: 22px 0 0; padding-top: 16px; border-top: 1px solid var(--line-soft); color: #858e9b; font-size: 10px; }
 
+.system-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.overview-card {
+  min-width: 0;
+  padding: 14px 15px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+.overview-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--quiet);
+  font: 9px var(--mono);
+  letter-spacing: .07em;
+}
+.overview-glyph {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+  border: 1px solid #363c44;
+  border-radius: 5px;
+  color: #b5c5af;
+  font-size: 13px;
+}
+.overview-value {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 550;
+  letter-spacing: -.015em;
+}
+.overview-value::before {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 8px 2px 0;
+  border-radius: 50%;
+  background: #a98664;
+  content: "";
+}
+.overview-value.status-good { color: #c4d8bd; }
+.overview-value.status-good::before { background: #91b28a; }
+.overview-value.status-attention { color: #e5a3a8; }
+.overview-value.status-attention::before { background: #d17f87; }
+.overview-value.status-pending { color: #d3b38a; }
+.overview-card p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
 @media (min-width: 1400px) {
   .page-content { padding-top: 58px; }
 }
@@ -256,6 +316,9 @@ button:disabled { cursor: not-allowed; opacity: .56; }
   .page-content { padding: 30px 17px 38px; }
   .page-intro { margin-bottom: 23px; }
   .page-intro h1 { font-size: 29px; }
+  .system-overview { grid-template-columns: 1fr; gap: 8px; }
+  .overview-card { padding: 12px 13px; }
+  .overview-value { margin-top: 10px; }
   .assistant-panel { padding: 18px 15px 14px; }
   .assistant-panel h2 { margin-top: 21px; }
   .availability { font-size: 7px; }
