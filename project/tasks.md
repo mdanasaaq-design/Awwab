@@ -34,7 +34,8 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [ ] Write acceptance criteria and capture a design/reference review before editing UI code.
 
 ### Interaction and accessibility
-- [ ] Phase 1 bounded slice: keyboard-first quick switcher, skip link, focus handling, and truthful signed-in status label. Acceptance criteria: [Phase 1 implementation](PHASE_1_IMPLEMENTATION.md). Keep unchecked until CI and manual interaction review are recorded.
+- [x] Implement bounded Phase 1 slice: keyboard-first quick switcher, skip link, focus handling, and truthful signed-in status label; CI passed. Acceptance criteria and evidence: [Phase 1 implementation](PHASE_1_IMPLEMENTATION.md).
+- [ ] Complete browser/manual interaction review and owner acceptance before treating this slice as fully accepted.
 - [ ] Design loading, empty, unavailable, error, success, confirmation, and retry states.
 - [ ] Review keyboard-only navigation, focus order, focus visibility, and escape/cancel behavior.
 - [ ] Review semantic labels, screen-reader behavior, contrast, scalable text, and reduced motion.
