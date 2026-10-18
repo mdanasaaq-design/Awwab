@@ -38,6 +38,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [ ] Complete browser/manual interaction review and owner acceptance before treating this slice as fully accepted.
 - [x] Implement Phase 1C explicit device-revocation confirmation and focus handling; CI passed. Acceptance criteria/evidence: [PHASE_1C_DEVICE_REVOCATION_CONFIRMATION.md](PHASE_1C_DEVICE_REVOCATION_CONFIRMATION.md).
 - [ ] Complete Phase 1C browser/manual confirm, cancel, focus, and error review.
+- [ ] Phase 1D mobile account controls and sign-out failure state. Acceptance criteria: [PHASE_1D_MOBILE_ACCOUNT_CONTROLS.md](PHASE_1D_MOBILE_ACCOUNT_CONTROLS.md); keep unchecked until CI and manual responsive review are recorded.
 - [x] Implement Phase 1B device-list loading, refreshing, empty, and error states; CI passed. Acceptance criteria/evidence: [PHASE_1B_DEVICE_LOADING.md](PHASE_1B_DEVICE_LOADING.md).
 - [ ] Complete Phase 1B browser/manual state review.
 - [ ] Design loading, empty, unavailable, error, success, confirmation, and retry states.
