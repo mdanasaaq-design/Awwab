@@ -29,6 +29,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [ ] Review the existing command-center shell against the intended information-dense, calm, keyboard-friendly direction.
 - [x] Implement Phase 1G page/browser-title context; merged in [PR #20](https://github.com/mdanasaaq-design/Awwab/pull/20), CI passed. Manual browser review remains pending; acceptance criteria: [PHASE_1G_PAGE_CONTEXT.md](PHASE_1G_PAGE_CONTEXT.md).
 - [ ] Define page hierarchy, navigation behavior, page titles, and consistent status language.
+- [ ] Phase 1H command-center operational overview added directly on `main`; build and browser/manual validation pending. Acceptance criteria: [PHASE_1H_COMMAND_CENTER_OVERVIEW.md](PHASE_1H_COMMAND_CENTER_OVERVIEW.md).
 - [ ] Define a small design-token/component baseline for typography, spacing, surfaces, borders, focus, and semantic states.
 - [ ] Specify the purpose and primary user workflow for Assistant, Projects, Tasks, Research, Automations, Activity, and Settings.
 - [ ] Decide whether a command/search palette and shortcuts solve real navigation problems before designing them.
