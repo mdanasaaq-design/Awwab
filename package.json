@@ -11,7 +11,8 @@
     "functions:typecheck": "npm --prefix backend/functions run typecheck",
     "shared:typecheck": "tsc --noEmit packages/shared/src/contracts.ts",
     "firebase:emulators": "firebase emulators:start --project demo-awwab",
-    "firebase:rules:test": "firebase emulators:exec --only firestore --project demo-awwab \"node --test tests/firestore.rules.test.js\""
+    "firebase:rules:test": "firebase emulators:exec --only firestore --project demo-awwab \"node --test tests/firestore.rules.test.js\"",
+    "firebase:callable:test": "firebase emulators:exec --only auth,firestore,functions --project demo-awwab \"node --test tests/functions.callable.test.js\""
   },
   "engines": {
     "node": "22"
