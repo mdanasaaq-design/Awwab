@@ -28,10 +28,10 @@
 
 - **Priority:** P0
 - **Type:** Security/reliability risk
-- **Status:** Mitigation implemented in PR #9; CI passed; merge pending.
+- **Status:** Resolved in PR #9 for the tested bootstrap invariant.
 - **Evidence:** `bootstrapFirstDevice` queries for any device, then creates a trusted device in a separate operation.
 - **Impact:** Two concurrent bootstrap requests may both observe an empty collection and create separate trusted first devices.
-- **Mitigation:** PR [#9](https://github.com/mdanasaaq-design/Awwab/pull/9) uses a per-user guard and one transaction for the guard, trusted device, and audit event. Callable emulator test [39117086761](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117086761) passed concurrent bootstrap, unauthenticated, repeat-call, and legacy-device checks. Close after merge and continued regression coverage.
+- **Resolution:** PR [#9](https://github.com/mdanasaaq-design/Awwab/pull/9) uses a per-user guard and one transaction for the guard, trusted device, and audit event. Callable emulator test [39117195997](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117195997) passed concurrent bootstrap, unauthenticated, repeat-call, and legacy-device checks.
 - **Acceptance:** Concurrent bootstrap attempts result in exactly one valid first trusted device; all other attempts fail safely or return the same established result.
 - **Phase:** 2 — Foundation security.
 
@@ -39,10 +39,10 @@
 
 - **Priority:** P0
 - **Type:** Security/recovery risk
-- **Status:** Confirmed read-then-write pattern; race not yet reproduced.
+- **Status:** Transaction mitigation and concurrency test implemented in PR #10; CI pending.
 - **Evidence:** `revokeDevice` queries the trusted-device count and then updates a target device separately.
 - **Impact:** Concurrent revocations may each observe multiple trusted devices and revoke different devices, potentially leaving no trusted device.
-- **Plan:** Make the last-trusted-device invariant concurrency-safe. Test concurrent revocations, retries, self-revocation, already-revoked devices, and recovery.
+- **Plan:** PR [#10](https://github.com/mdanasaaq-design/Awwab/pull/10) moves target-state checks, trusted-device counting, revocation, and audit into one transaction; the callable emulator test now races revocation of two trusted devices. Await CI before considering the mitigation validated.
 - **Acceptance:** No supported concurrent operation can leave the account with zero trusted devices unless a separately designed recovery path intentionally permits it.
 - **Phase:** 2 — Foundation security.
 
