@@ -175,7 +175,7 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
   await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-too-many-tags"), {
     name: "Too many tags",
     status: "active",
-    tags: Array.from({ length: 21 }, (_, index) => `tag-${index}`),
+    tags: Array.from({ length: 6 }, (_, index) => `tag-${index}`),
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
