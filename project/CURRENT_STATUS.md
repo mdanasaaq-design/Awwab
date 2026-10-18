@@ -77,7 +77,7 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 - Phase 2B atomic bootstrap was merged in [PR #9](https://github.com/mdanasaaq-design/Awwab/pull/9); CI run [39117195997](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117195997) passed all four jobs.
 - Phase 2C transactional last-device revocation was merged in [PR #10](https://github.com/mdanasaaq-design/Awwab/pull/10); CI run [39117401427](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117401427) passed all four jobs.
 - Phase 2D shared device callable contracts were merged in [PR #11](https://github.com/mdanasaaq-design/Awwab/pull/11); CI run [39117694957](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117694957) passed all four jobs. The planned `UserProfile` interface remains separate from the current persisted-profile DTO.
-- Phase 2E broader callable authorization, invalid-input, idempotency, and state-transition tests are in progress on branch `test/phase-2-callable-coverage`. Acceptance criteria are in [PHASE_2E_CALLABLE_COVERAGE.md](PHASE_2E_CALLABLE_COVERAGE.md); current CI is pending.
+- Phase 2E broader callable authorization, invalid-input, idempotency, and state-transition tests are implemented on branch `test/phase-2-callable-coverage`, PR [#12](https://github.com/mdanasaaq-design/Awwab/pull/12). CI run [39117914336](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117914336) passed all four jobs, including the expanded callable emulator suite. Merge is pending.
 - No Firebase deployment has been performed.
 
 ## Next phases
