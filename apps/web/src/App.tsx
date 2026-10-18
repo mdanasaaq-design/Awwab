@@ -368,7 +368,7 @@ export function App() {
         </div>
       </aside>
 
-      <section className="main-panel" id="main-content" tabIndex={-1} aria-label="Main content">
+      <section className="main-panel" aria-label="Main content">
         <header className="topbar">
           <div className="breadcrumbs">
             <span>Awwab</span>
@@ -394,7 +394,7 @@ export function App() {
         </header>
 
         {activeSection === "assistant" && (
-          <div className="page-content">
+          <div className="page-content" id="main-content" tabIndex={-1}>
             <div className="page-intro">
               <p className="eyebrow">YOUR COMMAND CENTER</p>
               <h1>Good to have you here.</h1>
@@ -461,7 +461,7 @@ export function App() {
         )}
 
         {activeSection !== "assistant" && activeSection !== "settings" && (
-          <div className="page-content secondary-page">
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
             <div className="page-intro">
               <p className="eyebrow">{sectionCopy[activeSection].eyebrow}</p>
               <h1>{sectionCopy[activeSection].title}</h1>
