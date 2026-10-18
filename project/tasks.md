@@ -61,7 +61,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 
 ### Rules and data ownership
 - [x] Phase 2A: make `/users/{uid}` backend-owned, allow owner read only, and test denied client writes. Merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8); CI run 39116859040 passed. Acceptance criteria/evidence: [PHASE_2A_PROFILE_WRITE_BOUNDARY.md](PHASE_2A_PROFILE_WRITE_BOUNDARY.md).
-- [ ] Phase 2F: document and enforce collection ownership for conversations/messages, memories, automations, preferences, notifications, jobs, connections, and the system guard. Acceptance criteria: [PHASE_2F_DATA_OWNERSHIP_RULES.md](PHASE_2F_DATA_OWNERSHIP_RULES.md); CI pending.
+- [x] Implement Phase 2F collection ownership rules and emulator tests; CI run 39118165874 passed all four jobs. PR [#13](https://github.com/mdanasaaq-design/Awwab/pull/13) awaits merge. Acceptance criteria/evidence: [PHASE_2F_DATA_OWNERSHIP_RULES.md](PHASE_2F_DATA_OWNERSHIP_RULES.md). Projects/tasks field-level validation remains a follow-up.
 - [ ] Decide and document whether /jobs and /connections are backend-only or need narrow client reads.
 - [ ] Review client write permissions for projects, tasks, memories, automations, preferences, and notifications.
 - [ ] Add negative Rules tests for protected profile fields, unexpected keys, cross-user access, and disallowed state changes.
