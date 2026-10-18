@@ -1,6 +1,6 @@
 # Phase 1D — Mobile Account Controls and Sign-Out Errors
 
-**Status:** Acceptance criteria recorded before implementation  
+**Status:** Merged into main in PR #6; CI passed; browser/manual review pending  
 **Phase:** 1 — Web command-center UX  
 **Branch:** `feat/phase-1-mobile-account-controls`
 
@@ -27,6 +27,13 @@ The mobile CSS hides the entire sidebar footer, including the only visible sign-
 - [ ] No authentication policy or backend behavior changes.
 - [ ] Web typecheck/build CI passes.
 - [ ] Manual responsive and sign-out failure checks are recorded; no browser interaction is claimed unless observed.
+
+## Implementation and validation record
+
+- Code: `apps/web/src/App.tsx` and `apps/web/src/styles.css`.
+- Pull request: [#6](https://github.com/mdanasaaq-design/Awwab/pull/6), merged as `e5dd42d8175fbd6157b9ee9574f91dc3d5b99955`.
+- CI: run [39116508500](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116508500) passed (web typecheck/build, Functions/shared typecheck, Firestore Rules tests).
+- Browser/manual responsive and sign-out failure checks have not been observed in this environment.
 
 ## Manual verification checklist
 
