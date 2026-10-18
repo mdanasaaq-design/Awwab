@@ -39,10 +39,10 @@
 
 - **Priority:** P0
 - **Type:** Security/recovery risk
-- **Status:** Transaction mitigation and concurrency test implemented in PR #10; CI pending.
+- **Status:** Resolved in PR #10 for the tested last-trusted-device invariant.
 - **Evidence:** `revokeDevice` queries the trusted-device count and then updates a target device separately.
 - **Impact:** Concurrent revocations may each observe multiple trusted devices and revoke different devices, potentially leaving no trusted device.
-- **Plan:** PR [#10](https://github.com/mdanasaaq-design/Awwab/pull/10) moves target-state checks, trusted-device counting, revocation, and audit into one transaction; the callable emulator test now races revocation of two trusted devices. Await CI before considering the mitigation validated.
+- **Resolution:** PR [#10](https://github.com/mdanasaaq-design/Awwab/pull/10) moves target-state checks, trusted-device counting, revocation, and audit into one transaction. CI run [39117401427](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117401427) passed concurrent revocation, final-device rejection, idempotent repeat, and pending-device checks.
 - **Acceptance:** No supported concurrent operation can leave the account with zero trusted devices unless a separately designed recovery path intentionally permits it.
 - **Phase:** 2 — Foundation security.
 
@@ -50,10 +50,10 @@
 
 - **Priority:** P1
 - **Type:** Correctness/maintainability
-- **Status:** Confirmed from source comparison.
+- **Status:** Device callable contract alignment implemented in PR #11; CI passed; merge pending.
 - **Evidence:** `packages/shared/src/contracts.ts`, web device types/callable generic types, and backend response shapes differ in required fields and envelope shape. For example, the shared device record does not include the web's `deviceId` field, and callable responses include fields such as `ok` and `status` that are not represented by one shared contract.
 - **Impact:** Drift can cause unsafe assumptions, duplicated types, and runtime failures that TypeScript cannot catch across the client/server boundary.
-- **Plan:** Define canonical versioned request/response DTOs and use them on both sides; validate untrusted runtime payloads instead of relying on compile-time types alone.
+- **Mitigation:** PR [#11](https://github.com/mdanasaaq-design/Awwab/pull/11) defines shared device callable DTOs, uses them in the web client, and adds emulator response-shape assertions. CI run [39117694957](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117694957) passed. The planned `UserProfile` domain interface remains explicitly separate from the current persisted-profile DTO and needs a later schema decision before use.
 - **Acceptance:** Contract tests cover success/error shapes and web/backend compile against the same definitions.
 - **Phase:** 2 — Foundation security and contracts.
 

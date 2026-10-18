@@ -1,19 +1,19 @@
 import { httpsCallable, type Functions } from "firebase/functions";
 import { getFunctions } from "firebase/functions";
+import {
+  type ApproveDeviceResponse,
+  type BootstrapFirstDeviceResponse,
+  type DeviceRecord,
+  type EnsureUserProfileResponse,
+  type ListDevicesResponse,
+  type RegisterDeviceResponse,
+  type RevokeDeviceResponse,
+} from "@awwab/shared/contracts";
 import { auth, firebaseApp } from "./firebase";
 
-const STORAGE_KEY = "awwab.deviceId";
+export type { DeviceRecord } from "@awwab/shared/contracts";
 
-export interface DeviceRecord {
-  deviceId: string;
-  platform: "web" | "android";
-  appVersion: string;
-  deviceName: string;
-  status: "pending" | "trusted" | "revoked";
-  createdAt: string | null;
-  lastSeenAt: string | null;
-  trustedAt: string | null;
-}
+const STORAGE_KEY = "awwab.deviceId";
 
 function getDeviceId(): string {
   const existing = window.localStorage.getItem(STORAGE_KEY);
@@ -50,7 +50,7 @@ export async function registerWebDevice() {
     deviceName: navigator.userAgent.slice(0, 100),
   };
 
-  const bootstrap = httpsCallable<typeof payload, { status: string }>(
+  const bootstrap = httpsCallable<typeof payload, BootstrapFirstDeviceResponse>(
     functions,
     "bootstrapFirstDevice",
   );
@@ -63,7 +63,7 @@ export async function registerWebDevice() {
       throw error;
     }
 
-    const register = httpsCallable<typeof payload, { status: string }>(
+    const register = httpsCallable<typeof payload, RegisterDeviceResponse>(
       functions,
       "registerDevice",
     );
@@ -77,7 +77,7 @@ export async function listDevices(): Promise<DeviceRecord[]> {
     throw new Error("Firebase is not configured for this environment.");
   }
 
-  const callable = httpsCallable<{ deviceId: string }, { devices: DeviceRecord[] }>(
+  const callable = httpsCallable<{ deviceId: string }, ListDevicesResponse>(
     functions,
     "listDevices",
   );
@@ -125,7 +125,7 @@ export async function ensureUserProfile() {
     throw new Error("Firebase is not configured for this environment.");
   }
 
-  const callable = httpsCallable<void, { ok: boolean; uid: string }>(
+  const callable = httpsCallable<void, EnsureUserProfileResponse>(
     functions,
     "ensureUserProfile",
   );
