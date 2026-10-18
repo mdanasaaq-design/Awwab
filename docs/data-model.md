@@ -41,13 +41,26 @@ deviceId, platform, appVersion, deviceName, createdAt, lastSeenAt, status, trust
 
 ## Project
 
-name, description, repositoryReferences, status, tags, createdAt, updatedAt.
+Fields: `name`, `description`, `repositoryReferences`, `status`, `tags`, `createdAt`, `updatedAt`.
+
+- Required client fields: `name`, `status`, `createdAt`, `updatedAt`.
+- Name is 1–160 characters; description is optional and at most 4,000 characters.
+- Status is `active` or `archived`.
+- Tags and repository references are optional lists bounded to 20 entries.
+- Create timestamps must use server timestamps; `createdAt` is immutable and `updatedAt` must be a server timestamp on update.
 
 ## Task
 
-title, description, status, priority, dueAt, projectId, recurrence, createdAt, updatedAt, completedAt, source.
+Client-writable fields: `title`, `description`, `status`, `priority`, `dueAt`, `projectId`, `createdAt`, `updatedAt`, `completedAt`, `source`.
 
-Tasks should preserve provenance between user commitments and AI suggestions.
+- Required: `title`, `status`, `priority`, `createdAt`, `updatedAt`, `source`.
+- Title is 1–200 characters; description is optional and at most 4,000 characters.
+- Status is `todo`, `in_progress`, `done`, `blocked`, or `cancelled`; priority is `low`, `medium`, `high`, or `urgent`.
+- Client-created tasks must use `source: "user"`; source cannot be changed later.
+- Create timestamps must use server timestamps; `createdAt` is immutable and `updatedAt` must be a server timestamp on update.
+- `recurrence` is not client-writable until its schema and allowed transitions are defined.
+
+Tasks should preserve provenance between user commitments and AI suggestions. List element validation, project/task cross-document consistency, and detailed status-transition policy remain follow-ups; no backend executor may trust these fields until those contracts are enforced.
 
 ## Conversation/message
 
