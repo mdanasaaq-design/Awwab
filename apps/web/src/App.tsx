@@ -478,7 +478,7 @@ export function App() {
         )}
 
         {activeSection === "settings" && (
-          <div className="page-content secondary-page">
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
             <div className="page-intro">
               <p className="eyebrow">SYSTEM / SETTINGS</p>
               <h1>Account and access.</h1>
