@@ -1,6 +1,6 @@
 # Phase 1F — Honest Empty State for Trusted Devices
 
-**Status:** Acceptance criteria recorded before application-code edits  
+**Status:** Implemented and merged in [PR #19](https://github.com/mdanasaaq-design/Awwab/pull/19); all four CI jobs passed in [run 39126668502](https://github.com/mdanasaaq-design/Awwab/actions/runs/39126668502). Manual browser review remains pending.  
 **Phase:** 1 — Web command-center UX  
 **Branch:** `fix/phase-1-device-empty-state-copy`  
 **Scope:** A narrowly bounded copy and accessibility correction in Settings. No backend, authorization, Firebase configuration, assistant runtime, or deployment changes.
@@ -18,14 +18,14 @@ The trusted-device list's successful empty result currently says **"No device re
 
 ## Acceptance criteria
 
-- [ ] A successful response containing zero devices displays a clear successful-empty message, not "No device records loaded."
-- [ ] The empty state is announced politely to assistive technology without stealing focus.
-- [ ] Loading, refreshing, and request-error states remain distinct from a successful empty result.
-- [ ] The Refresh list control remains available and continues to invoke the existing refresh function.
-- [ ] Existing device rows and approve/revoke flows are unchanged.
-- [ ] No backend, Firestore Rules, auth, dependency, or deployment changes are included.
-- [ ] Web typecheck/build passes in CI; no local/browser result is claimed unless actually observed.
-- [ ] Manual browser review remains explicitly pending if no browser session is available.
+- [x] A successful response containing zero devices displays a clear successful-empty message, not "No device records loaded."
+- [x] The empty state is announced politely to assistive technology without stealing focus.
+- [x] Loading, refreshing, and request-error states remain distinct from a successful empty result.
+- [x] The Refresh list control remains available and continues to invoke the existing refresh function.
+- [x] Existing device rows and approve/revoke flows are unchanged.
+- [x] No backend, Firestore Rules, auth, dependency, or deployment changes are included.
+- [x] All four CI jobs passed, including web typecheck/build, in [run 39126668502](https://github.com/mdanasaaq-design/Awwab/actions/runs/39126668502).
+- [x] Manual browser review remains explicitly pending; no authenticated browser session was exercised.
 
 ## Verification plan
 
