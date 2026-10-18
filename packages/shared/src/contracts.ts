@@ -4,23 +4,62 @@ export type ApprovalStatus = "pending" | "approved" | "rejected" | "expired" | "
 
 export type RiskLevel = "low" | "medium" | "high" | "critical";
 
+/**
+ * Serialized device shape returned by the listDevices callable.
+ * Firestore timestamps are converted to ISO strings; missing timestamps are null.
+ */
+export interface DeviceRecord {
+  deviceId: string;
+  platform: "web" | "android";
+  appVersion: string;
+  deviceName: string;
+  status: DeviceStatus;
+  createdAt: string | null;
+  lastSeenAt: string | null;
+  trustedAt: string | null;
+}
+
+export interface BootstrapFirstDeviceResponse {
+  ok: true;
+  deviceId: string;
+  status: "trusted";
+}
+
+export interface RegisterDeviceResponse {
+  ok: true;
+  deviceId: string;
+  status: "pending" | "trusted";
+}
+
+export interface ListDevicesResponse {
+  ok: true;
+  callerDeviceId: string;
+  devices: DeviceRecord[];
+}
+
+export interface ApproveDeviceResponse {
+  ok: true;
+  deviceId: string;
+  status: "trusted";
+}
+
+export interface RevokeDeviceResponse {
+  ok: true;
+  deviceId: string;
+  status: "revoked";
+}
+
+export interface EnsureUserProfileResponse {
+  ok: true;
+  uid: string;
+}
+
 export interface UserProfile {
   displayName: string;
   email: string;
   timezone: string;
   locale: string;
   status: "active" | "disabled";
-}
-
-export interface DeviceRecord {
-  platform: "web" | "android";
-  appVersion: string;
-  deviceName: string;
-  status: DeviceStatus;
-  createdAt: string;
-  lastSeenAt: string;
-  trustedAt?: string;
-  revokedAt?: string;
 }
 
 export interface ApprovalRecord {
