@@ -107,3 +107,36 @@ jobs:
         run: npm ci --prefer-offline --no-audit --no-fund
       - name: Firestore Security Rules tests
         run: npm run firebase:rules:test
+
+  backend-callables:
+    name: Backend callable emulator tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Cache installed workspace dependencies
+        id: deps-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            apps/web/node_modules
+            backend/functions/node_modules
+            packages/shared/node_modules
+          key: node-modules-${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json', 'package.json', 'apps/web/package.json', 'backend/functions/package.json', 'packages/shared/package.json') }}
+      - name: Install dependencies
+        if: steps.deps-cache.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline --no-audit --no-fund
+      - name: Build Functions
+        run: npm run functions:build
+      - name: Backend callable emulator tests
+        run: npm run firebase:callable:test

@@ -17,21 +17,21 @@
 
 - **Priority:** P0
 - **Type:** Security risk
-- **Status:** Confirmed from code; not yet demonstrated as exploited.
+- **Status:** Resolved in PR #8; not known to have been exploited.
 - **Evidence:** `firestore.rules` allows an authenticated owner to create and update `/users/{uid}` without field allowlists or restrictions on backend-owned fields.
 - **Impact:** A client can potentially write or overwrite fields intended to be controlled by trusted backend code, including metadata that later features may treat as authoritative.
-- **Plan:** Define allowed client-writable fields and immutable/backend-owned fields. Add Rules tests for protected fields, unexpected keys, valid profile edits, and cross-user access.
-- **Acceptance:** Every profile field has an explicit writer; unauthorized/protected mutations fail in emulator tests.
+- **Resolution:** PR [#8](https://github.com/mdanasaaq-design/Awwab/pull/8) changed the root profile to owner-read only and added negative tests for client create/update/delete and protected fields. CI run [39116859040](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116859040) passed the Firestore Rules suite.
+- **Acceptance:** Satisfied for the current root profile contract. Any future editable profile field needs a new explicit contract and tests.
 - **Phase:** 2 — Foundation security.
 
 ### AWW-002 — First-device bootstrap has a concurrency window
 
 - **Priority:** P0
 - **Type:** Security/reliability risk
-- **Status:** Confirmed from code; race not yet reproduced.
+- **Status:** Mitigation implemented in PR #9; CI passed; merge pending.
 - **Evidence:** `bootstrapFirstDevice` queries for any device, then creates a trusted device in a separate operation.
 - **Impact:** Two concurrent bootstrap requests may both observe an empty collection and create separate trusted first devices.
-- **Plan:** Choose an atomic/transactional bootstrap guard that works with Firestore's actual query/transaction semantics. Test simultaneous requests and idempotent retry behavior.
+- **Mitigation:** PR [#9](https://github.com/mdanasaaq-design/Awwab/pull/9) uses a per-user guard and one transaction for the guard, trusted device, and audit event. Callable emulator test [39117086761](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117086761) passed concurrent bootstrap, unauthenticated, repeat-call, and legacy-device checks. Close after merge and continued regression coverage.
 - **Acceptance:** Concurrent bootstrap attempts result in exactly one valid first trusted device; all other attempts fail safely or return the same established result.
 - **Phase:** 2 — Foundation security.
 
@@ -72,11 +72,11 @@
 
 - **Priority:** P1
 - **Type:** Data integrity
-- **Status:** Confirmed documentation/source gap.
+- **Status:** Resolved for the current root profile contract in PR #8.
 - **Evidence:** The backend's `ensureUserProfile` maintains profile fields and timestamps, while current Rules permit broad owner writes.
 - **Impact:** Client edits and backend-maintained metadata can conflict; future authorization decisions may accidentally rely on client-controlled values.
-- **Plan:** Document field ownership and mutation rules in the data model, Rules, callable contracts, and tests.
-- **Acceptance:** The same ownership matrix is reflected in documentation and enforced by tests.
+- **Resolution:** [Data model](../docs/data-model.md), [Phase 2A acceptance/evidence](PHASE_2A_PROFILE_WRITE_BOUNDARY.md), and the Rules test suite now agree that root profile fields are backend-owned and direct client writes are denied. CI run [39116859040](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116859040) passed.
+- **Acceptance:** Satisfied for the current profile shape; revisit only when a validated profile-edit workflow is designed.
 - **Phase:** 2 — Foundation security.
 
 ### AWW-007 — Jobs and connections appear in the data model but not in explicit Rules matches

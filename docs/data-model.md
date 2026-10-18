@@ -26,6 +26,7 @@
 /users/{uid}/notifications/{notificationId}
 /users/{uid}/jobs/{jobId}
 /users/{uid}/connections/{connectionId}
+/users/{uid}/system/firstDeviceBootstrap
 ```
 
 ## User
@@ -126,3 +127,5 @@ Audit history is backend-controlled and append-oriented.
 Every new personal-data class must define purpose, access, mutation, retention, deletion, export, sensitivity and whether it can influence autonomous actions.
 
 Cloud Functions Admin SDK bypasses Firestore Rules, so privileged functions require their own authorization checks.
+
+The `/users/{uid}/system/firstDeviceBootstrap` document is a backend-only concurrency guard. It records that the one-time first-device bootstrap has been claimed; clients cannot read or write it through Firestore Rules.
