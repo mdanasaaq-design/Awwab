@@ -1,6 +1,6 @@
 # Phase 1E — Sign-In Error and Retry States
 
-**Status:** Acceptance criteria recorded before implementation  
+**Status:** Implemented on branch; CI passed; browser/manual review pending  
 **Phase:** 1 — Web command-center UX  
 **Branch:** `feat/phase-1-auth-error-states`
 
@@ -29,6 +29,13 @@ The sign-in form currently displays the raw error message returned by Firebase A
 - [ ] No account-enumeration behavior or authentication policy changes are introduced.
 - [ ] Web typecheck/build CI passes.
 - [ ] Manual error/retry states are recorded; no browser interaction is claimed unless observed.
+
+## Implementation and validation record
+
+- Code: `apps/web/src/App.tsx`.
+- Pull request: [#7](https://github.com/mdanasaaq-design/Awwab/pull/7).
+- CI: run [39116623190](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116623190) passed on the branch (web typecheck/build, Functions/shared typecheck, Firestore Rules tests).
+- Browser/manual error and retry behavior has not been observed in this environment.
 
 ## Manual verification checklist
 
