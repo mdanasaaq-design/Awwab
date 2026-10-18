@@ -32,7 +32,7 @@
 
 displayName, email, photoUrl, createdAt, updatedAt, status, timezone, locale.
 
-Security-sensitive fields must be backend-controlled.
+**Ownership contract:** the root profile document is backend-controlled. Authenticated clients may read their own profile, but direct client create/update/delete is denied by Firestore Rules. The current web client initializes profiles through the validated `ensureUserProfile` callable; no profile-edit UI or direct client write is supported. If editable fields are introduced later, add a validated callable or a narrowly allowlisted Rules policy and tests rather than restoring broad document writes.
 
 ## Device
 

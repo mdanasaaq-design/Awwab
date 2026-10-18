@@ -72,11 +72,10 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 
 ## Active implementation work
 
-- Phase 1 keyboard navigation, skip-link focus, contrast refinements, device loading/empty/error states, and explicit device-revocation confirmation were merged in [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), merge commit `da11c173c7fd9c60ba4eb5f38edede342300fff2`.
-- Mobile account controls and safe sign-out error handling were merged in [PR #6](https://github.com/mdanasaaq-design/Awwab/pull/6), merge commit `4c870519c480352d9844e242ea194e7b2ae7b88f`. CI run [39116508500](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116508500) passed all three jobs.
-- Browser/manual interaction, responsive, and owner UX acceptance checks remain outstanding; Phase 1 is still in progress.
-- The current bounded slice maps Firebase sign-in failures to safe user-facing messages, with criteria written before the code change in [PHASE_1E_AUTH_ERROR_STATES.md](PHASE_1E_AUTH_ERROR_STATES.md). PR [#7](https://github.com/mdanasaaq-design/Awwab/pull/7) has CI run [39116623190](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116623190) passed: web typecheck/build, Functions/shared typecheck, and Firestore Rules tests. Browser/manual error and retry review remains outstanding.
-- Deployment has not been performed.
+- Phase 1 command-center UX slices were merged through [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), [PR #6](https://github.com/mdanasaaq-design/Awwab/pull/6), and [PR #7](https://github.com/mdanasaaq-design/Awwab/pull/7). Their CI runs passed; browser/manual UX and owner acceptance checks remain outstanding, so Phase 1 is not marked complete.
+- Phase 2A profile write-boundary work is in progress on branch `fix/phase-2-profile-write-boundary`. Acceptance criteria were written before code in [PHASE_2A_PROFILE_WRITE_BOUNDARY.md](PHASE_2A_PROFILE_WRITE_BOUNDARY.md).
+- This change makes root profile documents backend-owned: the client may read its own profile but may not create, update, or delete it. Rules tests and CI for the current branch are pending.
+- No Firebase deployment has been performed.
 
 ## Next phases
 

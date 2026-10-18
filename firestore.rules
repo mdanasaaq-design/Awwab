@@ -11,10 +11,9 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
+      // Root profile fields are backend-owned until a validated profile-edit API exists.
       allow read: if isOwner(uid);
-      allow create: if isOwner(uid);
-      allow update: if isOwner(uid);
-      allow delete: if false;
+      allow create, update, delete: if false;
 
       match /devices/{deviceId} {
         allow read: if isOwner(uid);
