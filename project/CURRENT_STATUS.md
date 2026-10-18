@@ -106,3 +106,25 @@ The user's Windows workstation has a Git-connected clone nested inside a separat
 - Do not commit local secrets or `.env.local`.
 - Do not claim success without observed evidence.
 - Do not deploy until Phase 8 and explicit owner authorization.
+
+
+## Agent-runtime research update — 2026-10-18
+
+**State:** Research documented; no runtime implementation has been made by this research update.
+
+The open-source review identified useful patterns in Mastra, LangGraph.js, OpenClaw, Dodaios, Khoj, OpenAgent and MCP. Awwab's decision is to remain standalone: these projects are references for architecture and threat modeling, not code/runtime integrations. No agent framework has been selected and no new dependency has been added.
+
+### Recommended next bounded change
+
+Implement an Awwab-owned **plan-only Assistant Core v0** behind the existing Node.js 22/Firebase backend. It should authenticate and validate a request, use a provider-neutral model adapter to produce a schema-validated plan, validate proposed capabilities against an Awwab-owned allowlist, persist user-scoped plan/job state, and record an audit event. It must not execute tools or external side effects.
+
+### Entry gates and evidence still required
+
+- Re-read current main and the latest security/contract status before coding.
+- Resolve or explicitly gate any remaining P0 security and backend validation issues in project/ISSUES_AND_RISKS.md.
+- Confirm shared contract shape and callable error conventions.
+- Write acceptance criteria and tests before application-code edits.
+- Validate with Node.js 22 and the Firebase Emulator Suite; record actual results rather than inferred success.
+- Keep the composer disabled and do not deploy as part of this increment.
+
+See [Agent Runtime Research](../docs/agent-runtime-research.md), [Architecture Decisions](DECISIONS.md), and [New Chat Handoff](NEW_CHAT_HANDOFF.md).

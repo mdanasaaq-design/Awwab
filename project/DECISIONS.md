@@ -82,3 +82,14 @@ MCP may be adopted for interoperability. It does not replace Awwab authorization
 **Status:** Accepted
 
 Keep modular interfaces before splitting infrastructure into separate services. Operational complexity must be justified.
+
+
+## ADR-016 — Awwab-owned standalone agent runtime
+**Status:** Accepted
+
+Awwab independently implements its own request lifecycle, provider adapter, job state, tool registry, deterministic policy, approvals, audit and verification. Open-source projects researched for this direction are architecture and threat-model references only. No code transplant or runtime dependency is implied. A future dependency proposal must include a separate decision, license review, Node.js 22/Firebase compatibility analysis, security review and measurable benefit.
+
+## ADR-017 — Plan-only assistant runtime as first increment
+**Status:** Accepted for the first runtime experiment
+
+The first assistant runtime slice may create and persist a validated plan but must not execute tools or external side effects. It must enforce server-derived user identity, runtime schema validation, Awwab-owned capability allowlisting, user-scoped persistence, typed failures and audit correlation. Tool execution, sensitive approvals, autonomous jobs and computer use remain later increments gated by tests and explicit scope.

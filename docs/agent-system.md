@@ -113,3 +113,35 @@ Future only. If introduced, sandbox it with explicit scope, action limits, appro
 ## Core rule
 
 Awwab should reason broadly but act narrowly.
+
+
+## Runtime implementation boundary (research update — 2026-10-18)
+
+The system described above is the intended Awwab-owned design, not an instruction to embed another agent product. Awwab owns the request lifecycle, job state, tool registry, policy decisions, approvals, audit records and verification. External projects studied during research are references; their code and runtime are not part of Awwab.
+
+### First implementation slice: plan-only
+
+The first runtime increment must be deliberately non-executing:
+
+- accept an authenticated request with a request ID, user ID derived from verified auth (never trusted from client payload), conversation ID, bounded text, and correlation ID;
+- normalize and validate input with shared schemas;
+- retrieve no broad personal history by default;
+- use a provider-neutral adapter to request a structured plan;
+- validate the complete plan and all proposed tool IDs/arguments against Awwab-owned schemas and an allowlist;
+- persist a user-scoped plan/job state and append an audit event;
+- return planned or a typed failure, never executed;
+- expose no arbitrary shell, browser, filesystem, or generic-code tool.
+
+### Required invariants
+
+1. The model cannot set the authoritative user ID, scopes, approval result or job ownership.
+2. Invalid, unknown or out-of-scope tools are rejected before any tool execution.
+3. The plan-only slice has no side-effect execution path.
+4. Stored job/plan reads are scoped to the authenticated owner on the server, not just hidden in the UI.
+5. A retry cannot create duplicate durable records or repeat external side effects; use idempotency keys where writes are introduced.
+6. Errors are typed and sanitized; secrets, raw credentials and unnecessary personal context are not placed in logs.
+7. A job records status transitions and correlation IDs sufficient to diagnose failures.
+
+### Durable work and recovery
+
+Do not assume a single callable invocation is suitable for long-running research or automation. Start with bounded calls and measure actual limits. If durable execution is needed, introduce an explicit worker/job boundary with lease/attempt semantics, idempotent transitions, cancellation and recovery tests. Choose a separate worker service only when evidence shows Cloud Functions is unsuitable; avoid premature infrastructure splitting.

@@ -63,6 +63,10 @@ Awwab should understand outcomes, recover relevant context, plan multi-step work
 - [Firebase setup](docs/firebase-setup.md)
 - [Roadmap](docs/roadmap.md)
 
+### Agent runtime research and handoff
+- [Standalone agent-runtime research and decision](docs/agent-runtime-research.md)
+- [New-chat handoff and next bounded task](project/NEW_CHAT_HANDOFF.md)
+
 ### Project tracking
 - [Current status](project/CURRENT_STATUS.md)
 - [Detailed phase plan](project/PHASE_PLAN.md)
@@ -72,8 +76,8 @@ Awwab should understand outcomes, recover relevant context, plan multi-step work
 
 ## Current next steps
 
-1. Review the documentation and phase plan.
-2. Begin a bounded web command-center UX change with acceptance criteria written before editing UI code.
-3. Then harden profile Rules, device concurrency, DTO contracts, callable tests, and development-environment validation.
-4. Connect the assistant only after the relevant security gates pass.
+1. Continue the bounded web command-center UX phase, with acceptance criteria written before editing UI code.
+2. Keep foundation security and development-environment validation as gates before connecting assistant execution.
+3. Use the standalone agent-runtime research and handoff to prepare a later plan-only Assistant Core v0; do not add third-party agent runtimes or execute tools in that slice.
+4. Connect real tool execution only after authorization, approval, recovery and verification gates pass.
 5. Treat production release as a separate phase requiring explicit owner authorization.

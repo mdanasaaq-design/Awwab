@@ -55,3 +55,35 @@ Modern agent APIs increasingly support web/file tools, function calling, remote 
 References:
 - https://platform.openai.com/docs/
 - https://modelcontextprotocol.io/
+
+
+## Independent agent-runtime direction (research update — 2026-10-18)
+
+Awwab will implement its own runtime and product logic. Research into Mastra, LangGraph.js, OpenClaw, Dodaios, Khoj, OpenAgent and MCP is architectural reconnaissance only. Do not copy their code, import their runtime, or make Awwab depend on any of those projects as part of this direction. Any future third-party dependency requires a separate explicit decision, license review, compatibility review, and measurable benefit.
+
+Use the research to inform requirements, not dictate implementation:
+
+- **Durable workflow state:** model jobs, steps, attempts, checkpoints, cancellation and recovery explicitly.
+- **Human approval:** approval must bind to a specific action, target, arguments/payload digest, expiry and requester; re-check authorization at execution time.
+- **Trust boundaries:** treat retrieved webpages, documents, tool output and model-produced arguments as untrusted input.
+- **Provider neutrality:** keep model-provider interfaces replaceable and avoid provider-specific state in product contracts.
+- **Tool contracts:** allowlisted tools have versioned schemas, scopes, risk, data classes, idempotency, timeout/retry policy, approval policy and verification rules.
+- **Evidence-first completion:** record tool results and verification evidence; never infer success from the absence of an exception.
+- **Bounded execution:** enforce step, token/cost, wall-clock and tool-call budgets; support cancellation and safe failure states.
+
+### Framework research disposition
+
+Mastra and LangGraph.js remain comparison references only; no framework has been selected. The first Awwab proof of concept should be a native, minimal request-to-structured-plan pipeline, not a framework integration. Select infrastructure only after validating Node.js 22, Cloud Functions execution limits, Firestore persistence needs, recovery semantics and operational cost.
+
+### Initial model/runtime experiment
+
+The first experiment should not execute external side effects. It should:
+1. authenticate a request in the backend;
+2. validate a bounded request envelope;
+3. ask a provider-neutral model adapter for a schema-validated plan;
+4. validate every proposed step against an Awwab-owned capability registry;
+5. persist request/plan/status with user ownership and correlation IDs;
+6. return the plan and explicit non-execution status;
+7. test malformed output, unauthorized access, timeouts, retries and cross-user isolation.
+
+Sensitive approval and actual tool execution belong to a later increment after this foundation passes tests.

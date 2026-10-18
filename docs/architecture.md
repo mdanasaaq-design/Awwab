@@ -143,3 +143,25 @@ Track model usage, tool calls, external APIs, storage and automation frequency. 
 ## Scalability
 
 Keep interfaces replaceable before splitting infrastructure. Do not introduce microservices until a demonstrated reliability, scale, security, cost or maintainability problem requires them.
+
+
+## Research-informed independence rule (2026-10-18)
+
+Awwab remains a separate, standalone product with its own architecture and code. Open-source agent projects reviewed for this effort are design references, not runtime components. Do not copy their code or add them as dependencies as an implied consequence of this research. Any future exception needs a documented decision and license/security/operations review.
+
+Awwab should independently implement the useful architectural patterns:
+- a controlled request lifecycle and explicit state machine;
+- provider-neutral planning;
+- a versioned allowlisted tool registry;
+- deterministic authorization and risk policy;
+- approvals bound to exact actions;
+- durable job records only when needed, with idempotency and recovery;
+- evidence-based verification and append-oriented audit;
+- prompt-injection isolation for retrieved content;
+- bounded execution and measurable quality/cost.
+
+### Runtime boundary for the first slice
+
+Keep the first assistant runtime inside the existing TypeScript/Node.js 22 backend boundary. Do not add a new service or agent framework yet. Implement a plan-only vertical slice first, with no tool side effects. Keep the web composer disabled until the backend contract, authorization and test coverage are ready. Evaluate whether long-running jobs require a separate worker only after a measured need is established.
+
+The first slice should define its own request, plan, job-status and error contracts in the shared package; enforce authentication and ownership in the backend; validate model output with runtime schemas; and record minimal audit evidence. It should not assume that Firestore transactions alone provide a task queue or exactly-once external execution.
