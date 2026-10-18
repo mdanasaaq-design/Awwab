@@ -74,6 +74,8 @@ jobs:
         run: npm run functions:typecheck
       - name: Functions build
         run: npm run functions:build
+      - name: Agent core unit tests
+        run: node --test tests/agent-core.test.js
       - name: Shared contract typecheck
         run: npm run shared:typecheck
 
