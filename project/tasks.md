@@ -96,6 +96,8 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 
 ## Phase 3 — Assistant Core v0
 
+**Current slice:** provider-neutral plan validation and trusted tool-policy preflight are present on `feat/assistant-core-foundation`; the Functions build, unit tests, and existing CI suites passed in run [39125085569](https://github.com/mdanasaaq-design/Awwab/actions/runs/39125085569); broader Phase 3 acceptance remains open. Scope and limitations: [Assistant Core Foundation](PHASE_3_AGENT_CORE_FOUNDATION.md).
+
 - [ ] Define versioned assistant request/response and error contracts.
 - [ ] Add authenticated assistant request endpoint.
 - [ ] Add provider-neutral model interface.

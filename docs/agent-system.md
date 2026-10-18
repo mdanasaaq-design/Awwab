@@ -4,6 +4,10 @@
 
 Define how Awwab turns a natural-language request into a safe, useful outcome.
 
+## Current implementation boundary
+
+The first code slice is a provider-neutral plan validator and policy preflight in `backend/functions/src/agent-core.ts`. It validates a bounded, versioned plan and derives tool risk/approval requirements from a trusted backend allowlist. It does not call a model, retrieve user context, persist state, or execute tools. CI passed for the current branch in run [39125085569](https://github.com/mdanasaaq-design/Awwab/actions/runs/39125085569), but the change is still in a draft PR and is not an enabled assistant runtime.
+
 ## Agent loop
 
 ```
