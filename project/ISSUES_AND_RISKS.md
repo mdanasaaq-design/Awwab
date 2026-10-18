@@ -160,10 +160,10 @@
 
 - **Priority:** P1
 - **Type:** Security/data integrity
-- **Status:** Phase 2F narrowed assistant-owned collection writes in merged PR #13; Phase 2G project/task schema validation is in PR #14; CI pending.
+- **Status:** Phase 2F narrowed assistant-owned collection writes in merged PR #13; Phase 2G top-level project/task schema validation is implemented in PR #14; CI passed; merge pending. Nested list/cross-document checks remain open.
 - **Evidence:** Rules allow the owner broad CRUD access to projects, tasks, memories, automations, and preferences, and allow owner updates to notifications. This may be intentional for some data, but each collection needs an explicit field/transition policy before server automation consumes it.
 - **Impact:** Future backend jobs may trust client-created or client-mutated records without validating schema, ownership, state transitions, or action definitions.
-- **Mitigation:** PR [#13](https://github.com/mdanasaaq-design/Awwab/pull/13) tightens conversation, memory, automation, preference, and notification mutation rules; CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed. PR [#14](https://github.com/mdanasaaq-design/Awwab/pull/14) adds project/task field allowlists, enum validation, timestamp integrity, and source immutability; CI pending. List element validation and cross-document consistency remain follow-ups.
+- **Mitigation:** PR [#13](https://github.com/mdanasaaq-design/Awwab/pull/13) tightens conversation, memory, automation, preference, and notification mutation rules; CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed. PR [#14](https://github.com/mdanasaaq-design/Awwab/pull/14) adds project/task field allowlists, enum validation, timestamp integrity, and source immutability; CI run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed. List element validation and cross-document consistency remain follow-ups.
 - **Acceptance:** Each collection has tested read/create/update/delete permissions and field/state constraints aligned with its trust level.
 - **Phase:** 2, then 6 for automation.
 
