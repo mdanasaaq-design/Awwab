@@ -125,7 +125,7 @@ export async function ensureUserProfile() {
     throw new Error("Firebase is not configured for this environment.");
   }
 
-  const callable = httpsCallable<Record<string, never>, EnsureUserProfileResponse>(
+  const callable = httpsCallable<void, EnsureUserProfileResponse>(
     functions,
     "ensureUserProfile",
   );
