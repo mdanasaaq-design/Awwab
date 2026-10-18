@@ -1,0 +1,79 @@
+# New Chat Handoff — Awwab
+
+**Updated:** 2026-10-18  
+**Repository:** [mdanasaaq-design/Awwab](https://github.com/mdanasaaq-design/Awwab)  
+**Handoff branch:** docs/independent-agent-runtime-research  
+**Default branch:** main  
+**Purpose:** Preserve project decisions and exact next steps when continuing in a new ChatGPT conversation.
+
+## Owner's direction
+
+- Awwab is a standalone product with its own code, logic, architecture and runtime.
+- Research other open-source projects to learn patterns; do not copy their code or embed their runtimes into Awwab.
+- Prioritize the web command-center redesign first, then harden the foundation, then connect assistant capabilities behind tested safety gates.
+- Work in GitHub directly where possible, use small reviewable pull requests, and write acceptance criteria before application-code edits.
+- Do not deploy production without explicit authorization.
+- Avoid generic “vibe-coded” UI; target a dense, powerful, keyboard-friendly command center.
+
+## What this branch changes
+
+This is a **documentation-only** change. It records research, architecture direction, decision records, status, and this handoff. It does not add runtime code, dependencies, secrets, Firebase configuration, tests, or deployment changes.
+
+Files updated:
+- docs/ai-strategy.md — independent-runtime rules, bounded execution and plan-only experiment.
+- docs/agent-system.md — plan-only first slice and runtime invariants.
+- docs/architecture.md — standalone boundary and first runtime deployment boundary.
+- project/DECISIONS.md — ADR-016 and ADR-017.
+- project/CURRENT_STATUS.md — research status and recommended next bounded change.
+- README.md — research/handoff links and updated next steps.
+
+Files added:
+- docs/agent-runtime-research.md — comparison, decisions, architecture, acceptance criteria and links.
+- project/NEW_CHAT_HANDOFF.md — this continuation guide.
+
+## Research conclusion
+
+No framework is selected. Mastra and LangGraph.js are useful TypeScript comparison references; OpenClaw is a gateway/security reference; Dodaios is a personal-agent UX reference; Khoj is a knowledge-retrieval reference; OpenAgent is a Go-oriented architecture reference; MCP is an optional future interoperability protocol, not a security boundary. None is being added as an Awwab dependency.
+
+## Verified current project reality
+
+Based on the repository's status docs and source review:
+- Web: React + TypeScript + Vite command-center shell.
+- Backend: Firebase Cloud Functions 2nd gen, TypeScript, Node.js 22.
+- Auth/data: Firebase Authentication and Cloud Firestore; App Check initialization is optional and enforcement is not established by the status doc.
+- Android: Kotlin + Jetpack Compose shell, not yet validated as an integrated assistant.
+- Assistant runtime: disconnected; composer remains disabled.
+- Projects, tasks, research, automations and activity are placeholder views without live data.
+- Deployment: not performed.
+- Previous recorded local web build passed on Node 24, but the repository targets Node 22; validate on Node 22 for reproducibility.
+- Review [Current Status](CURRENT_STATUS.md), [Phase Plan](PHASE_PLAN.md), [Tasks](tasks.md), and [Issues and Risks](ISSUES_AND_RISKS.md) before coding. Treat their statuses as evidence records that may need refresh from current main.
+
+## Next action recommended
+
+Do not jump directly to unrestricted tool execution. First complete the already stated web command-center UX phase and foundation security/validation gates. Then propose and implement a bounded **Awwab-owned plan-only Assistant Core v0**.
+
+### Plan-only Assistant Core v0 acceptance criteria
+
+1. Authenticate at the backend and derive the authoritative user ID from verified auth context.
+2. Validate a bounded request envelope using shared/runtime schemas.
+3. Call a provider-neutral model adapter to produce a structured plan.
+4. Validate the full model output and every proposed capability against Awwab-owned schemas and an allowlist.
+5. Persist user-scoped plan/job state and an audit event with correlation ID.
+6. Return planned or a typed failure; no tools or external side effects execute.
+7. Reject unauthenticated requests, malformed model output, unknown tools and cross-user reads.
+8. Cover duplicate requests/idempotency, timeouts, sanitized failures and recovery behavior with tests.
+9. Run typecheck/build and emulator tests on Node.js 22; report observed evidence.
+10. Keep the composer disabled and do not deploy.
+
+## Hard constraints
+
+- No Mastra, LangGraph.js, OpenClaw, Dodaios, Khoj, OpenAgent or MCP server code copied into Awwab.
+- No new framework dependency without a separate written decision.
+- No arbitrary shell or unrestricted browser/computer control.
+- No model-based authorization; deterministic server policy owns permission decisions.
+- No production deployment without explicit owner authorization.
+- Never claim a test, build, or end-to-end flow passed unless it was actually run and observed.
+
+## Start a new chat with
+
+“Continue Awwab from the repository handoff. First inspect the latest main and the PR/branch state. Keep Awwab standalone and do not integrate or copy other projects. Tell me the current state and propose the next bounded change with acceptance criteria before editing application code.”
