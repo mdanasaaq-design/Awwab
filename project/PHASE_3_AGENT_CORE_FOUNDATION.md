@@ -1,6 +1,6 @@
 # Assistant Core Foundation — bounded slice
 
-**Status:** Implementation proposed in PR; not yet merged or validated in CI.  
+**Status:** CI validation passed on 2026-10-18; PR #17 remains draft and unmerged.  
 **Base:** `main` at `cffb22b829e76a859dd3029e482abd10e8314af5`.  
 **Scope:** Provider-neutral plan validation and policy preflight only.
 
@@ -27,12 +27,12 @@ Awwab's architecture calls for a planner that proposes structured steps while tr
 
 ## Acceptance criteria
 
-- [ ] Functions TypeScript build succeeds on Node.js 22.
-- [ ] Unit tests pass for schema bounds, duplicate IDs, unexpected fields, unknown tools, invalid tool arguments, registry duplication, and thrown validators.
-- [ ] CI runs the unit tests on pull requests.
-- [ ] Existing web, Firestore Rules, and callable checks remain green.
-- [ ] No model output can define tool permissions, risk, or approval policy.
-- [ ] No live action is executed by this module.
+- [x] Functions TypeScript build succeeds on Node.js 22 (CI).
+- [x] Unit tests pass for schema bounds, duplicate IDs, unexpected fields, unknown tools, invalid tool arguments, registry duplication, and thrown validators (CI).
+- [x] CI runs the unit tests on pull requests.
+- [x] Existing web, Firestore Rules, and callable checks remain green (all four CI jobs passed).
+- [x] No model output can define tool permissions, risk, or approval policy (covered by validation design and unit tests).
+- [x] No live action is executed by this module (source inspection; module has no execution path).
 
 ## Next gate
 
