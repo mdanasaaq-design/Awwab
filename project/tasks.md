@@ -70,7 +70,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [x] Phase 2B atomic first-device bootstrap and callable emulator tests merged in [PR #9](https://github.com/mdanasaaq-design/Awwab/pull/9); CI run 39117195997 passed. Acceptance criteria/evidence: [PHASE_2B_BOOTSTRAP_CONCURRENCY.md](PHASE_2B_BOOTSTRAP_CONCURRENCY.md).
 - [x] Phase 2C transactional last-trusted-device revocation merged in [PR #10](https://github.com/mdanasaaq-design/Awwab/pull/10); CI run 39117401427 passed concurrent, final-device, idempotent, and pending-device tests. Acceptance criteria/evidence: [PHASE_2C_LAST_DEVICE_REVOCATION.md](PHASE_2C_LAST_DEVICE_REVOCATION.md).
 - [ ] Review registration/approval/revocation idempotency and retry behavior.
-- [ ] Phase 2D: align shared device contracts and web callable response DTOs; add emulator response-shape assertions. Acceptance criteria: [PHASE_2D_CONTRACT_ALIGNMENT.md](PHASE_2D_CONTRACT_ALIGNMENT.md); implementation and CI validation are in progress.
+- [x] Implement Phase 2D shared device callable DTOs and web generics; emulator response-shape assertions added; CI run 39117694957 passed. PR [#11](https://github.com/mdanasaaq-design/Awwab/pull/11) awaits merge. Acceptance criteria/evidence: [PHASE_2D_CONTRACT_ALIGNMENT.md](PHASE_2D_CONTRACT_ALIGNMENT.md).
 - [ ] Add callable tests for unauthenticated callers, invalid payloads, device authorization, registration, bootstrap, listing, approval, revocation, profile initialization, and activity logging.
 - [ ] Test audit behavior for successful and failed security transitions.
 - [ ] Review App Check configuration and staged enforcement; do not assume a configured client key means enforcement is active.
