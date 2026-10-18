@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { User } from "firebase/auth";
 import type { DeviceRecord } from "./device";
 import { observeAuth, signIn, signOutAwwab } from "./auth";
@@ -57,6 +57,114 @@ export function App() {
   const [deviceBusy, setDeviceBusy] = useState("");
   const [activeSection, setActiveSection] = useState<SectionId>("assistant");
   const [signOutBusy, setSignOutBusy] = useState(false);
+  const [switcherOpen, setSwitcherOpen] = useState(false);
+  const [switcherQuery, setSwitcherQuery] = useState("");
+  const [switcherIndex, setSwitcherIndex] = useState(0);
+  const switcherButtonRef = useRef<HTMLButtonElement | null>(null);
+  const switcherInputRef = useRef<HTMLInputElement | null>(null);
+  const switcherDialogRef = useRef<HTMLDivElement | null>(null);
+  const switcherReturnFocusRef = useRef<HTMLElement | null>(null);
+  const switcherWasOpenRef = useRef(false);
+
+  const filteredSections = sections.filter((section) =>
+    section.label.toLowerCase().includes(switcherQuery.trim().toLowerCase()),
+  );
+
+  function openSwitcher() {
+    switcherReturnFocusRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : switcherButtonRef.current;
+    setSwitcherQuery("");
+    setSwitcherIndex(0);
+    setSwitcherOpen(true);
+  }
+
+  function closeSwitcher() {
+    setSwitcherOpen(false);
+  }
+
+  function navigateToSection(sectionId: SectionId) {
+    setActiveSection(sectionId);
+    closeSwitcher();
+  }
+
+  useEffect(() => {
+    if (switcherOpen) {
+      switcherWasOpenRef.current = true;
+      switcherInputRef.current?.focus();
+      return;
+    }
+
+    if (switcherWasOpenRef.current) {
+      switcherWasOpenRef.current = false;
+      (switcherReturnFocusRef.current ?? switcherButtonRef.current)?.focus();
+    }
+  }, [switcherOpen]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    function handleGlobalKeyDown(event: KeyboardEvent) {
+      const target = event.target;
+      const isEditable =
+        target instanceof HTMLElement &&
+        (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName));
+      const isShortcut = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k";
+
+      if (isShortcut) {
+        if (isEditable && !switcherOpen) return;
+        event.preventDefault();
+        if (switcherOpen) {
+          closeSwitcher();
+        } else {
+          openSwitcher();
+        }
+        return;
+      }
+
+      if (!switcherOpen) return;
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeSwitcher();
+        return;
+      }
+
+      if (event.key === "Tab" && switcherDialogRef.current) {
+        const focusable = Array.from(
+          switcherDialogRef.current.querySelectorAll<HTMLElement>(
+            'input:not([disabled]), button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',
+          ),
+        );
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", handleGlobalKeyDown);
+    return () => document.removeEventListener("keydown", handleGlobalKeyDown);
+  }, [user, switcherOpen]);
+
+  function handleSwitcherInputKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
+    if (event.key === "ArrowDown" && filteredSections.length) {
+      event.preventDefault();
+      setSwitcherIndex((index) => (index + 1) % filteredSections.length);
+    } else if (event.key === "ArrowUp" && filteredSections.length) {
+      event.preventDefault();
+      setSwitcherIndex((index) => (index - 1 + filteredSections.length) % filteredSections.length);
+    } else if (event.key === "Enter" && filteredSections[switcherIndex]) {
+      event.preventDefault();
+      navigateToSection(filteredSections[switcherIndex].id);
+    }
+  }
 
   async function refreshDevices() {
     try {
@@ -77,6 +185,7 @@ export function App() {
       if (!nextUser) {
         setDeviceStatus("signed out");
         setActiveSection("assistant");
+        setSwitcherOpen(false);
         return;
       }
 
@@ -202,6 +311,7 @@ export function App() {
 
   return (
     <main className="app-shell">
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <aside className="sidebar">
         <a className="brand" href="#assistant" onClick={(event) => { event.preventDefault(); setActiveSection("assistant"); }} aria-label="Awwab home">
           <span className="brand-mark" aria-hidden="true">A</span>
@@ -258,7 +368,7 @@ export function App() {
         </div>
       </aside>
 
-      <section className="main-panel">
+      <section className="main-panel" id="main-content" tabIndex={-1} aria-label="Main content">
         <header className="topbar">
           <div className="breadcrumbs">
             <span>Awwab</span>
@@ -266,7 +376,19 @@ export function App() {
             <strong>{currentSection.label}</strong>
           </div>
           <div className="topbar-right">
-            <span className="environment-label"><span className="connection-dot good" /> PERSONAL</span>
+            <button
+              ref={switcherButtonRef}
+              className="quick-switcher-trigger"
+              type="button"
+              onClick={openSwitcher}
+              aria-haspopup="dialog"
+              aria-expanded={switcherOpen}
+              aria-label="Open quick switcher (Ctrl or Command plus K)"
+            >
+              <span>Jump to…</span>
+              <kbd>⌘ K</kbd>
+            </button>
+            <span className="environment-label"><span className="connection-dot good" /> SIGNED IN</span>
             <span className="topbar-avatar" title={user.email ?? user.uid}>{(user.email?.[0] ?? "A").toUpperCase()}</span>
           </div>
         </header>
@@ -282,7 +404,7 @@ export function App() {
             <section className="assistant-panel" aria-labelledby="assistant-title">
               <div className="panel-kicker">
                 <span className="assistant-glyph" aria-hidden="true">⌘</span>
-                <span>AWAAB ASSISTANT</span>
+                <span>AWWAB ASSISTANT</span>
                 <span className="availability">CORE NOT CONNECTED</span>
               </div>
               <h2 id="assistant-title">What are we working on?</h2>
@@ -422,6 +544,72 @@ export function App() {
           </div>
         )}
       </section>
+
+      {switcherOpen && (
+        <div className="quick-switcher-backdrop" onClick={closeSwitcher}>
+          <div
+            className="quick-switcher"
+            ref={switcherDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="quick-switcher-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="quick-switcher-heading">
+              <div>
+                <p className="eyebrow">NAVIGATION</p>
+                <h2 id="quick-switcher-title">Jump to a section</h2>
+              </div>
+              <button className="quick-switcher-close" type="button" onClick={closeSwitcher} aria-label="Close quick switcher">×</button>
+            </div>
+            <label className="quick-switcher-search">
+              <span aria-hidden="true">⌕</span>
+              <input
+                ref={switcherInputRef}
+                type="text"
+                value={switcherQuery}
+                onChange={(event) => { setSwitcherQuery(event.target.value); setSwitcherIndex(0); }}
+                onKeyDown={handleSwitcherInputKeyDown}
+                placeholder="Search sections…"
+                aria-label="Search navigation sections"
+                aria-autocomplete="list"
+                aria-controls="quick-switcher-options"
+                aria-activedescendant={filteredSections[switcherIndex] ? `quick-switcher-option-${filteredSections[switcherIndex].id}` : undefined}
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <kbd>ESC</kbd>
+            </label>
+            <div className="quick-switcher-options" id="quick-switcher-options" role="listbox" aria-label="Navigation sections">
+              {filteredSections.map((section, index) => (
+                <div
+                  className={index === switcherIndex ? "quick-switcher-option active" : "quick-switcher-option"}
+                  id={`quick-switcher-option-${section.id}`}
+                  key={section.id}
+                  role="option"
+                  aria-selected={index === switcherIndex}
+                  onMouseMove={() => setSwitcherIndex(index)}
+                  onClick={() => navigateToSection(section.id)}
+                >
+                  <span className="quick-switcher-option-glyph" aria-hidden="true">{section.glyph}</span>
+                  <span className="quick-switcher-option-label">{section.label}</span>
+                  <span className="quick-switcher-option-group">{section.group}</span>
+                  {section.id === activeSection && <span className="quick-switcher-current">CURRENT</span>}
+                  {index === switcherIndex && <span className="quick-switcher-enter" aria-hidden="true">↵</span>}
+                </div>
+              ))}
+              {!filteredSections.length && (
+                <p className="quick-switcher-empty" role="status" aria-live="polite">No sections match “{switcherQuery}”.</p>
+              )}
+            </div>
+            <div className="quick-switcher-footer">
+              <span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span>
+              <span><kbd>↵</kbd> Open section</span>
+              <span><kbd>ESC</kbd> Close</span>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
