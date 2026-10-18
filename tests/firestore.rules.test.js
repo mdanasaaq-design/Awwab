@@ -145,6 +145,19 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-long-name"), {
+    name: "x".repeat(161),
+    status: "active",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-invalid-references"), {
+    name: "Invalid references",
+    status: "active",
+    repositoryReferences: { repository: "https://github.com/example/repo" },
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
   await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-extra-field"), {
     name: "Unexpected field",
     status: "active",
@@ -199,6 +212,40 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     status: "todo",
     priority: "critical",
     source: "user",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-empty-title"), {
+    title: "",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-long-title"), {
+    title: "x".repeat(201),
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-invalid-due"), {
+    title: "Invalid due date",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    dueAt: "tomorrow",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-invalid-project"), {
+    title: "Invalid project reference",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: 42,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
