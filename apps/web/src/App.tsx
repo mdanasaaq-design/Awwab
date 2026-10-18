@@ -493,6 +493,35 @@ export function App() {
               </div>
             </section>
 
+            <section className="system-overview" aria-label="Workspace status">
+              <article className="overview-card">
+                <div className="overview-card-heading">
+                  <span className="overview-glyph" aria-hidden="true">⌘</span>
+                  <span>ASSISTANT CORE</span>
+                </div>
+                <strong className="overview-value status-pending">Not connected</strong>
+                <p>Requests remain disabled until the runtime is ready.</p>
+              </article>
+              <article className="overview-card">
+                <div className="overview-card-heading">
+                  <span className="overview-glyph" aria-hidden="true">◇</span>
+                  <span>DEVICE TRUST</span>
+                </div>
+                <strong className={`overview-value ${deviceStatus === "trusted" ? "status-good" : deviceStatus === "registration failed" ? "status-attention" : "status-pending"}`}>
+                  {deviceStatus === "trusted" ? "Trusted" : deviceStatus === "registration failed" ? "Needs attention" : deviceStatus === "checking" ? "Checking" : deviceStatus}
+                </strong>
+                <p>{deviceStatus === "trusted" ? "This browser is registered as trusted." : deviceStatus === "registration failed" ? "Device registration needs another look." : "Current device registration state."}</p>
+              </article>
+              <article className="overview-card">
+                <div className="overview-card-heading">
+                  <span className="overview-glyph" aria-hidden="true">▤</span>
+                  <span>WORKSPACE DATA</span>
+                </div>
+                <strong className="overview-value status-pending">Not connected</strong>
+                <p>Projects, tasks, and research have no live data yet.</p>
+              </article>
+            </section>
+
             <section className="section-block">
               <div className="section-title-row">
                 <div>
