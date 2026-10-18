@@ -185,4 +185,21 @@ test("concurrent revocations cannot remove the final trusted device", async () =
   );
   assert.equal(repeatedRevoke.ok, true, JSON.stringify(repeatedRevoke));
   assert.equal(repeatedRevoke.result.status, "revoked");
+
+  const pendingDeviceId = newDeviceId();
+  const pendingRegistration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDeviceId),
+    user.idToken,
+  );
+  assert.equal(pendingRegistration.ok, true, JSON.stringify(pendingRegistration));
+  assert.equal(pendingRegistration.result.status, "pending");
+
+  const pendingRevoke = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: remainingDeviceId, targetDeviceId: pendingDeviceId },
+    user.idToken,
+  );
+  assert.equal(pendingRevoke.ok, true, JSON.stringify(pendingRevoke));
+  assert.equal(pendingRevoke.result.status, "revoked");
 });
