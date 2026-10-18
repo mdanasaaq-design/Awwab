@@ -60,14 +60,14 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 ## Phase 2 — Foundation security and environment validation
 
 ### Rules and data ownership
-- [ ] Phase 2A: make `/users/{uid}` backend-owned, allow owner read only, and test denied client writes. Acceptance criteria: [PHASE_2A_PROFILE_WRITE_BOUNDARY.md](PHASE_2A_PROFILE_WRITE_BOUNDARY.md); implementation and emulator CI are in progress.
+- [x] Phase 2A: make `/users/{uid}` backend-owned, allow owner read only, and test denied client writes. Merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8); CI run 39116859040 passed. Acceptance criteria/evidence: [PHASE_2A_PROFILE_WRITE_BOUNDARY.md](PHASE_2A_PROFILE_WRITE_BOUNDARY.md).
 - [ ] Create a collection/field/action ownership matrix for all documented Firestore collections.
 - [ ] Decide and document whether /jobs and /connections are backend-only or need narrow client reads.
 - [ ] Review client write permissions for projects, tasks, memories, automations, preferences, and notifications.
 - [ ] Add negative Rules tests for protected profile fields, unexpected keys, cross-user access, and disallowed state changes.
 
 ### Device lifecycle and backend
-- [ ] Make first-device bootstrap safe under concurrent requests.
+- [ ] Phase 2B: make first-device bootstrap safe under concurrent requests and add callable emulator coverage. Acceptance criteria: [PHASE_2B_BOOTSTRAP_CONCURRENCY.md](PHASE_2B_BOOTSTRAP_CONCURRENCY.md); implementation and CI validation are in progress.
 - [ ] Make last-trusted-device revocation safe under concurrent requests.
 - [ ] Review registration/approval/revocation idempotency and retry behavior.
 - [ ] Align shared contracts, web callable DTOs, and backend responses.
