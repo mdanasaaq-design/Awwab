@@ -163,7 +163,7 @@
 - **Status:** Phase 2F narrowed assistant-owned collection writes in merged PR #13; Phase 2G top-level project/task schema validation is implemented in PR #14; CI passed; merge pending. Nested list/cross-document checks remain open.
 - **Evidence:** Rules allow the owner broad CRUD access to projects, tasks, memories, automations, and preferences, and allow owner updates to notifications. This may be intentional for some data, but each collection needs an explicit field/transition policy before server automation consumes it.
 - **Impact:** Future backend jobs may trust client-created or client-mutated records without validating schema, ownership, state transitions, or action definitions.
-- **Mitigation:** PR [#13](https://github.com/mdanasaaq-design/Awwab/pull/13) tightens conversation, memory, automation, preference, and notification mutation rules; CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed. PR [#14](https://github.com/mdanasaaq-design/Awwab/pull/14) adds project/task field allowlists, enum validation, timestamp integrity, and source immutability; CI run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed. List element validation and cross-document consistency remain follow-ups.
+- **Mitigation:** PR [#13](https://github.com/mdanasaaq-design/Awwab/pull/13) tightens conversation, memory, automation, preference, and notification mutation rules; CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed. PR [#14](https://github.com/mdanasaaq-design/Awwab/pull/14) adds project/task field allowlists, enum validation, timestamp integrity, and source immutability; CI run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed. PR [#16](https://github.com/mdanasaaq-design/Awwab/pull/16) adds bounded string-list validation and same-user project reference checks; CI pending. Detailed status-transition policy remains open.
 - **Acceptance:** Each collection has tested read/create/update/delete permissions and field/state constraints aligned with its trust level.
 - **Phase:** 2, then 6 for automation.
 
@@ -182,7 +182,7 @@
 
 - **Priority:** P1 before public production use
 - **Type:** Security/abuse-control validation gap
-- **Status:** Configuration audit and staged rollout documentation in PR #15; no enforcement change is made.
+- **Status:** Configuration audit and staged rollout documentation merged in PR #15; live provider/token validation remains outstanding and enforcement is not enabled.
 - **Evidence:** `apps/web/src/firebase.ts` initializes App Check only when `VITE_FIREBASE_APP_CHECK_SITE_KEY` is present. The reviewed Functions v2 callable declarations do not set `enforceAppCheck: true`. No live development provider/token validation has been recorded.
 - **Impact:** App Check is not currently an additional server-side attestation gate for these callables. Existing Firebase Authentication and trusted-device checks remain separate controls; App Check enforcement must not be assumed active.
 - **Plan:** Keep enforcement disabled until a real development Web App/provider is configured, valid token behavior is observed, rejection metrics are reviewed, and a separate bounded enforcement change is approved. Validate Android separately.
