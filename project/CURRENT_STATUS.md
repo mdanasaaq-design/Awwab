@@ -78,7 +78,7 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 - Phase 2C transactional last-device revocation was merged in [PR #10](https://github.com/mdanasaaq-design/Awwab/pull/10); CI run [39117401427](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117401427) passed all four jobs.
 - Phase 2D device callable DTO alignment was merged in [PR #11](https://github.com/mdanasaaq-design/Awwab/pull/11); the planned `UserProfile` interface remains a separate domain/schema gap.
 - Phase 2E callable authorization and state-transition coverage was merged in [PR #12](https://github.com/mdanasaaq-design/Awwab/pull/12); CI run [39117914336](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117914336) passed all four jobs. Full development-project and real device lifecycle validation remains outstanding.
-- Phase 2F Firestore collection ownership and narrow client mutation rules are in progress on branch `fix/phase-2-data-ownership-matrix`. Acceptance criteria are in [PHASE_2F_DATA_OWNERSHIP_RULES.md](PHASE_2F_DATA_OWNERSHIP_RULES.md); current-branch CI is pending.
+- Phase 2F Firestore collection ownership and narrow client mutation rules are implemented on branch `fix/phase-2-data-ownership-matrix`, PR [#13](https://github.com/mdanasaaq-design/Awwab/pull/13). CI run [39118165874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118165874) passed all four jobs, including Rules emulator tests. Merge is pending; projects/tasks field-level schema validation remains open.
 - No Firebase deployment has been performed.
 
 ## Next phases
