@@ -44,6 +44,33 @@ const sectionCopy: Record<Exclude<SectionId, "assistant" | "settings">, { title:
   },
 };
 
+function getSignInErrorMessage(error: unknown): string {
+  let code = "";
+  if (typeof error === "object" && error !== null && "code" in error) {
+    const candidate = error.code;
+    if (typeof candidate === "string") code = candidate;
+  }
+
+  switch (code) {
+    case "auth/invalid-credential":
+    case "auth/user-not-found":
+    case "auth/wrong-password":
+      return "Email or password wasn't recognized. Check your details and try again.";
+    case "auth/invalid-email":
+      return "Enter a valid email address and try again.";
+    case "auth/network-request-failed":
+      return "Couldn't connect to the sign-in service. Check your connection and try again.";
+    case "auth/too-many-requests":
+      return "There have been too many attempts. Wait a little while before trying again.";
+    case "auth/user-disabled":
+      return "This account is currently disabled. Contact the workspace administrator.";
+    case "auth/operation-not-allowed":
+      return "Email and password sign-in isn't enabled for this workspace. Contact the workspace administrator.";
+    default:
+      return "Sign-in failed. Check your details and try again.";
+  }
+}
+
 export function App() {
   const [user, setUser] = useState<User | null>(null);
   const [email, setEmail] = useState("");
@@ -248,7 +275,7 @@ export function App() {
       await signIn(email, password);
       setPassword("");
     } catch (error) {
-      setAuthError(error instanceof Error ? error.message : "Sign-in failed.");
+      setAuthError(getSignInErrorMessage(error));
     } finally {
       setLoading(false);
     }
