@@ -83,7 +83,6 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 - Phase 2G project/task field-level Rules were merged in [PR #14](https://github.com/mdanasaaq-design/Awwab/pull/14); CI run [39118461462](https://github.com/mdanasaaq-design/Awwab/actions/runs/39118461462) passed all four jobs. Nested list-element validation, cross-document consistency, and detailed status-transition policy remain open.
 - Phase 2H App Check/environment readiness audit is in progress on branch `docs/phase-2-app-check-audit`. Acceptance criteria and current configuration findings are in [PHASE_2H_APPCHECK_ENVIRONMENT.md](PHASE_2H_APPCHECK_ENVIRONMENT.md). This slice is documentation-only; no enforcement or deployment change is being made.
 - Phase 1F trusted-device successful-empty state copy/accessibility adjustment was merged in [PR #19](https://github.com/mdanasaaq-design/Awwab/pull/19); all four CI jobs passed in [run 39126668502](https://github.com/mdanasaaq-design/Awwab/actions/runs/39126668502). Manual browser review remains pending.
-- Phase 1G browser document title/page context is in progress on `fix/phase-1g-page-context`. Acceptance criteria were committed before the application edit in [PHASE_1G_PAGE_CONTEXT.md](PHASE_1G_PAGE_CONTEXT.md); CI and manual browser review are pending.
 - No Firebase deployment has been performed.
 
 ## Next phases
@@ -102,11 +101,11 @@ The user's Windows workstation has a Git-connected clone nested inside a separat
 
 ## Operating rules
 
-- Repository code/docs are the source of truth; inspect current `main` before implementation.
-- Write acceptance criteria before editing application code.
-- Keep changes bounded and reviewable.
+- Work directly on GitHub `main` for bounded, low-risk changes by default; batch related edits into coherent commits.
+- Use a branch/PR only when parallel work, a risky or broad change, or a meaningful review boundary makes it necessary—not for every file or minor fix.
+- Write acceptance criteria before editing application code and update project tracking alongside the change.
+- Validate proportionately; CI is evidence when available, not a mandatory ceremony for every documentation or low-risk change. Never claim unobserved build/browser success.
 - Do not commit local secrets or `.env.local`.
-- Do not claim success without observed evidence.
 - Do not deploy until Phase 8 and explicit owner authorization.
 
 
