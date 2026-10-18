@@ -27,7 +27,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 
 ### Design and information architecture
 - [ ] Review the existing command-center shell against the intended information-dense, calm, keyboard-friendly direction.
-- [ ] Implement Phase 1G page/browser-title context; acceptance criteria: [PHASE_1G_PAGE_CONTEXT.md](PHASE_1G_PAGE_CONTEXT.md). CI and manual browser review pending.
+- [x] Implement Phase 1G page/browser-title context; merged in [PR #20](https://github.com/mdanasaaq-design/Awwab/pull/20), CI passed. Manual browser review remains pending; acceptance criteria: [PHASE_1G_PAGE_CONTEXT.md](PHASE_1G_PAGE_CONTEXT.md).
 - [ ] Define page hierarchy, navigation behavior, page titles, and consistent status language.
 - [ ] Define a small design-token/component baseline for typography, spacing, surfaces, borders, focus, and semantic states.
 - [ ] Specify the purpose and primary user workflow for Assistant, Projects, Tasks, Research, Automations, Activity, and Settings.
