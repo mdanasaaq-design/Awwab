@@ -60,7 +60,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 ## Phase 2 — Foundation security and environment validation
 
 ### Rules and data ownership
-- [ ] Restrict writable fields on /users/{uid} and protect backend-owned metadata.
+- [ ] Phase 2A: make `/users/{uid}` backend-owned, allow owner read only, and test denied client writes. Acceptance criteria: [PHASE_2A_PROFILE_WRITE_BOUNDARY.md](PHASE_2A_PROFILE_WRITE_BOUNDARY.md); implementation and emulator CI are in progress.
 - [ ] Create a collection/field/action ownership matrix for all documented Firestore collections.
 - [ ] Decide and document whether /jobs and /connections are backend-only or need narrow client reads.
 - [ ] Review client write permissions for projects, tasks, memories, automations, preferences, and notifications.
