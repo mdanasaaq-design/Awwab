@@ -50,7 +50,7 @@
 
 - **Priority:** P1
 - **Type:** Correctness/maintainability
-- **Status:** Device callable contract alignment implemented in PR #11; CI passed; merge pending.
+- **Status:** Device callable DTOs aligned in merged PR #11; remaining planned UserProfile shape is documented as a separate schema/DTO gap.
 - **Evidence:** `packages/shared/src/contracts.ts`, web device types/callable generic types, and backend response shapes differ in required fields and envelope shape. For example, the shared device record does not include the web's `deviceId` field, and callable responses include fields such as `ok` and `status` that are not represented by one shared contract.
 - **Impact:** Drift can cause unsafe assumptions, duplicated types, and runtime failures that TypeScript cannot catch across the client/server boundary.
 - **Mitigation:** PR [#11](https://github.com/mdanasaaq-design/Awwab/pull/11) defines shared device callable DTOs, uses them in the web client, and adds emulator response-shape assertions. CI run [39117694957](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117694957) passed. The planned `UserProfile` domain interface remains explicitly separate from the current persisted-profile DTO and needs a later schema decision before use.
@@ -61,10 +61,10 @@
 
 - **Priority:** P1
 - **Type:** Validation gap
-- **Status:** Not validated in this audit.
+- **Status:** Expanded auth/input/state coverage implemented in PR #12; CI pending.
 - **Evidence:** The repository contains Firestore Rules tests; the reviewed task/status documents list backend callable emulator tests and real authentication/device lifecycle validation as outstanding.
 - **Impact:** A successful web build and Rules suite do not prove backend state transitions, authorization, audit events, or failure behavior work end-to-end.
-- **Plan:** Add callable tests for unauthenticated callers, invalid inputs, ownership, trusted-device checks, bootstrap, register, approve, revoke, profile initialization, activity logging, and concurrency.
+- **Plan:** PR [#12](https://github.com/mdanasaaq-design/Awwab/pull/12) extends the emulator suite for unauthenticated calls, invalid IDs/platforms, registration idempotency, trust checks, approval state, revoked-device reactivation, profile initialization, and health. CI is pending; full real Auth/device lifecycle validation remains outstanding.
 - **Acceptance:** Emulator tests exercise positive and negative paths with observed results recorded in the status report.
 - **Phase:** 2 — Foundation security.
 
