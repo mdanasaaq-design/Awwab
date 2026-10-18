@@ -50,10 +50,10 @@
 
 - **Priority:** P1
 - **Type:** Correctness/maintainability
-- **Status:** Contract-alignment implementation in PR #11; CI pending.
+- **Status:** Device callable contract alignment implemented in PR #11; CI passed; merge pending.
 - **Evidence:** `packages/shared/src/contracts.ts`, web device types/callable generic types, and backend response shapes differ in required fields and envelope shape. For example, the shared device record does not include the web's `deviceId` field, and callable responses include fields such as `ok` and `status` that are not represented by one shared contract.
 - **Impact:** Drift can cause unsafe assumptions, duplicated types, and runtime failures that TypeScript cannot catch across the client/server boundary.
-- **Plan:** PR [#11](https://github.com/mdanasaaq-design/Awwab/pull/11) defines shared device callable DTOs, uses them in the web client, and adds emulator response-shape assertions. Await CI before considering this slice validated.
+- **Mitigation:** PR [#11](https://github.com/mdanasaaq-design/Awwab/pull/11) defines shared device callable DTOs, uses them in the web client, and adds emulator response-shape assertions. CI run [39117694957](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117694957) passed. The planned `UserProfile` domain interface remains explicitly separate from the current persisted-profile DTO and needs a later schema decision before use.
 - **Acceptance:** Contract tests cover success/error shapes and web/backend compile against the same definitions.
 - **Phase:** 2 — Foundation security and contracts.
 
