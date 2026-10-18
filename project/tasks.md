@@ -43,7 +43,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [ ] Complete Phase 1D browser/manual responsive and sign-out failure review.
 - [x] Implement Phase 1E safe sign-in error mapping and retry states; CI passed. Acceptance criteria/evidence: [PHASE_1E_AUTH_ERROR_STATES.md](PHASE_1E_AUTH_ERROR_STATES.md).
 - [ ] Complete Phase 1E browser/manual error and retry review.
-- [ ] Phase 1F trusted-device successful-empty copy and polite status announcement; acceptance criteria recorded in [PHASE_1F_DEVICE_EMPTY_STATE.md](PHASE_1F_DEVICE_EMPTY_STATE.md). Awaiting CI and manual review.
+- [x] Implement Phase 1F trusted-device successful-empty copy and polite status announcement; merged in [PR #19](https://github.com/mdanasaaq-design/Awwab/pull/19), all four CI jobs passed in [run 39126668502](https://github.com/mdanasaaq-design/Awwab/actions/runs/39126668502). Manual browser review remains pending; acceptance criteria: [PHASE_1F_DEVICE_EMPTY_STATE.md](PHASE_1F_DEVICE_EMPTY_STATE.md).
 - [x] Implement Phase 1B device-list loading, refreshing, empty, and error states; CI passed. Acceptance criteria/evidence: [PHASE_1B_DEVICE_LOADING.md](PHASE_1B_DEVICE_LOADING.md).
 - [ ] Complete Phase 1B browser/manual state review.
 - [ ] Design loading, empty, unavailable, error, success, confirmation, and retry states.
@@ -183,5 +183,5 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 
 - Do not begin P2/P3 autonomy while P0 security/validation blockers remain open.
 - Do not mark a task complete because code exists; require appropriate evidence.
-- Split implementation into bounded pull requests with acceptance criteria written before editing.
-- Keep this file and CURRENT_STATUS.md synchronized when evidence changes.
+- Prefer direct, bounded commits to GitHub `main` for low-risk changes; use branches/PRs when a meaningful review boundary or elevated risk justifies them.
+- Write acceptance criteria before application-code edits and keep this file and CURRENT_STATUS.md synchronized when evidence changes.
