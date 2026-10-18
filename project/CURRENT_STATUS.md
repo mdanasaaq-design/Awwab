@@ -49,7 +49,7 @@ The blueprint describes the intended product. It must not be mistaken for implem
 | Shared contract typecheck CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
 | Firestore Rules test CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
 | Local Firestore emulator Rules tests | No separate local result recorded in this status | **Not verified locally** |
-| Backend callable tests | No callable emulator suite/result recorded | **Outstanding** |
+| Backend callable tests | Bootstrap concurrency/auth/legacy-device callable test passed in CI run [39117086761](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117086761); broader callable coverage remains incomplete | **Partially validated** |
 | Real Firebase Auth/device lifecycle | No end-to-end result recorded | **Outstanding** |
 | Dedicated development Firebase setup | Not verified end-to-end | **Outstanding** |
 | Android build/integration tests | No observed result recorded | **Outstanding** |
@@ -74,7 +74,7 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 
 - Phase 1 command-center UX slices were merged in [PR #5](https://github.com/mdanasaaq-design/Awwab/pull/5), [PR #6](https://github.com/mdanasaaq-design/Awwab/pull/6), and [PR #7](https://github.com/mdanasaaq-design/Awwab/pull/7). Automated CI passed for each; browser/manual interaction, responsive, and owner UX acceptance checks remain outstanding, so Phase 1 is not marked complete.
 - Phase 2A profile-write hardening was merged in [PR #8](https://github.com/mdanasaaq-design/Awwab/pull/8). CI run [39116859040](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116859040) passed the Rules tests, web build, Functions build/typecheck, and shared contract typecheck. Root profile documents are now owner-read only from clients; AWW-001 and AWW-006 are resolved for the current schema.
-- Phase 2B atomic first-device bootstrap and callable emulator tests are in progress on branch `fix/phase-2-bootstrap-concurrency`. Acceptance criteria were recorded before implementation in [PHASE_2B_BOOTSTRAP_CONCURRENCY.md](PHASE_2B_BOOTSTRAP_CONCURRENCY.md). Current-branch CI is pending.
+- Phase 2B atomic first-device bootstrap and callable emulator tests are implemented on branch `fix/phase-2-bootstrap-concurrency`, PR [#9](https://github.com/mdanasaaq-design/Awwab/pull/9). CI run [39117086761](https://github.com/mdanasaaq-design/Awwab/actions/runs/39117086761) passed all four jobs, including concurrent bootstrap tests. Merge is pending.
 - No Firebase deployment has been performed.
 
 ## Next phases
