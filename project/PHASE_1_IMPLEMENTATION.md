@@ -31,7 +31,7 @@ The current web shell has working section buttons, but no global way to jump dir
 - [ ] Keyboard focus remains visibly apparent; existing reduced-motion behavior is preserved.
 - [ ] Navigation works at desktop and mobile widths without adding horizontal overflow beyond the existing mobile navigation behavior.
 - [ ] No assistant request, privileged action, or external side effect is enabled.
-- [x] Web typecheck/build CI passes (run 39115777501); Functions/shared typecheck and Firestore Rules regression checks also passed.
+- [x] Web typecheck/build CI passes (run 39116279874); Functions/shared typecheck and Firestore Rules regression checks also passed.
 - [ ] Manual interaction checklist is completed and recorded.
 - [ ] Status/task/design documentation records exactly what changed and what was or was not tested.
 
@@ -39,12 +39,12 @@ The current web shell has working section buttons, but no global way to jump dir
 
 - Application changes: `apps/web/src/App.tsx`, `apps/web/src/main.tsx`, and new `apps/web/src/navigation.css`.
 - Pull request: [#5 — keyboard-first command navigation](https://github.com/mdanasaaq-design/Awwab/pull/5).
-- Automated CI result: passed on code commit `e70e63977a696cf288cfd48d66ec30901f527667` in run [39115777501](https://github.com/mdanasaaq-design/Awwab/actions/runs/39115777501): web typecheck/build, Functions/shared typecheck, and Firestore Rules tests all succeeded.
+- Automated CI result: the latest expanded branch validation passed on code commit `7923b0a535b92ac2d2b6d972cea533f80815f174` in run [39116279874](https://github.com/mdanasaaq-design/Awwab/actions/runs/39116279874): web typecheck/build, Functions/shared typecheck, and Firestore Rules tests all succeeded.
 - Browser/manual result: not yet observed in this environment.
 
 ## Follow-on UX slice
 
-The same branch also includes [Phase 1B device loading-state work](PHASE_1B_DEVICE_LOADING.md), with its own acceptance criteria written before the device UI edit. The earlier CI result cited above predates that follow-on change; the latest branch CI must pass before the expanded change is considered validated.
+The same branch also includes [Phase 1B device loading-state work](PHASE_1B_DEVICE_LOADING.md) and [Phase 1C device revocation confirmation](PHASE_1C_DEVICE_REVOCATION_CONFIRMATION.md), each with acceptance criteria recorded before implementation. The latest branch CI now passes; browser/manual verification remains outstanding.
 
 ## Contrast note
 
