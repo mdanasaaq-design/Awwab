@@ -47,3 +47,8 @@ The mobile CSS hides the entire sidebar footer, including the only visible sign-
 ## Non-goals
 
 No new account management, password reset, sign-up flow, Firebase policy, or deployment.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This file records scope and acceptance criteria for a bounded phase slice. The presence of this checklist is not proof that manual browser validation or live integration has passed. See [Master Plan and Work Audit](MASTER_PLAN.md) for current blockers and sequence.

@@ -27,3 +27,8 @@ The signed-in landing page has an assistant panel and navigation rows, but no co
 ## Rollback
 
 Remove the overview markup and its dedicated styles, then remove this phase from active status if it causes responsive, accessibility, or state-accuracy regressions.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This file records scope and acceptance criteria for a bounded phase slice. The presence of this checklist is not proof that manual browser validation or live integration has passed. See [Master Plan and Work Audit](MASTER_PLAN.md) for current blockers and sequence.

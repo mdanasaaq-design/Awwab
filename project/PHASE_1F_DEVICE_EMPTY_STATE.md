@@ -36,3 +36,8 @@ The trusted-device list's successful empty result currently says **"No device re
 ## Rollback
 
 Revert this small UI/documentation change if the copy is inaccurate for a valid empty device state or if status announcements create accessibility problems.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This file records scope and acceptance criteria for a bounded phase slice. The presence of this checklist is not proof that manual browser validation or live integration has passed. See [Master Plan and Work Audit](MASTER_PLAN.md) for current blockers and sequence.

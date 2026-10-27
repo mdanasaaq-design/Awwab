@@ -31,3 +31,8 @@ The command-center shell updates its visible breadcrumb and page heading when th
 - New keyboard shortcuts or quick-switcher behavior.
 - Changes to authentication, trusted-device lifecycle, backend services, or assistant capabilities.
 - Production deployment.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This file records scope and acceptance criteria for a bounded phase slice. The presence of this checklist is not proof that manual browser validation or live integration has passed. See [Master Plan and Work Audit](MASTER_PLAN.md) for current blockers and sequence.
