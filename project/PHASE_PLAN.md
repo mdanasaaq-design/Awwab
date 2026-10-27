@@ -29,7 +29,7 @@ Build Awwab into a dependable personal AI operating assistant. The product shoul
 - A local web production build passed on 2026-10-18. CI checks for web, functions/shared types, and Firestore rules passed on PR #3 before it was merged on 2026-10-16.
 - Real Firebase end-to-end validation, backend callable tests, Android validation, and production readiness are not established by those results.
 
-See [Current Status](CURRENT_STATUS.md), [Tasks](tasks.md), and [Issues and Risks](ISSUES_AND_RISKS.md) for the evidence and tracked work.
+See [Current Status](CURRENT_STATUS.md), [Tasks](TASKS.md), and [Issues and Risks](ISSUES_AND_RISKS.md) for the evidence and tracked work.
 
 ## Phase sequence
 
