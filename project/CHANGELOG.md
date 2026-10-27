@@ -1,3 +1,5 @@
+# Changelog
+
 ## 2026-10-27 — Repository organization and status refresh
 
 ### Documentation and repository hygiene
@@ -5,8 +7,6 @@
 - Standardized the project task register filename to `project/TASKS.md` and updated documentation links.
 - Refreshed README and current status to reflect the observed local web build, Firebase bundle verification, and temporary Hosting preview deployment.
 - No application code, Firebase configuration, security rules, or production Hosting release was changed by this organization pass.
-
-# Changelog
 
 ## Unreleased — Agentic Architecture Upgrade
 
