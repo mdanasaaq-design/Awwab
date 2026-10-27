@@ -58,3 +58,8 @@
 ## Definition of done
 
 A feature is done only when implementation exists, security is defined, important behavior is tested, failure paths are considered, docs are updated and acceptance criteria are met.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.

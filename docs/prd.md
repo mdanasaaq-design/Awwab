@@ -90,3 +90,8 @@ Awwab must never invent successful actions, expose secrets, silently broaden per
 Task completion, verified outcome rate, correction rate, unnecessary clarification, factuality/citation quality, proactive suggestion acceptance, automation success, latency, cost per useful task, security-policy violations and user trust.
 
 Never optimize metrics in ways that reward fabricated success or unsafe autonomy.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.

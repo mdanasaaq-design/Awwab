@@ -52,3 +52,8 @@ Awwab/
 - Keep `package-lock.json` in sync with workspace manifest changes by using npm rather than editing the lockfile manually.
 - Do not claim a build, test, preview check, or production deployment passed unless the output was observed and recorded.
 - Preview Hosting deployments are not production releases. Production deployment remains a separate, explicitly authorized action.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.

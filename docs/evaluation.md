@@ -60,3 +60,8 @@ Run in CI for deterministic suites, before model/tool/autonomy changes, after se
 ## Evidence principle
 
 Evaluate whether Awwab can prove what it did, not merely whether its final prose sounds convincing.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
