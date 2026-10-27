@@ -72,3 +72,13 @@ Validate build, Auth, device registration, approvals, notifications, App Check, 
 ## CI
 
 CI should run typechecks, builds and automated tests. Production deployment remains a separately authorized workflow.
+
+
+## Observed validation update — 2026-10-27
+
+The user's extracted Windows ZIP copy passed functions typecheck, functions build, and web build. The commands ran on Node 24.19.0 rather than the repository's Node 22 baseline. These results are local-copy build evidence only; they do not establish GitHub main parity, emulator test success, deployed function availability, or live Auth/device behavior. The live Functions deployment attempt was blocked by the Blaze requirement. Repeat the documented full suite on Node 22 after source reconciliation and after a no-Blaze backend architecture is selected.
+
+
+---
+
+> **Planning sync — 2026-10-27:** Current blockers and decisions are tracked centrally in [Master Plan and Work Audit](../project/MASTER_PLAN.md). Historical acceptance criteria and prior CI results must not be interpreted as proof that live Firebase integration works.

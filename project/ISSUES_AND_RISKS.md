@@ -204,3 +204,30 @@
 - A risk is not closed merely because a build passes.
 - A finding may be marked resolved only with a linked change and verification evidence.
 - This file is a planning register; it does not create GitHub Issues automatically.
+
+
+### AWW-017 — Cloud Functions deployment blocked by current billing plan
+
+- **Priority:** P0 for live device-management functionality; not a code compile failure.
+- **Type:** Deployment/environment blocker.
+- **Status:** Confirmed 2026-10-27; no Functions are deployed.
+- **Evidence:** firebase functions:list returned no functions. firebase deploy --only functions stopped before deployment because the project must be on Blaze to enable required Artifact Registry/Cloud Build setup.
+- **Impact:** Frontend callable requests target endpoints that do not exist; live device registration/list/bootstrap/profile initialization cannot work until a viable backend is deployed.
+- **Owner decision:** Stay on the current Firebase plan. Do not upgrade, retry deployment, or weaken client rules to work around the blocker.
+- **Plan:** Compare no-Blaze backend options with security, cost, identity, Firestore access, region, quotas, monitoring and rollback criteria. Cloudflare Workers is a candidate only; no architecture is selected.
+- **Acceptance:** An owner-approved alternative passes local security tests and a dedicated non-production Auth/device lifecycle, or the owner separately authorizes the Firebase billing upgrade.
+
+### AWW-018 — Local source edits may differ from GitHub main
+
+- **Priority:** P1 for operator safety.
+- **Type:** Source-of-truth / release risk.
+- **Status:** Confirmed 2026-10-27.
+- **Evidence:** User's current Windows folder was extracted from a ZIP without Git metadata. Region edits and successful builds occurred in that copy, not a verified Git clone.
+- **Impact:** A later pull, copy, or deploy could discard changes or publish code different from the tested files.
+- **Plan:** Compare exact files with GitHub main and the nested Git clone; preserve both copies until reconciliation. Do not rename/delete folders as part of this task.
+- **Acceptance:** Canonical working copy is identified, diffs are reviewed, and validation results can be tied to a known commit.
+
+
+---
+
+> **Planning sync — 2026-10-27:** Current blockers and decisions are tracked centrally in [Master Plan and Work Audit](MASTER_PLAN.md). Historical acceptance criteria and prior CI results must not be interpreted as proof that live Firebase integration works.

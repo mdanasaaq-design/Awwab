@@ -96,3 +96,8 @@ Test malicious web pages, repository issues, uploaded documents, attacker-contro
 ## Release gate
 
 No capability moves to autonomous execution until permissions, failure modes, audit, kill/revocation and adversarial evaluation exist.
+
+
+---
+
+> **Planning sync — 2026-10-27:** Current blockers and decisions are tracked centrally in [Master Plan and Work Audit](../project/MASTER_PLAN.md). Historical acceptance criteria and prior CI results must not be interpreted as proof that live Firebase integration works.

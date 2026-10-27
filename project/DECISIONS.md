@@ -93,3 +93,24 @@ Awwab independently implements its own request lifecycle, provider adapter, job 
 **Status:** Accepted for the first runtime experiment
 
 The first assistant runtime slice may create and persist a validated plan but must not execute tools or external side effects. It must enforce server-derived user identity, runtime schema validation, Awwab-owned capability allowlisting, user-scoped persistence, typed failures and audit correlation. Tool execution, sensitive approvals, autonomous jobs and computer use remain later increments gated by tests and explicit scope.
+
+
+## ADR-018 — Keep the current Firebase billing plan
+**Status:** Accepted on 2026-10-27
+
+The owner chose option B: do not upgrade the Firebase project to Blaze at this time. Cloud Functions deployment is blocked. Do not retry deployment or create paid resources without a separate explicit owner decision. This decision does not authorize a security-rule workaround.
+
+## ADR-019 — Alternative backend is research-only until approved
+**Status:** Proposed / not selected
+
+Cloudflare Workers with Firebase Authentication and Firestore is a candidate, not a final architecture. Before selection, compare token verification/revocation, least-privilege Firestore access, secrets, region, quotas, rate limiting, observability, cost, rollback, and data migration risk against other viable options. No account or cloud resource should be created until the owner approves the architecture.
+
+## ADR-020 — Reconcile local ZIP edits before syncing
+**Status:** Accepted on 2026-10-27
+
+The local Windows folder was extracted from a ZIP and is not a Git clone. Region edits in the local copy passed build checks but are not known to be on GitHub main. Do not assume local and remote code match, overwrite either copy, or deploy until exact diffs are reviewed.
+
+
+---
+
+> **Planning sync — 2026-10-27:** Current blockers and decisions are tracked centrally in [Master Plan and Work Audit](MASTER_PLAN.md). Historical acceptance criteria and prior CI results must not be interpreted as proof that live Firebase integration works.
