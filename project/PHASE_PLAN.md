@@ -1,7 +1,7 @@
 # Awwab Phase Plan
 
 **Status:** Planning baseline  
-**Last reviewed:** 2026-10-18  
+**Last reviewed:** 2026-10-27  
 **Repository baseline:** `main` at `cffb22b829e76a859dd3029e482abd10e8314af5`  
 **Scope of this change:** Documentation only. No application code, build, test run, Firebase change, or deployment is part of this plan.
 
@@ -250,3 +250,8 @@ Every shipped change must have:
 - autonomous account/security changes
 - unbounded background loops
 - premature microservices or multi-agent orchestration
+
+
+## 2026-10-27 execution correction
+
+The current Firebase project has Firestore in Mumbai but no deployed Cloud Functions. A Functions deployment attempt was blocked by the Blaze requirement, and the owner chose not to upgrade. Keep the existing Firebase architecture as the baseline while comparing no-Blaze backend alternatives; Cloudflare Workers is not selected. Local extracted-copy builds passed, but the region edits have not been reconciled to GitHub main. Do not treat local build success as live integration evidence. Follow [Master Plan](MASTER_PLAN.md) for the detailed new order: source reconciliation, manual UX acceptance, architecture comparison, security/contract closure, plan-only Assistant Core, then later capabilities and release.

@@ -40,6 +40,10 @@ Awwab should understand outcomes, recover relevant context, plan multi-step work
 - Make important decisions observable and auditable.
 - Build incrementally and optimize for user value, reliability, and maintainability.
 
+## Planning source of truth
+
+- [Master Plan and Work Audit](project/MASTER_PLAN.md) — current audit of planned vs completed work, backend billing blocker, detailed phased sequence, acceptance gates, and explicit no-deploy constraints.
+
 ## Documentation map
 
 ### Product and architecture
@@ -78,8 +82,9 @@ Awwab should understand outcomes, recover relevant context, plan multi-step work
 
 ## Current next steps
 
-1. Continue the bounded web command-center UX phase, with acceptance criteria written before editing UI code.
-2. Keep foundation security and development-environment validation as gates before connecting assistant execution.
-3. Use the standalone agent-runtime research and handoff to prepare a later plan-only Assistant Core v0; do not add third-party agent runtimes or execute tools in that slice.
-4. Connect real tool execution only after authorization, approval, recovery and verification gates pass.
-5. Treat production release as a separate phase requiring explicit owner authorization.
+1. Read the [Master Plan and Work Audit](project/MASTER_PLAN.md) before starting new implementation.
+2. Reconcile the extracted ZIP and actual Git clone; do not assume local edits exist on GitHub.
+3. Finish manual command-center UX acceptance checks and record evidence.
+4. Keep Firebase on the current plan; Cloud Functions deployment is blocked by the Blaze requirement. Do not retry deployment or provision an alternative backend until the architecture comparison is approved.
+5. Implement no new assistant execution until the backend, authentication, device trust, data ownership, and test gates pass.
+6. Treat production release as a separate phase requiring explicit owner authorization.

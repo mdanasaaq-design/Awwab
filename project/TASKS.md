@@ -1,6 +1,6 @@
 # Awwab Tasks
 
-**Last reviewed:** 2026-10-18  
+**Last reviewed:** 2026-10-27  
 **Source of truth:** [Current Status](CURRENT_STATUS.md), [Phase Plan](PHASE_PLAN.md), [Issues and Risks](ISSUES_AND_RISKS.md)  
 **Priority rule:** The command-center UX is the first product implementation phase. Foundation hardening follows before real assistant execution or privileged integrations.
 
@@ -186,3 +186,40 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - Do not mark a task complete because code exists; require appropriate evidence.
 - Prefer direct, bounded commits to GitHub `main` for low-risk changes; use branches/PRs when a meaningful review boundary or elevated risk justifies them.
 - Write acceptance criteria before application-code edits and keep this file and CURRENT_STATUS.md synchronized when evidence changes.
+
+
+## 2026-10-27 audit addendum — current blockers and next execution order
+
+### Phase 0 — Source-of-truth reconciliation
+- [ ] Identify the actual Git clone and the extracted ZIP copy; preserve both until compared.
+- [ ] Compare apps/web/src/device.ts and backend/functions/src/index.ts local region edits against GitHub main.
+- [ ] Confirm latest main/PR status before further code edits; update all evidence labels.
+- [ ] Keep the master plan, status, risk register, decisions, changelog and handoff synchronized.
+
+### Phase 1 — UX acceptance (before backend activation)
+- [ ] Test sign-in persistence, sign-out, sign-in error/retry, and refresh.
+- [ ] Test device loading/empty/error/refresh/registration failure/revocation confirm-cancel.
+- [ ] Review keyboard navigation, quick switcher, skip link, focus order/return, Escape and visible focus.
+- [ ] Review narrow mobile, tablet and desktop layouts for overlap/clipping.
+- [ ] Review accessible names, status announcements, contrast, zoom and reduced motion.
+- [ ] Record browser/manual results and owner acceptance; keep unconnected views truthful.
+
+### Backend architecture gate — no Blaze upgrade
+- [ ] Document comparison of blocked Firebase Functions, Cloudflare Worker + Firebase Auth/Firestore, and one alternative free-tier option.
+- [ ] Evaluate verified Firebase ID tokens, revocation, UID derivation, Firestore least-privilege access, secrets, region, quotas, rate limiting, monitoring, cost and rollback.
+- [ ] Obtain owner approval of one architecture before account/resource creation or migration.
+- [ ] Specify compatible API contracts for health, registerDevice, bootstrapFirstDevice, listDevices, approveDevice, revokeDevice and ensureUserProfile.
+- [ ] Preserve atomic bootstrap, last-trusted-device protection, audit and fail-closed authorization.
+- [ ] Add local tests for invalid/expired tokens, cross-user access, malformed inputs, concurrency, retries, idempotency and sanitized errors.
+- [ ] Only after explicit approval, validate in a non-production environment and record the real device lifecycle.
+
+### Foundation and later phases
+- [ ] Complete nested list/reference/state-transition Rules coverage and UserProfile contract decision.
+- [ ] Validate App Check with a real development provider/token before considering enforcement.
+- [ ] Run full checks on Node 22 and record exact outcomes.
+- [ ] Implement plan-only Assistant Core only after security/backend gates; no tool side effects.
+- [ ] Keep workspace data, memory/research, tools/automation, Android and release work behind their phase-specific gates.
+
+**Billing/deployment hold:** Do not retry Cloud Functions deployment, upgrade Firebase, deploy Hosting/Rules, create Cloudflare resources, migrate data, or change live security policies without explicit owner authorization.
+
+See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and dependencies.

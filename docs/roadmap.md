@@ -1,6 +1,6 @@
 # Awwab Roadmap
 
-**Last reviewed:** 2026-10-18  
+**Last reviewed:** 2026-10-27  
 **Detailed plan:** [Project Phase Plan](../project/PHASE_PLAN.md)  
 **Current status:** [Current Status](../project/CURRENT_STATUS.md)  
 **Issue and risk register:** [Issues and Risks](../project/ISSUES_AND_RISKS.md)
@@ -84,3 +84,8 @@ A phase is complete only when:
 - limitations and remaining risks are explicit
 
 No unrestricted autonomous execution, financial actions, arbitrary code execution, or production deployment is allowed by roadmap status alone.
+
+
+## 2026-10-27 plan correction: backend billing blocker
+
+The Firebase project has a default Firestore Native database in asia-south1, but no Cloud Functions are deployed. A live Functions deployment attempt stopped because the project must be on Blaze. The owner chose to stay on the current plan. Therefore Cloudflare Workers or another free-tier backend is a research candidate only, not an adopted architecture. Do not create resources, migrate data, change live Rules, or deploy while comparing options. See [Master Plan](../project/MASTER_PLAN.md) for the detailed decision process and ordered execution plan.

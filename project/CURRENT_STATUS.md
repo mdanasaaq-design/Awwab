@@ -133,3 +133,17 @@ Implement an Awwab-owned **plan-only Assistant Core v0** behind the existing Nod
 - Keep the composer disabled and do not deploy as part of this increment.
 
 See [Agent Runtime Research](../docs/agent-runtime-research.md), [Architecture Decisions](DECISIONS.md), and [New Chat Handoff](NEW_CHAT_HANDOFF.md).
+
+
+## Live project update — 2026-10-27 (observed)
+
+- Firebase project awwab-5d95f is accessible.
+- Default Firestore Native database exists in asia-south1 (Mumbai), STANDARD edition. It was created with deletion protection enabled.
+- firebase functions:list --project awwab-5d95f returned No functions found.
+- firebase deploy --only functions --project awwab-5d95f was blocked before deployment because Blaze is required to enable Artifact Registry/complete Functions deployment. No function or Hosting deployment occurred in that attempt.
+- In the user's extracted Windows ZIP copy, npm run functions:typecheck, npm run functions:build, and npm run web:build passed on 2026-10-27. The local copy is not a Git clone; these local edits/results must not be assumed to exist on GitHub main.
+- Local code was edited to use asia-south1 for frontend callable calls and all seven backend callables. Reconcile with GitHub before any sync or deploy.
+- Owner selected **stay on current Firebase plan**. Cloudflare Workers is only a candidate for a documented architecture comparison; no migration or Cloudflare resource creation is approved.
+- Production Hosting, Firestore Rules and Functions deployment remain unauthorized. The live device-management lifecycle remains unverified and is expected to fail while callable functions are absent.
+
+See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact next steps.
