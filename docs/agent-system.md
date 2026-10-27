@@ -145,3 +145,8 @@ The first runtime increment must be deliberately non-executing:
 ### Durable work and recovery
 
 Do not assume a single callable invocation is suitable for long-running research or automation. Start with bounded calls and measure actual limits. If durable execution is needed, introduce an explicit worker/job boundary with lease/attempt semantics, idempotent transitions, cancellation and recovery tests. Choose a separate worker service only when evidence shows Cloud Functions is unsuitable; avoid premature infrastructure splitting.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.

@@ -165,3 +165,8 @@ Awwab should independently implement the useful architectural patterns:
 Keep the first assistant runtime inside the existing TypeScript/Node.js 22 backend boundary. Do not add a new service or agent framework yet. Implement a plan-only vertical slice first, with no tool side effects. Keep the web composer disabled until the backend contract, authorization and test coverage are ready. Evaluate whether long-running jobs require a separate worker only after a measured need is established.
 
 The first slice should define its own request, plan, job-status and error contracts in the shared package; enforce authentication and ownership in the backend; validate model output with runtime schemas; and record minimal audit evidence. It should not assume that Firestore transactions alone provide a task queue or exactly-once external execution.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.

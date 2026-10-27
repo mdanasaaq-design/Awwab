@@ -87,3 +87,8 @@ The first experiment should not execute external side effects. It should:
 7. test malformed output, unauthorized access, timeouts, retries and cross-user isolation.
 
 Sensitive approval and actual tool execution belong to a later increment after this foundation passes tests.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.

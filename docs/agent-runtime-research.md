@@ -86,3 +86,8 @@ Awwab's current status documents show that the assistant runtime is disconnected
 - [Khoj repository and license](https://github.com/khoj-ai/khoj)
 - [OpenAgent repository](https://github.com/the-open-agent/openagent)
 - [MCP reference servers](https://github.com/modelcontextprotocol/servers)
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
