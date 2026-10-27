@@ -46,7 +46,7 @@ Based on the repository's status docs and source review:
 - Projects, tasks, research, automations and activity are placeholder views without live data.
 - Deployment: not performed.
 - Previous recorded local web build passed on Node 24, but the repository targets Node 22; validate on Node 22 for reproducibility.
-- Review [Current Status](CURRENT_STATUS.md), [Phase Plan](PHASE_PLAN.md), [Tasks](tasks.md), and [Issues and Risks](ISSUES_AND_RISKS.md) before coding. Treat their statuses as evidence records that may need refresh from current main.
+- Review [Current Status](CURRENT_STATUS.md), [Phase Plan](PHASE_PLAN.md), [Tasks](TASKS.md), and [Issues and Risks](ISSUES_AND_RISKS.md) before coding. Treat their statuses as evidence records that may need refresh from current main.
 
 ## Next action recommended
 
