@@ -6,7 +6,7 @@ Awwab is a personal AI operating assistant intended to help with planning, resea
 
 **Implementation maturity:** Early foundation; assistant capabilities are not production-complete.  
 **Next product phase:** Refine the web command center first, then harden the foundation.  
-**Deployment:** Not performed.
+**Hosting:** Live Hosting has an existing release (last listed release: 2026-10-16); temporary preview channel `awwab-check` was refreshed on 2026-10-27. No production deployment was performed as part of the repository-organization pass.
 
 The web interface includes sign-in and device-management UI. The assistant runtime is not connected, and the composer remains disabled. Projects, tasks, research, automations, and activity are placeholders without live data.
 
@@ -61,6 +61,7 @@ Awwab should understand outcomes, recover relevant context, plan multi-step work
 - [Testing strategy](docs/testing.md)
 - [Evaluation framework](docs/evaluation.md)
 - [Firebase setup](docs/firebase-setup.md)
+- [Repository structure and naming conventions](docs/repository-structure.md)
 - [Roadmap](docs/roadmap.md)
 
 ### Agent runtime research and handoff
@@ -70,7 +71,7 @@ Awwab should understand outcomes, recover relevant context, plan multi-step work
 ### Project tracking
 - [Current status](project/CURRENT_STATUS.md)
 - [Detailed phase plan](project/PHASE_PLAN.md)
-- [Tasks](project/tasks.md)
+- [Tasks](project/TASKS.md)
 - [Issues and risks](project/ISSUES_AND_RISKS.md)
 - [Architecture decisions](project/DECISIONS.md)
 
