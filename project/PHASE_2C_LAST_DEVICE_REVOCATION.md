@@ -44,3 +44,8 @@ Use the existing callable emulator harness. Create an Auth emulator user, bootst
 ## Non-goals
 
 No client authorization bypass, new recovery flow, device UI change, or production deployment.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This file records scope and acceptance criteria for a bounded phase slice. The presence of this checklist is not proof that manual browser validation or live integration has passed. See [Master Plan and Work Audit](MASTER_PLAN.md) for current blockers and sequence.

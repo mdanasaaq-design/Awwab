@@ -48,3 +48,8 @@ The existing `UserProfile` interface remains a planned application-level shape a
 ## Non-goals
 
 No API behavior change, Firestore schema migration, profile-edit workflow, or production deployment.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This file records scope and acceptance criteria for a bounded phase slice. The presence of this checklist is not proof that manual browser validation or live integration has passed. See [Master Plan and Work Audit](MASTER_PLAN.md) for current blockers and sequence.
