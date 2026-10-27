@@ -71,3 +71,8 @@ Target keyboard navigation, semantic labels, readable contrast, scalable text, s
 Prefer restrained hierarchy, low noise, fast interactions, consistent status language and clear error states.
 
 Avoid fake terminal aesthetics, excessive animation and dashboards that expose internal complexity without user value.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.

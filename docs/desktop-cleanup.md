@@ -51,3 +51,8 @@ The repository root should be `Downloads\Awwab`, and the origin should be `https
 - Do not commit credentials, `.env.local`, `node_modules`, or build output.
 - `git pull` updates tracked files but does not remove untracked or ignored folders. The nested duplicate must be removed separately.
 - Keep any backup until the clean checkout builds and the app is verified.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.

@@ -152,3 +152,8 @@ Every new personal-data class must define purpose, access, mutation, retention, 
 Cloud Functions Admin SDK bypasses Firestore Rules, so privileged functions require their own authorization checks.
 
 The `/users/{uid}/system/firstDeviceBootstrap` document is a backend-only concurrency guard. It records that the one-time first-device bootstrap has been claimed; clients cannot read or write it through Firestore Rules.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
