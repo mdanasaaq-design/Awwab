@@ -5,6 +5,7 @@
 ### Documentation and repository hygiene
 - Added `docs/repository-structure.md` with canonical folder responsibilities, naming conventions, and safety rules.
 - Standardized the project task register filename to `project/TASKS.md` and updated documentation links.
+- Updated `.gitignore` to exclude the local `.firebaserc`, TypeScript build metadata, and Gradle caches without removing local files.
 - Refreshed README and current status to reflect the observed local web build, Firebase bundle verification, and temporary Hosting preview deployment.
 - No application code, Firebase configuration, security rules, or production Hosting release was changed by this organization pass.
 
