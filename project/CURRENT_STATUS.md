@@ -1,10 +1,10 @@
 # Current Status
 
-**Last reviewed:** 2026-10-18  
+**Last reviewed:** 2026-10-27  
 **Repository:** `mdanasaaq-design/Awwab`  
-**Reviewed baseline:** `1e717a2b6838675c1a6f212673cf732b754de180` — `fix(web): keep browser title aligned with current section`  
+**Reviewed baseline:** `876b747fd02c210a19bddd565d015d7800f5ec68` — `main` before the repository-organization pass  
 **Current planning focus:** Web command-center UX first, then foundation hardening  
-**Deployment:** Not performed
+**Hosting evidence:** Live Hosting's last listed release is 2026-10-16; temporary preview `awwab-check` was deployed on 2026-10-27 and expires 2026-11-03. The preview UI result is awaiting manual confirmation.
 
 ## Executive state
 
@@ -43,7 +43,9 @@ The blueprint describes the intended product. It must not be mistaken for implem
 
 | Check | Evidence | State |
 |---|---|---|
-| Web TypeScript + production bundle | Local `npm run web:build` on 2026-10-18; `tsc -b && vite build` completed successfully | **Passed locally** |
+| Web TypeScript + production bundle | Local `npm run web:build` on 2026-10-27; `tsc -b && vite build` completed successfully | **Passed locally** |
+| Firebase client config in generated bundle | All six required values from local `apps/web/.env.local` were found in generated JS assets on 2026-10-27; values were not printed | **Passed locally** |
+| Firebase Hosting preview upload | `firebase hosting:channel:deploy awwab-check --expires 7d` completed on 2026-10-27; four files released to preview version `d0cc38145cf9844d` | **Deploy passed; browser behavior pending** |
 | Web typecheck/build CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
 | Functions typecheck/build CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
 | Shared contract typecheck CI | PR #3 checks passed before merge on 2026-10-16 | **Passed in CI** |
@@ -95,7 +97,7 @@ The detailed register and acceptance criteria are in [Issues and Risks](ISSUES_A
 4. **Phase 3 — Assistant Core v0:** introduce a narrow authenticated request pipeline with policy, approval, execution, verification, and audit.
 5. Continue with memory/research, productivity/project intelligence, controlled tools/automation, Android/multimodal, and release readiness only after prior gates pass.
 
-See [Phase Plan](PHASE_PLAN.md), [Tasks](tasks.md), and [Roadmap](../docs/roadmap.md).
+See [Phase Plan](PHASE_PLAN.md), [Tasks](TASKS.md), and [Roadmap](../docs/roadmap.md).
 
 ## Local workspace note
 
