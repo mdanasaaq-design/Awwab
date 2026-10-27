@@ -42,3 +42,8 @@ Extend `tests/functions.callable.test.js` using the existing Auth, Firestore, an
 ## Non-goals
 
 No new callable endpoints, auth policy changes, activity feed API, or production deployment. Failed-attempt audit events are not introduced in this test-only slice; that policy remains a separate design decision.
+
+
+---
+
+> **Planning sync — 2026-10-27:** This file records scope and acceptance criteria for a bounded phase slice. The presence of this checklist is not proof that manual browser validation or live integration has passed. See [Master Plan and Work Audit](MASTER_PLAN.md) for current blockers and sequence.
