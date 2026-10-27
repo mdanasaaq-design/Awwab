@@ -1,6 +1,6 @@
 # New Chat Handoff — Awwab
 
-**Updated:** 2026-10-18  
+**Updated:** 2026-10-27  
 **Repository:** [mdanasaaq-design/Awwab](https://github.com/mdanasaaq-design/Awwab)  
 **Handoff branch:** docs/independent-agent-runtime-research  
 **Default branch:** main  
@@ -77,3 +77,13 @@ Do not jump directly to unrestricted tool execution. First complete the already 
 ## Start a new chat with
 
 “Continue Awwab from the repository handoff. First inspect the latest main and the PR/branch state. Keep Awwab standalone and do not integrate or copy other projects. Tell me the current state and propose the next bounded change with acceptance criteria before editing application code.”
+
+
+## Latest handoff update — 2026-10-27
+
+- Read [Master Plan and Work Audit](MASTER_PLAN.md) before starting implementation; it contains the full audit and ordered steps.
+- The owner chose to remain on the current Firebase plan. Cloud Functions deployment is blocked by Blaze and no functions are deployed. Do not retry deployment or upgrade billing.
+- Firestore Native default database exists in asia-south1 (Mumbai). This does not prove rules, functions or the real device lifecycle work end-to-end.
+- Local extracted ZIP copy passed functions typecheck/build and web build, but it is not a Git clone. Its region edits are not known to be present on GitHub main. Reconcile exact diffs first.
+- Cloudflare Workers is a candidate for architecture research only; no backend migration or account/resource creation is approved.
+- No Hosting, Rules, or Functions deployment is authorized. Keep the assistant composer disabled and avoid any production or paid-resource changes.

@@ -23,3 +23,13 @@
 
 ### Validation boundary
 This documentation update does not claim local builds, emulator tests, real Firebase integration, Android tests or production deployment. Those remain executable validation tasks.
+
+
+## 2026-10-27 — Planning and deployment-blocker audit
+
+- Confirmed Firebase project access and existence of the default Firestore Native database in asia-south1.
+- Confirmed Functions list is empty; attempted Functions deployment stopped before deployment because Blaze is required.
+- Recorded owner choice to stay on the current Firebase plan.
+- Local extracted ZIP copy passed functions typecheck/build and web build; Node 22 parity and GitHub-main parity remain unverified.
+- Added a master plan that separates completed code changes from pending manual, emulator, live-environment and production checks.
+- No Hosting, Rules or Functions deployment was performed; no alternate backend was selected or provisioned.
