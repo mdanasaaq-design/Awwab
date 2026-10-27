@@ -62,6 +62,7 @@ Awwab should understand outcomes, recover relevant context, plan multi-step work
 - [Evaluation framework](docs/evaluation.md)
 - [Firebase setup](docs/firebase-setup.md)
 - [Repository structure and naming conventions](docs/repository-structure.md)
+- [Windows desktop cleanup and synchronization](docs/desktop-cleanup.md)
 - [Roadmap](docs/roadmap.md)
 
 ### Agent runtime research and handoff
