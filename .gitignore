@@ -2,9 +2,11 @@ node_modules/
 dist/
 build/
 coverage/
+*.tsbuildinfo
 .env
 .env.*
 !.env.example
+.firebaserc
 .firebase/
 firebase-debug.log
 firestore-debug.log
@@ -15,4 +17,5 @@ functions-debug.log
 local.properties
 .DS_Store
 .idea/
+.gradle/
 .vscode/
