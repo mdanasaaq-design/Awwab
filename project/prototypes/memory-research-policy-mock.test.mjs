@@ -90,7 +90,7 @@ test("retrieval is scoped to owner, expiry, visibility and type", () => {
     { ...memory({ type: "project_context" }), content: "project" },
   ];
   const result = retrieveMemories({ ownerId: "user-a", memories: values, now, types: ["explicit_preference"] });
-  assert.deepEqual(result.map((item) => item.content), ["own"]);
+  assert.deepEqual(result.map((item) => item.content), ["own", "future expiry"]);
 });
 
 test("sensitive memories are excluded from automatic retrieval", () => {
