@@ -156,11 +156,11 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - PR #17 (`feat/assistant-core-foundation`) remains draft/open. A CI run reported success, but its branch diverges from current main. It contains a plan-policy validator only, not a connected assistant runtime.
 - Current main's frontend Functions client does not specify `asia-south1`; backend callable declarations also use default region. The local ZIP's region edits have not been reconciled to GitHub.
 - The old `fix/web-build-types` branch is stale relative to current main and must not be merged wholesale.
-- Local working-tree state remains unknown until the user runs the read-only commands in [Master Plan](MASTER_PLAN.md).
+- The local clone was inspected on 2026-10-28; see the source-reconciliation update below. Fast-forward synchronization remains pending.
 
 ## Source reconciliation update — 2026-10-28
 
-- GitHub `main` is at `07651e30ed0b6f40e843b4fe90cb876dfdbd15d7` (`docs: record Phase 0 GitHub source audit`).
+- Application-code baseline reviewed: `07651e30ed0b6f40e843b4fe90cb876dfdbd15d7` (`docs: record Phase 0 GitHub source audit`). Documentation-only reconciliation commits followed; the local sync remains pending.
 - The actual Windows clone is `C:\Users\rexy2\Awwab`, remote `origin` is the canonical Awwab repository, and local `main` was at `3a7d914` before sync. After `git fetch origin`, local `main` was 60 commits behind and 0 commits ahead of `origin/main`; no tracked working-tree edits or local-only commits were reported.
 - An untracked local `package-lock.json` (410,433 bytes) remains in the clone. Its backup at `C:\Users\rexy2\Awwab-package-lock.local-backup-20261028.json` was verified byte-identical using SHA-256. Preserve both until the local file is compared with the tracked GitHub version.
 - `C:\Users\rexy2\Downloads\Awwab` is an extracted non-Git copy; no `.git` metadata was found there. Do not treat it as the canonical working clone.
