@@ -253,10 +253,10 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [x] Add explicit five-entry list validation: tags are strings up to 64 characters; repository references are strings up to 500 characters.
 - [x] Test empty lists, maximum-size lists, malformed element types, oversized values, and excess entries.
 - [x] Require a non-null task `projectId` to reference an existing project owned by the same user; test valid, null, missing, and cross-user references on create.
-- [ ] Verify follow-up update-path tests: accept an existing same-owner project; reject missing and cross-user references. Added on the isolated branch; fresh CI is not yet confirmed.
+- [x] Verify follow-up update-path tests: accept an existing same-owner project; reject missing and cross-user references.
 - [x] Run the complete CI suite for the core implementation; all four jobs passed in [run 40694648586](https://github.com/mdanasaaq-design/Awwab/actions/runs/40694648586).
-- [ ] Run/confirm the complete CI suite after the follow-up update-path tests.
+- [x] Run/confirm the complete CI suite after the follow-up update-path tests; all four jobs passed in [run 40695884479](https://github.com/mdanasaaq-design/Awwab/actions/runs/40695884479).
 - [ ] Review and approve the isolated security change before merge; PR [#21](https://github.com/mdanasaaq-design/Awwab/pull/21) remains a draft and is not merged.
 - [ ] Deploy Rules only after explicit owner authorization; no live deployment has occurred.
 
-Implementation evidence: [commit e8a2d1c](https://github.com/mdanasaaq-design/Awwab/commit/e8a2d1c3d3d5fcc6862dc164485c0039835fc619). Scope and detailed criteria: [Phase 2I](PHASE_2I_NESTED_FIELD_VALIDATION.md).
+Implementation evidence: [commit e8a2d1c](https://github.com/mdanasaaq-design/Awwab/commit/e8a2d1c3d3d5fcc6862dc164485c0039835fc619); follow-up full CI evidence: [run 40695884479](https://github.com/mdanasaaq-design/Awwab/actions/runs/40695884479). Scope and detailed criteria: [Phase 2I](PHASE_2I_NESTED_FIELD_VALIDATION.md).
