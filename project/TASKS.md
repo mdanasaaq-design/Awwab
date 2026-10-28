@@ -246,3 +246,10 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [x] Extend the existing `:focus-visible` outline to native `select` and `textarea` controls in [commit 4aea511](https://github.com/mdanasaaq-design/Awwab/commit/4aea511b03fd24b8dc57148d216a817530238384).
 - [ ] Confirm GitHub Actions for this CSS change.
 - [ ] Complete browser keyboard-focus review; source edits and CI do not replace manual review.
+## Free-only local prototypes
+
+- [x] Record the strict $0 backend feasibility gate in [Backend Architecture Options](BACKEND_ARCHITECTURE_OPTIONS.md).
+- [x] Add a synthetic-data-only device lifecycle model and Node.js test cases under [project/prototypes](prototypes/).
+- [ ] Run the local prototype tests and record the observed result.
+- [ ] Do not connect the mock to the live UI or treat it as proof of Firestore transaction correctness.
+- [ ] Continue investigating only solutions that require no billing, no paid service, and no weakening of Firestore Rules.
