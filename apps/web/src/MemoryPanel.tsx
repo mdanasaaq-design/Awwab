@@ -231,7 +231,7 @@ export function MemoryPanel({ uid }: { uid: string }) {
               <>
                 <p className="memory-record-content">{record.content}</p>
                 <div className="memory-actions">
-                  <button className="secondary" type="button" disabled={busy} onClick={() => { setEditingId(record.id); setEditContent(record.content); }}>Correct</button>
+                  <button className="secondary" type="button" disabled={busy || Boolean(record.expiresAt && record.expiresAt.toMillis() <= Date.now())} onClick={() => { setEditingId(record.id); setEditContent(record.content); }}>Correct</button>
                   <button className="danger" type="button" disabled={busy} onClick={() => void removeMemory(record)}>Delete</button>
                 </div>
               </>
