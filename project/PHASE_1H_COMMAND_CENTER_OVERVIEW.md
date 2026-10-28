@@ -10,13 +10,13 @@ The signed-in landing page has an assistant panel and navigation rows, but no co
 
 ## Acceptance criteria
 
-- [ ] The Assistant landing page presents a compact three-part overview for Assistant Core, device trust, and workspace data availability.
-- [ ] Assistant Core and workspace-data statuses clearly say they are not connected; no fabricated counts, activity, or success claims are introduced.
-- [ ] Device-trust status is derived from the existing `deviceStatus` state, with attention visually distinguishable from a trusted state.
+- [x] Source review confirms the Assistant landing page presents a three-part overview for Assistant Core, device trust, and workspace data availability.
+- [x] Source review confirms Assistant Core and workspace-data statuses say they are not connected; no fabricated counts, activity, or success claims are introduced.
+- [x] Source review confirms device-trust status derives from `deviceStatus`, with distinct trusted, attention, and pending styles.
 - [ ] The overview uses existing design tokens, fits desktop and narrow mobile layouts without horizontal overflow, and keeps text readable.
-- [ ] Existing navigation, quick-switcher keyboard behavior, sign-in, device-management flows, and disabled assistant composer remain unchanged.
-- [ ] No backend, Firebase Rules/configuration, dependencies, secrets, or deployment settings change.
-- [ ] Relevant automated checks are run when practical; any unperformed browser/manual review remains explicitly pending.
+- [x] Source review confirms the overview is additive and the assistant composer remains disabled; existing navigation, quick-switcher, sign-in, and device-management code paths are untouched by the overview markup/styles.
+- [x] The reviewed Phase 1H overview implementation is confined to frontend markup/styles; no backend, Firebase Rules/configuration, dependency, secret, or deployment-setting change is part of this slice.
+- [x] Automated CI evidence exists for the frontend baseline and keyboard-focus CSS (runs [40684572657](https://github.com/mdanasaaq-design/Awwab/actions/runs/40684572657) and [40685073409](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685073409)); browser/manual review remains explicitly pending.
 
 ## Verification
 
@@ -63,3 +63,8 @@ Source review found the global visible-focus outline covered buttons, links, and
 ## Verification correction — 2026-10-28
 
 GitHub Actions run [40685073409](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685073409) passed all four jobs after the keyboard-focus CSS commit: web typecheck/build, Functions/shared typecheck, Firestore security rules tests, and backend callable emulator tests. The run was triggered by a subsequent documentation commit and includes the CSS change. This is automated evidence only; desktop/mobile browser acceptance and keyboard interaction checks remain pending.
+
+
+## Source acceptance audit — 2026-10-28
+
+Reviewed the current `main` source for the overview markup in `apps/web/src/App.tsx` and its dedicated styles in `apps/web/src/styles.css`. The three cards use truthful not-connected states for Assistant Core/workspace data and derive device-trust copy/classes from `deviceStatus`. The composer remains disabled. The stylesheet includes a single-column overview at the narrow-mobile breakpoint and uses distinct status styles. These are source-level findings only: rendered overflow, text readability, contrast, and real keyboard/screen-reader behavior have not been browser-tested. The visual acceptance criterion below therefore remains unchecked until desktop and narrow-mobile browser review is actually performed.
