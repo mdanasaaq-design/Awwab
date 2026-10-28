@@ -233,3 +233,13 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - A direct port of PR #16's bounded list validation and task project-reference checks failed the Rules emulator suite: valid project writes produced evaluation errors. A static-index adjustment did not resolve it.
 - Reverted the unverified Rules and test edits to the previous baseline in [commit ee12ffd](https://github.com/mdanasaaq-design/Awwab/commit/ee12ffdece44765e0a7e85c57e65e139dd37a0a7) and [commit 4c88064](https://github.com/mdanasaaq-design/Awwab/commit/4c88064260251b6fbea2c1d9eeefa65effa6afbc). The Phase 2I implementation remains blocked and unchecked; investigate in a controlled branch before retrying.
 - The restored baseline passed all four CI jobs in [run 40692497914](https://github.com/mdanasaaq-design/Awwab/actions/runs/40692497914), including Firestore Rules emulator tests. Phase 2I remains blocked pending a reproducible fix. No live Firestore Rules deployment occurred.
+
+
+## Phase 1H source acceptance audit — 2026-10-28
+
+- Reviewed the current `main` implementation of the command-center overview in `apps/web/src/App.tsx` and `apps/web/src/styles.css`.
+- The three status cards are present; Assistant Core and workspace data are explicitly marked not connected; device-trust status is derived from `deviceStatus` and uses distinct trusted/attention/pending styles. The assistant composer remains disabled.
+- The overview switches to a single-column layout at the narrow-mobile breakpoint. This is source inspection, not proof of rendered readability or no overflow.
+- Updated [Phase 1H acceptance record](PHASE_1H_COMMAND_CENTER_OVERVIEW.md) and [Tasks](TASKS.md) to distinguish source-verified criteria from outstanding visual/manual acceptance.
+- Automated CI evidence for the relevant frontend baseline and keyboard-focus CSS is recorded in runs [40684572657](https://github.com/mdanasaaq-design/Awwab/actions/runs/40684572657) and [40685073409](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685073409). Browser review across desktop and narrow mobile, keyboard interaction, focus appearance, and screen-reader behavior remain outstanding.
+- No application code, backend, Firebase Rules/configuration, dependency, secret, or deployment setting changed in this audit. No deployment was performed.
