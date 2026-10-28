@@ -46,7 +46,7 @@ Fields: `name`, `description`, `repositoryReferences`, `status`, `tags`, `create
 - Required client fields: `name`, `status`, `createdAt`, `updatedAt`.
 - Name is 1–160 characters; description is optional and at most 4,000 characters.
 - Status is `active` or `archived`.
-- Tags and repository references are optional lists bounded to 20 entries.
+- Tags are an optional list of at most 5 strings, each at most 64 characters. Repository references are an optional list of at most 5 strings, each at most 500 characters. Firestore Rules reject non-string elements, overlong strings, and lists exceeding these bounds.
 - Create timestamps must use server timestamps; `createdAt` is immutable and `updatedAt` must be a server timestamp on update.
 
 ## Task
@@ -157,3 +157,11 @@ The `/users/{uid}/system/firstDeviceBootstrap` document is a backend-only concur
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Phase 2I validation evidence (2026-10-28)
+
+- Firestore Rules emulator suite passed on isolated branch commit `e8a2d1c3d3d5fcc6862dc164485c0039835fc619`; CI run [40694648586](https://github.com/mdanasaaq-design/Awwab/actions/runs/40694648586) passed all four jobs.
+- List bounds are five entries; per-entry limits are 64 characters for tags and 500 for repository references. Empty and max-length lists are accepted; malformed, oversized, and excessive lists are rejected.
+- Task project references must resolve within the same user's project collection. Omitted and null project IDs remain allowed.
+- These Rules changes remain on isolated draft PR #21 and have not been merged or deployed to live Firebase.
