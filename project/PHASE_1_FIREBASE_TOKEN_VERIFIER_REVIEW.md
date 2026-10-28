@@ -85,3 +85,26 @@ Do not start production integration as part of Phase 2. Keep the strict $0 gate,
 - Supabase, [Authorization headers](https://supabase.com/docs/guides/functions/auth-headers): platform gateway JWT behavior and header semantics.
 
 This is a bounded source review, not an independent penetration test, a live-provider validation, or a security certification.
+
+## Phase 2 — synthetic verifier hardening follow-up
+
+**Implementation status:** Changes and regression cases committed to `main`. **Execution status:** The expanded suite has not yet been run after these changes in an independent runtime. Do not mark test acceptance complete until it passes.
+
+Changes:
+- Require `auth_time` as a non-negative safe integer and reject future authentication time or an authentication time later than issue time beyond configured skew.
+- Validate project ID shape, `now`, bounded integer clock skew (0–300 seconds), and a non-empty key set with unique, syntactically valid key IDs and public-key material.
+- Bound clock arithmetic to safe-integer ranges.
+- Require JWT `typ` to be `JWT`; strictly decode canonical unpadded base64url and UTF-8 JSON; require JSON object values; validate signature-segment encoding.
+- Add synthetic regression tests for missing/malformed/future `auth_time`, invalid clock/skew configuration, malformed segment encodings/UTF-8, wrong token type, duplicate/malformed keys, and empty key sets.
+
+**Known limitations remain:** duplicate JSON member names are not explicitly detected; the verifier does not fetch/cache/rotate Google's certificates, perform revocation checks, or use a production JWT library. This work does not validate live Firebase tokens or Supabase Edge Runtime behavior. No network, cloud resources, secrets, billing changes, Rules changes, or deployment were involved.
+
+### Phase 2 local acceptance command
+
+From the repository root, run:
+
+```powershell
+node --test project/prototypes/firebase-token-verifier-mock.test.mjs
+```
+
+Record the exact output. A passing local model suite is necessary but not sufficient for production approval.
