@@ -539,8 +539,8 @@ export function App() {
                   <span className="overview-glyph" aria-hidden="true">▤</span>
                   <span>WORKSPACE DATA</span>
                 </div>
-                <strong className="overview-value status-pending">Not connected</strong>
-                <p>Projects, tasks, and research have no live data yet.</p>
+                <strong className="overview-value status-pending">Partially connected</strong>
+                <p>Memory management and live Wikipedia source lookup are available. Projects, tasks, and assistant retrieval remain disconnected.</p>
               </article>
             </section>
 
@@ -556,7 +556,8 @@ export function App() {
                 {[
                   { id: "projects" as const, number: "01", title: "Projects", description: "Repositories, decisions, and project context", glyph: "▤" },
                   { id: "tasks" as const, number: "02", title: "Tasks", description: "Commitments, priorities, and what comes next", glyph: "☷" },
-                  { id: "research" as const, number: "03", title: "Research", description: "Sources, evidence, and useful conclusions", glyph: "⌕" },
+                  { id: "research" as const, number: "03", title: "Research", description: "Live source lookup and citations", glyph: "⌕" },
+                  { id: "memories" as const, number: "04", title: "Memory", description: "Saved context you can inspect and correct", glyph: "◉" },
                 ].map((item) => (
                   <button className="workspace-row" type="button" key={item.id} onClick={() => setActiveSection(item.id)}>
                     <span className="workspace-row-number">{item.number}</span>
@@ -565,7 +566,7 @@ export function App() {
                       <strong>{item.title}</strong>
                       <small>{item.description}</small>
                     </span>
-                    <span className="workspace-row-status">NOT CONNECTED</span>
+                    <span className="workspace-row-status">{item.id === "research" || item.id === "memories" ? "AVAILABLE" : "NOT CONNECTED"}</span>
                     <span className="workspace-row-arrow" aria-hidden="true">↗</span>
                   </button>
                 ))}
