@@ -13,21 +13,16 @@ service cloud.firestore {
     function validStringList(values, maxItems, maxLength) {
       return values is list
         && values.size() <= maxItems
-        && (values.size() == 0
-          ? true
-          : (values[0] is string && values[0].size() <= maxLength))
-        && (values.size() <= 1
-          ? true
-          : (values[1] is string && values[1].size() <= maxLength))
-        && (values.size() <= 2
-          ? true
-          : (values[2] is string && values[2].size() <= maxLength))
-        && (values.size() <= 3
-          ? true
-          : (values[3] is string && values[3].size() <= maxLength))
-        && (values.size() <= 4
-          ? true
-          : (values[4] is string && values[4].size() <= maxLength));
+        && (values.size() < 1
+          || (values[0] is string && values[0].size() <= maxLength))
+        && (values.size() < 2
+          || (values[1] is string && values[1].size() <= maxLength))
+        && (values.size() < 3
+          || (values[2] is string && values[2].size() <= maxLength))
+        && (values.size() < 4
+          || (values[3] is string && values[3].size() <= maxLength))
+        && (values.size() < 5
+          || (values[4] is string && values[4].size() <= maxLength));
     }
 
     function validProject(data) {
