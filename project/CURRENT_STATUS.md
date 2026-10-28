@@ -147,3 +147,13 @@ See [Agent Runtime Research](../docs/agent-runtime-research.md), [Architecture D
 - Production Hosting, Firestore Rules and Functions deployment remain unauthorized. The live device-management lifecycle remains unverified and is expected to fail while callable functions are absent.
 
 See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact next steps.
+
+
+## GitHub source reconciliation update — 2026-10-28
+
+- Current GitHub `main` head: [97d908a](https://github.com/mdanasaaq-design/Awwab/commit/97d908a3a0c8905ba7864018f8ef4d6b8a960652).
+- PR #16 (`fix/phase-2-nested-field-validation`) remains draft/open. Its latest reported CI run was cancelled; its branch diverges from current main. Rules emulator acceptance remains pending.
+- PR #17 (`feat/assistant-core-foundation`) remains draft/open. A CI run reported success, but its branch diverges from current main. It contains a plan-policy validator only, not a connected assistant runtime.
+- Current main's frontend Functions client does not specify `asia-south1`; backend callable declarations also use default region. The local ZIP's region edits have not been reconciled to GitHub.
+- The old `fix/web-build-types` branch is stale relative to current main and must not be merged wholesale.
+- Local working-tree state remains unknown until the user runs the read-only commands in [Master Plan](MASTER_PLAN.md).
