@@ -63,6 +63,7 @@ test('expired and future-dated challenges fail closed', () => {
   const { store, firstKey } = setup();
   const challenge = challengeFor(store, { ttlMs: 100 });
   const proof = { uid: 'synthetic-user', deviceId: firstId, action: 'approve_device', targetId, challengeId: challenge.challengeId, signature: signed(firstKey, challenge) };
+  assert.throws(() => store.authorizeAndConsume({ ...proof, now: 2100 }), /challenge-expired-or-invalid-time/);
   assert.throws(() => store.authorizeAndConsume({ ...proof, now: 2101 }), /challenge-expired-or-invalid-time/);
   assert.throws(() => store.authorizeAndConsume({ ...proof, now: 1999 }), /challenge-expired-or-invalid-time/);
 });
@@ -146,4 +147,38 @@ test('audit events contain only synthetic model events and are user scoped', () 
   assert.ok(store.auditEvents('synthetic-user').every((event) => event.synthetic === true));
   assert.equal(store.auditEvents('other-user').length, 1);
   assert.equal(store.auditEvents('synthetic-user').length, 1);
+});
+
+
+test('a failed signature does not consume the challenge, so the legitimate key can retry', () => {
+  const { store, firstKey, secondKey } = setup();
+  const challenge = challengeFor(store);
+  const request = {
+    uid: 'synthetic-user', deviceId: firstId, action: 'approve_device', targetId,
+    challengeId: challenge.challengeId, now: 2001,
+  };
+  assert.throws(() => store.authorizeAndConsume({ ...request, signature: signed(secondKey, challenge) }), /invalid-signature/);
+  assert.equal(store.authorizeAndConsume({ ...request, signature: signed(firstKey, challenge) }).ok, true);
+});
+
+test('revocation invalidates an outstanding challenge for that device', () => {
+  const { store, firstKey, secondKey } = setup();
+  store.registerPendingDevice({ uid: 'synthetic-user', deviceId: secondId, publicKeyPem: publicPem(secondKey), now: 1000 });
+  store.approvePendingDevice({ uid: 'synthetic-user', callerDeviceId: firstId, targetDeviceId: secondId });
+  const challenge = store.issueChallenge({ uid: 'synthetic-user', deviceId: secondId, action: 'list_devices', now: 2000 });
+  store.revokeDevice({ uid: 'synthetic-user', callerDeviceId: firstId, targetDeviceId: secondId });
+  assert.throws(() => store.authorizeAndConsume({
+    uid: 'synthetic-user', deviceId: secondId, action: 'list_devices',
+    challengeId: challenge.challengeId, signature: signed(secondKey, challenge), now: 2001,
+  }), /device-not-trusted/);
+  assert.equal(store.getDevice('synthetic-user', secondId).status, 'revoked');
+  assert.ok(firstKey);
+});
+
+test('challenge creation rejects unsafe expiry arithmetic', () => {
+  const { store } = setup();
+  assert.throws(() => store.issueChallenge({
+    uid: 'synthetic-user', deviceId: firstId, action: 'list_devices',
+    now: Number.MAX_SAFE_INTEGER - 10, ttlMs: 30,
+  }), /invalid-challenge-lifetime/);
 });
