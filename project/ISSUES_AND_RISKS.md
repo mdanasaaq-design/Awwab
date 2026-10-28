@@ -243,3 +243,12 @@
 - **Mitigation:** Compare each relevant branch against current main, preserve the user's local ZIP/clone, rerun only the necessary checks after reconciliation, and integrate only the smallest safe changes.
 - **Acceptance:** No merge conflict or stale-state issue remains; required tests run against the reconciled head; owner can identify the exact resulting commit.
 
+## AWW-009 — Local clone is stale and has an untracked lockfile
+
+- **Priority:** P2 — workflow/reproducibility risk
+- **Type:** Source-of-truth / local workflow
+- **Status:** Partially mitigated; synchronization pending.
+- **Evidence:** On 2026-10-28, `C:\Users\rexy2\Awwab` was on `main` at `3a7d914`; after fetching `origin`, local `main` was 60 commits behind `origin/main` at `07651e3` and 0 commits ahead. No tracked changes or local-only commits were reported. An untracked root `package-lock.json` was present.
+- **Mitigation:** A copy was made at `C:\Users\rexy2\Awwab-package-lock.local-backup-20261028.json`; SHA-256 hashes matched. The original remains in place.
+- **Required action:** Fast-forward only, then compare the local lockfile against GitHub's tracked version. Do not use reset/clean, overwrite, or delete the file/backup before comparison.
+- **Exit condition:** Local branch points at current main, the working tree is understood, and any local lockfile difference is preserved or deliberately reconciled.
