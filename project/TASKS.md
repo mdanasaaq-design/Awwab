@@ -274,3 +274,15 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [ ] Independently review a production-grade JWT/JWKS verification design and verify Google key caching/rotation, revocation policy, Edge Function gateway bypass, and failure behavior.
 - [ ] Resolve the Firebase role-claim dependency without Blaze/Identity Platform, or reject the Supabase candidate; do not create a project until the owner explicitly approves a separate non-production proof of concept.
 - [ ] Obtain explicit approval before creating any Supabase project, secret, integration, or deployment.
+
+## Phase 3 — backend architecture decision (2026-10-28)
+
+- [x] Compare Firebase callable Functions, Cloudflare Worker + Google service identity, isolated Supabase Edge Function/database, direct browser writes, and deferral under the strict $0 requirement.
+- [x] Record the decision and acceptance gates in [PHASE_3_BACKEND_DECISION.md](PHASE_3_BACKEND_DECISION.md).
+- [x] Select isolated Supabase device-only service as the preferred **research candidate** because it offers a narrower data boundary than privileged access to the existing shared Firestore database.
+- [x] Record the current operating decision: **no candidate is approved for provisioning or deployment; defer live device management** until token verification, atomicity, security, and strict-$0 requirements are demonstrated.
+- [ ] Resolve the Supabase Firebase role-claim / custom-verification question without requiring Blaze or Identity Platform.
+- [ ] Complete local adversarial design tests and independent review before any hosted proof of concept.
+- [ ] Obtain explicit owner approval before creating any account, resource, secret, or deployment.
+
+**Important:** Phase 3 research/decision is complete; backend implementation/provisioning acceptance is not. Existing backend acceptance-gate items above remain unchecked.
