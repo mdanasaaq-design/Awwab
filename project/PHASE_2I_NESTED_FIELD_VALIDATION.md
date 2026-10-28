@@ -1,6 +1,6 @@
 # Phase 2I — Validate Project/Task List Elements and References
 
-**Status:** Blocked pending a reproducible Rules-emulator fix  
+**Status:** Implementation and full CI verified on isolated branch; awaiting review/merge decision  
 **Phase:** 2 — Foundation security and environment validation  
 **Risk:** AWW-014  
 **Scope:** Firestore Rules and emulator tests only
@@ -11,15 +11,15 @@ Phase 2G validates top-level project/task fields, enums, and timestamp integrity
 
 ## Acceptance criteria
 
-- [ ] `tags` is a list of at most 5 strings; each string is at most 64 characters.
-- [ ] `repositoryReferences` is a list of at most 5 strings; each string is at most 500 characters.
-- [ ] Nested objects, numbers, and oversized strings in either list are rejected.
-- [ ] A task may omit `projectId` or set it to null.
-- [ ] A non-null `projectId` must be a string naming an existing project under the same user's `/users/{uid}/projects` hierarchy.
-- [ ] Missing and cross-user project references are rejected.
-- [ ] Valid owner project/task CRUD and previous Rules tests remain green.
-- [ ] The complete CI suite passes on the implementation commit.
-- [ ] Current status, task list, data model, and risk register record evidence and remaining limits.
+- [x] `tags` is a list of at most 5 strings; each string is at most 64 characters.
+- [x] `repositoryReferences` is a list of at most 5 strings; each string is at most 500 characters.
+- [x] Nested objects, numbers, and oversized strings in either list are rejected.
+- [x] A task may omit `projectId` or set it to null.
+- [x] A non-null `projectId` must be a string naming an existing project under the same user's `/users/{uid}/projects` hierarchy.
+- [x] Missing and cross-user project references are rejected.
+- [x] Valid owner project/task CRUD and previous Rules tests remain green.
+- [x] The complete CI suite passes on the implementation commit.
+- [x] Current status, task list, data model, and risk register record evidence and remaining limits.
 - [ ] No live Rules deployment or other production change occurs.
 
 ## Implementation constraints
@@ -28,12 +28,12 @@ Phase 2G validates top-level project/task fields, enums, and timestamp integrity
 - Preserve owner scoping, default deny, existing field allowlists, immutable creation timestamps, and task source-provenance constraints.
 - This change does not define deep URL validation or a complete task status-transition graph. Any backend executor must validate project/task content and policy independently.
 
-## Investigation note — 2026-10-28
+## Investigation and verification — 2026-10-28
 
 - A direct port of the stale PR #16 implementation was attempted on `main`, with tests for malformed list elements, list bounds, and same-user project references.
 - The Firestore Rules emulator rejected valid project writes with evaluation errors in the new validation helper. A second attempt using static list indexes did not resolve the failure.
 - The unverified Rules/test edits were reverted to the previously verified baseline in commits [ee12ffd](https://github.com/mdanasaaq-design/Awwab/commit/ee12ffdece44765e0a7e85c57e65e139dd37a0a7) and [4c88064](https://github.com/mdanasaaq-design/Awwab/commit/4c88064260251b6fbea2c1d9eeefa65effa6afbc). No live Rules deployment occurred.
-- Do not mark this phase complete. Reproduce the emulator failure in a controlled local branch, isolate which expression causes evaluation errors, and rerun the full Rules suite before retrying.
+- The isolated branch now uses a bounded explicit-index helper with short-circuit guards. The first task-reference run exposed a missing `uid` argument on the update path; this was corrected in commit [e8a2d1c](https://github.com/mdanasaaq-design/Awwab/commit/e8a2d1c3d3d5fcc6862dc164485c0039835fc619). CI run [40694648586](https://github.com/mdanasaaq-design/Awwab/actions/runs/40694648586) passed all four jobs, including Firestore Rules emulator tests. This evidence applies to the isolated branch only; it is not merged or deployed.
 
 ## Verification plan
 
@@ -42,3 +42,12 @@ Run the existing Firestore Rules emulator suite and the full CI workflow. Tests 
 ## Non-goals
 
 No UI changes, callable API changes, assistant execution, live data writes, Rules deployment, billing changes, or backend provisioning.
+
+
+## Verified implementation details
+
+- `validStringList` checks list type, maximum size, and each of up to five entries as a string within the field-specific length limit.
+- Task `projectId` validation checks existence under the authenticated owner's project collection; it does not accept another user's same-named project.
+- Empty lists and lists at the five-item cap are accepted. Malformed element types, overlong entries, and six-item lists are rejected by emulator tests.
+- The emulator test suite and all four CI jobs passed on the implementation commit. Live Rules remain unchanged.
+- Review the isolated branch and PR #21 before deciding whether to merge. Keep the branch unmerged until the owner/reviewer approves this security-policy change.
