@@ -403,3 +403,70 @@ test("protected callables validate authentication, inputs, and device state", as
   assert.equal(profileFirst.result.uid, trustedUser.localId);
   assert.equal(profileSecond.result.uid, trustedUser.localId);
 });
+
+
+test("a revoked device cannot approve or revoke devices", async () => {
+  const user = await createAuthUser("revoked-caller");
+  const originalDevice = newDeviceId();
+  const replacementDevice = newDeviceId();
+  const pendingDevice = newDeviceId();
+
+  const bootstrap = await invokeCallable(
+    "bootstrapFirstDevice",
+    bootstrapPayload(originalDevice),
+    user.idToken,
+  );
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  const replacementRegistration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(replacementDevice),
+    user.idToken,
+  );
+  assert.equal(replacementRegistration.ok, true, JSON.stringify(replacementRegistration));
+
+  const approval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: originalDevice, targetDeviceId: replacementDevice },
+    user.idToken,
+  );
+  assert.equal(approval.ok, true, JSON.stringify(approval));
+
+  const revokeOriginal = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: replacementDevice, targetDeviceId: originalDevice },
+    user.idToken,
+  );
+  assert.equal(revokeOriginal.ok, true, JSON.stringify(revokeOriginal));
+
+  const registerPending = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDevice),
+    user.idToken,
+  );
+  assert.equal(registerPending.ok, true, JSON.stringify(registerPending));
+
+  const staleApprove = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: originalDevice, targetDeviceId: pendingDevice },
+    user.idToken,
+  );
+  assert.equal(staleApprove.ok, false);
+  assert.equal(staleApprove.error.status, "PERMISSION_DENIED");
+
+  const staleRevoke = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: originalDevice, targetDeviceId: pendingDevice },
+    user.idToken,
+  );
+  assert.equal(staleRevoke.ok, false);
+  assert.equal(staleRevoke.error.status, "PERMISSION_DENIED");
+
+  const listed = await invokeCallable(
+    "listDevices",
+    { deviceId: replacementDevice },
+    user.idToken,
+  );
+  assert.equal(listed.ok, true, JSON.stringify(listed));
+  assert.equal(listed.result.devices.find((device) => device.deviceId === pendingDevice).status, "pending");
+});
