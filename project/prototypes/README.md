@@ -34,3 +34,16 @@ Review notes and remaining blockers: see [DEVICE_BINDING_REVIEW.md](../DEVICE_BI
 ## Supabase device-service research gate
 
 See [SUPABASE_DEVICE_SERVICE_TEST_PLAN.md](../SUPABASE_DEVICE_SERVICE_TEST_PLAN.md) for the local-only design and acceptance test matrix. This is a specification, not a running Supabase integration. No Supabase project, credentials, network calls, or production imports are involved. The Firebase token role-claim dependency and strict $0 cost gate remain unresolved.
+
+
+## Synthetic Firebase ID-token verification harness
+
+Files `firebase-token-verifier-mock.mjs` and `firebase-token-verifier-mock.test.mjs` exercise token parsing, RS256 signatures, key IDs, issuer/audience/subject checks, time claims, clock skew, and fail-closed configuration using freshly generated synthetic RSA keys and synthetic tokens.
+
+Run from the repository root:
+
+```sh
+node --test project/prototypes/firebase-token-verifier-mock.test.mjs
+```
+
+This is a **local test model only**. It accepts an explicitly supplied synthetic key set and does not fetch Google's JWKS, implement HTTP cache headers/key rotation, validate real Firebase tokens, check refresh-token revocation, or prove Supabase Edge Runtime behavior. Never use this mock as production authentication code. The Supabase candidate remains NO-GO for cloud creation/deployment pending independent review and the strict $0 gate.
