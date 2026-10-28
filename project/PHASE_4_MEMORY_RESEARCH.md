@@ -28,7 +28,7 @@
 - [ ] Connect authenticated memory retrieval to Assistant Core with server-verified identity, explicit permission scope, expiry filtering, strict context budgets, and untrusted-data boundaries. The current Assistant Core is not connected, so memory is not yet automatically used in conversations.
 - [ ] Expand research beyond Wikipedia to general web/document sources, with source fetching, extraction, deduplication/ranking, durable research sessions, and source-linked claims. Current search ranking is Wikipedia's; Awwab does not independently verify claims or generate a synthesis.
 - [ ] Complete end-to-end privacy/security testing in a running app and perform an independent review.
-- [ ] Verify the full web build and Firestore emulator suite after the final branch commit.
+- [x] Verify the full web build and Firestore emulator suite after the final implementation commit; CI run 40750012960 passed all five jobs.
 
 ## Architecture and safety boundaries
 
