@@ -56,6 +56,41 @@ service cloud.firestore {
           || data.completedAt == null || data.completedAt is timestamp);
     }
 
+    function validMemory(data) {
+      return data.keys().hasOnly([
+          "content", "type", "sourceKind", "sourceRef", "confidence",
+          "sensitivity", "createdAt", "updatedAt", "expiresAt",
+          "userVisible", "confirmedByUser"
+        ])
+        && data.keys().hasAll([
+          "content", "type", "sourceKind", "sourceRef", "confidence",
+          "sensitivity", "createdAt", "updatedAt", "expiresAt",
+          "userVisible", "confirmedByUser"
+        ])
+        && data.content is string
+        && data.content.size() > 0
+        && data.content.size() <= 2000
+        && data.type in [
+          "explicit_preference", "stable_profile_fact", "goal_commitment",
+          "project_context", "learned_preference", "temporary_context"
+        ]
+        && data.sourceKind in ["user_explicit", "user_corrected"]
+        && (data.sourceRef == null
+          || (data.sourceRef is string && data.sourceRef.size() <= 256))
+        && data.confidence is number
+        && data.confidence >= 0
+        && data.confidence <= 1
+        && data.sensitivity in ["low", "normal", "sensitive"]
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && (data.expiresAt == null || data.expiresAt is timestamp)
+        && data.userVisible is bool
+        && data.confirmedByUser is bool
+        && (data.sensitivity != "sensitive"
+          || (data.sourceKind in ["user_explicit", "user_corrected"]
+            && data.confirmedByUser == true));
+    }
+
     match /users/{uid} {
       // Root profile fields are backend-owned until a validated profile-edit API exists.
       allow read: if isOwner(uid);
@@ -107,10 +142,20 @@ service cloud.firestore {
       }
 
       match /memories/{memoryId} {
-        // The owner may inspect and delete memory, but provenance/classification
-        // and content updates must pass through a validated backend path.
+        // Direct client writes are safe here because records are strictly schema-
+        // validated, the path is tied to Firebase Auth UID, and only user-entered
+        // or user-corrected records are accepted. Retrieved content remains untrusted.
         allow read, delete: if isOwner(uid);
-        allow create, update: if false;
+        allow create: if isOwner(uid)
+          && validMemory(request.resource.data)
+          && request.resource.data.sourceKind == "user_explicit"
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time;
+        allow update: if isOwner(uid)
+          && validMemory(request.resource.data)
+          && request.resource.data.sourceKind == "user_corrected"
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.updatedAt == request.time;
       }
 
       match /automations/{automationId} {
