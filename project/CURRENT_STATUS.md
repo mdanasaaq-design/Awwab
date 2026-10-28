@@ -209,3 +209,11 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - Added a callable emulator regression test proving a revoked device cannot subsequently approve or revoke another device.
 - Verification passed on commit `317e742b368d3f37e0948270978c50096e858974`: [GitHub Actions run 40685807443](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685807443). All four jobs passed: web typecheck/build, Functions/shared typecheck, Firestore Rules tests, and backend callable emulator tests. The new revoked-caller test passed; 4 callable test groups passed overall.
 - This is emulator/CI verification, not live Firebase verification. Production remains unchanged; no deploy, billing change, Rules change, or backend provisioning was performed.
+
+
+## Device security verification update — 2026-10-28
+
+- Phase 2C last-trusted-device revocation is verified in CI, not pending: [run 40685807443](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685807443) passed all four jobs on code/test commit `317e742b368d3f37e0948270978c50096e858974`.
+- Callable emulator coverage verifies concurrent revocations permit exactly one state transition, preserve one trusted device, reject sequential revocation of the final trusted device, allow idempotent repeats, and allow pending-device revocation. The revoked-caller authorization regression test also passes. The callable suite reported 4 passing test groups.
+- Device approval/revocation caller trust checks are performed inside the mutation transaction; approval audit activity is atomic with approval. Details: [Phase 2C acceptance record](PHASE_2C_LAST_DEVICE_REVOCATION.md) and [authorization risk resolution](ISSUES_AND_RISKS.md).
+- Evidence is from CI emulators only. Live Firebase Auth/device lifecycle and manual browser acceptance remain outstanding. No deployment, billing upgrade, Rules change, or backend provisioning occurred.
