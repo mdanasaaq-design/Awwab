@@ -201,3 +201,11 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - Created [project/BACKEND_ARCHITECTURE_OPTIONS.md](BACKEND_ARCHITECTURE_OPTIONS.md) with a sourced comparison of staying on Firebase Spark, a Cloudflare Worker API with Firebase Auth/Firestore, and Supabase Edge Functions/Postgres/Auth.
 - Current safe state remains unchanged: no Cloud Functions deployment, no Blaze upgrade, no alternate provider account/resource, no migration, and no Rules change. No architecture decision has been made on the owner's behalf.
 - The key unresolved requirement is not merely a free endpoint: any replacement must verify Firebase identity server-side, preserve user scoping and server-owned device records, and prove atomic bootstrap and last-trusted-device protection before live use.
+
+
+## Device authorization transaction hardening — 2026-10-28
+
+- Hardened `approveDevice` and `revokeDevice` so caller-device trust is read within the same Firestore transaction as the protected mutation. Approval audit activity is written atomically with the approval.
+- Added a callable emulator regression test proving a revoked device cannot subsequently approve or revoke another device.
+- Verification passed on commit `317e742b368d3f37e0948270978c50096e858974`: [GitHub Actions run 40685807443](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685807443). All four jobs passed: web typecheck/build, Functions/shared typecheck, Firestore Rules tests, and backend callable emulator tests. The new revoked-caller test passed; 4 callable test groups passed overall.
+- This is emulator/CI verification, not live Firebase verification. Production remains unchanged; no deploy, billing change, Rules change, or backend provisioning was performed.
