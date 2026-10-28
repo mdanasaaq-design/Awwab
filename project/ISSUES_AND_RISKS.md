@@ -238,7 +238,7 @@
 - **Priority:** P1
 - **Type:** Source reconciliation / integration risk
 - **Status:** Confirmed 2026-10-28.
-- **Evidence:** PR #16 branch reports 13 commits ahead and 39 behind current main; latest reported CI run cancelled. PR #17 branch reports 12 ahead and 39 behind; a CI run passed, but branch is not current with main. `fix/web-build-types` reports 2 ahead and 53 behind.
+- **Evidence:** PR #16 branch reports 13 commits ahead and 49 behind current main; latest reported CI run cancelled. PR #17 branch reports 12 ahead and 49 behind; a CI run passed, but branch is not current with main. `fix/web-build-types` reports 2 ahead and 53 behind.
 - **Impact:** Merging without reconciliation risks bringing stale documentation/status or conflicting code and may falsely treat old CI as validation of current main.
 - **Mitigation:** Compare each relevant branch against current main, preserve the user's local ZIP/clone, rerun only the necessary checks after reconciliation, and integrate only the smallest safe changes.
 - **Acceptance:** No merge conflict or stale-state issue remains; required tests run against the reconciled head; owner can identify the exact resulting commit.
