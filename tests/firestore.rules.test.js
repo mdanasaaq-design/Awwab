@@ -158,6 +158,27 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-non-string-tag"), {
+    name: "Non-string tag",
+    status: "active",
+    tags: ["valid", { forged: true }],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-long-reference"), {
+    name: "Long reference",
+    status: "active",
+    repositoryReferences: ["x".repeat(501)],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-too-many-tags"), {
+    name: "Too many tags",
+    status: "active",
+    tags: Array.from({ length: 6 }, (_, index) => `tag-${index}`),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
   await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-extra-field"), {
     name: "Unexpected field",
     status: "active",
