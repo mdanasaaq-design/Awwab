@@ -45,7 +45,7 @@ service cloud.firestore {
           || validStringList(data.repositoryReferences, 5, 500));
     }
 
-    function validTask(data) {
+    function validTask(data, uid) {
       return data.keys().hasOnly([
           "title", "description", "status", "priority", "dueAt",
           "projectId", "createdAt", "updatedAt", "completedAt", "source"
@@ -66,7 +66,9 @@ service cloud.firestore {
         && (!("dueAt" in data)
           || data.dueAt == null || data.dueAt is timestamp)
         && (!("projectId" in data)
-          || data.projectId == null || data.projectId is string)
+          || data.projectId == null
+          || (data.projectId is string
+            && exists(/databases/$(database)/documents/users/$(uid)/projects/$(data.projectId))))
         && (!("completedAt" in data)
           || data.completedAt == null || data.completedAt is timestamp);
     }
@@ -97,7 +99,7 @@ service cloud.firestore {
       match /tasks/{taskId} {
         allow read: if isOwner(uid);
         allow create: if isOwner(uid)
-          && validTask(request.resource.data)
+          && validTask(request.resource.data, uid)
           && request.resource.data.source == "user"
           && request.resource.data.createdAt == request.time
           && request.resource.data.updatedAt == request.time;
