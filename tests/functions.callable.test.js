@@ -470,6 +470,13 @@ test("device security audit records successful transitions without false success
   );
   assert.equal(revokePending.ok, true, JSON.stringify(revokePending));
 
+  const revokeFirstTrusted = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: secondDevice, targetDeviceId: firstDevice },
+    user.idToken,
+  );
+  assert.equal(revokeFirstTrusted.ok, true, JSON.stringify(revokeFirstTrusted));
+
   const finalTrustedRevoke = await invokeCallable(
     "revokeDevice",
     { callerDeviceId: secondDevice, targetDeviceId: secondDevice },
@@ -484,13 +491,16 @@ test("device security audit records successful transitions without false success
   assert.equal(byAction("device_bootstrapped").length, 1);
   assert.equal(byAction("device_registered").length, 2);
   assert.equal(byAction("device_approved").length, 1);
-  assert.equal(byAction("device_revoked").length, 1);
+  assert.equal(byAction("device_revoked").length, 2);
 
   assert.equal(byAction("device_bootstrapped")[0].outcome, "success");
   assert.equal(byAction("device_registered").every((event) => event.outcome === "success"), true);
   assert.equal(byAction("device_approved")[0].outcome, "success");
   assert.equal(byAction("device_revoked")[0].outcome, "success");
-  assert.equal(byAction("device_revoked")[0].targetReference, thirdDevice);
+  assert.deepEqual(
+    byAction("device_revoked").map((event) => event.targetReference).sort(),
+    [firstDevice, thirdDevice].sort(),
+  );
 
   // Failed transitions currently fail closed and must never be represented as
   // successful audit events. Failed-attempt audit logging remains a separate policy decision.
