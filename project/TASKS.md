@@ -227,13 +227,15 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 
 ## Phase 0 — live repository audit follow-up (2026-10-28)
 
-- [x] Inspect GitHub repository/default branch and current main head.
-- [x] Inspect open PR #16/#17 and record their status and changed files.
-- [x] Confirm current main has no explicit `asia-south1` region in the web Functions client or backend callable declarations.
-- [ ] Obtain read-only local Git status, remotes and HEAD from `Awwab-fixed`; verify outer ZIP is not a repository.
-- [ ] Reconcile region edits without overwriting local work.
+- [x] Inspect GitHub repository/default branch and current main head (`07651e3`).
+- [x] Inspect open PR #16/#17 and record their draft/open state, scope, and divergence from current main.
+- [x] Confirm current main has no explicit `asia-south1` region in the web Functions client or backend callable declarations; local ZIP edits are not on main.
+- [x] Locate actual clone at `C:\Users\rexy2\Awwab`; confirm remote, branch, HEAD (`3a7d914`), and clean tracked tree.
+- [x] Fetch `origin`; confirm local `main` is 60 commits behind and 0 ahead, with no local-only commits.
+- [x] Back up the untracked local `package-lock.json` to `C:\Users\rexy2\Awwab-package-lock.local-backup-20261028.json` and verify identical SHA-256 hashes.
+- [ ] Fast-forward local `main` and inspect any lockfile difference without discarding local data.
 - [ ] Review PR #16 against current main and obtain a non-cancelled Rules test run after reconciliation.
 - [ ] Review PR #17 against current main; preserve it as a pure validator/preflight with no execution side effects.
-- [ ] Decide the smallest safe next code change only after source and PR state are clear.
+- [ ] After synchronization, proceed to Phase 1 manual browser acceptance; do not confuse source review or CI with browser validation.
 
-**Hold:** Do not merge PR #16/#17, merge the stale `fix/web-build-types` branch, deploy, change Rules, upgrade billing, or provision an alternative backend during Phase 0.
+**Hold:** Do not merge PR #16/#17, merge stale feature branches wholesale, deploy, change Rules, upgrade billing, or provision an alternative backend during reconciliation.
