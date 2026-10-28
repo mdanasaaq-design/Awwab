@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, serverTimestamp, updateDoc, type Timestamp } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, serverTimestamp, Timestamp, updateDoc } from "firebase/firestore";
 import { firebaseApp } from "./firebase";
 
 type MemoryType =
@@ -39,6 +39,7 @@ export function MemoryPanel({ uid }: { uid: string }) {
   const [content, setContent] = useState("");
   const [type, setType] = useState<MemoryType>("explicit_preference");
   const [sensitivity, setSensitivity] = useState<Sensitivity>("normal");
+  const [expiry, setExpiry] = useState("never");
   const [confirmed, setConfirmed] = useState(false);
   const [editingId, setEditingId] = useState("");
   const [editContent, setEditContent] = useState("");
@@ -98,12 +99,13 @@ export function MemoryPanel({ uid }: { uid: string }) {
         sensitivity,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        expiresAt: null,
+        expiresAt: expiry === "never" ? null : Timestamp.fromMillis(Date.now() + Number(expiry) * 24 * 60 * 60 * 1000),
         userVisible: true,
         confirmedByUser: sensitivity === "sensitive" ? confirmed : true,
       });
       setContent("");
       setSensitivity("normal");
+      setExpiry("never");
       setConfirmed(false);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Could not save memory.");
@@ -180,6 +182,15 @@ export function MemoryPanel({ uid }: { uid: string }) {
               <option value="sensitive">Sensitive</option>
             </select>
           </label>
+          <label>
+            Expiry
+            <select value={expiry} onChange={(event) => setExpiry(event.target.value)}>
+              <option value="never">No expiry</option>
+              <option value="30">30 days</option>
+              <option value="90">90 days</option>
+              <option value="365">1 year</option>
+            </select>
+          </label>
         </div>
         {sensitivity === "sensitive" && (
           <label className="memory-confirm">
@@ -206,6 +217,7 @@ export function MemoryPanel({ uid }: { uid: string }) {
               <span>{types.find((item) => item.value === record.type)?.label ?? record.type}</span>
               <span>{record.sensitivity} sensitivity</span>
               <span>{record.sourceKind === "user_corrected" ? "User-corrected" : "User-entered"}</span>
+              {record.expiresAt && record.expiresAt.toMillis() <= Date.now() && <span>Expired</span>}
             </div>
             {editingId === record.id ? (
               <div className="memory-edit">
