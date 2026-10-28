@@ -231,3 +231,15 @@
 ---
 
 > **Planning sync — 2026-10-27:** Current blockers and decisions are tracked centrally in [Master Plan and Work Audit](MASTER_PLAN.md). Historical acceptance criteria and prior CI results must not be interpreted as proof that live Firebase integration works.
+
+
+### AWW-019 — Open implementation branches diverged from current main
+
+- **Priority:** P1
+- **Type:** Source reconciliation / integration risk
+- **Status:** Confirmed 2026-10-28.
+- **Evidence:** PR #16 branch reports 13 commits ahead and 39 behind current main; latest reported CI run cancelled. PR #17 branch reports 12 ahead and 39 behind; a CI run passed, but branch is not current with main. `fix/web-build-types` reports 2 ahead and 53 behind.
+- **Impact:** Merging without reconciliation risks bringing stale documentation/status or conflicting code and may falsely treat old CI as validation of current main.
+- **Mitigation:** Compare each relevant branch against current main, preserve the user's local ZIP/clone, rerun only the necessary checks after reconciliation, and integrate only the smallest safe changes.
+- **Acceptance:** No merge conflict or stale-state issue remains; required tests run against the reconciled head; owner can identify the exact resulting commit.
+
