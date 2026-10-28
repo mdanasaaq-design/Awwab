@@ -172,3 +172,11 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - Implemented a bounded fix in `apps/web/src/App.tsx` at commit `dbed29520c01e2027c6dd7f3953d6a3f632050cb`. Registration outcome is now recorded separately; profile initialization errors remain visible without overwriting the device status. Registration/module failures still show the registration-failed state.
 - The change does not alter Firebase configuration, backend behavior, Rules, dependencies, or deployment settings.
 - **Validation:** the GitHub connector has not yet surfaced a CI run or check result for this commit. Do not mark build/typecheck as passed until the actual run is observed. Manual browser validation remains pending.
+
+
+## Verification correction — 2026-10-28
+
+- The older source-reconciliation entry above records the baseline before the Phase 1 code change and is retained as history; its stated baseline head is not the current main head.
+- The device/profile setup error-attribution fix is in `apps/web/src/App.tsx` at commit `dbed29520c01e2027c6dd7f3953d6a3f632050cb`.
+- GitHub Actions run [40684572657](https://github.com/mdanasaaq-design/Awwab/actions/runs/40684572657), triggered by the subsequent documentation commit on `main`, passed all four jobs: Web typecheck/build, Functions/shared typecheck/build, Firestore Rules tests, and backend callable emulator tests. The run includes the code fix.
+- Manual browser verification remains pending. Local fast-forward synchronization and lockfile comparison remain pending; no deployment or Firebase billing change is authorized.
