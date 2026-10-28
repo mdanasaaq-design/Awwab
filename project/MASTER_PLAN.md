@@ -227,3 +227,10 @@ The repository is private, writable by the connected GitHub integration, and use
 The lockfile backup is already verified. If local synchronization is needed, run `git -C "C:\Users\rexy2\Awwab" pull --ff-only origin main`; stop if it fails, and inspect rather than discard any post-pull `package-lock.json` difference. This operation is not a deployment and must not be coupled to Firebase changes.
 
 **Phase 0 exit gate:** complete the fast-forward and verify the local tree, then review PR #16/#17 against current main. The repository source audit is complete; local synchronization is pending. No application-code edit, PR merge, Firebase deployment, Rules change, paid resource, or migration is authorized by this audit.
+
+
+### Backend architecture research snapshot — 2026-10-28
+
+- Added [Backend Architecture Options](BACKEND_ARCHITECTURE_OPTIONS.md), comparing staying on Spark/deferred live device management, a Cloudflare Worker API with existing Firebase Auth/Firestore, and Supabase Edge Functions/Postgres/Auth.
+- **No architecture is selected.** Keep the existing Firebase project unchanged and do not upgrade billing, create accounts/resources, migrate data, or deploy alternate infrastructure without explicit owner approval.
+- Cloudflare Workers Free currently lists 100,000 requests/day and 10 ms CPU per request; Supabase Free currently lists 500,000 Edge Function invocations/month and 500 MB database per project. These are vendor-published quotas, not guarantees of free operation or proof that Awwab's security requirements are met. Source links and the required security proof are in the comparison document.
