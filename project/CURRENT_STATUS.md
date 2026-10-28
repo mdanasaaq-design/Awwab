@@ -187,3 +187,10 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - Added native `select` and `textarea` to the existing global `:focus-visible` outline in [commit 4aea511](https://github.com/mdanasaaq-design/Awwab/commit/4aea511b03fd24b8dc57148d216a817530238384). This closes a small source-level keyboard affordance gap without changing layout or behavior.
 - CI for this new commit and manual browser confirmation are pending. The previous successful run validates the earlier setup-error fix, not this newer CSS commit.
 - No production deploy, Firebase configuration/Rules change, dependency change, or billing action was performed.
+
+
+## Keyboard accessibility verification correction — 2026-10-28
+
+- GitHub Actions run [40685073409](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685073409) passed all four jobs: Web typecheck/build, Functions/shared typecheck, Firestore security rules tests, and backend callable emulator tests. The run was triggered by the subsequent documentation commit and includes the 4aea511 keyboard-focus CSS change.
+- Manual browser review is still pending. Source review confirms the CSS selector now includes select:focus-visible and textarea:focus-visible; it does not prove the rendered appearance in a browser.
+- Device-management live integration remains blocked by the existing architecture decision: the repository's callable functions are not deployed, and the current Firebase plan does not permit that deployment. No retry or billing upgrade was made.
