@@ -116,6 +116,23 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     updatedAt: serverTimestamp(),
   }));
   await assertSucceeds(getDoc(project));
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/projects/project-empty-lists"), {
+    name: "Empty lists are valid",
+    status: "active",
+    tags: [],
+    repositoryReferences: [],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/projects/project-max-lists"), {
+    name: "Maximum valid lists",
+    status: "active",
+    tags: ["one", "two", "three", "four", "five"],
+    repositoryReferences: ["a", "b", "c", "d", "e"],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+
   await assertSucceeds(updateDoc(project, {
     status: "archived",
     updatedAt: serverTimestamp(),
