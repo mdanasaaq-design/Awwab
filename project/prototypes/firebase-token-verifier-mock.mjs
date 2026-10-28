@@ -85,7 +85,11 @@ export function verifySyntheticFirebaseIdToken(token, {
 
   let publicKey;
   try {
-    publicKey = createPublicKey(keyRecord.publicKey);
+    // createPublicKey() rejects an existing public KeyObject in some Node versions;
+    // accept it directly, while still importing PEM/DER-style key material when supplied.
+    publicKey = keyRecord.publicKey?.type === 'public'
+      ? keyRecord.publicKey
+      : createPublicKey(keyRecord.publicKey);
   } catch {
     throw new Error('invalid-verification-key');
   }
