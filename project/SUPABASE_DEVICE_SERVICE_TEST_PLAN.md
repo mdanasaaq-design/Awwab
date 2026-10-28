@@ -73,3 +73,31 @@ Use synthetic UIDs, synthetic device IDs, ephemeral Ed25519 keys, and an in-memo
 The most important blocker is the Firebase `role` claim dependency. If no supported, strictly free way to satisfy it exists, the manual-verification Edge Function design requires an independent security review before any use. The second blocker is confirming that the selected Free plan and usage limits meet the owner's literal $0 rule without an automatic paid path.
 
 Only after all local design questions are answered should a separate, explicit owner approval be requested for a non-production proof of concept. No deployment or production migration is authorized by this document.
+
+
+## Research update: Firebase token authentication without the `role` claim — 2026-10-28
+
+### Finding
+
+The missing `role: "authenticated"` claim is a blocker for the **normal Supabase Data API / third-party-auth path**, but it does not necessarily block a narrowly scoped Edge Function that does not rely on Supabase's gateway to authenticate the Firebase token and does not pass that token to the Data API as an authenticated Supabase JWT.
+
+A possible design is:
+
+1. Set platform JWT verification off **for this one function only**, because its incoming bearer token is a Firebase ID token rather than a Supabase-issued JWT.
+2. Inside the function, use a maintained JWT/JWKS verification library and Google's published Firebase public keys to validate the token. Check allowed algorithm, `kid`, signature, issuer `https://securetoken.google.com/<firebase-project-id>`, audience equal to the Firebase project ID, expiration, issued-at/time bounds, and non-empty subject. Handle key rotation and caching correctly; fail closed on unknown keys or verifier/network uncertainty.
+3. Derive the user ID exclusively from the verified `sub`. Never trust a UID in request JSON.
+4. Only after successful verification, use the function's server-only database credential to call a narrowly scoped set of device-service operations in the **separate device-only database**. Do not expose the privileged key to the browser or repository. Use parameterized SQL/RPC or a reviewed server-side data layer; do not concatenate untrusted values into SQL.
+5. Keep the database project isolated from Awwab's Firestore. The privileged credential bypasses RLS, so RLS is defense in depth, not the authorization boundary for requests made with that credential. The function must enforce per-user ownership and allowed transitions, and Postgres must enforce transaction/uniqueness constraints.
+
+Sources: [Supabase Edge Function authentication modes](https://supabase.com/docs/guides/functions/auth) · [Supabase authorization headers and gateway verification](https://supabase.com/docs/guides/functions/auth-headers) · [Supabase Firebase Auth integration and role claim](https://supabase.com/docs/guides/auth/third-party/firebase-auth) · [Firebase ID-token verification requirements](https://firebase.google.com/docs/auth/admin/verify-id-tokens).
+
+### What this resolves—and what it does not
+
+- **Resolves at the design level:** a Firebase `role: "authenticated"` custom claim is not necessarily required if the Edge Function itself verifies Firebase ID tokens and does not depend on Supabase's Data API role mapping for the caller.
+- **Does not prove implementation safety:** turning off gateway JWT verification removes that gateway check. Every request must be verified by the function before any data access. This needs an independently reviewed implementation and adversarial tests.
+- **Does not establish $0 operation:** project eligibility, usage, inactivity pausing, payment-method requirements, and the possibility of paid prompts/overages must still be checked before any resource is created.
+- **Does not authorize cloud work:** no project, integration, secret, or function has been created or deployed. This remains a desk-research conclusion.
+
+### Updated decision and next bounded step
+
+Keep the candidate **NO-GO for cloud creation/deployment**. The next useful step is a local-only, dependency-backed token-verification test harness using synthetic test keys/tokens—not live Firebase tokens or credentials—plus an explicit threat model for gateway bypass, key rotation, claim validation, cross-user isolation, and failure behavior. The mock must not be described as proving the deployed Edge runtime or provider configuration. Separately, the strict $0 gate remains mandatory; if it cannot be established for the actual configuration, reject this candidate.
