@@ -10,19 +10,14 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == uid;
     }
 
-    function stringAtMost(values, index, maxLength) {
-      return values.size() <= index
-        || (values[index] is string && values[index].size() <= maxLength);
-    }
-
     function validStringList(values, maxItems, maxLength) {
       return values is list
         && values.size() <= maxItems
-        && stringAtMost(values, 0, maxLength)
-        && stringAtMost(values, 1, maxLength)
-        && stringAtMost(values, 2, maxLength)
-        && stringAtMost(values, 3, maxLength)
-        && stringAtMost(values, 4, maxLength);
+        && (values.size() < 1 || (values[0] is string && values[0].size() <= maxLength))
+        && (values.size() < 2 || (values[1] is string && values[1].size() <= maxLength))
+        && (values.size() < 3 || (values[2] is string && values[2].size() <= maxLength))
+        && (values.size() < 4 || (values[3] is string && values[3].size() <= maxLength))
+        && (values.size() < 5 || (values[4] is string && values[4].size() <= maxLength));
     }
 
     function validProject(data) {
