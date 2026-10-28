@@ -404,7 +404,7 @@ test("notifications are readable/updatable by the owner but not client-created",
   await assertFails(deleteDoc(notification));
 });
 
-test("memories allow owner read/delete but not client creation or updates", async () => {
+test("legacy malformed memories remain owner-readable/deletable but cannot be forged through client writes", async () => {
   const alice = userContext("alice");
   const bob = userContext("bob");
   const db = alice.firestore();
