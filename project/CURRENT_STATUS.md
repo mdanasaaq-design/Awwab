@@ -225,3 +225,11 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - The first test run exposed an incorrect test setup: the test attempted to revoke a device while two trusted devices still existed, which is valid behavior. Corrected the sequence to revoke one trusted device first, then assert that the remaining final trusted device cannot be revoked. Correction: [commit 2a0280ee](https://github.com/mdanasaaq-design/Awwab/commit/2a0280ee9993e3852c56ed1d07d7f1d979c1cc55).
 - The corrected callable emulator test passed in CI run [40691341042](https://github.com/mdanasaaq-design/Awwab/actions/runs/40691341042); all four jobs passed: web typecheck/build, Functions/shared typecheck/build, Firestore Rules tests, and backend callable emulator tests.
 - This test validates emulator audit behavior only. It does not add failed-attempt audit events and does not validate live Firebase, deployed Functions, or the browser. No deployment, billing change, Rules change, or resource provisioning was performed.
+
+
+## Nested project/task Rules validation investigation — 2026-10-28
+
+- Recorded Phase 2I acceptance criteria in [project/PHASE_2I_NESTED_FIELD_VALIDATION.md](PHASE_2I_NESTED_FIELD_VALIDATION.md) before attempting implementation.
+- A direct port of PR #16's bounded list validation and task project-reference checks failed the Rules emulator suite: valid project writes produced evaluation errors. A static-index adjustment did not resolve it.
+- Reverted the unverified Rules and test edits to the previous baseline in [commit ee12ffd](https://github.com/mdanasaaq-design/Awwab/commit/ee12ffdece44765e0a7e85c57e65e139dd37a0a7) and [commit 4c88064](https://github.com/mdanasaaq-design/Awwab/commit/4c88064260251b6fbea2c1d9eeefa65effa6afbc). The Phase 2I implementation remains blocked and unchecked; investigate in a controlled branch before retrying.
+- No live Firestore Rules deployment occurred. The current baseline should be treated as restored but requires the post-revert CI result before claiming validation.
