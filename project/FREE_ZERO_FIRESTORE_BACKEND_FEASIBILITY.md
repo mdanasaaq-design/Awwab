@@ -76,3 +76,26 @@ Cloudflare Free documents 100,000 requests/day and 10 ms CPU per invocation at t
 ## Current status
 
 No option has passed the acceptance gate. Keep the live project on Spark, retain restrictive Firestore Rules, keep UI failures truthful, and continue local synthetic testing. This document does not authorize deployment, resource creation, billing changes, or production modifications.
+
+## Research update: IAM scope and credential blocker — 2026-10-28
+
+### Finding: database scope is not collection scope
+
+Google documents IAM Conditions that can restrict Firestore access to a named database for REST/API clients. This is useful as a boundary, but it does not establish a collection-level or document-level boundary inside that database. The current Awwab design stores device/profile records alongside other user/workspace data in the same Firestore database. A service identity with broad entity read/write permissions at that database could potentially reach far more than device records if Worker authorization code is compromised or a route is implemented incorrectly. Firestore Security Rules do not provide a second guardrail for OAuth/IAM-authorized server requests.
+
+Sources:
+- [Firestore Native mode: database-level IAM conditions](https://cloud.google.com/firestore/docs/manage-databases#configure_per-database_access_permissions)
+- [Firestore IAM roles and permissions](https://cloud.google.com/iam/docs/roles-permissions/firestore)
+- [Firestore REST API authentication](https://firebase.google.com/docs/firestore/use-rest-api)
+
+**Decision for this candidate:** do not grant a Worker service identity broad access to the existing shared database merely to make device management work. A database-level condition would only be a partial containment measure. Before reconsidering, either prove an actually enforceable least-privilege design for the required data boundary, or evaluate a separate database/project with its own explicit migration and operational cost assessment. The latter is not authorized or implemented.
+
+### Credential finding: a secret store is not a complete identity strategy
+
+Cloudflare Worker secrets keep secret values out of ordinary source/configuration, but they do not remove the impact of compromised Worker code. Google explicitly recommends avoiding user-managed service-account keys where possible because the key can be used to act as that service account; leaked keys can enable privilege escalation and obscure which actor performed an operation. [Google service-account key best practices](https://cloud.google.com/iam/docs/best-practices-for-managing-service-account-keys)
+
+Workload Identity Federation is the preferred general pattern for external workloads according to Google, but this research has not demonstrated a supported, configured, strictly $0 federation path for a Cloudflare Worker into this Firebase project. Do not create keys, configure federation, enable billing, or test credentials as part of this research.
+
+### Updated assessment
+
+The Worker + service identity approach remains **not approved** and is less promising for the existing shared database than a generic “free Worker” comparison suggests. No verified collection-level IAM boundary, acceptable credential lifecycle, or no-billing identity path has been demonstrated. The safe current choice remains to keep live device management deferred, preserve restrictive Firestore Rules, and continue synthetic local tests only.
