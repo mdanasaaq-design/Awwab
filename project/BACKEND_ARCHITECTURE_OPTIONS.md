@@ -31,3 +31,41 @@ The architecture must preserve all of these properties:
 ## Evidence limits
 
 This is a desk-research comparison based on current public vendor documentation. It is not a security audit, a live quota check, a pricing guarantee, or evidence that any alternate backend has been implemented or tested. No vendor account was connected and no resource was created.
+## Free-only feasibility result — 2026-10-28
+
+**Owner constraint:** Awwab must incur **$0 in recurring and usage-based charges**. Do not link a billing account, upgrade Firebase to Blaze, create paid resources, or accept a design that weakens security. Published free quotas are limits, not a guarantee that a feature can run indefinitely at any traffic level.
+
+### Findings from official documentation
+
+- Firebase Spark does not require payment information for no-cost products and quotas. Firebase Cloud Functions access requires Blaze, so the existing callable Functions cannot be the live device-management solution while Spark is a hard constraint. [Firebase pricing plans](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans)
+- Firestore REST calls made with a Firebase Auth ID token are authorized by Firestore Security Rules. Awwab's current rules deliberately deny client writes to profile and device records. A Worker forwarding the user's Firebase ID token therefore cannot safely perform the privileged device lifecycle under the current rules. [Firestore REST authentication](https://firebase.google.com/docs/firestore/use-rest-api)
+- Google OAuth/service-account credentials instead use IAM and bypass Firestore Security Rules. That can support trusted server-side writes, but it requires a separately secured Google Cloud workload identity with narrow IAM permissions. Do not place credentials in browser code or commit them.
+- Google documents Workload Identity Federation as an alternative to long-lived service-account keys, but its setup guide explicitly says to verify that billing is enabled in the Google Cloud project before configuring it. That fails our strict no-billing gate unless independently verified otherwise; we must not enable billing to test it. [WIF setup requirements](https://cloud.google.com/iam/docs/workload-identity-federation-with-other-providers)
+- Cloudflare Workers Free has a documented allowance of 100,000 requests/day and 10 ms CPU time per invocation. Requests exceeding free limits can fail; do not configure an upgrade or payment fallback. [Workers limits](https://developers.cloudflare.com/workers/platform/limits/) [Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/)
+
+### Decision
+
+**No secure, live, $0-cost path for the current privileged Firestore device-management API has been demonstrated. Do not deploy a Cloudflare Worker or change Firestore Rules.** The Worker idea remains blocked pending a verifiable no-billing identity path with server-side Firestore permissions. A long-lived service-account key is not accepted as a shortcut in this phase.
+
+The safe free-only path is to:
+1. Keep Firebase Spark, Hosting, Auth, Firestore, and existing restrictive Rules as they are.
+2. Keep device-management errors truthful; do not show success without a real trusted backend.
+3. Continue local-only/mock development and tests for the device lifecycle, Assistant Core planning, UI, and contracts without calling live Google APIs or storing real user data.
+4. Treat all free-tier limits as hard stop conditions. No automatic upgrade, billing activation, paid fallback, or surprise-cost service.
+5. Revisit live device management only if a genuinely free and secure authorization design is verified. If none exists, defer the feature rather than weakening rules or incurring charges.
+
+### Prototype scope and acceptance criteria
+
+The permitted next prototype is **local/mock only**. It must use synthetic users/devices and an in-memory or emulator-backed test store; it must not require Firebase/Cloudflare credentials or network access to a live project.
+
+- Validate opaque device IDs and platform values.
+- Model `pending`, `trusted`, and `revoked` states.
+- Allow first-device bootstrap only when no device exists, and test concurrent attempts.
+- Require a trusted caller for listing, approving, and revoking devices.
+- Reject self-approval and revoked-device self-reactivation.
+- Ensure the last trusted device cannot be revoked, including competing requests.
+- Record synthetic audit events for successful state transitions.
+- Test unauthorized, malformed, duplicate, race, and failure cases.
+- Clearly label the mock as **not connected to production**; it must never be wired into the live UI as a fake success path.
+
+No account, cloud resource, secret, billing setting, production code, Firestore Rules, or deployment was changed by this research update.
