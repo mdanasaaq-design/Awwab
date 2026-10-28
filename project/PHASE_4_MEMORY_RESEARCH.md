@@ -1,41 +1,55 @@
-# Phase 4 — Personal context and research safety prototype
+# Phase 4 — Personal memory and source research
 
-**Status:** Prototype slice implemented on an isolated branch; full Phase 4 remains blocked.
-**Branch:** `phase-4-memory-research-safety`
-**Baseline:** `main` at `c74bab5b6cfc3ee56617af5d177988ff9b91ca11`
-**Scope:** Dependency-free, in-memory policy model and regression tests only. No production app/backend wiring, persistent writes, external retrieval, credentials, billing, or deployment.
+**Status:** Core user-facing slices implemented on `phase-4-memory-research-safety`; end-to-end Assistant Core integration remains blocked because the assistant runtime is not connected.
+**Baseline:** Phase 4 policy prototype commit `d0e4ecf00557f57a7532b1e1db267a8ec293a9cf`
+**Budget:** $0 additions; no secrets, paid APIs, cloud resource creation, or production deployment.
 
-## Acceptance criteria for this slice
+## Implemented in this phase branch
 
-- [x] Memory records require bounded content, explicit type, provenance, confidence, sensitivity, visibility, and expiry fields.
-- [x] Sensitive memory requires explicit user-originated provenance and confirmation.
-- [x] Model-derived inference confidence is capped and cannot be sensitive.
-- [x] Retrieval is user-scoped, expiry-aware, visibility-aware, type-filterable, and budget-bounded.
-- [x] Automatic retrieval excludes sensitive memory unless an explicit caller opts in; production policy must still independently authorize this.
-- [x] Correction changes provenance to a user correction; deletion checks owner scope.
-- [x] Retrieved memory and research source content are explicitly marked untrusted and cannot authorize actions.
-- [x] Research claims map to known source IDs; claims without sources are marked uncertain, and source-linked claims are not claimed as verified.
-- [x] Regression cases cover cross-user access attempts, memory poisoning / indirect prompt injection content, unsupported claims, expiry, budgets, malformed inputs, and sensitive-memory promotion.
-- [ ] Node.js 22 test run observed in CI.
-- [ ] Independent review of the policy model and threat cases.
+### Persistent personal memory
+- [x] Added a Memory workspace to the signed-in web app.
+- [x] Persists user-entered records in Firestore at `users/{authenticatedUid}/memories/{memoryId}`.
+- [x] Supports explicit memory type, sensitivity, provenance, confidence, visibility, and optional expiry (30 days, 90 days, one year, or no expiry).
+- [x] Sensitive records require an explicit confirmation in the UI and validated provenance in Firestore rules.
+- [x] Real-time list, correction, and deletion controls; corrections are marked `user_corrected`.
+- [x] Firestore rules enforce the authenticated owner path, strict field allowlist, bounded content, supported types, timestamp integrity, and expiry validation.
+- [x] Added emulator regression tests for cross-user access, invalid schema, oversized content, unconfirmed sensitive records, forged inference provenance, immutable creation time, correction, deletion, and expired writes.
+- [x] Saved memory is explicitly described as untrusted data and is not automatically injected into the assistant.
+- [x] Added bounded, provenance-aware policy prototype and prompt-injection / evidence-mapping regression tests from the first Phase 4 slice.
 
-## Why Phase 4 is not complete
+### Live source lookup
+- [x] Added a Research workspace that calls Wikipedia's public API directly from the browser (no key or paid service).
+- [x] Searches up to five results and retrieves introductory plain-text extracts with links to the original pages.
+- [x] Displays source status as “not verified” and explains that retrieved page content is untrusted.
+- [x] Links each extract to a source page so users can inspect and cite the origin.
 
-This prototype is not durable memory or a research workflow. Phase 3 Assistant Core v0 is not connected, and the free-plan backend decision remains unresolved. The existing Firebase Functions deployment is blocked by the project's current plan; no backend migration or cloud resource creation is approved. The acceptance gates for real user-scoped persistence, inspect/correct/delete UI, permission-scoped retrieval, real source extraction/ranking/citations, and end-to-end privacy/security benchmarks therefore cannot be honestly marked complete yet.
+## Remaining Phase 4 gates
 
-## Run locally
+- [ ] Connect authenticated memory retrieval to Assistant Core with server-verified identity, explicit permission scope, expiry filtering, strict context budgets, and untrusted-data boundaries. The current Assistant Core is not connected, so memory is not yet automatically used in conversations.
+- [ ] Expand research beyond Wikipedia to general web/document sources, with source fetching, extraction, deduplication/ranking, durable research sessions, and source-linked claims. Current search ranking is Wikipedia's; Awwab does not independently verify claims or generate a synthesis.
+- [ ] Complete end-to-end privacy/security testing in a running app and perform an independent review.
+- [ ] Verify the full web build and Firestore emulator suite after the final branch commit.
 
-From the repository root on Node.js 22:
+## Architecture and safety boundaries
+
+- Firestore memory is scoped by the Firebase Authentication UID encoded in the document path; the client cannot write another user's path under the rules.
+- This UI saves only records explicitly entered by the user. It does not silently promote assistant guesses into memory.
+- Sensitive memory is only stored after an explicit UI confirmation; it should not be automatically retrieved into prompts.
+- Retrieved memory and research content must always be treated as untrusted data. Text from a memory or source cannot authorize tools, permissions, or side effects.
+- The live research integration currently uses Wikipedia's public API only. It is a useful, free first connector, not a general-purpose web search engine.
+- The memory workspace is persistent, but assistant retrieval is not wired until the Assistant Core runtime exists. Do not describe the overall assistant as fully memory-enabled yet.
+- No deployment, billing change, credential creation, or paid infrastructure was performed.
+
+## Local verification
+
+Use Node.js 22 from the repository root:
 
 ```sh
+npm install
+npm run web:typecheck
+npm run web:build
+npm run firebase:rules:test
 node --test project/prototypes/memory-research-policy-mock.test.mjs
 ```
 
-## Safety limits
-
-- This is a pure in-memory model. It proves neither Firestore/SQL transaction semantics nor real authorization.
-- The caller-supplied owner ID is not a trusted identity source; production code must derive identity from verified server authentication.
-- The model does not fetch sources, verify URLs, extract web/document content, evaluate factual entailment, or provide real citations.
-- The `includeSensitive` switch is a test seam, not an authorization system.
-- No production code imports this module. Never present its results as live Awwab memory or research.
-- No deployment or billing changes were performed.
+The Firestore rules suite requires the configured local Firestore emulator. The repository's CI workflow runs the automated typecheck/build, rules, callable, and prototype checks.
