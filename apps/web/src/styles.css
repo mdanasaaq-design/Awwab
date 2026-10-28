@@ -387,3 +387,34 @@ button:disabled { cursor: not-allowed; opacity: .56; }
   .memory-submit-row { align-items: flex-start; flex-direction: column; }
   .memory-submit-row .primary { width: 100%; }
 }
+
+
+/* Phase 4 — source-first research workspace */
+.research-workspace { display: grid; gap: 16px; }
+.research-policy-note, .research-form, .research-source {
+  border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 18px;
+}
+.research-policy-note strong { display: block; font-size: 13px; }
+.research-policy-note p { color: var(--muted); font-size: 13px; line-height: 1.6; margin: 8px 0 0; max-width: 900px; }
+.research-form { display: flex; align-items: flex-end; gap: 12px; }
+.research-form label { flex: 1; min-width: 0; display: grid; gap: 8px; color: var(--muted); font-size: 12px; }
+.research-form input { width: 100%; min-height: 42px; padding: 10px 12px; color: var(--text); background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; }
+.research-results-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
+.research-results-heading h2 { margin: 2px 0 0; font-size: 20px; }
+.research-results-heading > span { color: var(--quiet); font-size: 11px; }
+.research-results { display: grid; gap: 10px; }
+.research-source { min-width: 0; }
+.research-source-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.research-source-number { color: var(--accent); font: 12px var(--mono); }
+.research-source-status { color: var(--quiet); font: 10px var(--mono); letter-spacing: .04em; }
+.research-source h3 { font-size: 16px; line-height: 1.4; margin: 14px 0 8px; overflow-wrap: anywhere; }
+.research-source p { color: var(--muted); font-size: 13px; line-height: 1.7; margin: 0 0 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.research-source a { color: var(--accent); font-size: 12px; text-decoration: none; }
+.research-source a:hover { text-decoration: underline; }
+.research-footer { color: var(--quiet); font-size: 11px; line-height: 1.6; }
+@media (max-width: 640px) {
+  .research-form { align-items: stretch; flex-direction: column; padding: 14px; }
+  .research-form .primary { width: 100%; }
+  .research-policy-note, .research-source { padding: 14px; }
+  .research-source-status { text-align: right; }
+}
