@@ -259,6 +259,8 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [x] Run the expanded local prototype suite and record the actual result: 12 passed, 0 failed (user-confirmed PowerShell output, 2026-10-28).
 - [x] Draft a server-verifiable device-key proof-of-possession design and document its limits in [DEVICE_BINDING_DESIGN.md](DEVICE_BINDING_DESIGN.md); this is a proposal only, not implementation.
 - [ ] Add explicit registration/profile initialization retry tests and decide their idempotency contract.
-- [x] Add an isolated Node.js Ed25519 device-key proof-of-possession model with synthetic identities and tests for replay, wrong key/user/action/target, expiry, pending/revoked status, and key replacement; execution still needs local verification.
-- [x] Run both local prototype test suites: **24 passed, 0 failed** (12 device-key proof tests + 12 device-lifecycle tests; user-reported PowerShell run, 2026-10-28).
+- [x] Add an isolated Node.js Ed25519 device-key proof-of-possession model with synthetic identities and tests for replay, wrong key/user/action/target, expiry, pending/revoked status, and key replacement.
+- [x] Run both original local prototype test suites: **24 passed, 0 failed** (12 device-key proof tests + 12 device-lifecycle tests; user-reported PowerShell run, 2026-10-28).
+- [x] Review proof-model edge cases and add regressions for exclusive expiry, unsafe expiry arithmetic, retry after invalid signature, and revocation after challenge issuance; document limits in [DEVICE_BINDING_REVIEW.md](DEVICE_BINDING_REVIEW.md).
+- [ ] Run the updated regression suite locally and record the exact result; these newly added tests have not yet been executed.
 - [ ] Prove a secure server-side Firestore access path compatible with the strict $0/no-billing constraint before any live device-binding implementation.
