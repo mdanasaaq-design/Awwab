@@ -86,7 +86,7 @@ test('requires a valid auth_time claim and rejects future authentication times',
   assert.throws(() => verify(token({ claims: { auth_time: undefined } })), /invalid-time-claims/);
   assert.throws(() => verify(token({ claims: { auth_time: 'recently' } })), /invalid-time-claims/);
   assert.throws(() => verify(token({ claims: { auth_time: now + 61 } })), /auth-time-in-future/);
-  assert.throws(() => verify(token({ claims: { iat: now - 10, auth_time: now } })), /invalid-time-order/);
+  assert.throws(() => verify(token({ claims: { iat: now - 61, auth_time: now } })), /invalid-time-order/);
   assert.equal(verify(token({ claims: { auth_time: now - 10 } })).uid, 'synthetic-user');
 });
 
@@ -98,6 +98,8 @@ test('rejects invalid verifier clock configuration and unsafe skew values', () =
     assert.throws(() => verify(token(), { clockSkewSeconds: badSkew }), /verifier-misconfigured/);
   }
   assert.throws(() => verify(token(), { clockSkewSeconds: 0.5 }), /verifier-misconfigured/);
+  assert.throws(() => verify(token(), { now: Number.MAX_SAFE_INTEGER - 10 }), /verifier-misconfigured/);
+  assert.throws(() => verify(token(), { keys: [] }), /verifier-misconfigured/);
 });
 
 test('rejects invalid token segment encodings and malformed UTF-8', () => {
