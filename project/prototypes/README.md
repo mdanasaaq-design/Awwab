@@ -51,3 +51,9 @@ This is a **local test model only**. It accepts an explicitly supplied synthetic
 ## Phase 1 security review
 
 See [PHASE_1_FIREBASE_TOKEN_VERIFIER_REVIEW.md](../PHASE_1_FIREBASE_TOKEN_VERIFIER_REVIEW.md) for the source-only review of this verifier, the official Firebase/Supabase requirements, and the production blockers. The review is complete; the verifier itself is still a synthetic model and is **not approved for production use**.
+
+## Phase 2 prototype hardening
+
+The synthetic verifier now requires and validates `auth_time`, bounds the configured clock and skew values, requires a non-empty unambiguous key set, checks the JWT type, and rejects malformed/non-canonical base64url segments and invalid UTF-8 JSON. Regression tests cover these cases and malformed verifier configuration.
+
+These are model-level defenses only. The harness still has no live Firebase certificate retrieval/cache/rotation, revocation check, maintained JWT-library integration, or Edge Runtime validation. Do not use it to authenticate real requests.
