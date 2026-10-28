@@ -83,7 +83,8 @@ service cloud.firestore {
         && data.sensitivity in ["low", "normal", "sensitive"]
         && data.createdAt is timestamp
         && data.updatedAt is timestamp
-        && (data.expiresAt == null || data.expiresAt is timestamp)
+        && (data.expiresAt == null
+          || (data.expiresAt is timestamp && data.expiresAt > request.time))
         && data.userVisible is bool
         && data.confirmedByUser is bool
         && (data.sensitivity != "sensitive"
