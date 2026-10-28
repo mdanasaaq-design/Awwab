@@ -267,6 +267,24 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-numeric-project"), {
+    title: "Task with a non-string project reference",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: 123,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-object-project"), {
+    title: "Task with an object project reference",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: { id: "task-project" },
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
   await assertSucceeds(setDoc(task, {
     title: "Alice task",
     description: "A valid user-created task",
@@ -291,6 +309,10 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
   }));
   await assertFails(updateDoc(task, {
     projectId: "bob-only-project",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    projectId: 123,
     updatedAt: serverTimestamp(),
   }));
   await assertFails(updateDoc(task, {
