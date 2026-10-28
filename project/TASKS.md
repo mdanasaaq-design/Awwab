@@ -254,8 +254,10 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [x] Test empty lists, maximum-size lists, malformed element types, oversized values, and excess entries.
 - [x] Require a non-null task `projectId` to reference an existing project owned by the same user; test valid, null, missing, and cross-user references on create.
 - [x] Verify follow-up update-path tests: accept an existing same-owner project; reject missing and cross-user references.
+- [ ] Verify newly added malformed-type tests: reject numeric/object project references on create and numeric references on update (fresh CI pending).
 - [x] Run the complete CI suite for the core implementation; all four jobs passed in [run 40694648586](https://github.com/mdanasaaq-design/Awwab/actions/runs/40694648586).
 - [x] Run/confirm the complete CI suite after the follow-up update-path tests; all four jobs passed in [run 40695884479](https://github.com/mdanasaaq-design/Awwab/actions/runs/40695884479).
+- [ ] Confirm complete CI after malformed project-reference type tests.
 - [ ] Review and approve the isolated security change before merge; PR [#21](https://github.com/mdanasaaq-design/Awwab/pull/21) remains a draft and is not merged.
 - [ ] Deploy Rules only after explicit owner authorization; no live deployment has occurred.
 
