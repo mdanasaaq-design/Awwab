@@ -257,5 +257,7 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [x] Perform a source-only device backend review; findings and guardrails recorded in [DEVICE_BACKEND_SECURITY_REVIEW.md](DEVICE_BACKEND_SECURITY_REVIEW.md).
 - [x] Expand local regression coverage for pending-device revocation, repeat-revocation idempotency, cross-user target-ID attempts, metadata bounds, and invalid caller IDs.
 - [x] Run the expanded local prototype suite and record the actual result: 12 passed, 0 failed (user-confirmed PowerShell output, 2026-10-28).
-- [ ] Design a server-verifiable device/session binding before relying on caller-supplied device IDs as proof of physical-device trust.
+- [x] Draft a server-verifiable device-key proof-of-possession design and document its limits in [DEVICE_BINDING_DESIGN.md](DEVICE_BINDING_DESIGN.md); this is a proposal only, not implementation.
 - [ ] Add explicit registration/profile initialization retry tests and decide their idempotency contract.
+- [ ] Build an isolated Node.js crypto prototype for device-key proof-of-possession using synthetic identities; test replay, wrong key/user/action/target, expiry, pending/revoked status, and key replacement.
+- [ ] Prove a secure server-side Firestore access path compatible with the strict $0/no-billing constraint before any live device-binding implementation.
