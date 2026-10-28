@@ -71,3 +71,57 @@ test('simultaneous-style bootstrap attempts yield only one successful first devi
   assert.equal(results.filter((result) => result.status === 'rejected').length, 1);
   assert.equal(store.listDevices('synthetic-user', first.deviceId).length, 1);
 });
+
+test('pending devices can be revoked without risking the last trusted device', () => {
+  const store = setup();
+  store.registerDevice('synthetic-user', second);
+  assert.deepEqual(store.revokeDevice('synthetic-user', first.deviceId, second.deviceId), {
+    deviceId: second.deviceId,
+    status: 'revoked',
+  });
+  assert.equal(store.listDevices('synthetic-user', first.deviceId).length, 2);
+  assert.throws(() => store.approveDevice('synthetic-user', first.deviceId, second.deviceId), /failed-precondition/);
+});
+
+test('repeating revocation is idempotent and does not add a second success audit event', () => {
+  const store = setup();
+  store.registerDevice('synthetic-user', second);
+  const before = store.auditEvents('synthetic-user').length;
+  store.revokeDevice('synthetic-user', first.deviceId, second.deviceId);
+  const afterFirstRevoke = store.auditEvents('synthetic-user').length;
+  assert.equal(afterFirstRevoke, before + 1);
+  assert.deepEqual(store.revokeDevice('synthetic-user', first.deviceId, second.deviceId), {
+    deviceId: second.deviceId,
+    status: 'revoked',
+  });
+  assert.equal(store.auditEvents('synthetic-user').length, afterFirstRevoke);
+});
+
+test('a trusted caller cannot approve or revoke another user’s device by guessing its ID', () => {
+  const store = setup();
+  store.bootstrapFirstDevice('other-user', { ...first, deviceId: 'other_web_device_01' });
+  assert.throws(
+    () => store.approveDevice('synthetic-user', first.deviceId, 'other_web_device_01'),
+    /not-found/,
+  );
+  assert.throws(
+    () => store.revokeDevice('synthetic-user', first.deviceId, 'other_web_device_01'),
+    /not-found/,
+  );
+  assert.equal(store.listDevices('other-user', 'other_web_device_01')[0].status, 'trusted');
+});
+
+test('metadata is bounded and invalid caller identifiers fail closed', () => {
+  const store = setup();
+  store.registerDevice('synthetic-user', {
+    ...second,
+    appVersion: 'v'.repeat(100),
+    deviceName: 'n'.repeat(200),
+  });
+  const registered = store.listDevices('synthetic-user', first.deviceId)
+    .find((device) => device.deviceId === second.deviceId);
+  assert.equal(registered.appVersion.length, 32);
+  assert.equal(registered.deviceName.length, 100);
+  assert.throws(() => store.listDevices('synthetic-user', 'short'), /invalid-argument/);
+  assert.throws(() => store.listDevices('', first.deviceId), /unauthenticated/);
+});
