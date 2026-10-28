@@ -250,6 +250,6 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 
 - [x] Record the strict $0 backend feasibility gate in [Backend Architecture Options](BACKEND_ARCHITECTURE_OPTIONS.md).
 - [x] Add a synthetic-data-only device lifecycle model and Node.js test cases under [project/prototypes](prototypes/).
-- [ ] Run the local prototype tests and record the observed result.
+- [x] Run the local prototype tests: 8 passed, 0 failed (user-confirmed Node.js test output, 2026-10-28).
 - [ ] Do not connect the mock to the live UI or treat it as proof of Firestore transaction correctness.
 - [ ] Continue investigating only solutions that require no billing, no paid service, and no weakening of Firestore Rules.
