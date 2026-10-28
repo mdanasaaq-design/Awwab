@@ -1,6 +1,6 @@
 # Phase 2I — Validate Project/Task List Elements and References
 
-**Status:** Core implementation and full CI verified; follow-up task-update tests added, awaiting fresh CI and review/merge decision  
+**Status:** Implementation, create/update regression tests, and full CI verified on isolated branch; awaiting owner/reviewer decision  
 **Phase:** 2 — Foundation security and environment validation  
 **Risk:** AWW-014  
 **Scope:** Firestore Rules and emulator tests only
@@ -33,7 +33,7 @@ Phase 2G validates top-level project/task fields, enums, and timestamp integrity
 - A direct port of the stale PR #16 implementation was attempted on `main`, with tests for malformed list elements, list bounds, and same-user project references.
 - The Firestore Rules emulator rejected valid project writes with evaluation errors in the new validation helper. A second attempt using static list indexes did not resolve the failure.
 - The unverified Rules/test edits were reverted to the previously verified baseline in commits [ee12ffd](https://github.com/mdanasaaq-design/Awwab/commit/ee12ffdece44765e0a7e85c57e65e139dd37a0a7) and [4c88064](https://github.com/mdanasaaq-design/Awwab/commit/4c88064260251b6fbea2c1d9eeefa65effa6afbc). No live Rules deployment occurred.
-- The isolated branch now uses a bounded explicit-index helper with short-circuit guards. The first task-reference run exposed a missing `uid` argument on the update path; this was corrected in commit [e8a2d1c](https://github.com/mdanasaaq-design/Awwab/commit/e8a2d1c3d3d5fcc6862dc164485c0039835fc619). CI run [40694648586](https://github.com/mdanasaaq-design/Awwab/actions/runs/40694648586) passed all four jobs, including Firestore Rules emulator tests. This evidence applies to the isolated branch only; it is not merged or deployed. Subsequent regression tests now exercise task project-reference changes on update (valid same-owner project accepted; missing and cross-user references rejected). Those newly added update tests do not yet have a confirmed CI result and must be verified before this phase is considered review-ready.
+- The isolated branch now uses a bounded explicit-index helper with short-circuit guards. The first task-reference run exposed a missing `uid` argument on the update path; this was corrected in commit [e8a2d1c](https://github.com/mdanasaaq-design/Awwab/commit/e8a2d1c3d3d5fcc6862dc164485c0039835fc619). CI run [40694648586](https://github.com/mdanasaaq-design/Awwab/actions/runs/40694648586) passed all four jobs, including Firestore Rules emulator tests. This evidence applies to the isolated branch only; it is not merged or deployed. Subsequent regression tests now exercise task project-reference changes on update (valid same-owner project accepted; missing and cross-user references rejected). The follow-up tests were verified in full CI run [40695884479](https://github.com/mdanasaaq-design/Awwab/actions/runs/40695884479), which passed all four jobs.
 
 ## Verification plan
 
@@ -49,5 +49,5 @@ No UI changes, callable API changes, assistant execution, live data writes, Rule
 - `validStringList` checks list type, maximum size, and each of up to five entries as a string within the field-specific length limit.
 - Task `projectId` validation checks existence under the authenticated owner's project collection; it does not accept another user's same-named project.
 - Empty lists and lists at the five-item cap are accepted. Malformed element types, overlong entries, and six-item lists are rejected by emulator tests.
-- The emulator test suite and all four CI jobs passed on implementation commit `e8a2d1c3d3d5fcc6862dc164485c0039835fc619`. Follow-up tests for task project-reference updates were added afterward; their CI status is not yet confirmed. Live Rules remain unchanged.
+- The core emulator test suite and all four CI jobs passed on implementation commit `e8a2d1c3d3d5fcc6862dc164485c0039835fc619`. Follow-up tests for task project-reference updates were then verified in [full CI run 40695884479](https://github.com/mdanasaaq-design/Awwab/actions/runs/40695884479): all four jobs passed, including Firestore Rules tests. Live Rules remain unchanged.
 - Review the isolated branch and PR #21 before deciding whether to merge. Keep the branch unmerged until the owner/reviewer approves this security-policy change.
