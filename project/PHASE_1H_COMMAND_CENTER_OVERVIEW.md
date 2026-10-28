@@ -47,3 +47,14 @@ Source review found that the signed-in initialization chain groups `registerWebD
 - [ ] No backend, Firebase Rules/configuration, dependency, or deployment changes.
 
 This is a bounded Phase 1 state-accuracy fix, not evidence that the current browser flow has been manually validated.
+
+
+## Follow-on bounded fix — keyboard focus visibility (2026-10-28)
+
+Source review found the global visible-focus outline covered buttons, links, and inputs but omitted native select and textarea controls. The shared focus-visible selector now includes both controls in commit [4aea511](https://github.com/mdanasaaq-design/Awwab/commit/4aea511b03fd24b8dc57148d216a817530238384).
+
+- [x] Include native select and textarea controls in the existing visible keyboard-focus treatment.
+- [x] Keep the existing outline style and design token unchanged.
+- [x] Limit the change to frontend CSS; no backend, Firebase, dependencies, or deployment settings changed.
+- [ ] Confirm typecheck/build CI for this commit.
+- [ ] Manually verify keyboard focus appearance in desktop and mobile browsers.
