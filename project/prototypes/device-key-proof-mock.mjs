@@ -134,7 +134,7 @@ export class DeviceKeyProofMock {
     this.#requireDeviceId(deviceId);
     if (!ACTIONS.has(action)) throw new Error('invalid-action');
     if (targetId !== null) this.#requireDeviceId(targetId);
-    if (!Number.isSafeInteger(now) || !Number.isSafeInteger(ttlMs) || ttlMs < 1 || ttlMs > MAX_CHALLENGE_TTL_MS) {
+    if (!Number.isSafeInteger(now) || !Number.isSafeInteger(ttlMs) || ttlMs < 1 || ttlMs > MAX_CHALLENGE_TTL_MS || !Number.isSafeInteger(now + ttlMs)) {
       throw new Error('invalid-challenge-lifetime');
     }
     const device = this.#devices.get(this.#key(uid, deviceId));
@@ -159,7 +159,7 @@ export class DeviceKeyProofMock {
     const challenge = this.#challenges.get(challengeId);
     if (!challenge) throw new Error('unknown-challenge');
     if (challenge.consumed) throw new Error('challenge-replayed');
-    if (!Number.isSafeInteger(now) || now > challenge.expiresAt || now < challenge.issuedAt) {
+    if (!Number.isSafeInteger(now) || now >= challenge.expiresAt || now < challenge.issuedAt) {
       throw new Error('challenge-expired-or-invalid-time');
     }
     if (challenge.uid !== uid || challenge.deviceId !== deviceId ||
