@@ -250,11 +250,12 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 
 - [x] Record the strict $0 backend feasibility gate in [Backend Architecture Options](BACKEND_ARCHITECTURE_OPTIONS.md).
 - [x] Add a synthetic-data-only device lifecycle model and Node.js test cases under [project/prototypes](prototypes/).
-- [x] Run the local prototype tests: 8 passed, 0 failed (user-confirmed Node.js test output, 2026-10-28).
+- [x] Run the initial local prototype tests: 8 passed, 0 failed (user-confirmed Node.js test output, 2026-10-28).
+- [x] Run the expanded local prototype tests: 12 passed, 0 failed (user-confirmed PowerShell output, 2026-10-28).
 - [ ] Do not connect the mock to the live UI or treat it as proof of Firestore transaction correctness.
 - [ ] Continue investigating only solutions that require no billing, no paid service, and no weakening of Firestore Rules.
 - [x] Perform a source-only device backend review; findings and guardrails recorded in [DEVICE_BACKEND_SECURITY_REVIEW.md](DEVICE_BACKEND_SECURITY_REVIEW.md).
 - [x] Expand local regression coverage for pending-device revocation, repeat-revocation idempotency, cross-user target-ID attempts, metadata bounds, and invalid caller IDs.
-- [ ] Run the expanded local prototype suite and record the actual result.
+- [x] Run the expanded local prototype suite and record the actual result: 12 passed, 0 failed (user-confirmed PowerShell output, 2026-10-28).
 - [ ] Design a server-verifiable device/session binding before relying on caller-supplied device IDs as proof of physical-device trust.
 - [ ] Add explicit registration/profile initialization retry tests and decide their idempotency contract.
