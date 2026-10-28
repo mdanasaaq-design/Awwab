@@ -92,7 +92,8 @@ export function verifySyntheticFirebaseIdToken(token, {
     throw new Error('invalid-token');
   }
   if (typeof projectId !== 'string' || !/^[a-z0-9][a-z0-9-]{0,127}$/.test(projectId) ||
-      !Array.isArray(keys) || !Number.isSafeInteger(now) || now < 0 ||
+      !Array.isArray(keys) || keys.length === 0 || !Number.isSafeInteger(now) ||
+      now < 0 || now > Number.MAX_SAFE_INTEGER - MAX_CLOCK_SKEW_SECONDS ||
       !Number.isSafeInteger(clockSkewSeconds) || clockSkewSeconds < 0 ||
       clockSkewSeconds > MAX_CLOCK_SKEW_SECONDS) {
     throw new Error('verifier-misconfigured');
@@ -164,7 +165,7 @@ export function verifySyntheticFirebaseIdToken(token, {
   if (claims.exp <= now - clockSkewSeconds) throw new Error('token-expired');
   if (claims.iat > now + clockSkewSeconds) throw new Error('issued-in-future');
   if (claims.auth_time > now + clockSkewSeconds) throw new Error('auth-time-in-future');
-  if (claims.auth_time > claims.iat + clockSkewSeconds) throw new Error('invalid-time-order');
+  if (claims.auth_time - claims.iat > clockSkewSeconds) throw new Error('invalid-time-order');
   if (claims.nbf !== undefined && claims.nbf > now + clockSkewSeconds) {
     throw new Error('not-yet-valid');
   }
