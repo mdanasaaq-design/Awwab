@@ -256,7 +256,7 @@
 ## AWW-010 — Device setup error attribution could mislead users
 
 - **Priority:** P2 — user-facing status accuracy
-- **Status:** Code mitigation committed; automated/browser verification pending.
+- **Status:** Code mitigation committed; automated checks passed; browser verification pending.
 - **Evidence:** The web auth observer previously used one `Promise.all` for device registration and profile initialization and mapped any rejection to `registration failed`. A profile failure could therefore misstate device registration status.
 - **Mitigation:** Commit `dbed29520c01e2027c6dd7f3953d6a3f632050cb` separates the steps and preserves the registration result when profile initialization fails.
-- **Verification required:** CI typecheck/build and manual confirmation of registration failure versus profile failure states.
+- **Verification:** CI run [40684572657](https://github.com/mdanasaaq-design/Awwab/actions/runs/40684572657) passed web typecheck/build, Functions/shared checks, Firestore Rules tests, and backend callable emulator tests. Manual confirmation of registration failure versus profile failure states remains outstanding.
