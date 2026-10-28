@@ -216,20 +216,14 @@ The repository is private, writable by the connected GitHub integration, and use
 - `apps/web/src/device.ts` currently returns `getFunctions(firebaseApp)` without the explicit `asia-south1` region.
 - `backend/functions/src/index.ts` currently defines all seven callables using default-region `onCall(...)` signatures.
 - Therefore the local extracted ZIP's Mumbai region edits are **not present on current main**. They are also not known to be committed in the older `fix/web-build-types` branch.
-- The user's local Git clone status cannot be inspected remotely. Phase 0 remains open until the user runs the read-only PowerShell checks below and we reconcile the output.
+- The actual local Git clone is `C:\Users\rexy2\Awwab`, with `origin` set to `https://github.com/mdanasaaq-design/Awwab.git` and branch `main` at `3a7d914` before synchronization.
+- A read-only `git fetch origin` succeeded and moved the local remote-tracking reference to `07651e30ed0b6f40e843b4fe90cb876dfdbd15d7`. Local `main` is 60 commits behind `origin/main`, 0 commits ahead; there are no tracked local edits or local-only commits.
+- The local clone contains an untracked root `package-lock.json` (410,433 bytes). A byte-identical backup was verified by SHA-256 at `C:\Users\rexy2\Awwab-package-lock.local-backup-20261028.json`. The original file remains in place. Do not discard it without comparing its contents to GitHub's tracked lockfile.
+- `C:\Users\rexy2\Downloads\Awwab` is an extracted project copy, not a Git repository. `Awwab-main` and `Awwab-local-backup` also showed no `.git` metadata. Keep these copies untouched until their purpose is no longer needed.
+- The remaining local-only operation is a fast-forward synchronization of the actual clone, followed by verification of the resulting status and lockfile diff. This assistant cannot execute commands on the user's Windows filesystem directly; do not keep asking the user for diagnostics already completed.
 
-### Next exact operator check (read-only)
+### Next exact local action (only when the user is at the computer)
 
-Run in PowerShell:
+The lockfile backup is already verified. If local synchronization is needed, run `git -C "C:\Users\rexy2\Awwab" pull --ff-only origin main`; stop if it fails, and inspect rather than discard any post-pull `package-lock.json` difference. This operation is not a deployment and must not be coupled to Firebase changes.
 
-```powershell
-Get-Location
-git -C "C:\Users\rexy2\Downloads\Awwab\Awwab-fixed" status --short --branch
-git -C "C:\Users\rexy2\Downloads\Awwab\Awwab-fixed" remote -v
-git -C "C:\Users\rexy2\Downloads\Awwab\Awwab-fixed" log -1 --oneline --decorate
-git -C "C:\Users\rexy2\Downloads\Awwab" rev-parse --is-inside-work-tree
-```
-
-The last command is expected to report that the outer extracted ZIP folder is not a Git repository; that is a check, not an error to fix. Do not run `git reset`, `git clean`, `git checkout`, folder moves/deletions, or deployments during this source reconciliation. Preserve both folders and report the exact output.
-
-**Phase 0 exit gate:** identify the current local branch/commit and dirty files; establish which region changes exist only in the ZIP; review PR #16/#17 relative to current main; then choose the smallest safe integration action. No application-code edit, PR merge, Firebase deployment, Rules change, paid resource, or migration is authorized by this audit.
+**Phase 0 exit gate:** complete the fast-forward and verify the local tree, then review PR #16/#17 against current main. The repository source audit is complete; local synchronization is pending. No application-code edit, PR merge, Firebase deployment, Rules change, paid resource, or migration is authorized by this audit.
