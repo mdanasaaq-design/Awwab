@@ -548,5 +548,6 @@ test("memory deletion is owner-scoped", async () => {
   await assertSucceeds(setDoc(aliceRef, validMemory()));
   await assertFails(deleteDoc(doc(bob.firestore(), "users/alice/memories/memory-1")));
   await assertSucceeds(deleteDoc(aliceRef));
-  await assertFails(getDoc(aliceRef));
+  const deleted = await assertSucceeds(getDoc(aliceRef));
+  assert.equal(deleted.exists(), false);
 });
