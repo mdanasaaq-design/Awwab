@@ -3,12 +3,14 @@ import type { User } from "firebase/auth";
 import type { DeviceRecord } from "./device";
 import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
+import { MemoryPanel } from "./MemoryPanel";
 
 const sections = [
   { id: "assistant", label: "Assistant", glyph: "⌘", group: "WORKSPACE" },
   { id: "projects", label: "Projects", glyph: "▤", group: "WORKSPACE" },
   { id: "tasks", label: "Tasks", glyph: "☷", group: "WORKSPACE" },
   { id: "research", label: "Research", glyph: "⌕", group: "WORKSPACE" },
+  { id: "memories", label: "Memory", glyph: "◉", group: "WORKSPACE" },
   { id: "automations", label: "Automations", glyph: "↻", group: "WORKSPACE" },
   { id: "activity", label: "Activity", glyph: "◷", group: "SYSTEM" },
   { id: "settings", label: "Settings", glyph: "⚙", group: "SYSTEM" },
@@ -31,6 +33,11 @@ const sectionCopy: Record<Exclude<SectionId, "assistant" | "settings">, { title:
     eyebrow: "WORKSPACE / RESEARCH",
     title: "Research you can trace back to its sources.",
     description: "Research sessions, evidence, and cited findings will appear here when the research workflow is available.",
+  },
+  memories: {
+    eyebrow: "WORKSPACE / MEMORY",
+    title: "Keep useful context, on your terms.",
+    description: "Review and manage details you explicitly choose to save. Memory is not automatically sent to an assistant runtime.",
   },
   automations: {
     eyebrow: "WORKSPACE / AUTOMATIONS",
@@ -575,7 +582,7 @@ export function App() {
           </div>
         )}
 
-        {activeSection !== "assistant" && activeSection !== "settings" && (
+        {activeSection !== "assistant" && activeSection !== "settings" && activeSection !== "memories" && (
           <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
             <div className="page-intro">
               <p className="eyebrow">{sectionCopy[activeSection].eyebrow}</p>
@@ -589,6 +596,17 @@ export function App() {
               <p>There is no live data here yet. We’ll connect this view to a real workflow before presenting it as ready to use.</p>
               <button className="secondary" type="button" onClick={() => setActiveSection("assistant")}>Back to command center</button>
             </section>
+          </div>
+        )}
+
+        {activeSection === "memories" && (
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
+            <div className="page-intro">
+              <p className="eyebrow">WORKSPACE / MEMORY</p>
+              <h1>Keep useful context, on your terms.</h1>
+              <p className="page-description">Review, correct, and delete what you choose to save. Nothing is inferred or sent to an assistant automatically.</p>
+            </div>
+            <MemoryPanel key={user.uid} uid={user.uid} />
           </div>
         )}
 
