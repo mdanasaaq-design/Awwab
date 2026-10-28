@@ -32,3 +32,18 @@ Remove the overview markup and its dedicated styles, then remove this phase from
 ---
 
 > **Planning sync — 2026-10-27:** This file records scope and acceptance criteria for a bounded phase slice. The presence of this checklist is not proof that manual browser validation or live integration has passed. See [Master Plan and Work Audit](MASTER_PLAN.md) for current blockers and sequence.
+
+
+## Follow-on bounded fix — setup error attribution
+
+Source review found that the signed-in initialization chain groups `registerWebDevice()` and `ensureUserProfile()` in one `Promise.all` and one catch. A profile-initialization failure can therefore incorrectly set device status to `registration failed`, even when the registration result may have succeeded.
+
+**Acceptance criteria before implementation:**
+- [ ] Registration failures set `registration failed` and show an error.
+- [ ] Profile-initialization failures do not overwrite an already returned device-registration status; the error remains visible.
+- [ ] Module/setup failures remain visible without a false trusted/success state.
+- [ ] Device loading exits its loading state on failure.
+- [ ] Web typecheck/build CI passes; browser/manual verification remains pending unless observed.
+- [ ] No backend, Firebase Rules/configuration, dependency, or deployment changes.
+
+This is a bounded Phase 1 state-accuracy fix, not evidence that the current browser flow has been manually validated.
