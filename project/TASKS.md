@@ -267,5 +267,7 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [x] Research Firestore IAM database-scope limitations and service-account key risks; document why a Worker identity is not approved for the existing shared database.
 - [x] Compare an isolated Supabase Free + Edge Function device-service candidate against the Worker + Google IAM approach; document Firebase-token claim caveats, isolation benefits, quota/pause limits, and unresolved security gates.
 - [x] Write a local-only Supabase device-service security/test specification covering Firebase token validation, role-claim dependency, Postgres transaction invariants, RLS, secret handling, and strict $0 hard stops in [SUPABASE_DEVICE_SERVICE_TEST_PLAN.md](SUPABASE_DEVICE_SERVICE_TEST_PLAN.md).
+- [x] Add a local-only synthetic Firebase JWT verification harness with adversarial claim/signature tests; this validates the model only, not real JWKS/network/Edge Runtime behavior.
+- [ ] Independently review a production-grade JWT/JWKS verification design and verify Google key caching/rotation, revocation policy, Edge Function gateway bypass, and failure behavior.
 - [ ] Resolve the Firebase role-claim dependency without Blaze/Identity Platform, or reject the Supabase candidate; do not create a project until the owner explicitly approves a separate non-production proof of concept.
 - [ ] Obtain explicit approval before creating any Supabase project, secret, integration, or deployment.
