@@ -73,6 +73,10 @@ test('fails closed when verifier configuration is absent', () => {
 });
 
 test('small clock skew is tolerated but does not bypass expiry indefinitely', () => {
-  assert.equal(verify(token({ claims: { exp: now - 30 } })).uid, 'synthetic-user');
-  assert.throws(() => verify(token({ claims: { exp: now - 61 } })), /token-expired/);
+  // Keep iat before exp so these cases test expiry/skew rather than inconsistent claims.
+  assert.equal(verify(token({ claims: { iat: now - 3600, exp: now - 30 } })).uid, 'synthetic-user');
+  assert.throws(
+    () => verify(token({ claims: { iat: now - 3600, exp: now - 61 } })),
+    /token-expired/,
+  );
 });
