@@ -281,6 +281,18 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     status: "in_progress",
     updatedAt: serverTimestamp(),
   }));
+  await assertSucceeds(updateDoc(task, {
+    projectId: "task-project",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    projectId: "does-not-exist",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    projectId: "bob-only-project",
+    updatedAt: serverTimestamp(),
+  }));
   await assertFails(updateDoc(task, {
     status: "running",
     updatedAt: serverTimestamp(),
