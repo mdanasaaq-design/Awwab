@@ -58,3 +58,8 @@ Source review found the global visible-focus outline covered buttons, links, and
 - [x] Limit the change to frontend CSS; no backend, Firebase, dependencies, or deployment settings changed.
 - [ ] Confirm typecheck/build CI for this commit.
 - [ ] Manually verify keyboard focus appearance in desktop and mobile browsers.
+
+
+## Verification correction — 2026-10-28
+
+GitHub Actions run [40685073409](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685073409) passed all four jobs after the keyboard-focus CSS commit: web typecheck/build, Functions/shared typecheck, Firestore security rules tests, and backend callable emulator tests. The run was triggered by a subsequent documentation commit and includes the CSS change. This is automated evidence only; desktop/mobile browser acceptance and keyboard interaction checks remain pending.
