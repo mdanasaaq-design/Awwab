@@ -1,6 +1,6 @@
 # Phase 2C — Preserve the Last Trusted Device Under Concurrent Revocation
 
-**Status:** Implementation committed; CI validation pending  
+**Status:** Implemented and verified in CI (2026-10-28)  
 **Phase:** 2 — Foundation security and environment validation  
 **Branch:** `fix/phase-2-last-device-revocation`  
 **Risk:** AWW-003 (P0)
@@ -20,22 +20,23 @@
 
 ## Acceptance criteria
 
-- [ ] Two simultaneous attempts to revoke two trusted devices produce at most one successful state transition.
-- [ ] The losing operation fails safely with a precondition error when it would remove the final trusted device.
-- [ ] Exactly one trusted device remains after the concurrent test.
-- [ ] A sequential attempt to revoke the final trusted device is rejected.
-- [ ] Repeating a revoke for an already-revoked device remains idempotent.
-- [ ] Pending-device revocation remains supported and does not alter the trusted-device count.
-- [ ] The target state, trusted-device count, revocation update, and audit event are transactionally consistent.
-- [ ] Callable emulator tests and existing Rules/web/Functions/shared CI checks pass.
-- [ ] Risk register and current status record the observed result.
-- [ ] No deployment is performed.
+- [x] Two simultaneous attempts to revoke two trusted devices produce at most one successful state transition.
+- [x] The losing operation fails safely with a precondition error when it would remove the final trusted device.
+- [x] Exactly one trusted device remains after the concurrent test.
+- [x] A sequential attempt to revoke the final trusted device is rejected.
+- [x] Repeating a revoke for an already-revoked device remains idempotent.
+- [x] Pending-device revocation remains supported and does not alter the trusted-device count.
+- [x] The target state, trusted-device count, revocation update, and audit event are transactionally consistent.
+- [x] Callable emulator tests and existing Rules/web/Functions/shared CI checks pass.
+- [x] Risk register and current status record the observed result.
+- [x] No deployment is performed.
 
 ## Implementation record
 
 - Backend change: `backend/functions/src/index.ts` moves trusted-count validation, target revocation, and audit creation into one transaction.
 - Callable test: `tests/functions.callable.test.js` now races two trusted-device revocations and verifies one trusted device remains, while checking final-device rejection, idempotent repeat, and pending-device revocation.
-- CI result: pending for the current branch.
+- CI passed on commit `317e742b368d3f37e0948270978c50096e858974`: [run 40685807443](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685807443). All four jobs passed, including callable emulator tests, Firestore Rules tests, web typecheck/build, and Functions/shared typecheck. The callable suite reports 4 passing test groups; the concurrency case verifies exactly one revocation succeeds and one trusted device remains.
+- Verification is emulator/CI evidence only; no live Firebase device lifecycle was tested and no deployment was performed.
 
 ## Test plan
 
