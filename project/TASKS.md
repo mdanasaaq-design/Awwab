@@ -262,5 +262,5 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [x] Add an isolated Node.js Ed25519 device-key proof-of-possession model with synthetic identities and tests for replay, wrong key/user/action/target, expiry, pending/revoked status, and key replacement.
 - [x] Run both original local prototype test suites: **24 passed, 0 failed** (12 device-key proof tests + 12 device-lifecycle tests; user-reported PowerShell run, 2026-10-28).
 - [x] Review proof-model edge cases and add regressions for exclusive expiry, unsafe expiry arithmetic, retry after invalid signature, and revocation after challenge issuance; document limits in [DEVICE_BINDING_REVIEW.md](DEVICE_BINDING_REVIEW.md).
-- [ ] Run the updated regression suite locally and record the exact result; these newly added tests have not yet been executed.
+- [x] Run the updated regression suite locally and record the exact user-reported result: **27 passed, 0 failed, 0 skipped** (15 device-key proof tests + 12 device-lifecycle tests; PowerShell output supplied 2026-10-28).
 - [ ] Prove a secure server-side Firestore access path compatible with the strict $0/no-billing constraint before any live device-binding implementation.
