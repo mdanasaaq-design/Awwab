@@ -193,26 +193,50 @@ export const approveDevice = onCall(async (request) => {
   const data = (request.data ?? {}) as Record<string, unknown>;
   const callerDeviceId = requireDeviceId(data.callerDeviceId);
   const targetDeviceId = requireDeviceId(data.targetDeviceId);
-  await requireTrustedCaller(uid, callerDeviceId);
-
   if (callerDeviceId === targetDeviceId) {
     throw new HttpsError("invalid-argument", "A trusted device does not need approval.");
   }
 
-  const { ref, snapshot } = await getDevice(uid, targetDeviceId);
-  if (snapshot.get("status") !== "pending") {
-    throw new HttpsError("failed-precondition", "Only pending devices can be approved.");
-  }
+  const devicesRef = db.collection(`users/${uid}/devices`);
+  const callerRef = devicesRef.doc(callerDeviceId);
+  const targetRef = devicesRef.doc(targetDeviceId);
+  const activityRef = db.collection(`users/${uid}/activity`).doc();
 
-  await ref.set(
-    {
+  await db.runTransaction(async (transaction) => {
+    // Authorization and target state are read in the same transaction as the
+    // mutation, preventing a concurrent revoke from authorizing stale approval.
+    const callerSnapshot = await transaction.get(callerRef);
+    const targetSnapshot = await transaction.get(targetRef);
+
+    if (!callerSnapshot.exists || callerSnapshot.get("status") !== "trusted") {
+      throw new HttpsError("permission-denied", "The calling device is not trusted.");
+    }
+    if (!targetSnapshot.exists) {
+      throw new HttpsError("not-found", "Device was not found.");
+    }
+    if (targetSnapshot.get("status") !== "pending") {
+      throw new HttpsError("failed-precondition", "Only pending devices can be approved.");
+    }
+
+    const timestamp = FieldValue.serverTimestamp();
+    transaction.update(targetRef, {
       status: "trusted",
-      trustedAt: FieldValue.serverTimestamp(),
+      trustedAt: timestamp,
       approvedByDeviceId: callerDeviceId,
-    },
-    { merge: true },
-  );
-  await writeActivity(uid, callerDeviceId, "device_approved", "success", targetDeviceId);
+    });
+    transaction.create(activityRef, {
+      eventType: "security",
+      actorType: "device",
+      actorId: callerDeviceId,
+      deviceId: callerDeviceId,
+      tool: "device-management",
+      action: "device_approved",
+      targetType: "device",
+      targetReference: targetDeviceId,
+      outcome: "success",
+      createdAt: timestamp,
+    });
+  });
 
   return { ok: true, deviceId: targetDeviceId, status: "trusted" };
 });
@@ -222,14 +246,18 @@ export const revokeDevice = onCall(async (request) => {
   const data = (request.data ?? {}) as Record<string, unknown>;
   const callerDeviceId = requireDeviceId(data.callerDeviceId);
   const targetDeviceId = requireDeviceId(data.targetDeviceId);
-  await requireTrustedCaller(uid, callerDeviceId);
-
   const devicesRef = db.collection(`users/${uid}/devices`);
+  const callerRef = devicesRef.doc(callerDeviceId);
   const targetRef = devicesRef.doc(targetDeviceId);
   const activityRef = db.collection(`users/${uid}/activity`).doc();
 
   await db.runTransaction(async (transaction) => {
+    // Read caller authorization in the same transaction as the revocation.
+    const callerSnapshot = await transaction.get(callerRef);
     const targetSnapshot = await transaction.get(targetRef);
+    if (!callerSnapshot.exists || callerSnapshot.get("status") !== "trusted") {
+      throw new HttpsError("permission-denied", "The calling device is not trusted.");
+    }
     if (!targetSnapshot.exists) {
       throw new HttpsError("not-found", "Device not found.");
     }
