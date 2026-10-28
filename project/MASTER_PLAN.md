@@ -199,3 +199,37 @@ This phase now includes the backend architecture decision required by the no-Bla
 ## 7. Current next action
 
 **Documentation and source reconciliation only.** Finish synchronizing Markdown, then inspect the actual Git clone versus the ZIP-edited copy. The next application-code change is not authorized until the architecture comparison and Phase 1 acceptance plan are reviewed. The immediate backend deployment is blocked by the current Firebase plan and must not be retried as a workaround.
+
+
+## Phase 0 live GitHub audit — 2026-10-28
+
+The repository is private, writable by the connected GitHub integration, and uses `main` as its default branch. The current main head is [97d908a](https://github.com/mdanasaaq-design/Awwab/commit/97d908a3a0c8905ba7864018f8ef4d6b8a960652), the master-plan documentation commit.
+
+### Current open PR inventory
+
+- [PR #16 — project/task list and reference validation](https://github.com/mdanasaaq-design/Awwab/pull/16): draft, open, based on `main`; branch `fix/phase-2-nested-field-validation`; 7 changed files. Latest reported workflow on the PR head was **cancelled**, so acceptance is not complete. Its branch compares as diverged from current `main` (13 commits ahead, 39 behind in the comparison result). Do not merge until the branch is reconciled and the Rules emulator suite passes against current main.
+- [PR #17 — provider-neutral plan-policy preflight](https://github.com/mdanasaaq-design/Awwab/pull/17): draft, open, based on `main`; branch `feat/assistant-core-foundation`; 8 changed files. A CI run reported success for its head, including the new agent-core tests and existing suites, but the branch compares as diverged from current `main` (12 commits ahead, 39 behind in the comparison result). This is only a planning/policy validator; it does not make the assistant runtime live. Do not merge until reviewed against the current base and Phase 2 gates are respected.
+- [`fix/web-build-types`](https://github.com/mdanasaaq-design/Awwab/tree/fix/web-build-types) has two commits ahead and is 53 commits behind current main in the comparison result. Its earlier Vite declaration change is not proof that the current region edit exists there. Do not merge this stale branch wholesale.
+
+### Confirmed current-main code state
+
+- `apps/web/src/device.ts` currently returns `getFunctions(firebaseApp)` without the explicit `asia-south1` region.
+- `backend/functions/src/index.ts` currently defines all seven callables using default-region `onCall(...)` signatures.
+- Therefore the local extracted ZIP's Mumbai region edits are **not present on current main**. They are also not known to be committed in the older `fix/web-build-types` branch.
+- The user's local Git clone status cannot be inspected remotely. Phase 0 remains open until the user runs the read-only PowerShell checks below and we reconcile the output.
+
+### Next exact operator check (read-only)
+
+Run in PowerShell:
+
+```powershell
+Get-Location
+git -C "C:\Users\rexy2\Downloads\Awwab\Awwab-fixed" status --short --branch
+git -C "C:\Users\rexy2\Downloads\Awwab\Awwab-fixed" remote -v
+git -C "C:\Users\rexy2\Downloads\Awwab\Awwab-fixed" log -1 --oneline --decorate
+git -C "C:\Users\rexy2\Downloads\Awwab" rev-parse --is-inside-work-tree
+```
+
+The last command is expected to report that the outer extracted ZIP folder is not a Git repository; that is a check, not an error to fix. Do not run `git reset`, `git clean`, `git checkout`, folder moves/deletions, or deployments during this source reconciliation. Preserve both folders and report the exact output.
+
+**Phase 0 exit gate:** identify the current local branch/commit and dirty files; establish which region changes exist only in the ZIP; review PR #16/#17 relative to current main; then choose the smallest safe integration action. No application-code edit, PR merge, Firebase deployment, Rules change, paid resource, or migration is authorized by this audit.
