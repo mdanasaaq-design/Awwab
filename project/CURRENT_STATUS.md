@@ -217,3 +217,11 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - Callable emulator coverage verifies concurrent revocations permit exactly one state transition, preserve one trusted device, reject sequential revocation of the final trusted device, allow idempotent repeats, and allow pending-device revocation. The revoked-caller authorization regression test also passes. The callable suite reported 4 passing test groups.
 - Device approval/revocation caller trust checks are performed inside the mutation transaction; approval audit activity is atomic with approval. Details: [Phase 2C acceptance record](PHASE_2C_LAST_DEVICE_REVOCATION.md) and [authorization risk resolution](ISSUES_AND_RISKS.md).
 - Evidence is from CI emulators only. Live Firebase Auth/device lifecycle and manual browser acceptance remain outstanding. No deployment, billing upgrade, Rules change, or backend provisioning occurred.
+
+
+## Device audit outcome test — 2026-10-28
+
+- Added a callable emulator test in [commit 5768d085](https://github.com/mdanasaaq-design/Awwab/commit/5768d085f5e1ec6111242348e1ee1c844f942496) to verify that bootstrap, registration, approval, and revocation write the expected successful audit events and that failed security transitions are not falsely represented as successful activity.
+- The first test run exposed an incorrect test setup: the test attempted to revoke a device while two trusted devices still existed, which is valid behavior. Corrected the sequence to revoke one trusted device first, then assert that the remaining final trusted device cannot be revoked. Correction: [commit 2a0280ee](https://github.com/mdanasaaq-design/Awwab/commit/2a0280ee9993e3852c56ed1d07d7f1d979c1cc55).
+- The corrected callable emulator test passed in CI run [40691341042](https://github.com/mdanasaaq-design/Awwab/actions/runs/40691341042); web typecheck/build and Functions/shared checks also passed. Firestore Rules tests were still running when this note was prepared; the full run must be checked before claiming all four jobs passed.
+- This test validates emulator audit behavior only. It does not add failed-attempt audit events and does not validate live Firebase, deployed Functions, or the browser. No deployment, billing change, Rules change, or resource provisioning was performed.
