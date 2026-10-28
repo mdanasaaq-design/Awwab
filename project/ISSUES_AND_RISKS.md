@@ -252,3 +252,11 @@
 - **Mitigation:** A copy was made at `C:\Users\rexy2\Awwab-package-lock.local-backup-20261028.json`; SHA-256 hashes matched. The original remains in place.
 - **Required action:** Fast-forward only, then compare the local lockfile against GitHub's tracked version. Do not use reset/clean, overwrite, or delete the file/backup before comparison.
 - **Exit condition:** Local branch points at current main, the working tree is understood, and any local lockfile difference is preserved or deliberately reconciled.
+
+## AWW-010 — Device setup error attribution could mislead users
+
+- **Priority:** P2 — user-facing status accuracy
+- **Status:** Code mitigation committed; automated/browser verification pending.
+- **Evidence:** The web auth observer previously used one `Promise.all` for device registration and profile initialization and mapped any rejection to `registration failed`. A profile failure could therefore misstate device registration status.
+- **Mitigation:** Commit `dbed29520c01e2027c6dd7f3953d6a3f632050cb` separates the steps and preserves the registration result when profile initialization fails.
+- **Verification required:** CI typecheck/build and manual confirmation of registration failure versus profile failure states.
