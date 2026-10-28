@@ -1,6 +1,6 @@
 # Awwab Tasks
 
-**Last reviewed:** 2026-10-27  
+**Last reviewed:** 2026-10-28  
 **Source of truth:** [Current Status](CURRENT_STATUS.md), [Phase Plan](PHASE_PLAN.md), [Issues and Risks](ISSUES_AND_RISKS.md)  
 **Priority rule:** The command-center UX is the first product implementation phase. Foundation hardening follows before real assistant execution or privileged integrations.
 
@@ -76,7 +76,7 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 - [ ] Review registration/approval/revocation idempotency and retry behavior.
 - [x] Phase 2D shared device callable DTOs and web generics merged in [PR #11](https://github.com/mdanasaaq-design/Awwab/pull/11); CI run 39117694957 passed. Acceptance criteria/evidence: [PHASE_2D_CONTRACT_ALIGNMENT.md](PHASE_2D_CONTRACT_ALIGNMENT.md).
 - [x] Phase 2E callable authorization/validation/state tests merged in [PR #12](https://github.com/mdanasaaq-design/Awwab/pull/12); CI run 39117914336 passed all four jobs. Acceptance criteria/evidence: [PHASE_2E_CALLABLE_COVERAGE.md](PHASE_2E_CALLABLE_COVERAGE.md).
-- [ ] Test audit behavior for successful and failed security transitions.
+- [x] Test audit behavior for successful security transitions and verify failed transitions are not falsely recorded as successful; callable emulator test passed in [run 40691341042](https://github.com/mdanasaaq-design/Awwab/actions/runs/40691341042). Failed-attempt audit logging remains a separate policy decision.
 - [x] Audit current App Check initialization/enforcement and document the staged rollout; see [PHASE_2H_APPCHECK_ENVIRONMENT.md](PHASE_2H_APPCHECK_ENVIRONMENT.md). No enforcement was enabled.
 - [ ] Validate App Check with a real development web client/provider and observe callable acceptance/rejection before any enforcement change.
 
