@@ -30,3 +30,7 @@ node --test project/prototypes/device-lifecycle-mock.test.mjs project/prototypes
 ```
 
 Review notes and remaining blockers: see [DEVICE_BINDING_REVIEW.md](../DEVICE_BINDING_REVIEW.md). **Important limits:** the in-memory challenge store is not atomic across processes or servers. The model does not verify Firebase ID tokens, persist challenge consumption, perform a real protected operation in the same transaction, protect against XSS/browser compromise, prove hardware-backed identity, or establish a secure $0 server path. It is protocol logic only, not production-ready device authorization.
+
+## Supabase device-service research gate
+
+See [SUPABASE_DEVICE_SERVICE_TEST_PLAN.md](../SUPABASE_DEVICE_SERVICE_TEST_PLAN.md) for the local-only design and acceptance test matrix. This is a specification, not a running Supabase integration. No Supabase project, credentials, network calls, or production imports are involved. The Firebase token role-claim dependency and strict $0 cost gate remain unresolved.
