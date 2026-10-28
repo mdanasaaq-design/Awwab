@@ -99,3 +99,38 @@ Workload Identity Federation is the preferred general pattern for external workl
 ### Updated assessment
 
 The Worker + service identity approach remains **not approved** and is less promising for the existing shared database than a generic “free Worker” comparison suggests. No verified collection-level IAM boundary, acceptable credential lifecycle, or no-billing identity path has been demonstrated. The safe current choice remains to keep live device management deferred, preserve restrictive Firestore Rules, and continue synthetic local tests only.
+
+## Alternative candidate: isolated Supabase device service — 2026-10-28
+
+This research found a potentially cleaner boundary than giving a Worker Google IAM access to Awwab's shared Firestore database: use a separate Supabase Free project solely for device-trust records and its Edge Function as the trusted API. This is a candidate for a **local/non-production proof of concept only**, not an approved migration or deployment.
+
+Official documentation confirms:
+- Supabase supports Firebase Auth as a third-party identity provider. [Firebase Auth integration](https://supabase.com/docs/guides/auth/third-party/firebase-auth)
+- Supabase Free currently lists 500,000 Edge Function invocations/month, a 500 MB database, and 50,000 monthly active users / third-party MAUs; the Free project can pause after a week of low activity. [Billing and usage limits](https://supabase.com/docs/guides/platform/billing-on-supabase) · [Free project pausing](https://supabase.com/docs/guides/platform/free-project-pausing)
+- Supabase warns that Firebase ID tokens do not normally contain the `role: authenticated` claim required for its Data API. Its documentation describes adding that claim via Firebase Admin / an Auth blocking function; the latter requires Firebase Authentication with Identity Platform. [Firebase Auth integration requirements](https://supabase.com/docs/guides/auth/third-party/firebase-auth)
+
+### Candidate architecture
+
+1. Keep current Firebase Authentication as the account identity provider. Do not migrate user accounts.
+2. Put only device lifecycle data in a dedicated Supabase Postgres project/schema, separate from Firestore's other user/workspace data.
+3. Expose narrowly scoped Edge Function endpoints for enrollment, challenge issuance/verification, listing, approval, revocation, and audit. The browser never receives a service-role secret.
+4. Since existing Firebase tokens may lack the Supabase `role` claim, do **not** assume the standard Supabase gateway will authenticate them successfully by default. One possible design is to disable gateway JWT verification for that specific function and perform strict Firebase JWT signature/claim validation inside the function with a maintained verifier, checking signature/JWKS, issuer, audience/project, expiry, issued-at time, and UID. This must be independently reviewed and tested; any verification or key-fetch uncertainty fails closed. Alternatively, investigate a supported way to provide the required claim without requiring Blaze/Identity Platform before choosing the integration.
+5. Derive the UID exclusively from the verified token. Bind device keys and one-time challenges to that UID. Keep privileged mutations server-side and use a single Postgres transaction for challenge consumption, state transition, last-trusted-device invariant, and audit record.
+6. Add restrictive Row-Level Security to all exposed tables and schemas even if the Edge Function uses a server-only privileged key. The privileged key is a high-value secret; the database is isolated to device metadata to limit blast radius. Never add that key to browser code or Git.
+7. Treat every free quota as a hard stop. No plan upgrade, add-on, overage acceptance, or billing fallback. Confirm the actual account's free-tier eligibility and usage behavior before any resource creation.
+
+### Advantages and unresolved issues
+
+**Potential advantage:** unlike the proposed Worker with a Google service identity, this isolates the device-management database from Awwab's existing Firestore records, so a compromised backend credential would not automatically grant access to the whole Firestore database. Supabase also documents Firebase third-party authentication support.
+
+**Unresolved blockers:**
+- This adds a new vendor, project, secret, deployment pipeline, monitoring surface, and operational dependency.
+- Supabase's gateway claim requirements mean a normal Firebase ID token cannot simply be assumed to work for every API path. Manually validating the token inside an Edge Function is security-critical and needs independent review, negative tests, and a maintained verification library.
+- The service-role key bypasses RLS. Its use must be confined to the server function and isolated database; function authorization and SQL transaction design must be audited.
+- The documented free quota is not an uptime guarantee. A project may pause after inactivity, and quotas/pricing can change. Confirm that no payment method, paid-plan prompt, or chargeable third-party MAU overage can trigger charges; if this cannot be guaranteed, reject the option.
+- Device data would be split between Firestore and Postgres only for this feature. Data ownership, export/deletion, backup/recovery, and provider-outage behavior need explicit design.
+- No Supabase project, database, secret, or integration has been created. This remains documentation-based research, not evidence of working authentication or transactions.
+
+### Updated research decision
+
+The Supabase isolated-device-service option is now the **preferred candidate to evaluate next**, ahead of the Worker + Google IAM route, because it may provide a narrower database blast radius while retaining Firebase Auth. It is not yet proven to satisfy the strict $0 requirement or the security gates. Do not create a project or deploy a function without explicit approval. First build a local-only design/test harness and review the exact token verification, transaction, RLS, and cost/limit plan. If the gate cannot be met, continue deferring live device management.
