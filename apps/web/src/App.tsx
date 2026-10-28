@@ -4,6 +4,7 @@ import type { DeviceRecord } from "./device";
 import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
 import { MemoryPanel } from "./MemoryPanel";
+import { ResearchPanel } from "./ResearchPanel";
 
 const sections = [
   { id: "assistant", label: "Assistant", glyph: "⌘", group: "WORKSPACE" },
@@ -582,7 +583,7 @@ export function App() {
           </div>
         )}
 
-        {activeSection !== "assistant" && activeSection !== "settings" && activeSection !== "memories" && (
+        {activeSection !== "assistant" && activeSection !== "settings" && activeSection !== "memories" && activeSection !== "research" && (
           <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
             <div className="page-intro">
               <p className="eyebrow">{sectionCopy[activeSection].eyebrow}</p>
@@ -596,6 +597,17 @@ export function App() {
               <p>There is no live data here yet. We’ll connect this view to a real workflow before presenting it as ready to use.</p>
               <button className="secondary" type="button" onClick={() => setActiveSection("assistant")}>Back to command center</button>
             </section>
+          </div>
+        )}
+
+        {activeSection === "research" && (
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
+            <div className="page-intro">
+              <p className="eyebrow">WORKSPACE / RESEARCH</p>
+              <h1>Research you can trace back to its sources.</h1>
+              <p className="page-description">Search live source material, inspect the extracts, and open the original citations before relying on a claim.</p>
+            </div>
+            <ResearchPanel />
           </div>
         )}
 
