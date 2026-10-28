@@ -134,3 +134,9 @@ Official documentation confirms:
 ### Updated research decision
 
 The Supabase isolated-device-service option is now the **preferred candidate to evaluate next**, ahead of the Worker + Google IAM route, because it may provide a narrower database blast radius while retaining Firebase Auth. It is not yet proven to satisfy the strict $0 requirement or the security gates. Do not create a project or deploy a function without explicit approval. First build a local-only design/test harness and review the exact token verification, transaction, RLS, and cost/limit plan. If the gate cannot be met, continue deferring live device management.
+
+## Phase 3 decision — 2026-10-28
+
+The architecture comparison is consolidated in [PHASE_3_BACKEND_DECISION.md](PHASE_3_BACKEND_DECISION.md). The current decision is to defer live device management. An isolated Supabase Edge Function plus a dedicated device-only database is the preferred **research candidate** because it avoids granting a Worker broad IAM access to Awwab's existing shared Firestore database. It is not approved for provisioning or deployment: the Firebase `role: "authenticated"` claim dependency, custom token verification risk, Free-plan inactivity pause, transaction/security design, and actual $0 eligibility remain unresolved.
+
+No account, resource, secret, billing setting, Firestore Rule, migration, or deployment was changed. All earlier acceptance-gate checkboxes remain requirements, not completed evidence.
