@@ -1,6 +1,6 @@
 # Awwab Issues and Risks
 
-**Last reviewed:** 2026-10-18  
+**Last reviewed:** 2026-10-28  
 **Repository baseline reviewed:** `cffb22b829e76a859dd3029e482abd10e8314af5`  
 **Purpose:** Planning register from source/document review. These are not all reproduced runtime bugs. Items marked **confirmed from code** are directly visible in the inspected source; items marked **validation gap** need tests or environment evidence.
 
