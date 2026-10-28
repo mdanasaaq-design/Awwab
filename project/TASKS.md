@@ -259,5 +259,6 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [x] Run the expanded local prototype suite and record the actual result: 12 passed, 0 failed (user-confirmed PowerShell output, 2026-10-28).
 - [x] Draft a server-verifiable device-key proof-of-possession design and document its limits in [DEVICE_BINDING_DESIGN.md](DEVICE_BINDING_DESIGN.md); this is a proposal only, not implementation.
 - [ ] Add explicit registration/profile initialization retry tests and decide their idempotency contract.
-- [ ] Build an isolated Node.js crypto prototype for device-key proof-of-possession using synthetic identities; test replay, wrong key/user/action/target, expiry, pending/revoked status, and key replacement.
+- [x] Add an isolated Node.js Ed25519 device-key proof-of-possession model with synthetic identities and tests for replay, wrong key/user/action/target, expiry, pending/revoked status, and key replacement; execution still needs local verification.
+- [ ] Run both local prototype test suites and record exact results.
 - [ ] Prove a secure server-side Firestore access path compatible with the strict $0/no-billing constraint before any live device-binding implementation.
