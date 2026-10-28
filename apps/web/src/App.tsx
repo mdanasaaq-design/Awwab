@@ -258,11 +258,25 @@ export function App() {
       void import("./device")
         .then(async ({ registerWebDevice, ensureUserProfile, getAwwabDeviceId }) => {
           setCurrentDeviceId(getAwwabDeviceId());
-          return Promise.all([registerWebDevice(), ensureUserProfile()]);
-        })
-        .then(([result]) => {
+
+          // Keep registration outcome separate from profile setup: a profile
+          // failure must not misreport a successful device registration.
+          const result = await registerWebDevice();
           setDeviceStatus(result.status);
-          return refreshDevices();
+
+          try {
+            await ensureUserProfile();
+          } catch (error) {
+            setDeviceError(
+              error instanceof Error
+                ? `Profile setup failed: ${error.message}`
+                : "Profile setup failed.",
+            );
+            setDevicesLoading(false);
+            return;
+          }
+
+          await refreshDevices();
         })
         .catch((error) => {
           setDevicesLoading(false);
