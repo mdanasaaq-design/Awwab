@@ -223,3 +223,17 @@ Checkboxes mean only that the work is complete with evidence; planned or unexecu
 **Billing/deployment hold:** Do not retry Cloud Functions deployment, upgrade Firebase, deploy Hosting/Rules, create Cloudflare resources, migrate data, or change live security policies without explicit owner authorization.
 
 See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and dependencies.
+
+
+## Phase 0 — live repository audit follow-up (2026-10-28)
+
+- [x] Inspect GitHub repository/default branch and current main head.
+- [x] Inspect open PR #16/#17 and record their status and changed files.
+- [x] Confirm current main has no explicit `asia-south1` region in the web Functions client or backend callable declarations.
+- [ ] Obtain read-only local Git status, remotes and HEAD from `Awwab-fixed`; verify outer ZIP is not a repository.
+- [ ] Reconcile region edits without overwriting local work.
+- [ ] Review PR #16 against current main and obtain a non-cancelled Rules test run after reconciliation.
+- [ ] Review PR #17 against current main; preserve it as a pure validator/preflight with no execution side effects.
+- [ ] Decide the smallest safe next code change only after source and PR state are clear.
+
+**Hold:** Do not merge PR #16/#17, merge the stale `fix/web-build-types` branch, deploy, change Rules, upgrade billing, or provision an alternative backend during Phase 0.
