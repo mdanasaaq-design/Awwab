@@ -165,3 +165,10 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - An untracked local `package-lock.json` (410,433 bytes) remains in the clone. Its backup at `C:\Users\rexy2\Awwab-package-lock.local-backup-20261028.json` was verified byte-identical using SHA-256. Preserve both until the local file is compared with the tracked GitHub version.
 - `C:\Users\rexy2\Downloads\Awwab` is an extracted non-Git copy; no `.git` metadata was found there. Do not treat it as the canonical working clone.
 - **Pending:** fast-forward local `main`, inspect any lockfile difference without discarding it, then continue the Phase 1 manual browser acceptance gate. No deployment or billing changes are authorized.
+
+## Phase 1 execution update — 2026-10-28
+
+- Source review identified inaccurate failure attribution: the signed-in initialization chain treated a profile-initialization error as a device-registration failure.
+- Implemented a bounded fix in `apps/web/src/App.tsx` at commit `dbed29520c01e2027c6dd7f3953d6a3f632050cb`. Registration outcome is now recorded separately; profile initialization errors remain visible without overwriting the device status. Registration/module failures still show the registration-failed state.
+- The change does not alter Firebase configuration, backend behavior, Rules, dependencies, or deployment settings.
+- **Validation:** the GitHub connector has not yet surfaced a CI run or check result for this commit. Do not mark build/typecheck as passed until the actual run is observed. Manual browser validation remains pending.
