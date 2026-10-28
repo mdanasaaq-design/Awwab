@@ -87,8 +87,6 @@ Do not jump directly to unrestricted tool execution. First complete the already 
 - Local extracted ZIP copy passed functions typecheck/build and web build, but it is not a Git clone. Its region edits are not known to be present on GitHub main. Reconcile exact diffs first.
 - Cloudflare Workers is a candidate for architecture research only; no backend migration or account/resource creation is approved.
 - No Hosting, Rules, or Functions deployment is authorized. Keep the assistant composer disabled and avoid any production or paid-resource changes.
-undefined
-
 ## Source reconciliation handoff — 2026-10-28
 
 - Current GitHub `main`: `07651e30ed0b6f40e843b4fe90cb876dfdbd15d7`.
