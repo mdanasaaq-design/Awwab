@@ -26,7 +26,7 @@ html { min-width: 320px; background: var(--canvas); }
 body { margin: 0; min-width: 320px; min-height: 100vh; }
 button, input { font: inherit; }
 button { color: inherit; }
-button:focus-visible, a:focus-visible, input:focus-visible {
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 2px solid #c7d5c2;
   outline-offset: 3px;
 }
