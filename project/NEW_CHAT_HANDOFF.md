@@ -88,3 +88,12 @@ Do not jump directly to unrestricted tool execution. First complete the already 
 - Cloudflare Workers is a candidate for architecture research only; no backend migration or account/resource creation is approved.
 - No Hosting, Rules, or Functions deployment is authorized. Keep the assistant composer disabled and avoid any production or paid-resource changes.
 undefined
+
+## Source reconciliation handoff — 2026-10-28
+
+- Current GitHub `main`: `07651e30ed0b6f40e843b4fe90cb876dfdbd15d7`.
+- Actual local clone: `C:\Users\rexy2\Awwab`, remote `https://github.com/mdanasaaq-design/Awwab.git`; before sync, local `main` was `3a7d914`, and after fetching `origin` it was 60 commits behind, 0 ahead. No tracked edits or local-only commits were reported.
+- Untracked local `package-lock.json` was preserved and copied to `C:\Users\rexy2\Awwab-package-lock.local-backup-20261028.json`; the SHA-256 hashes matched. Do not delete the backup or discard the local lockfile until its contents have been compared.
+- `C:\Users\rexy2\Downloads\Awwab` is an extracted copy, not a Git repository. Keep it untouched.
+- **Next local operation:** fast-forward the actual clone with `git -C "C:\Users\rexy2\Awwab" pull --ff-only origin main`, stop on failure, then verify status and inspect lockfile differences. No production deploy, Rules/Functions deploy, billing upgrade, migration, or paid resource creation is authorized.
+- **Next project phase:** after local sync, complete Phase 1 manual browser acceptance (auth persistence/error/retry; device loading/empty/error/revoke flows; quick-switcher/skip-link focus; responsive and accessibility checks). Current-main source inspection is not a substitute for observing the UI in a browser.
