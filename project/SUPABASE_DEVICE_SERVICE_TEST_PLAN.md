@@ -101,3 +101,23 @@ Sources: [Supabase Edge Function authentication modes](https://supabase.com/docs
 ### Updated decision and next bounded step
 
 Keep the candidate **NO-GO for cloud creation/deployment**. The next useful step is a local-only, dependency-backed token-verification test harness using synthetic test keys/tokens—not live Firebase tokens or credentials—plus an explicit threat model for gateway bypass, key rotation, claim validation, cross-user isolation, and failure behavior. The mock must not be described as proving the deployed Edge runtime or provider configuration. Separately, the strict $0 gate remains mandatory; if it cannot be established for the actual configuration, reject this candidate.
+
+
+## Research update: synthetic token-verification harness — 2026-10-28
+
+Added a local-only Node.js harness in `project/prototypes/firebase-token-verifier-mock.mjs` and tests in `project/prototypes/firebase-token-verifier-mock.test.mjs`. It generates ephemeral RSA keys and synthetic JWTs and exercises signature verification plus RS256, `kid`, issuer, audience, subject, expiration, issued-at, not-before, clock-skew, malformed-token, and verifier-configuration rejection paths.
+
+Run:
+
+```sh
+node --test project/prototypes/firebase-token-verifier-mock.test.mjs
+```
+
+### Interpretation and limits
+
+- The harness is dependency-free and uses Node's built-in crypto; it makes no network calls and handles no real credentials or user tokens.
+- The verifier accepts an injected key set. It does **not** implement production Google JWKS fetching, cache-header compliance, key refresh/rotation, network-failure behavior, revocation checks, or Edge Runtime integration.
+- The tests establish behavior of this local model only. They do not establish that a deployed function is secure, that Supabase gateway bypass is configured safely, or that the candidate can operate at $0.
+- The production implementation must use a maintained/reviewed JWT library and official Firebase key distribution behavior, and must be independently reviewed before any cloud experiment.
+
+**Decision unchanged: NO-GO for cloud creation/deployment.** No Supabase project, secret, integration, billing change, or production modification was made.
