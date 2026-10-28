@@ -268,3 +268,11 @@
 - **Evidence:** [Commit 4aea511](https://github.com/mdanasaaq-design/Awwab/commit/4aea511b03fd24b8dc57148d216a817530238384) adds native select and textarea to the shared visible-focus selector. GitHub Actions run [40685073409](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685073409) passed all four jobs and includes the change.
 - **Remaining acceptance:** Confirm visible focus on actual dropdowns and text areas using keyboard-only navigation at desktop and narrow mobile widths.
 - **Boundary:** Do not treat CI as browser evidence; no backend, Firebase Rules/configuration, deployment, or billing changes were made.
+
+
+### Resolved: stale caller trust check in device approval/revocation (2026-10-28)
+
+- `approveDevice` and `revokeDevice` now read the caller's trusted status inside the transaction that performs the protected state change, so a concurrent revocation cannot rely on a stale pre-transaction authorization check.
+- Approval mutation and its audit event are atomic. Regression test covers attempts by a revoked caller to approve and revoke a pending device.
+- CI passed all four jobs on commit `317e742b368d3f37e0948270978c50096e858974`: https://github.com/mdanasaaq-design/Awwab/actions/runs/40685807443
+- Scope limitation: emulator coverage is not a live deployment test; backend Functions are still not deployed to the Firebase project.
