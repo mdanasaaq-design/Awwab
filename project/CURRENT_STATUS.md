@@ -180,3 +180,10 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - The device/profile setup error-attribution fix is in `apps/web/src/App.tsx` at commit `dbed29520c01e2027c6dd7f3953d6a3f632050cb`.
 - GitHub Actions run [40684572657](https://github.com/mdanasaaq-design/Awwab/actions/runs/40684572657), triggered by the subsequent documentation commit on `main`, passed all four jobs: Web typecheck/build, Functions/shared typecheck/build, Firestore Rules tests, and backend callable emulator tests. The run includes the code fix.
 - Manual browser verification remains pending. Local fast-forward synchronization and lockfile comparison remain pending; no deployment or Firebase billing change is authorized.
+
+
+## Keyboard accessibility follow-up — 2026-10-28
+
+- Added native `select` and `textarea` to the existing global `:focus-visible` outline in [commit 4aea511](https://github.com/mdanasaaq-design/Awwab/commit/4aea511b03fd24b8dc57148d216a817530238384). This closes a small source-level keyboard affordance gap without changing layout or behavior.
+- CI for this new commit and manual browser confirmation are pending. The previous successful run validates the earlier setup-error fix, not this newer CSS commit.
+- No production deploy, Firebase configuration/Rules change, dependency change, or billing action was performed.
