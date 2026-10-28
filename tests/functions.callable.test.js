@@ -46,6 +46,21 @@ async function invokeCallable(name, data, idToken) {
   return { ok: true, result: body.result, httpStatus: response.status };
 }
 
+
+async function listActivity(uid, idToken) {
+  const response = await fetch(
+    `http://127.0.0.1:8080/v1/projects/${PROJECT_ID}/databases/(default)/documents/users/${uid}/activity?pageSize=100`,
+    { headers: { authorization: `Bearer ${idToken}` } },
+  );
+  const body = await response.json();
+  assert.equal(response.ok, true, `Activity read failed: ${JSON.stringify(body)}`);
+  return (body.documents ?? []).map((document) => ({
+    action: document.fields?.action?.stringValue,
+    outcome: document.fields?.outcome?.stringValue,
+    targetReference: document.fields?.targetReference?.stringValue,
+  }));
+}
+
 function bootstrapPayload(deviceId) {
   return {
     deviceId,
@@ -404,6 +419,84 @@ test("protected callables validate authentication, inputs, and device state", as
   assert.equal(profileSecond.result.uid, trustedUser.localId);
 });
 
+
+
+test("device security audit records successful transitions without false success events", async () => {
+  const user = await createAuthUser("audit-transitions");
+  const firstDevice = newDeviceId();
+  const secondDevice = newDeviceId();
+  const thirdDevice = newDeviceId();
+
+  const bootstrap = await invokeCallable(
+    "bootstrapFirstDevice",
+    bootstrapPayload(firstDevice),
+    user.idToken,
+  );
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  const registration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(secondDevice),
+    user.idToken,
+  );
+  assert.equal(registration.ok, true, JSON.stringify(registration));
+
+  const approval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: firstDevice, targetDeviceId: secondDevice },
+    user.idToken,
+  );
+  assert.equal(approval.ok, true, JSON.stringify(approval));
+
+  const duplicateApproval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: firstDevice, targetDeviceId: secondDevice },
+    user.idToken,
+  );
+  assert.equal(duplicateApproval.ok, false);
+  assert.equal(duplicateApproval.error.status, "FAILED_PRECONDITION");
+
+  const thirdRegistration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(thirdDevice),
+    user.idToken,
+  );
+  assert.equal(thirdRegistration.ok, true, JSON.stringify(thirdRegistration));
+
+  const revokePending = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: firstDevice, targetDeviceId: thirdDevice },
+    user.idToken,
+  );
+  assert.equal(revokePending.ok, true, JSON.stringify(revokePending));
+
+  const finalTrustedRevoke = await invokeCallable(
+    "revokeDevice",
+    { callerDeviceId: secondDevice, targetDeviceId: secondDevice },
+    user.idToken,
+  );
+  assert.equal(finalTrustedRevoke.ok, false);
+  assert.equal(finalTrustedRevoke.error.status, "FAILED_PRECONDITION");
+
+  const activity = await listActivity(user.localId, user.idToken);
+  const byAction = (action) => activity.filter((event) => event.action === action);
+
+  assert.equal(byAction("device_bootstrapped").length, 1);
+  assert.equal(byAction("device_registered").length, 2);
+  assert.equal(byAction("device_approved").length, 1);
+  assert.equal(byAction("device_revoked").length, 1);
+
+  assert.equal(byAction("device_bootstrapped")[0].outcome, "success");
+  assert.equal(byAction("device_registered").every((event) => event.outcome === "success"), true);
+  assert.equal(byAction("device_approved")[0].outcome, "success");
+  assert.equal(byAction("device_revoked")[0].outcome, "success");
+  assert.equal(byAction("device_revoked")[0].targetReference, thirdDevice);
+
+  // Failed transitions currently fail closed and must never be represented as
+  // successful audit events. Failed-attempt audit logging remains a separate policy decision.
+  assert.equal(activity.some((event) => event.targetReference === secondDevice && event.action === "device_approved" && event.outcome !== "success"), false);
+  assert.equal(activity.some((event) => event.targetReference === secondDevice && event.action === "device_revoked"), false);
+});
 
 test("a revoked device cannot approve or revoke devices", async () => {
   const user = await createAuthUser("revoked-caller");
