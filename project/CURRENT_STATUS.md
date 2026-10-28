@@ -194,3 +194,10 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - GitHub Actions run [40685073409](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685073409) passed all four jobs: Web typecheck/build, Functions/shared typecheck, Firestore security rules tests, and backend callable emulator tests. The run was triggered by the subsequent documentation commit and includes the 4aea511 keyboard-focus CSS change.
 - Manual browser review is still pending. Source review confirms the CSS selector now includes select:focus-visible and textarea:focus-visible; it does not prove the rendered appearance in a browser.
 - Device-management live integration remains blocked by the existing architecture decision: the repository's callable functions are not deployed, and the current Firebase plan does not permit that deployment. No retry or billing upgrade was made.
+
+
+## Backend architecture research — 2026-10-28
+
+- Created [project/BACKEND_ARCHITECTURE_OPTIONS.md](BACKEND_ARCHITECTURE_OPTIONS.md) with a sourced comparison of staying on Firebase Spark, a Cloudflare Worker API with Firebase Auth/Firestore, and Supabase Edge Functions/Postgres/Auth.
+- Current safe state remains unchanged: no Cloud Functions deployment, no Blaze upgrade, no alternate provider account/resource, no migration, and no Rules change. No architecture decision has been made on the owner's behalf.
+- The key unresolved requirement is not merely a free endpoint: any replacement must verify Firebase identity server-side, preserve user scoping and server-owned device records, and prove atomic bootstrap and last-trusted-device protection before live use.
