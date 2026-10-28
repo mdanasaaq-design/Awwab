@@ -239,3 +239,10 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [ ] After synchronization, proceed to Phase 1 manual browser acceptance; do not confuse source review or CI with browser validation.
 
 **Hold:** Do not merge PR #16/#17, merge stale feature branches wholesale, deploy, change Rules, upgrade billing, or provision an alternative backend during reconciliation.
+
+
+## Phase 1 — keyboard accessibility follow-up (2026-10-28)
+
+- [x] Extend the existing `:focus-visible` outline to native `select` and `textarea` controls in [commit 4aea511](https://github.com/mdanasaaq-design/Awwab/commit/4aea511b03fd24b8dc57148d216a817530238384).
+- [ ] Confirm GitHub Actions for this CSS change.
+- [ ] Complete browser keyboard-focus review; source edits and CI do not replace manual review.
