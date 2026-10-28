@@ -21,7 +21,7 @@ node --test project/prototypes/device-lifecycle-mock.test.mjs
 
 ## Device-key proof-of-possession protocol model
 
-Files `device-key-proof-mock.mjs` and `device-key-proof-mock.test.mjs` model a local Ed25519 public/private-key protocol. The test code generates synthetic key pairs at runtime. The model includes bound action/target challenges, expiry, one-time consumption, pending/trusted/revoked status, and rejection of silent key replacement.
+Files `device-key-proof-mock.mjs` and `device-key-proof-mock.test.mjs` model a local Ed25519 public/private-key protocol. The test code generates synthetic key pairs at runtime. The model includes bound action/target challenges, exclusive expiry deadlines, safe expiry arithmetic, one-time consumption in the sequential mock, pending/trusted/revoked status, and rejection of silent key replacement. Regression cases also cover invalid-signature retry and revocation after challenge issuance.
 
 Run both suites from the repository root:
 
@@ -29,4 +29,4 @@ Run both suites from the repository root:
 node --test project/prototypes/device-lifecycle-mock.test.mjs project/prototypes/device-key-proof-mock.test.mjs
 ```
 
-**Important limits:** the in-memory challenge store is not atomic across processes or servers. The model does not verify Firebase ID tokens, persist challenge consumption, perform a real protected operation in the same transaction, protect against XSS/browser compromise, prove hardware-backed identity, or establish a secure $0 server path. It is protocol logic only, not production-ready device authorization.
+Review notes and remaining blockers: see [DEVICE_BINDING_REVIEW.md](../DEVICE_BINDING_REVIEW.md). **Important limits:** the in-memory challenge store is not atomic across processes or servers. The model does not verify Firebase ID tokens, persist challenge consumption, perform a real protected operation in the same transaction, protect against XSS/browser compromise, prove hardware-backed identity, or establish a secure $0 server path. It is protocol logic only, not production-ready device authorization.
