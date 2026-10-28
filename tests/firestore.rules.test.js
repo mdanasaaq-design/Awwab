@@ -219,6 +219,54 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
   await assertSucceeds(deleteDoc(project));
 
   const task = doc(aliceDb, "users/alice/tasks/task-1");
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/projects/task-project"), {
+    name: "Task reference project",
+    status: "active",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(setDoc(doc(bobDb, "users/bob/projects/bob-only-project"), {
+    name: "Bob-only project",
+    status: "active",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/tasks/task-valid-project"), {
+    title: "Task with a valid project",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: "task-project",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/tasks/task-null-project"), {
+    title: "Task with a null project",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: null,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-missing-project"), {
+    title: "Task with a missing project",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: "does-not-exist",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-cross-user-project"), {
+    title: "Task with another user's project",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: "bob-only-project",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
   await assertSucceeds(setDoc(task, {
     title: "Alice task",
     description: "A valid user-created task",
