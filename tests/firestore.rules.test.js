@@ -503,6 +503,10 @@ test("memory writes are owner-scoped and schema-validated", async () => {
     validMemory({ type: "medical_diagnosis" }),
   ));
   await assertFails(setDoc(
+    doc(alice.firestore(), "users/alice/memories/already-expired"),
+    validMemory({ expiresAt: new Date("2020-01-01T00:00:00.000Z") }),
+  ));
+  await assertFails(setDoc(
     doc(alice.firestore(), "users/alice/memories/unconfirmed-sensitive"),
     validMemory({ sensitivity: "sensitive", confirmedByUser: false }),
   ));
