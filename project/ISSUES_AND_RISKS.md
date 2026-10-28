@@ -260,3 +260,11 @@
 - **Evidence:** The web auth observer previously used one `Promise.all` for device registration and profile initialization and mapped any rejection to `registration failed`. A profile failure could therefore misstate device registration status.
 - **Mitigation:** Commit `dbed29520c01e2027c6dd7f3953d6a3f632050cb` separates the steps and preserves the registration result when profile initialization fails.
 - **Verification:** CI run [40684572657](https://github.com/mdanasaaq-design/Awwab/actions/runs/40684572657) passed web typecheck/build, Functions/shared checks, Firestore Rules tests, and backend callable emulator tests. Manual confirmation of registration failure versus profile failure states remains outstanding.
+
+
+## Phase 1 keyboard-focus follow-up — 2026-10-28
+
+- **Status:** Source fix committed; automated CI passed; browser review pending.
+- **Evidence:** [Commit 4aea511](https://github.com/mdanasaaq-design/Awwab/commit/4aea511b03fd24b8dc57148d216a817530238384) adds native select and textarea to the shared visible-focus selector. GitHub Actions run [40685073409](https://github.com/awwab/actions/runs/40685073409) passed all four jobs and includes the change.
+- **Remaining acceptance:** Confirm visible focus on actual dropdowns and text areas using keyboard-only navigation at desktop and narrow mobile widths.
+- **Boundary:** Do not treat CI as browser evidence; no backend, Firebase Rules/configuration, deployment, or billing changes were made.
