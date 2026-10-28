@@ -47,3 +47,7 @@ node --test project/prototypes/firebase-token-verifier-mock.test.mjs
 ```
 
 This is a **local test model only**. It accepts an explicitly supplied synthetic key set and does not fetch Google's JWKS, implement HTTP cache headers/key rotation, validate real Firebase tokens, check refresh-token revocation, or prove Supabase Edge Runtime behavior. Never use this mock as production authentication code. The Supabase candidate remains NO-GO for cloud creation/deployment pending independent review and the strict $0 gate.
+
+## Phase 1 security review
+
+See [PHASE_1_FIREBASE_TOKEN_VERIFIER_REVIEW.md](../PHASE_1_FIREBASE_TOKEN_VERIFIER_REVIEW.md) for the source-only review of this verifier, the official Firebase/Supabase requirements, and the production blockers. The review is complete; the verifier itself is still a synthetic model and is **not approved for production use**.
