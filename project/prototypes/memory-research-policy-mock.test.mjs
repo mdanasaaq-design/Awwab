@@ -85,7 +85,7 @@ test("retrieval is scoped to owner, expiry, visibility and type", () => {
     { ...memory(), content: "own" },
     { ...memory({ ownerId: "user-b" }), content: "other user" },
     { ...memory({ expiresAt: now + 1 }), content: "future expiry" },
-    { ...memory({ expiresAt: now - 1 }), content: "expired" },
+    { ...memory(), content: "expired", expiresAt: now - 1 },
     { ...memory({ userVisible: false }), content: "hidden" },
     { ...memory({ type: "project_context" }), content: "project" },
   ];
