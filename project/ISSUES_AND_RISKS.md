@@ -1,6 +1,6 @@
 # Awwab Issues and Risks
 
-**Last reviewed:** 2026-10-18  
+**Last reviewed:** 2026-10-28  
 **Repository baseline reviewed:** `cffb22b829e76a859dd3029e482abd10e8314af5`  
 **Purpose:** Planning register from source/document review. These are not all reproduced runtime bugs. Items marked **confirmed from code** are directly visible in the inspected source; items marked **validation gap** need tests or environment evidence.
 
@@ -276,3 +276,14 @@
 - Approval mutation and its audit event are atomic. Regression test covers attempts by a revoked caller to approve and revoke a pending device.
 - CI passed all four jobs on commit `317e742b368d3f37e0948270978c50096e858974`: https://github.com/mdanasaaq-design/Awwab/actions/runs/40685807443
 - Scope limitation: emulator coverage is not a live deployment test; backend Functions are still not deployed to the Firebase project.
+
+
+### AWW-014 — Project list elements and task project references were under-validated
+
+- **Priority:** P1
+- **Type:** Data integrity / security validation
+- **Status:** Implementation and emulator tests pass on isolated branch; awaiting review/merge decision.
+- **Risk:** Malformed tags/repository-reference elements and dangling or cross-user task project references could enter owner-writable data and later be misinterpreted by backend features.
+- **Mitigation:** Isolated branch `investigate/phase-2i-rules-evaluation` adds bounded list-element checks and requires a non-null task `projectId` to resolve under the same user's project collection. Tests cover empty/max-size lists, malformed entries, overlong values, excessive item count, valid/null references, missing projects, and cross-user references.
+- **Evidence:** All four CI jobs passed in [run 40694648586](https://github.com/mdanasaaq-design/Awwab/actions/runs/40694648586), including Firestore Rules emulator tests. Follow-up task-reference update tests passed all four jobs in [run 40695884479](https://github.com/mdanasaaq-design/Awwab/actions/runs/40695884479), and malformed numeric/object reference tests passed all four jobs in [run 40696376085](https://github.com/mdanasaaq-design/Awwab/actions/runs/40696376085). Implementation commit: [e8a2d1c](https://github.com/mdanasaaq-design/Awwab/commit/e8a2d1c3d3d5fcc6862dc164485c0039835fc619). This is branch-only evidence; live Rules are unchanged.
+- **Remaining limits:** Detailed task status-transition policy and deep URL validation are not included. A backend executor must independently validate its policy and payloads. Keep this risk open until the isolated security change is reviewed and merged.

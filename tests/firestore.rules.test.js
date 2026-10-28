@@ -116,6 +116,23 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     updatedAt: serverTimestamp(),
   }));
   await assertSucceeds(getDoc(project));
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/projects/project-empty-lists"), {
+    name: "Empty lists are valid",
+    status: "active",
+    tags: [],
+    repositoryReferences: [],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/projects/project-max-lists"), {
+    name: "Maximum valid lists",
+    status: "active",
+    tags: ["one", "two", "three", "four", "five"],
+    repositoryReferences: ["a", "b", "c", "d", "e"],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+
   await assertSucceeds(updateDoc(project, {
     status: "archived",
     updatedAt: serverTimestamp(),
@@ -158,6 +175,27 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-non-string-tag"), {
+    name: "Non-string tag",
+    status: "active",
+    tags: ["valid", { forged: true }],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-long-reference"), {
+    name: "Long reference",
+    status: "active",
+    repositoryReferences: ["x".repeat(501)],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-too-many-tags"), {
+    name: "Too many tags",
+    status: "active",
+    tags: Array.from({ length: 6 }, (_, index) => `tag-${index}`),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
   await assertFails(setDoc(doc(aliceDb, "users/alice/projects/project-extra-field"), {
     name: "Unexpected field",
     status: "active",
@@ -181,6 +219,72 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
   await assertSucceeds(deleteDoc(project));
 
   const task = doc(aliceDb, "users/alice/tasks/task-1");
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/projects/task-project"), {
+    name: "Task reference project",
+    status: "active",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(setDoc(doc(bobDb, "users/bob/projects/bob-only-project"), {
+    name: "Bob-only project",
+    status: "active",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/tasks/task-valid-project"), {
+    title: "Task with a valid project",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: "task-project",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(setDoc(doc(aliceDb, "users/alice/tasks/task-null-project"), {
+    title: "Task with a null project",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: null,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-missing-project"), {
+    title: "Task with a missing project",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: "does-not-exist",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-cross-user-project"), {
+    title: "Task with another user's project",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: "bob-only-project",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-numeric-project"), {
+    title: "Task with a non-string project reference",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: 123,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(setDoc(doc(aliceDb, "users/alice/tasks/task-object-project"), {
+    title: "Task with an object project reference",
+    status: "todo",
+    priority: "medium",
+    source: "user",
+    projectId: { id: "task-project" },
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
   await assertSucceeds(setDoc(task, {
     title: "Alice task",
     description: "A valid user-created task",
@@ -193,6 +297,22 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
   await assertSucceeds(getDoc(task));
   await assertSucceeds(updateDoc(task, {
     status: "in_progress",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(updateDoc(task, {
+    projectId: "task-project",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    projectId: "does-not-exist",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    projectId: "bob-only-project",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    projectId: 123,
     updatedAt: serverTimestamp(),
   }));
   await assertFails(updateDoc(task, {

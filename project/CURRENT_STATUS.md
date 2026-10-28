@@ -1,6 +1,6 @@
 # Current Status
 
-**Last reviewed:** 2026-10-27  
+**Last reviewed:** 2026-10-28  
 **Repository:** `mdanasaaq-design/Awwab`  
 **Reviewed baseline:** `876b747fd02c210a19bddd565d015d7800f5ec68` — `main` before the repository-organization pass  
 **Current planning focus:** Web command-center UX first, then foundation hardening  
@@ -233,3 +233,10 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - A direct port of PR #16's bounded list validation and task project-reference checks failed the Rules emulator suite: valid project writes produced evaluation errors. A static-index adjustment did not resolve it.
 - Reverted the unverified Rules and test edits to the previous baseline in [commit ee12ffd](https://github.com/mdanasaaq-design/Awwab/commit/ee12ffdece44765e0a7e85c57e65e139dd37a0a7) and [commit 4c88064](https://github.com/mdanasaaq-design/Awwab/commit/4c88064260251b6fbea2c1d9eeefa65effa6afbc). The Phase 2I implementation remains blocked and unchecked; investigate in a controlled branch before retrying.
 - The restored baseline passed all four CI jobs in [run 40692497914](https://github.com/mdanasaaq-design/Awwab/actions/runs/40692497914), including Firestore Rules emulator tests. Phase 2I remains blocked pending a reproducible fix. No live Firestore Rules deployment occurred.
+
+
+## Phase 2I Rules validation — 2026-10-28
+
+An isolated implementation now validates project `tags` (maximum five strings, 64 characters each) and `repositoryReferences` (maximum five strings, 500 characters each), and checks non-null task project references against the same user's project collection. The Firestore Rules emulator suite and all four CI jobs passed in [run 40694648586](https://github.com/mdanasaaq-design/Awwab/actions/runs/40694648586), on implementation commit [e8a2d1c](https://github.com/mdanasaaq-design/Awwab/commit/e8a2d1c3d3d5fcc6862dc164485c0039835fc619). Follow-up tests were subsequently added for changing task project references during update (valid same-owner accepted; missing/cross-user rejected). The follow-up update-path tests were verified in full CI run [40695884479](https://github.com/mdanasaaq-design/Awwab/actions/runs/40695884479), with all four jobs passing, including Firestore Rules emulator tests. The additional malformed-type tests also passed all four jobs in [run 40696376085](https://github.com/mdanasaaq-design/Awwab/actions/runs/40696376085). The implementation is ready for owner/reviewer review, not automatically approved for merge. PR [#21](https://github.com/mdanasaaq-design/Awwab/pull/21) remains isolated and unmerged; no live Rules deployment occurred.
+
+**Important boundary:** this evidence is from draft PR [#21](https://github.com/mdanasaaq-design/Awwab/pull/21) and its isolated branch. It has not been merged or deployed; live Firestore Rules remain unchanged. Reviewer/owner approval is still required before merge. Detailed task status-transition policy and deep repository URL validation remain outside this phase.
