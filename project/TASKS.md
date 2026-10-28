@@ -265,4 +265,6 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [x] Run the updated regression suite locally and record the exact user-reported result: **27 passed, 0 failed, 0 skipped** (15 device-key proof tests + 12 device-lifecycle tests; PowerShell output supplied 2026-10-28).
 - [x] Refine the backend feasibility research with a concrete Worker + Firebase ID-token verification + server-only Google identity candidate and explicit blockers in [FREE_ZERO_FIRESTORE_BACKEND_FEASIBILITY.md](FREE_ZERO_FIRESTORE_BACKEND_FEASIBILITY.md); this is desk research only, not proof or approval.
 - [x] Research Firestore IAM database-scope limitations and service-account key risks; document why a Worker identity is not approved for the existing shared database.
-- [ ] Demonstrate an enforceable least-privilege data boundary plus a supported no-billing workload identity, or reject the Worker candidate before any implementation.
+- [x] Compare an isolated Supabase Free + Edge Function device-service candidate against the Worker + Google IAM approach; document Firebase-token claim caveats, isolation benefits, quota/pause limits, and unresolved security gates.
+- [ ] Complete a local-only threat-model/test design for the Supabase candidate, including manual Firebase JWT verification or a supported role-claim path, Postgres transaction invariants, RLS, secret handling, and strict $0 hard stops.
+- [ ] Obtain explicit approval before creating any Supabase project, secret, integration, or deployment.
