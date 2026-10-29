@@ -425,3 +425,21 @@ button:disabled { cursor: not-allowed; opacity: .56; }
 .memory-context-list { display: grid; gap: 10px; margin: 4px 0 0; padding: 0; list-style: none; }
 .memory-context-list li { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .memory-context-list li p { margin: 6px 0 0; color: var(--text); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; white-space: pre-wrap; }
+
+
+/* Assistant Core request and plan surface */
+.assistant-request-label { display: block; margin: 18px 0 8px; color: var(--muted); font-size: 12px; }
+.assistant-request-input {
+  display: block; width: 100%; min-height: 112px; resize: vertical; box-sizing: border-box;
+  border: 1px solid var(--line); border-radius: 9px; padding: 13px 14px;
+  background: var(--canvas); color: var(--text); font: inherit; line-height: 1.6;
+}
+.assistant-request-input:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+.assistant-memory-optin { display: flex; align-items: flex-start; gap: 9px; margin: 12px 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.assistant-memory-optin input { margin-top: 2px; accent-color: var(--accent); }
+.assistant-plan { margin-top: 18px; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.assistant-plan h3 { margin: 8px 0 14px; font-size: 18px; line-height: 1.5; overflow-wrap: anywhere; }
+.assistant-plan ol { display: grid; gap: 10px; padding-left: 22px; color: var(--text); font-size: 13px; line-height: 1.65; }
+.assistant-plan li { padding-left: 4px; }
+.assistant-plan > p:last-child { margin: 14px 0 0; }
+@media (max-width: 640px) { .assistant-plan { padding: 14px; } }

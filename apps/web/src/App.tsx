@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { User } from "firebase/auth";
-import { getAssistantMemoryContext, type AssistantMemoryContext, type DeviceRecord } from "./device";
+import { getAssistantMemoryContext, runAssistant, type AssistantMemoryContext, type AssistantPlan, type DeviceRecord } from "./device";
 import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
 import { MemoryPanel } from "./MemoryPanel";
@@ -89,6 +89,12 @@ export function App() {
   const [memoryContext, setMemoryContext] = useState<AssistantMemoryContext | null>(null);
   const [memoryContextLoading, setMemoryContextLoading] = useState(false);
   const [memoryContextError, setMemoryContextError] = useState("");
+  const [assistantText, setAssistantText] = useState("");
+  const [assistantIncludeMemory, setAssistantIncludeMemory] = useState(false);
+  const [assistantPlan, setAssistantPlan] = useState<AssistantPlan | null>(null);
+  const [assistantBusy, setAssistantBusy] = useState(false);
+  const [assistantError, setAssistantError] = useState("");
+  const [assistantConversationId] = useState(() => crypto.randomUUID());
   const [devices, setDevices] = useState<DeviceRecord[]>([]);
   const [devicesLoading, setDevicesLoading] = useState(false);
   const [currentDeviceId, setCurrentDeviceId] = useState("");
@@ -248,6 +254,24 @@ export function App() {
       setMemoryContext(null);
     } finally {
       setMemoryContextLoading(false);
+    }
+  }
+
+  async function submitAssistantRequest(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const text = assistantText.trim();
+    if (!text || assistantBusy || deviceStatus !== "trusted") return;
+    setAssistantBusy(true);
+    setAssistantError("");
+    setAssistantPlan(null);
+    try {
+      setAssistantPlan(await runAssistant(text, assistantIncludeMemory, assistantConversationId));
+    } catch (error) {
+      const candidate = error as { message?: unknown };
+      const message = typeof candidate?.message === "string" ? candidate.message : "Assistant Core could not complete this request.";
+      setAssistantError(message.replace(/^FirebaseError:\\s*/, ""));
+    } finally {
+      setAssistantBusy(false);
     }
   }
 
@@ -516,20 +540,43 @@ export function App() {
               <div className="panel-kicker">
                 <span className="assistant-glyph" aria-hidden="true">⌘</span>
                 <span>AWWAB ASSISTANT</span>
-                <span className="availability">CORE NOT CONNECTED</span>
+                <span className="availability">{deviceStatus === "trusted" ? "AUTHENTICATED CORE" : "TRUSTED DEVICE REQUIRED"}</span>
               </div>
               <h2 id="assistant-title">What are we working on?</h2>
-              <p className="panel-description">
-                Conversation and tool execution are not connected yet. This workspace will become the place to plan, research, and act with your approval.
-              </p>
-              <div className="composer" aria-label="Assistant input unavailable">
-                <span className="composer-placeholder">The assistant runtime is not connected yet.</span>
-                <button className="composer-submit" type="button" disabled aria-label="Send request unavailable">↑</button>
-              </div>
+              <p className="panel-description">Send a request to Assistant Core for a plan. It cannot execute tools or external actions.</p>
+              <form onSubmit={(event) => void submitAssistantRequest(event)}>
+                <label className="assistant-request-label" htmlFor="assistant-request">Your request</label>
+                <textarea id="assistant-request" className="assistant-request-input" value={assistantText}
+                  onChange={(event) => setAssistantText(event.target.value)} placeholder="Describe what you want help planning…"
+                  rows={4} maxLength={4000} disabled={assistantBusy || deviceStatus !== "trusted"} required />
+                <label className="assistant-memory-optin">
+                  <input type="checkbox" checked={assistantIncludeMemory}
+                    onChange={(event) => setAssistantIncludeMemory(event.target.checked)}
+                    disabled={assistantBusy || deviceStatus !== "trusted"} />
+                  <span>Include my eligible saved memories for this request</span>
+                </label>
+                <div className="composer">
+                  <span className="composer-placeholder">{deviceStatus === "trusted" ? "Plan only · no tools or actions" : "Trust this device to send requests"}</span>
+                  <button className="composer-submit" type="submit"
+                    disabled={assistantBusy || deviceStatus !== "trusted" || !assistantText.trim()} aria-label="Send request">
+                    {assistantBusy ? "…" : "↑"}
+                  </button>
+                </div>
+              </form>
               <div className="composer-note">
-                <span>NO REQUESTS WILL BE SENT</span>
-                <span>Assistant Core v0 is planned</span>
+                <span>{assistantBusy ? "REQUEST IN PROGRESS" : "NO ACTIONS WILL BE EXECUTED"}</span>
+                <span>Human review required</span>
               </div>
+              {assistantError && <p className="error" role="alert">{assistantError}</p>}
+              {assistantPlan && (
+                <section className="assistant-plan" aria-live="polite" aria-labelledby="assistant-plan-title">
+                  <p className="eyebrow">PROPOSED PLAN · {assistantPlan.providerId}</p>
+                  <h3 id="assistant-plan-title">{assistantPlan.summary}</h3>
+                  {assistantPlan.steps.length > 0 ? <ol>{assistantPlan.steps.map((step) => <li key={step.id}>{step.description}</li>)}</ol>
+                    : <p className="muted">No steps were returned. Refine the request and try again.</p>}
+                  <p className="muted">Not executed. Review every step before taking action.</p>
+                </section>
+              )}
             </section>
 
             <section className="settings-card memory-context-preview" aria-labelledby="memory-context-preview-title">

@@ -61,3 +61,13 @@ npm run firebase:callable:test
 ```
 
 The Firestore rules suite requires the configured local Firestore emulator. The repository's CI workflow runs the automated typecheck/build, rules, callable, and prototype checks.
+
+
+## Assistant Core server connection (2026-10-29)
+
+- Added authenticated `runAssistant` callable; it requires a signed-in user and a trusted device.
+- Added a configurable OpenAI-compatible chat-completions adapter. Configure Firebase secret `AWWAB_MODEL_API_KEY` and server environment values `AWWAB_MODEL_BASE_URL` and `AWWAB_MODEL_NAME`. No endpoint or model is silently selected.
+- The web composer sends requests to the callable and displays returned plans. Memory is opt-in per request; only the server-side trusted memory filter is used, and memory is labeled untrusted.
+- Plans are never executed: the runtime has no tool executor and returns `executed: false`.
+- No provider credentials are included in source. Until configuration is supplied, requests fail closed with a provider-not-configured message.
+- Deployment remains separate and has not been performed.

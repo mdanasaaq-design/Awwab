@@ -697,3 +697,31 @@ test("assistant memory context excludes expired, hidden, unconfirmed, and sensit
   assert.ok(result.result.totalChars <= result.result.maxChars);
   assert.match(result.result.untrustedDataNotice, /not instructions or permissions/i);
 });
+
+
+test("assistant callable requires authentication and a trusted device", async () => {
+  const request = {
+    deviceId: newDeviceId(),
+    requestId: randomUUID(),
+    conversationId: randomUUID(),
+    text: "Plan a small task",
+    includeMemoryContext: false,
+  };
+  const unauthenticated = await invokeCallable("runAssistant", request, null);
+  assert.equal(unauthenticated.ok, false);
+  assert.equal(unauthenticated.error.status, "UNAUTHENTICATED");
+
+  const user = await createAuthUser("assistant-untrusted");
+  const untrusted = await invokeCallable("runAssistant", request, user.idToken);
+  assert.equal(untrusted.ok, false);
+  assert.equal(untrusted.error.status, "NOT_FOUND");
+
+  const deviceId = newDeviceId();
+  const bootstrap = await invokeCallable("bootstrapFirstDevice", bootstrapPayload(deviceId), user.idToken);
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  const notConfigured = await invokeCallable("runAssistant", { ...request, deviceId }, user.idToken);
+  assert.equal(notConfigured.ok, false, JSON.stringify(notConfigured));
+  assert.equal(notConfigured.error.status, "FAILED_PRECONDITION");
+  assert.match(notConfigured.error.message, /provider is not configured/i);
+});
