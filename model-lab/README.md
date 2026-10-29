@@ -1,6 +1,6 @@
 # Awwab Model Lab (Stage 2)
 
-Awwab's first from-scratch model workbench. It contains a byte-level tokenizer, provenance-checked JSONL data loader, randomly initialized causal decoder-only Transformer, deterministic training loop, integrity-checked checkpoints, local generation, and validation metrics.
+Awwab's first from-scratch model workbench. It contains a byte-level tokenizer, provenance-checked JSONL data loader, randomly initialized causal decoder-only Transformer, deterministic training loop, versioned architecture-validated checkpoints, local generation, and validation metrics.
 
 **Status:** implementation scaffold; no trained Awwab checkpoint is included and the production assistant is still disabled. A tiny model is a systems proof-of-concept, not a capable general assistant.
 
@@ -57,7 +57,7 @@ Use an accurate source and license label for each item. The loader rejects missi
 
 ## Checkpoint contract
 
-Checkpoints include format/model/tokenizer versions, architecture configuration, seed, completed step count, data SHA-256, provenance summary, validation loss, and model state. Load verifies format and architecture metadata before constructing a model. Checkpoints are local pickle-based PyTorch artifacts; only load checkpoints you created or otherwise trust.
+Checkpoints are local PyTorch artifacts and should only be loaded if trusted. The loader validates format, model identity, tokenizer version, architecture metadata, and state-dict compatibility; this is not a cryptographic integrity guarantee. Checkpoints include format/model/tokenizer versions, architecture configuration, seed, completed step count, data SHA-256, provenance summary, validation loss, and model state. Load verifies format and architecture metadata before constructing a model. Checkpoints are local pickle-based PyTorch artifacts; only load checkpoints you created or otherwise trust.
 
 ## Known limitations
 
