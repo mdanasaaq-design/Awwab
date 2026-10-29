@@ -66,10 +66,16 @@ def evaluate_loss(model, tokens: list[int], *, seq_len: int, batch_size: int, ba
 
 
 def train(args) -> None:
-    if args.steps < 1 or args.batch_size < 1 or args.seq_len < 2 or args.eval_every < 1:
-        raise ValueError("steps, batch size, eval interval must be positive and seq_len >= 2")
+    if args.steps < 1 or args.batch_size < 1 or args.seq_len < 2 or args.eval_every < 1 or args.eval_batches < 1:
+        raise ValueError("steps, batch size, evaluation interval/batches must be positive and seq_len >= 2")
     if args.d_model < 8 or args.n_heads < 1 or args.n_layers < 1 or args.d_model % args.n_heads:
         raise ValueError("invalid model dimensions")
+    if not math.isfinite(args.learning_rate) or args.learning_rate <= 0:
+        raise ValueError("learning rate must be finite and positive")
+    if not math.isfinite(args.grad_clip) or args.grad_clip <= 0:
+        raise ValueError("gradient clip must be finite and positive")
+    if not math.isfinite(args.dropout) or not 0 <= args.dropout < 1:
+        raise ValueError("dropout must be finite and in [0, 1)")
     texts, manifest = load_jsonl(args.data)
     all_tokens = encode_corpus(texts)
     train_tokens, validation_tokens = split_tokens(all_tokens, args.seq_len)
