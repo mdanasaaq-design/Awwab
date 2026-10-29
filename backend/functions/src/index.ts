@@ -1,16 +1,14 @@
 import { getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { onCall, HttpsError, type CallableRequest } from "firebase-functions/v2/https";
-import { defineSecret } from "firebase-functions/params";
-import { runAssistantRequest, AssistantRuntimeError, type AssistantMemoryContext } from "./assistantRuntime.js";
-import { createOpenAICompatibleProvider } from "./assistantProvider.js";
+import { type AssistantMemoryContext } from "./assistantRuntime.js";
+import { AwwabModelUnavailableError, awwabModelRuntime } from "./awwabModel.js";
 
 if (getApps().length === 0) {
   initializeApp();
 }
 
 const db = getFirestore();
-const assistantModelApiKey = defineSecret("AWWAB_MODEL_API_KEY");
 
 type DevicePlatform = "web" | "android";
 type DeviceStatus = "pending" | "trusted" | "revoked";
@@ -399,85 +397,39 @@ export const getAssistantMemoryContext = onCall(async (request) => {
   return loadAssistantMemoryContextForTrustedDevice(uid, callerDeviceId);
 });
 
-async function enforceAssistantUsageLimit(uid: string): Promise<void> {
-  const now = new Date();
-  const minuteBucket = Math.floor(now.getTime() / 60_000);
-  const dayBucket = now.toISOString().slice(0, 10);
-  const minuteRef = db.doc(`users/${uid}/assistantUsage/minute_${minuteBucket}`);
-  const dayRef = db.doc(`users/${uid}/assistantUsage/day_${dayBucket}`);
+/**
+ * Assistant generation is intentionally unavailable until Awwab's own model
+ * is trained. This callable never configures or invokes an external provider.
+ */
+export const runAssistant = onCall(async (request) => {
+  const uid = requireAuth(request);
+  const data = (request.data ?? {}) as Record<string, unknown>;
+  const callerDeviceId = requireDeviceId(data.deviceId);
+  await requireTrustedCaller(uid, callerDeviceId);
 
-  await db.runTransaction(async (transaction) => {
-    const [minuteSnapshot, daySnapshot] = await Promise.all([
-      transaction.get(minuteRef),
-      transaction.get(dayRef),
-    ]);
-    const minuteCount = Number(minuteSnapshot.data()?.count ?? 0);
-    const dayCount = Number(daySnapshot.data()?.count ?? 0);
+  if (typeof data.includeMemoryContext !== "boolean") {
+    throw new HttpsError("invalid-argument", "includeMemoryContext must be explicitly true or false.");
+  }
+  if (typeof data.requestId !== "string" || !/^[A-Za-z0-9_-]{8,128}$/.test(data.requestId) ||
+      typeof data.conversationId !== "string" || !/^[A-Za-z0-9_-]{8,128}$/.test(data.conversationId) ||
+      typeof data.text !== "string" || !data.text.trim() || data.text.length > 4000) {
+    throw new HttpsError("invalid-argument", "The assistant request is invalid or exceeds its limits.");
+  }
 
-    if (minuteCount >= 3) {
-      throw new HttpsError("resource-exhausted", "Assistant rate limit reached. Wait a minute and try again.");
+  try {
+    return await awwabModelRuntime.generatePlan({
+      requestId: data.requestId,
+      conversationId: data.conversationId,
+      text: data.text.trim(),
+      includeMemoryContext: data.includeMemoryContext,
+    });
+  } catch (error) {
+    if (error instanceof AwwabModelUnavailableError) {
+      throw new HttpsError("failed-precondition", error.message);
     }
-    if (dayCount >= 20) {
-      throw new HttpsError("resource-exhausted", "Assistant daily limit reached. Try again tomorrow.");
-    }
-
-    transaction.set(minuteRef, { count: minuteCount + 1, updatedAt: FieldValue.serverTimestamp() });
-    transaction.set(dayRef, { count: dayCount + 1, updatedAt: FieldValue.serverTimestamp() });
-  });
-}
-
-export const runAssistant = onCall(
-  { secrets: [assistantModelApiKey], timeoutSeconds: 60, memory: "256MiB" },
-  async (request) => {
-    const uid = requireAuth(request);
-    const data = (request.data ?? {}) as Record<string, unknown>;
-    const callerDeviceId = requireDeviceId(data.deviceId);
-    await requireTrustedCaller(uid, callerDeviceId);
-    if (typeof data.includeMemoryContext !== "boolean") {
-      throw new HttpsError("invalid-argument", "includeMemoryContext must be explicitly true or false.");
-    }
-
-    let provider: ReturnType<typeof createOpenAICompatibleProvider> | null = null;
-    const apiKey = assistantModelApiKey.value();
-    const baseUrl = process.env.AWWAB_MODEL_BASE_URL ?? "";
-    const model = process.env.AWWAB_MODEL_NAME ?? "";
-    try {
-      if (apiKey && baseUrl && model) provider = createOpenAICompatibleProvider({ apiKey, baseUrl, model });
-    } catch {
-      throw new HttpsError("failed-precondition", "Assistant model configuration is invalid. Check server configuration.");
-    }
-
-    if (!provider) {
-      throw new HttpsError("failed-precondition", "Assistant model provider is not configured yet.");
-    }
-    await enforceAssistantUsageLimit(uid);
-
-    try {
-      return await runAssistantRequest({
-        requestId: data.requestId as string,
-        conversationId: data.conversationId as string,
-        text: data.text as string,
-        includeMemoryContext: data.includeMemoryContext,
-      }, {
-        provider,
-        loadMemoryContext: data.includeMemoryContext
-          ? () => loadAssistantMemoryContextForTrustedDevice(uid, callerDeviceId)
-          : undefined,
-      });
-    } catch (error) {
-      if (error instanceof AssistantRuntimeError) {
-        const status = error.code === "invalid_request" ? "invalid-argument"
-          : error.code === "provider_unavailable" || error.code === "context_unavailable" ? "failed-precondition"
-          : error.code === "cancelled" ? "cancelled" : "internal";
-        const message = error.code === "provider_unavailable"
-          ? "Assistant model provider is not configured yet."
-          : error.message;
-        throw new HttpsError(status, message);
-      }
-      throw new HttpsError("internal", "Assistant Core could not complete this request.");
-    }
-  },
-);
+    throw new HttpsError("internal", "Awwab's own model could not complete this request.");
+  }
+});
 
 async function writeActivity(
   uid: string,
