@@ -19,6 +19,7 @@ test("provider adapter parses a JSON plan from a compatible response", async (t)
     assert.equal(new Headers(init?.headers).get("authorization"), "Bearer test-key");
     const request = JSON.parse(String(init?.body));
     assert.equal(request.model, "test-model");
+    assert.equal(request.max_tokens, 1024);
     return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({
       summary: "Test plan", steps: [{ id: "step-1", description: "Review the request." }],
     }) } }] }), { status: 200, headers: { "content-type": "application/json" } });

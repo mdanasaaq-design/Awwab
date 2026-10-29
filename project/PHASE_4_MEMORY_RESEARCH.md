@@ -71,3 +71,12 @@ The Firestore rules suite requires the configured local Firestore emulator. The 
 - Plans are never executed: the runtime has no tool executor and returns `executed: false`.
 - No provider credentials are included in source. Until configuration is supplied, requests fail closed with a provider-not-configured message.
 - Deployment remains separate and has not been performed.
+
+
+## Free-start cost and request safeguards (2026-10-29)
+
+- Provider requests have a 30-second timeout and a hard maximum of 1,024 generated tokens per response.
+- The authenticated server callable enforces per-user limits of 3 requests per minute and 20 requests per UTC day before calling the configured model provider.
+- Requests fail closed when provider configuration is missing; no automatic paid fallback or provider switching is performed.
+- These controls cap request frequency and output length, but they do not guarantee zero charges if an administrator later configures a billable provider/account. Keep billing disabled unless explicitly approved and verify provider-specific free-tier settings before adding credentials.
+- Provider comparison: Groq is the recommended first trial to investigate because its documented Free Plan says over-limit requests are rate-limited rather than billed; Google Gemini also offers free-tier models, but its free-tier data-use terms deserve careful review before sending personal memories. Provider choice is not hard-coded into the runtime.

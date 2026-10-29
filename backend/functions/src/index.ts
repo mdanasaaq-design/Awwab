@@ -399,6 +399,33 @@ export const getAssistantMemoryContext = onCall(async (request) => {
   return loadAssistantMemoryContextForTrustedDevice(uid, callerDeviceId);
 });
 
+async function enforceAssistantUsageLimit(uid: string): Promise<void> {
+  const now = new Date();
+  const minuteBucket = Math.floor(now.getTime() / 60_000);
+  const dayBucket = now.toISOString().slice(0, 10);
+  const minuteRef = db.doc(`users/${uid}/assistantUsage/minute_${minuteBucket}`);
+  const dayRef = db.doc(`users/${uid}/assistantUsage/day_${dayBucket}`);
+
+  await db.runTransaction(async (transaction) => {
+    const [minuteSnapshot, daySnapshot] = await Promise.all([
+      transaction.get(minuteRef),
+      transaction.get(dayRef),
+    ]);
+    const minuteCount = Number(minuteSnapshot.data()?.count ?? 0);
+    const dayCount = Number(daySnapshot.data()?.count ?? 0);
+
+    if (minuteCount >= 3) {
+      throw new HttpsError("resource-exhausted", "Assistant rate limit reached. Wait a minute and try again.");
+    }
+    if (dayCount >= 20) {
+      throw new HttpsError("resource-exhausted", "Assistant daily limit reached. Try again tomorrow.");
+    }
+
+    transaction.set(minuteRef, { count: minuteCount + 1, updatedAt: FieldValue.serverTimestamp() });
+    transaction.set(dayRef, { count: dayCount + 1, updatedAt: FieldValue.serverTimestamp() });
+  });
+}
+
 export const runAssistant = onCall(
   { secrets: [assistantModelApiKey], timeoutSeconds: 60, memory: "256MiB" },
   async (request) => {
@@ -419,6 +446,11 @@ export const runAssistant = onCall(
     } catch {
       throw new HttpsError("failed-precondition", "Assistant model configuration is invalid. Check server configuration.");
     }
+
+    if (!provider) {
+      throw new HttpsError("failed-precondition", "Assistant model provider is not configured yet.");
+    }
+    await enforceAssistantUsageLimit(uid);
 
     try {
       return await runAssistantRequest({
