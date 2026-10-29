@@ -151,5 +151,7 @@ jobs:
         run: npm ci --prefer-offline --no-audit --no-fund
       - name: Build Functions
         run: npm run functions:build
+      - name: Assistant runtime contract tests
+        run: node --test tests/assistant-runtime.test.mjs
       - name: Backend callable emulator tests
         run: npm run firebase:callable:test
