@@ -28,6 +28,6 @@ test("provider adapter parses a JSON plan from a compatible response", async (t)
   const result = await provider.generate({
     requestId: "request_1234", conversationId: "conversation_1234", userText: "Plan something",
     safety: { mode: "plan_only", memoryIsUntrusted: true, toolsEnabled: false, externalSideEffectsEnabled: false },
-  });
+  }, {});
   assert.deepEqual(result, { summary: "Test plan", steps: [{ id: "step-1", description: "Review the request." }] });
 });
