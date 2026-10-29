@@ -41,7 +41,8 @@ def split_tokens(tokens: list[int], seq_len: int) -> tuple[list[int], list[int]]
             "add a small, appropriately licensed dataset or reduce --seq-len"
         )
     split = int(len(tokens) * 0.9)
-    split = max(seq_len + 1, min(split, len(tokens) - seq_len - 1))
+    # Each partition needs at least seq_len + 2 tokens for valid shifted batches.
+    split = max(seq_len + 2, min(split, len(tokens) - seq_len - 2))
     return tokens[:split], tokens[split:]
 
 
