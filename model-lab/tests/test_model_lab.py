@@ -36,13 +36,10 @@ class IndependenceBoundaryTests(unittest.TestCase):
                         node.func.id if isinstance(node.func, ast.Name) else ""
                     )
                     self.assertNotIn(function_name, blocked_calls, f"pretrained download call in {source_path}")
-                    if isinstance(node.func, ast.Attribute) and node.func.attr == "load" and isinstance(node.func.value, ast.Attribute):
-                        self.assertFalse(
-                            isinstance(node.func.value.value, ast.Name)
-                            and node.func.value.value.id == "torch"
-                            and node.func.value.attr == "hub",
-                            f"torch.hub.load is prohibited in {source_path}",
-                        )
+                    self.assertFalse(
+                        ast.unparse(node.func).startswith("torch.hub."),
+                        f"torch.hub model loading/downloading is prohibited in {source_path}",
+                    )
 
 
 class TokenizerTests(unittest.TestCase):
