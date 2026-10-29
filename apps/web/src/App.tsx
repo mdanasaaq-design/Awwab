@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { User } from "firebase/auth";
-import type { DeviceRecord } from "./device";
+import { getAssistantMemoryContext, type AssistantMemoryContext, type DeviceRecord } from "./device";
 import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
 import { MemoryPanel } from "./MemoryPanel";
@@ -86,6 +86,9 @@ export function App() {
   const [authError, setAuthError] = useState("");
   const [loading, setLoading] = useState(false);
   const [deviceStatus, setDeviceStatus] = useState("checking");
+  const [memoryContext, setMemoryContext] = useState<AssistantMemoryContext | null>(null);
+  const [memoryContextLoading, setMemoryContextLoading] = useState(false);
+  const [memoryContextError, setMemoryContextError] = useState("");
   const [devices, setDevices] = useState<DeviceRecord[]>([]);
   const [devicesLoading, setDevicesLoading] = useState(false);
   const [currentDeviceId, setCurrentDeviceId] = useState("");
@@ -231,6 +234,20 @@ export function App() {
     } else if (event.key === "Enter" && filteredSections[switcherIndex]) {
       event.preventDefault();
       navigateToSection(filteredSections[switcherIndex].id);
+    }
+  }
+
+  async function loadAssistantMemoryContext() {
+    setMemoryContextLoading(true);
+    setMemoryContextError("");
+    try {
+      const result = await getAssistantMemoryContext();
+      setMemoryContext(result);
+    } catch (error) {
+      setMemoryContextError(error instanceof Error ? error.message : "Could not load assistant memory context.");
+      setMemoryContext(null);
+    } finally {
+      setMemoryContextLoading(false);
     }
   }
 
@@ -513,6 +530,37 @@ export function App() {
                 <span>NO REQUESTS WILL BE SENT</span>
                 <span>Assistant Core v0 is planned</span>
               </div>
+            </section>
+
+            <section className="settings-card memory-context-preview" aria-labelledby="memory-context-preview-title">
+              <div className="section-title-row">
+                <div>
+                  <p className="eyebrow">CONTEXT BOUNDARY</p>
+                  <h2 id="memory-context-preview-title">Assistant memory context</h2>
+                  <p className="settings-description">Preview the safe, user-confirmed memories the backend would allow into a conversation. This is an explicit test—not automatic assistant retrieval.</p>
+                </div>
+                <button className="secondary" type="button" onClick={() => void loadAssistantMemoryContext()} disabled={memoryContextLoading || deviceStatus !== "trusted"}>
+                  {memoryContextLoading ? "Loading…" : "Preview context"}
+                </button>
+              </div>
+              {deviceStatus !== "trusted" && <p className="muted" role="status">A trusted device is required to retrieve context.</p>}
+              {memoryContextError && <p className="error" role="alert">{memoryContextError}</p>}
+              {memoryContext && (
+                <div className="memory-context-results" aria-live="polite">
+                  <p className="muted">{memoryContext.memories.length} eligible memories · {memoryContext.totalChars}/{memoryContext.maxChars} characters · sensitive records excluded</p>
+                  <p className="muted">{memoryContext.untrustedDataNotice}</p>
+                  {memoryContext.memories.length ? (
+                    <ul className="memory-context-list">
+                      {memoryContext.memories.map((memory) => (
+                        <li key={memory.id}>
+                          <span className="quiet-label">{memory.type.replaceAll("_", " ")}</span>
+                          <p>{memory.content}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : <p className="muted">No eligible memories are available for conversation context.</p>}
+                </div>
+              )}
             </section>
 
             <section className="system-overview" aria-label="Workspace status">
