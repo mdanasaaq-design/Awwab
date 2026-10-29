@@ -546,7 +546,7 @@ export function App() {
               {deviceStatus !== "trusted" && <p className="muted" role="status">A trusted device is required to retrieve context.</p>}
               {memoryContextError && <p className="error" role="alert">{memoryContextError}</p>}
               {memoryContext && (
-                <div className="memory-context-results" aria-live="polite">
+                <div className="memory-context-results" role="status" aria-live="polite">
                   <p className="muted">{memoryContext.memories.length} eligible memories · {memoryContext.totalChars}/{memoryContext.maxChars} characters · sensitive records excluded</p>
                   <p className="muted">{memoryContext.untrustedDataNotice}</p>
                   {memoryContext.memories.length ? (
