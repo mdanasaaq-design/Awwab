@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { User } from "firebase/auth";
-import type { DeviceRecord } from "./device";
+import { getAssistantMemoryContext, type AssistantMemoryContext, type DeviceRecord } from "./device";
 import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
+import { MemoryPanel } from "./MemoryPanel";
+import { ResearchPanel } from "./ResearchPanel";
 
 const sections = [
   { id: "assistant", label: "Assistant", glyph: "⌘", group: "WORKSPACE" },
   { id: "projects", label: "Projects", glyph: "▤", group: "WORKSPACE" },
   { id: "tasks", label: "Tasks", glyph: "☷", group: "WORKSPACE" },
   { id: "research", label: "Research", glyph: "⌕", group: "WORKSPACE" },
+  { id: "memories", label: "Memory", glyph: "◉", group: "WORKSPACE" },
   { id: "automations", label: "Automations", glyph: "↻", group: "WORKSPACE" },
   { id: "activity", label: "Activity", glyph: "◷", group: "SYSTEM" },
   { id: "settings", label: "Settings", glyph: "⚙", group: "SYSTEM" },
@@ -31,6 +34,11 @@ const sectionCopy: Record<Exclude<SectionId, "assistant" | "settings">, { title:
     eyebrow: "WORKSPACE / RESEARCH",
     title: "Research you can trace back to its sources.",
     description: "Research sessions, evidence, and cited findings will appear here when the research workflow is available.",
+  },
+  memories: {
+    eyebrow: "WORKSPACE / MEMORY",
+    title: "Keep useful context, on your terms.",
+    description: "Review and manage details you explicitly choose to save. Memory is not automatically sent to an assistant runtime.",
   },
   automations: {
     eyebrow: "WORKSPACE / AUTOMATIONS",
@@ -78,6 +86,9 @@ export function App() {
   const [authError, setAuthError] = useState("");
   const [loading, setLoading] = useState(false);
   const [deviceStatus, setDeviceStatus] = useState("checking");
+  const [memoryContext, setMemoryContext] = useState<AssistantMemoryContext | null>(null);
+  const [memoryContextLoading, setMemoryContextLoading] = useState(false);
+  const [memoryContextError, setMemoryContextError] = useState("");
   const [devices, setDevices] = useState<DeviceRecord[]>([]);
   const [devicesLoading, setDevicesLoading] = useState(false);
   const [currentDeviceId, setCurrentDeviceId] = useState("");
@@ -223,6 +234,20 @@ export function App() {
     } else if (event.key === "Enter" && filteredSections[switcherIndex]) {
       event.preventDefault();
       navigateToSection(filteredSections[switcherIndex].id);
+    }
+  }
+
+  async function loadAssistantMemoryContext() {
+    setMemoryContextLoading(true);
+    setMemoryContextError("");
+    try {
+      const result = await getAssistantMemoryContext();
+      setMemoryContext(result);
+    } catch (error) {
+      setMemoryContextError(error instanceof Error ? error.message : "Could not load assistant memory context.");
+      setMemoryContext(null);
+    } finally {
+      setMemoryContextLoading(false);
     }
   }
 
@@ -491,20 +516,46 @@ export function App() {
               <div className="panel-kicker">
                 <span className="assistant-glyph" aria-hidden="true">⌘</span>
                 <span>AWWAB ASSISTANT</span>
-                <span className="availability">CORE NOT CONNECTED</span>
+                <span className="availability">MODEL NOT TRAINED</span>
               </div>
-              <h2 id="assistant-title">What are we working on?</h2>
-              <p className="panel-description">
-                Conversation and tool execution are not connected yet. This workspace will become the place to plan, research, and act with your approval.
-              </p>
-              <div className="composer" aria-label="Assistant input unavailable">
-                <span className="composer-placeholder">The assistant runtime is not connected yet.</span>
-                <button className="composer-submit" type="button" disabled aria-label="Send request unavailable">↑</button>
+              <h2 id="assistant-title">Awwab is being built from the ground up.</h2>
+              <p className="panel-description">Awwab's own model has not been trained yet. We will not send your requests to another AI model or use one as a fallback.</p>
+              <div className="notice" role="status">
+                <strong>Independent model · not trained</strong>
+                <p className="muted">The Assistant Core interface is being prepared, but generation is disabled until Awwab's own model is trained and tested from random initialization.</p>
+                <p className="muted">Your saved memory preview and source research remain available separately. Memory is not being sent to any model.</p>
               </div>
-              <div className="composer-note">
-                <span>NO REQUESTS WILL BE SENT</span>
-                <span>Assistant Core v0 is planned</span>
+            </section>
+
+            <section className="settings-card memory-context-preview" aria-labelledby="memory-context-preview-title">
+              <div className="section-title-row">
+                <div>
+                  <p className="eyebrow">CONTEXT BOUNDARY</p>
+                  <h2 id="memory-context-preview-title">Assistant memory context</h2>
+                  <p className="settings-description">Preview the safe, user-confirmed memories the backend would allow into a conversation. This is an explicit test—not automatic assistant retrieval.</p>
+                </div>
+                <button className="secondary" type="button" onClick={() => void loadAssistantMemoryContext()} disabled={memoryContextLoading || deviceStatus !== "trusted"}>
+                  {memoryContextLoading ? "Loading…" : "Preview context"}
+                </button>
               </div>
+              {deviceStatus !== "trusted" && <p className="muted" role="status">A trusted device is required to retrieve context.</p>}
+              {memoryContextError && <p className="error" role="alert">{memoryContextError}</p>}
+              {memoryContext && (
+                <div className="memory-context-results" role="status" aria-live="polite">
+                  <p className="muted">{memoryContext.memories.length} eligible memories · {memoryContext.totalChars}/{memoryContext.maxChars} characters · sensitive records excluded</p>
+                  <p className="muted">{memoryContext.untrustedDataNotice}</p>
+                  {memoryContext.memories.length ? (
+                    <ul className="memory-context-list">
+                      {memoryContext.memories.map((memory) => (
+                        <li key={memory.id}>
+                          <span className="quiet-label">{memory.type.replaceAll("_", " ")}</span>
+                          <p>{memory.content}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : <p className="muted">No eligible memories are available for conversation context.</p>}
+                </div>
+              )}
             </section>
 
             <section className="system-overview" aria-label="Workspace status">
@@ -513,8 +564,8 @@ export function App() {
                   <span className="overview-glyph" aria-hidden="true">⌘</span>
                   <span>ASSISTANT CORE</span>
                 </div>
-                <strong className="overview-value status-pending">Not connected</strong>
-                <p>Requests remain disabled until the runtime is ready.</p>
+                <strong className="overview-value status-pending">Model not trained</strong>
+                <p>Awwab uses no other AI model; generation stays disabled until its own model is trained and evaluated.</p>
               </article>
               <article className="overview-card">
                 <div className="overview-card-heading">
@@ -531,8 +582,8 @@ export function App() {
                   <span className="overview-glyph" aria-hidden="true">▤</span>
                   <span>WORKSPACE DATA</span>
                 </div>
-                <strong className="overview-value status-pending">Not connected</strong>
-                <p>Projects, tasks, and research have no live data yet.</p>
+                <strong className="overview-value status-pending">Partially connected</strong>
+                <p>Memory management and live Wikipedia source lookup are available. Projects, tasks, and assistant retrieval remain disconnected.</p>
               </article>
             </section>
 
@@ -548,7 +599,8 @@ export function App() {
                 {[
                   { id: "projects" as const, number: "01", title: "Projects", description: "Repositories, decisions, and project context", glyph: "▤" },
                   { id: "tasks" as const, number: "02", title: "Tasks", description: "Commitments, priorities, and what comes next", glyph: "☷" },
-                  { id: "research" as const, number: "03", title: "Research", description: "Sources, evidence, and useful conclusions", glyph: "⌕" },
+                  { id: "research" as const, number: "03", title: "Research", description: "Live source lookup and citations", glyph: "⌕" },
+                  { id: "memories" as const, number: "04", title: "Memory", description: "Saved context you can inspect and correct", glyph: "◉" },
                 ].map((item) => (
                   <button className="workspace-row" type="button" key={item.id} onClick={() => setActiveSection(item.id)}>
                     <span className="workspace-row-number">{item.number}</span>
@@ -557,7 +609,7 @@ export function App() {
                       <strong>{item.title}</strong>
                       <small>{item.description}</small>
                     </span>
-                    <span className="workspace-row-status">NOT CONNECTED</span>
+                    <span className="workspace-row-status">{item.id === "research" || item.id === "memories" ? "AVAILABLE" : "NOT CONNECTED"}</span>
                     <span className="workspace-row-arrow" aria-hidden="true">↗</span>
                   </button>
                 ))}
@@ -575,7 +627,7 @@ export function App() {
           </div>
         )}
 
-        {activeSection !== "assistant" && activeSection !== "settings" && (
+        {activeSection !== "assistant" && activeSection !== "settings" && activeSection !== "memories" && activeSection !== "research" && (
           <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
             <div className="page-intro">
               <p className="eyebrow">{sectionCopy[activeSection].eyebrow}</p>
@@ -589,6 +641,28 @@ export function App() {
               <p>There is no live data here yet. We’ll connect this view to a real workflow before presenting it as ready to use.</p>
               <button className="secondary" type="button" onClick={() => setActiveSection("assistant")}>Back to command center</button>
             </section>
+          </div>
+        )}
+
+        {activeSection === "research" && (
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
+            <div className="page-intro">
+              <p className="eyebrow">WORKSPACE / RESEARCH</p>
+              <h1>Research you can trace back to its sources.</h1>
+              <p className="page-description">Search live source material, inspect the extracts, and open the original citations before relying on a claim.</p>
+            </div>
+            <ResearchPanel />
+          </div>
+        )}
+
+        {activeSection === "memories" && (
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
+            <div className="page-intro">
+              <p className="eyebrow">WORKSPACE / MEMORY</p>
+              <h1>Keep useful context, on your terms.</h1>
+              <p className="page-description">Review, correct, and delete what you choose to save. Nothing is inferred or sent to an assistant automatically.</p>
+            </div>
+            <MemoryPanel key={user.uid} uid={user.uid} />
           </div>
         )}
 

@@ -573,3 +573,155 @@ test("a revoked device cannot approve or revoke devices", async () => {
   assert.equal(listed.ok, true, JSON.stringify(listed));
   assert.equal(listed.result.devices.find((device) => device.deviceId === pendingDevice).status, "pending");
 });
+
+
+async function seedMemoryAsEmulatorAdmin(uid, memoryId, overrides = {}) {
+  const now = new Date();
+  const expiresAt = Object.hasOwn(overrides, "expiresAt")
+    ? overrides.expiresAt
+    : null;
+  const fields = {
+    content: { stringValue: "I prefer concise project updates." },
+    type: { stringValue: "explicit_preference" },
+    sourceKind: { stringValue: "user_explicit" },
+    confidence: { doubleValue: 1 },
+    sensitivity: { stringValue: "normal" },
+    createdAt: { timestampValue: now.toISOString() },
+    updatedAt: { timestampValue: now.toISOString() },
+    expiresAt: expiresAt
+      ? { timestampValue: new Date(expiresAt).toISOString() }
+      : { nullValue: null },
+    userVisible: { booleanValue: true },
+    confirmedByUser: { booleanValue: true },
+  };
+
+  for (const [key, value] of Object.entries(overrides)) {
+    if (key === "expiresAt") continue;
+    if (typeof value === "string") fields[key] = { stringValue: value };
+    else if (typeof value === "boolean") fields[key] = { booleanValue: value };
+    else if (typeof value === "number") fields[key] = { doubleValue: value };
+  }
+
+  const response = await fetch(
+    `http://127.0.0.1:8080/v1/projects/${PROJECT_ID}/databases/(default)/documents/users/${uid}/memories/${memoryId}`,
+    {
+      method: "PATCH",
+      headers: {
+        authorization: "Bearer owner",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ fields }),
+    },
+  );
+  const body = await response.json();
+  assert.equal(response.ok, true, `Memory seed failed: ${JSON.stringify(body)}`);
+}
+
+test("assistant memory context requires auth, explicit scope, and a trusted device", async () => {
+  const deviceId = newDeviceId();
+  const unauthenticated = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId, scope: "conversation_context" },
+    null,
+  );
+  assert.equal(unauthenticated.ok, false);
+  assert.equal(unauthenticated.error.status, "UNAUTHENTICATED");
+
+  const user = await createAuthUser("memory-context");
+  const untrusted = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId, scope: "conversation_context" },
+    user.idToken,
+  );
+  assert.equal(untrusted.ok, false);
+  assert.equal(untrusted.error.status, "NOT_FOUND");
+
+  const trustedDeviceId = newDeviceId();
+  const bootstrap = await invokeCallable(
+    "bootstrapFirstDevice",
+    bootstrapPayload(trustedDeviceId),
+    user.idToken,
+  );
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  const missingScope = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId: trustedDeviceId },
+    user.idToken,
+  );
+  assert.equal(missingScope.ok, false);
+  assert.equal(missingScope.error.status, "INVALID_ARGUMENT");
+
+  const empty = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId: trustedDeviceId, scope: "conversation_context" },
+    user.idToken,
+  );
+  assert.equal(empty.ok, true, JSON.stringify(empty));
+  assert.deepEqual(empty.result.memories, []);
+});
+
+test("assistant memory context excludes expired, hidden, unconfirmed, and sensitive records", async () => {
+  const user = await createAuthUser("memory-filter");
+  const deviceId = newDeviceId();
+  const bootstrap = await invokeCallable(
+    "bootstrapFirstDevice",
+    bootstrapPayload(deviceId),
+    user.idToken,
+  );
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  await seedMemoryAsEmulatorAdmin(user.localId, "valid-memory");
+  await seedMemoryAsEmulatorAdmin(user.localId, "sensitive-memory", {
+    sensitivity: "sensitive",
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "expired-memory", {
+    expiresAt: "2020-01-01T00:00:00.000Z",
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "hidden-memory", {
+    userVisible: false,
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "unconfirmed-memory", {
+    confirmedByUser: false,
+  });
+
+  const result = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId, scope: "conversation_context" },
+    user.idToken,
+  );
+  assert.equal(result.ok, true, JSON.stringify(result));
+  assert.equal(result.result.memories.length, 1, JSON.stringify(result.result.memories));
+  assert.equal(result.result.memories[0].id, "valid-memory");
+  assert.equal(result.result.scope, "conversation_context");
+  assert.ok(result.result.totalChars <= result.result.maxChars);
+  assert.match(result.result.untrustedDataNotice, /not instructions or permissions/i);
+});
+
+
+test("assistant callable requires authentication and a trusted device", async () => {
+  const request = {
+    deviceId: newDeviceId(),
+    requestId: randomUUID(),
+    conversationId: randomUUID(),
+    text: "Plan a small task",
+    includeMemoryContext: false,
+  };
+  const unauthenticated = await invokeCallable("runAssistant", request, null);
+  assert.equal(unauthenticated.ok, false);
+  assert.equal(unauthenticated.error.status, "UNAUTHENTICATED");
+
+  const user = await createAuthUser("assistant-untrusted");
+  const untrusted = await invokeCallable("runAssistant", request, user.idToken);
+  assert.equal(untrusted.ok, false);
+  assert.equal(untrusted.error.status, "NOT_FOUND");
+
+  const deviceId = newDeviceId();
+  const bootstrap = await invokeCallable("bootstrapFirstDevice", bootstrapPayload(deviceId), user.idToken);
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  const notConfigured = await invokeCallable("runAssistant", { ...request, deviceId }, user.idToken);
+  assert.equal(notConfigured.ok, false, JSON.stringify(notConfigured));
+  assert.equal(notConfigured.error.status, "FAILED_PRECONDITION");
+  assert.match(notConfigured.error.message, /Awwab\x27s own model has not been trained yet/i);
+});

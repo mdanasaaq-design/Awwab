@@ -404,7 +404,7 @@ test("notifications are readable/updatable by the owner but not client-created",
   await assertFails(deleteDoc(notification));
 });
 
-test("memories allow owner read/delete but not client creation or updates", async () => {
+test("legacy malformed memories remain owner-readable/deletable but cannot be forged through client writes", async () => {
   const alice = userContext("alice");
   const bob = userContext("bob");
   const db = alice.firestore();
@@ -464,4 +464,90 @@ test("jobs, connections, and bootstrap guard are not client-accessible", async (
   await assertFails(setDoc(doc(db, "users/alice/connections/connection-1"), { status: "connected" }));
   await assertFails(getDoc(doc(db, "users/alice/system/firstDeviceBootstrap")));
   await assertFails(setDoc(doc(db, "users/alice/system/firstDeviceBootstrap"), { deviceId: "forged" }));
+});
+
+
+function validMemory(overrides = {}) {
+  return {
+    content: "I prefer concise project updates.",
+    type: "explicit_preference",
+    sourceKind: "user_explicit",
+    sourceRef: "user-interface",
+    confidence: 1,
+    sensitivity: "normal",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    expiresAt: null,
+    userVisible: true,
+    confirmedByUser: true,
+    ...overrides,
+  };
+}
+
+test("memory writes are owner-scoped and schema-validated", async () => {
+  const alice = userContext("alice");
+  const bob = userContext("bob");
+  const aliceMemory = doc(alice.firestore(), "users/alice/memories/memory-1");
+  const otherOwnerPath = doc(alice.firestore(), "users/bob/memories/memory-2");
+
+  await assertSucceeds(setDoc(aliceMemory, validMemory()));
+  await assertSucceeds(getDoc(aliceMemory));
+  await assertFails(getDoc(doc(bob.firestore(), "users/alice/memories/memory-1")));
+  await assertFails(setDoc(otherOwnerPath, validMemory()));
+  await assertFails(setDoc(
+    doc(alice.firestore(), "users/alice/memories/oversized"),
+    validMemory({ content: "x".repeat(2001) }),
+  ));
+  await assertFails(setDoc(
+    doc(alice.firestore(), "users/alice/memories/bad-type"),
+    validMemory({ type: "medical_diagnosis" }),
+  ));
+  await assertFails(setDoc(
+    doc(alice.firestore(), "users/alice/memories/already-expired"),
+    validMemory({ expiresAt: new Date("2020-01-01T00:00:00.000Z") }),
+  ));
+  await assertFails(setDoc(
+    doc(alice.firestore(), "users/alice/memories/unconfirmed-sensitive"),
+    validMemory({ sensitivity: "sensitive", confirmedByUser: false }),
+  ));
+  await assertFails(setDoc(
+    doc(alice.firestore(), "users/alice/memories/inferred"),
+    validMemory({ sourceKind: "assistant_inference" }),
+  ));
+});
+
+test("memory correction requires user-corrected provenance and preserves creation time", async () => {
+  const alice = userContext("alice");
+  const ref = doc(alice.firestore(), "users/alice/memories/memory-1");
+  await assertSucceeds(setDoc(ref, validMemory()));
+  await assertSucceeds(updateDoc(ref, {
+    content: "I prefer short, clear project updates.",
+    sourceKind: "user_corrected",
+    sourceRef: "user-correction",
+    confidence: 1,
+    confirmedByUser: true,
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(ref, {
+    content: "Forged assistant memory",
+    sourceKind: "assistant_inference",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(ref, {
+    content: "Created-at tampering",
+    sourceKind: "user_corrected",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+});
+
+test("memory deletion is owner-scoped", async () => {
+  const alice = userContext("alice");
+  const bob = userContext("bob");
+  const aliceRef = doc(alice.firestore(), "users/alice/memories/memory-1");
+  await assertSucceeds(setDoc(aliceRef, validMemory()));
+  await assertFails(deleteDoc(doc(bob.firestore(), "users/alice/memories/memory-1")));
+  await assertSucceeds(deleteDoc(aliceRef));
+  const deleted = await assertSucceeds(getDoc(aliceRef));
+  assert.equal(deleted.exists(), false);
 });

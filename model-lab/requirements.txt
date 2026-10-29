@@ -1,0 +1,3 @@
+# Install explicitly in a user-managed virtual environment; no auto-install/download is performed.
+# Select the CPU/GPU wheel appropriate for your operating system from the official PyTorch instructions.
+torch>=2.2,<3
