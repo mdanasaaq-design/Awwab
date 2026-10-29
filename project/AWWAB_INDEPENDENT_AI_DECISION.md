@@ -37,10 +37,13 @@ A tiny model trained on a computer is a proof of concept, not a competitive gene
 - [x] Marked the older third-party local-model proposal as superseded and updated Phase 4 documentation.
 - [x] All five CI jobs passed on the initial Stage 1 commit; Stage 2 adds a separate dependency-free Model Lab CI job.
 
-### Stage 2 — Train a tiny model from scratch
-- Implement a reproducible tokenizer, small Transformer, training loop, checkpoints, and local inference.
-- Use synthetic or explicitly licensed data with recorded provenance. No private scraping or user-conversation training without consent.
-- Do not automatically download data/model files; ask first before large downloads or compute-heavy runs.
+### Stage 2 — Model Lab implementation (code scaffold added; training not yet run)
+- [x] Added a versioned reversible byte-level tokenizer and provenance-checked JSONL data loader.
+- [x] Added a small causal decoder-only Transformer whose weights initialize randomly, plus a configurable training loop, local checkpoint contract, local inference, and next-token loss/perplexity evaluation.
+- [x] Added standard-library tests for tokenizer round-trips, provenance enforcement, private-source rejection, and synthetic fixture creation; wired them into CI without installing PyTorch or downloading model/data files.
+- [ ] Run PyTorch-backed forward/backward, checkpoint round-trip, and generation smoke tests after the owner chooses and installs an appropriate PyTorch build. No training or weight downloads were run in this phase.
+- [ ] Add held-out evaluation and quality/safety benchmarks before any assistant integration.
+- Synthetic fixture is deliberately trivial. Use only owner-provided or appropriately licensed data with recorded provenance; no private scraping or user-conversation training without separate consent. No automatic data/model downloads or compute-heavy runs.
 
 ### Stage 3 — Evaluate and improve
 - Add train/validation splits, deduplication, checkpoint resume, loss/perplexity, structured-output, instruction-following, safety, latency, RAM, and power evaluations.
