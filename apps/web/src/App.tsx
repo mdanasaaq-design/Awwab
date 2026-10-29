@@ -564,8 +564,8 @@ export function App() {
                   <span className="overview-glyph" aria-hidden="true">⌘</span>
                   <span>ASSISTANT CORE</span>
                 </div>
-                <strong className="overview-value status-pending">Not connected</strong>
-                <p>Requests remain disabled until the runtime is ready.</p>
+                <strong className="overview-value status-pending">Model not trained</strong>
+                <p>Awwab uses no other AI model; generation stays disabled until its own model is trained and evaluated.</p>
               </article>
               <article className="overview-card">
                 <div className="overview-card-heading">
