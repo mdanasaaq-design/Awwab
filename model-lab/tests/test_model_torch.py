@@ -1,10 +1,13 @@
 """PyTorch-backed model tests; automatically skipped when PyTorch is not installed."""
 from __future__ import annotations
 
+import contextlib
+import io
 import sys
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -16,8 +19,11 @@ except ImportError:
 
 if torch is not None:
     from checkpoint import load_checkpoint, save_checkpoint
+    from data import write_synthetic
     from infer import generate, prepare_prompt_tokens
     from model import AwwabTransformer, ModelConfig
+    import train as train_module
+    import evaluate as evaluate_module
 
 
 @unittest.skipIf(torch is None, "PyTorch is optional and is not installed in dependency-free CI")
@@ -76,6 +82,38 @@ class ModelTests(unittest.TestCase):
             self.assertIsInstance(generated, str)
             self.assertTrue(generated.startswith("A"))
 
+    def test_tiny_training_checkpoint_and_evaluation_pipeline(self):
+        """Exercise the real CLI pipeline on generated toy data, without downloads."""
+        with tempfile.TemporaryDirectory() as directory:
+            data_path = Path(directory) / "synthetic.jsonl"
+            checkpoint_path = Path(directory) / "smoke.pt"
+            write_synthetic(data_path)
+            args = type("Args", (), {
+                "data": str(data_path), "out": str(checkpoint_path),
+                "steps": 2, "batch_size": 2, "seq_len": 8,
+                "eval_every": 1, "eval_batches": 1, "seed": 17,
+                "d_model": 16, "n_heads": 2, "n_layers": 1,
+                "dropout": 0.0, "learning_rate": 3e-4,
+                "grad_clip": 1.0, "device": "cpu",
+            })()
+            train_output = io.StringIO()
+            with contextlib.redirect_stdout(train_output):
+                train_module.train(args)
+            self.assertTrue(checkpoint_path.is_file())
+            self.assertIn("initial_val_loss=", train_output.getvalue())
+            self.assertIn("checkpoint_saved=", train_output.getvalue())
+            _, metadata = load_checkpoint(checkpoint_path)
+            self.assertEqual(metadata["step"], 2)
+            evaluation_output = io.StringIO()
+            with patch.object(sys, "argv", [
+                "evaluate.py", "--checkpoint", str(checkpoint_path),
+                "--data", str(data_path), "--device", "cpu",
+            ]), contextlib.redirect_stdout(evaluation_output):
+                evaluate_module.main()
+            self.assertIn("next_token_loss=", evaluation_output.getvalue())
+            self.assertIn("perplexity=", evaluation_output.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()
+"
