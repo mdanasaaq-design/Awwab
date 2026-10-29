@@ -723,5 +723,5 @@ test("assistant callable requires authentication and a trusted device", async ()
   const notConfigured = await invokeCallable("runAssistant", { ...request, deviceId }, user.idToken);
   assert.equal(notConfigured.ok, false, JSON.stringify(notConfigured));
   assert.equal(notConfigured.error.status, "FAILED_PRECONDITION");
-  assert.match(notConfigured.error.message, /provider is not configured/i);
+  assert.match(notConfigured.error.message, /Awwab\x27s own model has not been trained yet/i);
 });
