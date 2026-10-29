@@ -85,6 +85,41 @@ export async function listDevices(): Promise<DeviceRecord[]> {
   return result.data.devices;
 }
 
+export type AssistantMemoryContext = {
+  ok: true;
+  scope: "conversation_context";
+  trustedDeviceId: string;
+  maxRecords: number;
+  maxChars: number;
+  untrustedDataNotice: string;
+  memories: Array<{
+    id: string;
+    type: string;
+    content: string;
+    sourceKind: "user_explicit" | "user_corrected";
+    updatedAt: string | null;
+  }>;
+  totalChars: number;
+};
+
+/** Explicitly retrieve eligible memory for inspection by the signed-in user. */
+export async function getAssistantMemoryContext(): Promise<AssistantMemoryContext> {
+  const functions = getAwwabFunctions();
+  if (!functions) {
+    throw new Error("Firebase is not configured or no user is signed in.");
+  }
+
+  const callable = httpsCallable<
+    { deviceId: string; scope: "conversation_context" },
+    AssistantMemoryContext
+  >(functions, "getAssistantMemoryContext");
+  const result = await callable({
+    deviceId: getDeviceId(),
+    scope: "conversation_context",
+  });
+  return result.data;
+}
+
 export async function approveDevice(targetDeviceId: string) {
   const functions = getAwwabFunctions();
   if (!functions) {
