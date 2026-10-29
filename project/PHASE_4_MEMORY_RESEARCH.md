@@ -78,3 +78,10 @@ The Firestore rules suite requires the configured local Firestore emulator. The 
 - The active model boundary makes no network request and has no remote fallback.
 - Firebase Authentication, device state, and saved memories remain existing cloud dependencies; this work does not make the app fully offline.
 - No deployment, billing change, credential creation, model/data download, or paid infrastructure was performed.
+
+
+## Model Lab implementation (2026-10-29)
+
+Awwab's first independent model workbench is now in `model-lab/`: versioned byte-level tokenizer, JSONL data provenance checks, randomly initialized causal decoder-only Transformer, reproducible small-corpus training script, atomic versioned local checkpoints, local autoregressive inference, and next-token loss/perplexity evaluation. It contains no pretrained weights or external AI provider. A small synthetic fixture can be generated locally; no fixture corpus, checkpoint, or model weights are committed.
+
+The CI workflow checks Python syntax and standard-library tokenizer/data tests without installing PyTorch, downloading datasets, or running training. PyTorch-backed training, checkpoint round-trip, generation, and actual quality evaluation remain unverified until an explicit local dependency setup and smoke test. The production assistant remains disabled and does not load these checkpoints. Do not claim Awwab has a trained assistant until an actual checkpoint has been trained from random initialization, evaluated, and later integrated under a separate phase.
