@@ -4,7 +4,10 @@ from __future__ import annotations
 import argparse
 import random
 
-import torch
+try:
+    import torch
+except ImportError as exc:
+    raise SystemExit("Awwab Model Lab inference requires PyTorch 2.x. Install it explicitly; no package or model downloads are automatic.") from exc
 
 from checkpoint import load_checkpoint
 from tokenizer import BOS_ID, EOS_ID, encode, decode
