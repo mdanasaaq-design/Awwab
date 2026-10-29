@@ -97,7 +97,7 @@ class DataTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "bad.jsonl"
             path.write_text(json.dumps({
-                "text": "private", "source": "user_conversation_export", "license": "unknown"
+                "text": "private", "source": "user_conversation_export", "license": "CC0-1.0"
             }) + "\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "prohibited private-data"):
                 load_jsonl(path)
