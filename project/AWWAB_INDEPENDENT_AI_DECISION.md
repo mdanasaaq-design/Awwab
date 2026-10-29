@@ -29,13 +29,13 @@ A tiny model trained on a computer is a proof of concept, not a competitive gene
 
 ## Roadmap
 
-### Stage 1 — Independence boundary (implemented; CI pending)
+### Stage 1 — Independence boundary (implemented; CI passed on initial Stage 1 commit)
 - [x] Removed the external OpenAI-compatible adapter and its test; no provider secret is bound by the active callable.
 - [x] Added an Awwab-owned model interface with an explicit `not_trained` status and no remote fallback.
 - [x] Added deterministic no-network/fail-closed tests and wired them into CI.
 - [x] Disabled assistant generation in the UI and explained that Awwab's own model is not trained yet.
 - [x] Marked the older third-party local-model proposal as superseded and updated Phase 4 documentation.
-- [ ] Confirm all CI jobs pass on the final Stage 1 commit.
+- [x] All five CI jobs passed on the initial Stage 1 commit; Stage 2 adds a separate dependency-free Model Lab CI job.
 
 ### Stage 2 — Train a tiny model from scratch
 - Implement a reproducible tokenizer, small Transformer, training loop, checkpoints, and local inference.
@@ -61,6 +61,6 @@ A tiny model trained on a computer is a proof of concept, not a competitive gene
 - Desktop is validated before Android support is claimed.
 - No paid service, deployment, billing change, cloud training, or model/data download without explicit approval.
 
-## Next bounded task — Stage 2
+## Next bounded task — Stage 2 verification
 
 Design and implement Awwab Model Lab: a reproducible tokenizer/data pipeline, a small decoder-only Transformer initialized from random weights, a training loop, checkpoints, local inference, and evaluation. Start with synthetic or explicitly licensed data and record provenance. Before any compute-heavy training run or large data download, get the owner's explicit approval. Do not use third-party pretrained weights, teacher-model distillation, paid cloud training, or user conversations as training data without separate explicit opt-in. Do not deploy or change billing.
