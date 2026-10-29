@@ -418,3 +418,10 @@ button:disabled { cursor: not-allowed; opacity: .56; }
   .research-policy-note, .research-source { padding: 14px; }
   .research-source-status { text-align: right; }
 }
+
+.memory-context-preview { margin: 0 0 24px; }
+.memory-context-results { display: grid; gap: 8px; margin-top: 16px; }
+.memory-context-results > p { margin: 0; }
+.memory-context-list { display: grid; gap: 10px; margin: 4px 0 0; padding: 0; list-style: none; }
+.memory-context-list li { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.memory-context-list li p { margin: 6px 0 0; color: var(--text); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; white-space: pre-wrap; }
