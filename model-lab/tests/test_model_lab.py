@@ -82,14 +82,14 @@ class DataTests(unittest.TestCase):
             path = Path(directory) / "bad.jsonl"
             path.write_text(json.dumps({
                 "text": "hello", "source": "document-owner", "license": "unknown"
-            }) + "\\n", encoding="utf-8")
+            }) + "\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "placeholder license label"):
                 load_jsonl(path)
 
     def test_invalid_utf8_is_rejected_with_actionable_error(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "bad.jsonl"
-            path.write_bytes(b"\\xff\\xfe")
+            path.write_bytes(b"\xff\xfe")
             with self.assertRaisesRegex(ValueError, "valid UTF-8"):
                 load_jsonl(path)
 
