@@ -16,7 +16,7 @@ except ImportError:
 
 if torch is not None:
     from checkpoint import load_checkpoint, save_checkpoint
-    from infer import generate
+    from infer import generate, prepare_prompt_tokens
     from model import AwwabTransformer, ModelConfig
 
 
@@ -47,6 +47,11 @@ class ModelTests(unittest.TestCase):
             first_logits = self.model(first)
             changed_logits = self.model(changed_future)
         self.assertTrue(torch.allclose(first_logits[:, :3], changed_logits[:, :3], atol=1e-6))
+
+    def test_prompt_does_not_end_with_eos(self):
+        self.assertEqual(prepare_prompt_tokens("A"), [256, 65])
+        self.assertEqual(prepare_prompt_tokens("السلام"), [256] + list("السلام".encode("utf-8")))
+        self.assertEqual(prepare_prompt_tokens(""), [256])
 
     def test_checkpoint_round_trip_and_local_generation(self):
         with tempfile.TemporaryDirectory() as directory:
