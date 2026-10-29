@@ -399,7 +399,7 @@ export const getAssistantMemoryContext = onCall(async (request) => {
     }
 
     // Remove non-printing controls but preserve ordinary whitespace and Unicode.
-    const content = value.content.replace(/[\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]/g, "").trim();
+    const content = value.content.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim();
     if (!content || content.length > remainingChars) continue;
 
     memories.push({
