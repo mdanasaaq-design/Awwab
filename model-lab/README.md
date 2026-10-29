@@ -53,7 +53,7 @@ One JSON object per line:
 {"text":"Example training text.","source":"owner-authored-synthetic-fixture","license":"CC0-1.0"}
 ```
 
-Use an accurate source and license label for each item. The loader rejects missing provenance and known private-conversation source labels. This is a guardrail, not a legal review or proof that a dataset is safe to use.
+Use an accurate source and license label for each item. The loader rejects missing or placeholder provenance/license labels, invalid UTF-8, and known private-conversation source labels. This is a guardrail, not a legal review, license allowlist, or proof that a dataset is safe to use.
 
 ## Checkpoint contract
 
