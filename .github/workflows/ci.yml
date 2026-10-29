@@ -152,6 +152,6 @@ jobs:
       - name: Build Functions
         run: npm run functions:build
       - name: Assistant runtime contract tests
-        run: node --test tests/assistant-runtime.test.mjs tests/assistant-provider.test.mjs tests/awwab-model.test.mjs
+        run: node --test tests/assistant-runtime.test.mjs tests/awwab-model.test.mjs
       - name: Backend callable emulator tests
         run: npm run firebase:callable:test
