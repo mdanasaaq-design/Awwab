@@ -43,7 +43,7 @@ export function ResearchPanel() {
           const authors = (item.author ?? []).slice(0, 6).map((author) => [author.given, author.family].filter(Boolean).join(" ")).filter(Boolean);
           const year = item.published?.["date-parts"]?.[0]?.[0];
           const metadata = [authors.length ? authors.join(", ") : "Author details unavailable", year, item["container-title"]?.[0]].filter(Boolean).join(" · ");
-          const extract = (item.abstract ?? "Abstract unavailable from Crossref.").replace(/<[^>]*>/g, " ").replace(/\\s+/g, " ").trim().slice(0, 1800);
+          const extract = (item.abstract ?? "Abstract unavailable from Crossref.").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 1800);
           return [{ id: item.DOI ?? url, title, url, extract, provider: "CROSSREF · ACADEMIC METADATA", metadata }];
         }));
         return;
