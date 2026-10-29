@@ -167,20 +167,3 @@ export async function ensureUserProfile() {
   return callable();
 }
 
-export type AssistantPlan = {
-  ok: true; status: "planned"; providerId: string; requestId: string; conversationId: string;
-  summary: string; steps: Array<{ id: string; description: string }>;
-  executed: false; requiresHumanReview: true;
-};
-
-export async function runAssistant(text: string, includeMemoryContext: boolean, conversationId: string): Promise<AssistantPlan> {
-  const functions = getAwwabFunctions();
-  if (!functions) throw new Error("Firebase is not configured or no user is signed in.");
-  const callable = httpsCallable<{
-    deviceId: string; requestId: string; conversationId: string; text: string; includeMemoryContext: boolean;
-  }, AssistantPlan>(functions, "runAssistant");
-  const result = await callable({
-    deviceId: getDeviceId(), requestId: crypto.randomUUID(), conversationId, text, includeMemoryContext,
-  });
-  return result.data;
-}
