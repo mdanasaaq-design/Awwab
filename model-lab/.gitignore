@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+data/*.jsonl
+!data/README.md
