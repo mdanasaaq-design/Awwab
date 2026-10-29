@@ -67,7 +67,7 @@ The Firestore rules suite requires the configured local Firestore emulator. The 
 ## Independent model boundary (2026-10-29)
 
 - The owner decision in [AWWAB_INDEPENDENT_AI_DECISION.md](https://github.com/mdanasaaq-design/Awwab/blob/phase-4-memory-research-safety/project/AWWAB_INDEPENDENT_AI_DECISION.md) is authoritative.
-- The previous OpenAI-compatible adapter and provider-configurable request path have been disconnected from the active Assistant Core path. The active callable does not bind an AI API secret or call an external AI provider.
+- Removed the OpenAI-compatible external AI adapter and its tests. The active callable does not bind an AI API secret or call an external AI provider.
 - Awwab's own model interface reports `not_trained` and fails closed. The web UI does not submit assistant generation requests and explains why generation is unavailable.
 - The older provider adapter/runtime tests remain legacy contract tests only; they do not represent the active application path. Do not configure or enable that adapter.
 - No model training, model/data download, secret configuration, deployment, billing change, or paid infrastructure was performed.
