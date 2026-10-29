@@ -11,6 +11,20 @@ BLOCKED_SOURCE_MARKERS = (
     "user_conversation", "private_chat", "private_conversation",
     "personal_memory", "secret_dump",
 )
+PLACEHOLDER_LABELS = {
+    "", "unknown", "none", "null", "n/a", "na", "tbd", "todo",
+    "unspecified", "unlicensed", "no license", "no-license",
+    "not known", "not specified", "to be determined",
+}
+
+
+def _require_real_label(value: object, *, field: str, line_number: int) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"line {line_number} requires {field}")
+    normalized = " ".join(value.strip().lower().split())
+    if normalized in PLACEHOLDER_LABELS:
+        raise ValueError(f"line {line_number} has a placeholder {field}; record the actual provenance")
+    return value.strip()
 
 
 def load_jsonl(path: str | Path) -> tuple[list[str], dict[str, Any]]:
@@ -18,10 +32,14 @@ def load_jsonl(path: str | Path) -> tuple[list[str], dict[str, Any]]:
     raw = source_path.read_bytes()
     if not raw:
         raise ValueError("training file is empty")
+    try:
+        decoded = raw.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise ValueError("training file must be valid UTF-8") from exc
     texts: list[str] = []
     sources: set[str] = set()
     licenses: set[str] = set()
-    for line_number, line in enumerate(raw.decode("utf-8").splitlines(), start=1):
+    for line_number, line in enumerate(decoded.splitlines(), start=1):
         if not line.strip():
             continue
         try:
@@ -35,11 +53,9 @@ def load_jsonl(path: str | Path) -> tuple[list[str], dict[str, Any]]:
         license_name = row.get("license")
         if not isinstance(text, str) or not text.strip():
             raise ValueError(f"line {line_number} requires non-empty text")
-        if not isinstance(source, str) or not source.strip():
-            raise ValueError(f"line {line_number} requires source provenance")
-        if not isinstance(license_name, str) or not license_name.strip():
-            raise ValueError(f"line {line_number} requires a license label")
-        normalized_source = source.strip().lower()
+        source = _require_real_label(source, field="source provenance", line_number=line_number)
+        license_name = _require_real_label(license_name, field="license label", line_number=line_number)
+        normalized_source = source.lower()
         if any(marker in normalized_source for marker in BLOCKED_SOURCE_MARKERS):
             raise ValueError(f"line {line_number} uses a prohibited private-data source label")
         texts.append(text)
