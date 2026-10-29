@@ -1,0 +1,65 @@
+# Awwab Independent AI — Owner Decision
+
+**Decision date:** 2026-10-29  
+**Target:** Android phone and computer  
+**Priority:** Independence, privacy, and avoiding API charges  
+**Constraints:** No deployment, billing enablement, paid API use, model/data downloads, new cloud resources, or costs without explicit approval.
+
+## Non-negotiable direction
+
+Awwab is to become its own AI system. It must not be a wrapper around another AI, call another AI API, or depend on a third-party pretrained model as its intelligence engine. This supersedes the earlier local-first plan that proposed using an existing model via a local runtime.
+
+Awwab must eventually have its own model architecture, training pipeline, and model weights trained from random initialization. General-purpose software libraries for tensor math/training may be used; those are tools, not substitute AI models. No third-party pretrained weights or teacher-model distillation unless the owner explicitly changes this decision.
+
+## Be precise about capability
+
+We can build Awwab's own assistant software now: conversation handling, memory policy, retrieval/research, planning, safety, permissions, and deterministic tools. We must separately implement and train a neural model before claiming Awwab has its own trained generative intelligence.
+
+A tiny model trained on a computer is a proof of concept, not a competitive general-purpose assistant. High-quality general reasoning from scratch requires lawful, high-quality training data, compute, careful evaluation, and time. Do not promise frontier-level ability or continuous learning without evidence.
+
+## Architecture
+
+1. **Awwab Core:** owned orchestration, memory/context policy, retrieval, permissions, response validation, safety, and tool authorization.
+2. **Awwab Model Lab:** our tokenizer/data pipeline, a small decoder-only Transformer initialized randomly, training loop, checkpoints, inference implementation, reproducibility, and evaluations.
+3. **Desktop-first development:** train and evaluate a small model on the user's computer, CPU-first where practical. Do not use paid cloud training.
+4. **Phone inference:** once a trained checkpoint exists, port or optimize inference for Android/Termux and measure actual RAM, speed, battery, and thermal limits. Do not claim phone support until tested.
+5. **Knowledge and memory:** Awwab-owned retrieval and user-approved memory can complement the model. Stored memory is not training. User conversations must not be used as training data without a separate explicit opt-in and deletion/privacy controls.
+6. **No remote AI fallback:** if Awwab's own model is missing or cannot answer well, report the limitation or use Awwab-owned deterministic/retrieval features. Never silently call another AI.
+7. **Cloud transparency:** current authentication, device state, and saved memories use Firebase/Firestore. These are existing cloud dependencies, so the application is not fully offline/local yet. Local persistence and optional cloud sync require a separate phase; do not silently migrate/delete existing data.
+
+## Roadmap
+
+### Stage 1 — Independence boundary (next task)
+- Disconnect the OpenAI-compatible adapter from the active Assistant Core path; do not configure its secret or endpoint.
+- Introduce an Awwab-owned model interface, not a remote-provider selector.
+- Add tests proving the default path makes no remote inference calls and has no fallback.
+- If model weights are missing/untrained, show an honest unavailable/experimental status.
+- Update UI and project documentation to distinguish the Awwab-owned Core from the not-yet-trained model.
+
+### Stage 2 — Train a tiny model from scratch
+- Implement a reproducible tokenizer, small Transformer, training loop, checkpoints, and local inference.
+- Use synthetic or explicitly licensed data with recorded provenance. No private scraping or user-conversation training without consent.
+- Do not automatically download data/model files; ask first before large downloads or compute-heavy runs.
+
+### Stage 3 — Evaluate and improve
+- Add train/validation splits, deduplication, checkpoint resume, loss/perplexity, structured-output, instruction-following, safety, latency, RAM, and power evaluations.
+- Publish a model card with data provenance, licensing, limitations, and measured results.
+- Increase model size only after benchmarks justify resource use.
+
+### Stage 4 — Phone support and local persistence
+- Validate Android/Termux inference on real hardware.
+- Separately design local memory persistence and explicit optional cloud sync. Keep user memory, training examples, and model weights as distinct data classes.
+
+## Acceptance criteria
+
+- No third-party pretrained model weights are needed for Awwab's own model.
+- No external AI API calls or automatic remote fallback.
+- Model training begins from random initialization with documented data provenance.
+- Missing weights never result in fake claims of intelligence.
+- A small checkpoint is trained, saved, loaded, and evaluated locally before claiming model capability.
+- Desktop is validated before Android support is claimed.
+- No paid service, deployment, billing change, cloud training, or model/data download without explicit approval.
+
+## Immediate bounded task
+
+Implement Stage 1 only. Do not start training, download data or weights, install runtimes, configure secrets, deploy, or incur costs in this stage.
