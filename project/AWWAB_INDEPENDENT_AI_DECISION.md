@@ -40,7 +40,9 @@ A tiny model trained on a computer is a proof of concept, not a competitive gene
 ### Stage 2 — Model Lab implementation (code scaffold added; training not yet run)
 - [x] Added a versioned reversible byte-level tokenizer and provenance-checked JSONL data loader.
 - [x] Added a small causal decoder-only Transformer whose weights initialize randomly, plus a configurable training loop, local checkpoint contract, local inference, and next-token loss/perplexity evaluation.
-- [x] Added standard-library tests for tokenizer round-trips, provenance enforcement, private-source rejection, and synthetic fixture creation; wired them into CI without installing PyTorch or downloading model/data files.
+- [x] Added standard-library tests for tokenizer round-trips, provenance enforcement, private-source rejection, synthetic fixture creation, and an AST guard against network/pretrained-model imports; wired them into CI without installing PyTorch or downloading model/data files.
+- [x] Added optional PyTorch tests for forward/backward gradients, causal masking, prompt construction, checkpoint round-trip, and local generation; these are skipped when PyTorch is not installed in dependency-free CI.
+- [x] Fixed prompt construction so local generation does not condition on an end-of-sequence token, and added finite/positive checks for optimizer and evaluation settings.
 - [ ] Run PyTorch-backed forward/backward, checkpoint round-trip, and generation smoke tests after the owner chooses and installs an appropriate PyTorch build. No training or weight downloads were run in this phase.
 - [ ] Add held-out evaluation and quality/safety benchmarks before any assistant integration.
 - Synthetic fixture is deliberately trivial. Use only owner-provided or appropriately licensed data with recorded provenance; no private scraping or user-conversation training without separate consent. No automatic data/model downloads or compute-heavy runs.
