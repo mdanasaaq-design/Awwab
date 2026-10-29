@@ -155,3 +155,22 @@ jobs:
         run: node --test tests/assistant-runtime.test.mjs tests/awwab-model.test.mjs
       - name: Backend callable emulator tests
         run: npm run firebase:callable:test
+
+  model-lab-stdlib:
+    name: Model Lab tokenizer and data checks (no model downloads)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile Model Lab Python sources
+        run: python -m py_compile model-lab/*.py model-lab/tests/*.py
+      - name: Run standard-library tokenizer and provenance tests
+        run: python -m unittest discover -s model-lab/tests -v
+      - name: Validate synthetic fixture generation and provenance
+        run: |
+          python model-lab/data.py --write-synthetic "$RUNNER_TEMP/awwab-synthetic.jsonl"
+          python model-lab/data.py --validate "$RUNNER_TEMP/awwab-synthetic.jsonl"
