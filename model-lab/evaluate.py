@@ -4,8 +4,11 @@ from __future__ import annotations
 import argparse
 import math
 
-import torch
-from torch.nn import functional as F
+try:
+    import torch
+    from torch.nn import functional as F
+except ImportError as exc:
+    raise SystemExit("Awwab Model Lab evaluation requires PyTorch 2.x. Install it explicitly; no package or model downloads are automatic.") from exc
 
 from checkpoint import load_checkpoint
 from data import load_jsonl
