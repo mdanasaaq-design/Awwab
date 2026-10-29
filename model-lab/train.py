@@ -7,8 +7,11 @@ from pathlib import Path
 import random
 import sys
 
-import torch
-from torch.nn import functional as F
+try:
+    import torch
+    from torch.nn import functional as F
+except ImportError as exc:
+    raise SystemExit("Awwab Model Lab requires PyTorch 2.x. Install it explicitly in a virtual environment; no package or model downloads are automatic.") from exc
 
 from checkpoint import save_checkpoint
 from data import load_jsonl
@@ -70,7 +73,8 @@ def train(args) -> None:
     all_tokens = encode_corpus(texts)
     train_tokens, validation_tokens = split_tokens(all_tokens, args.seq_len)
     set_seed(args.seed)
-    device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else args.device)
+    device_name = ("cuda" if torch.cuda.is_available() else "cpu") if args.device == "auto" else args.device
+    device = torch.device(device_name)
     if device.type == "cuda" and not torch.cuda.is_available():
         raise ValueError("CUDA requested but unavailable")
     config = ModelConfig(d_model=args.d_model, n_heads=args.n_heads, n_layers=args.n_layers,
