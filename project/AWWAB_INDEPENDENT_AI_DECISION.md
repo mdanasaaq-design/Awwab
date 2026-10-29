@@ -29,12 +29,13 @@ A tiny model trained on a computer is a proof of concept, not a competitive gene
 
 ## Roadmap
 
-### Stage 1 — Independence boundary (next task)
-- Disconnect the OpenAI-compatible adapter from the active Assistant Core path; do not configure its secret or endpoint.
-- Introduce an Awwab-owned model interface, not a remote-provider selector.
-- Add tests proving the default path makes no remote inference calls and has no fallback.
-- If model weights are missing/untrained, show an honest unavailable/experimental status.
-- Update UI and project documentation to distinguish the Awwab-owned Core from the not-yet-trained model.
+### Stage 1 — Independence boundary (implemented; CI pending)
+- [x] Removed the external OpenAI-compatible adapter and its test; no provider secret is bound by the active callable.
+- [x] Added an Awwab-owned model interface with an explicit `not_trained` status and no remote fallback.
+- [x] Added deterministic no-network/fail-closed tests and wired them into CI.
+- [x] Disabled assistant generation in the UI and explained that Awwab's own model is not trained yet.
+- [x] Marked the older third-party local-model proposal as superseded and updated Phase 4 documentation.
+- [ ] Confirm all CI jobs pass on the final Stage 1 commit.
 
 ### Stage 2 — Train a tiny model from scratch
 - Implement a reproducible tokenizer, small Transformer, training loop, checkpoints, and local inference.
@@ -60,6 +61,6 @@ A tiny model trained on a computer is a proof of concept, not a competitive gene
 - Desktop is validated before Android support is claimed.
 - No paid service, deployment, billing change, cloud training, or model/data download without explicit approval.
 
-## Immediate bounded task
+## Next bounded task — Stage 2
 
-Implement Stage 1 only. Do not start training, download data or weights, install runtimes, configure secrets, deploy, or incur costs in this stage.
+Design and implement Awwab Model Lab: a reproducible tokenizer/data pipeline, a small decoder-only Transformer initialized from random weights, a training loop, checkpoints, local inference, and evaluation. Start with synthetic or explicitly licensed data and record provenance. Before any compute-heavy training run or large data download, get the owner's explicit approval. Do not use third-party pretrained weights, teacher-model distillation, paid cloud training, or user conversations as training data without separate explicit opt-in. Do not deploy or change billing.
