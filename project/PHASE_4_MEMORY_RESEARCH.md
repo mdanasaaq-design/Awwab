@@ -1,6 +1,6 @@
 # Phase 4 — Personal memory and source research
 
-**Status:** Memory storage, bounded server-side memory retrieval contract, and two-source research lookup are implemented on `phase-4-memory-research-safety`. Full Phase 4 remains gated on wiring the retrieval contract into an Assistant Core runtime, which does not yet exist in this branch.
+**Status:** Memory storage, bounded server-side memory retrieval, and two-source research lookup are implemented on `phase-4-memory-research-safety`. The Assistant Core request boundary exists, but generation is intentionally disabled until Awwab's own model is trained from scratch. The independent-AI owner decision supersedes all earlier third-party provider plans.
 **Baseline:** Phase 4 policy prototype commit `d0e4ecf00557f57a7532b1e1db267a8ec293a9cf`
 **Budget:** $0 additions; no secrets, paid APIs, cloud resource creation, or production deployment.
 
@@ -32,7 +32,8 @@
 ## Remaining Phase 4 gates
 
 - [x] Added a provider-neutral, plan-only Assistant Core runtime boundary with typed requests/responses/errors, bounded input/output validation, cancellation, explicit opt-in memory loading, and hard-coded no-tools/no-side-effects safety flags. A deterministic mock provider and automated contract tests run without network calls or model charges.
-- [ ] Configure a real model adapter/provider and connect an authenticated server callable to the runtime. The assistant composer remains disabled; the mock is test-only, and this branch does not claim to generate real replies or automatically invoke memory during conversations.
+- [x] Disconnect the external AI provider from the active callable; add an Awwab-owned model interface whose default status is `not_trained`; fail closed with no remote fallback; disable the generation composer in the UI; and add deterministic no-network tests.
+- [ ] Implement and train Awwab's own model from random initialization, then validate local inference and model quality. Until that work is complete, Awwab does not generate model-based assistant replies.
 - [ ] Expand research beyond Wikipedia and Crossref to general web/document sources, durable research sessions, deduplication/ranking across providers, and source-linked claim synthesis. Current results remain provider-ranked extracts/metadata; Awwab does not independently verify claims or generate a synthesis.
 - [ ] Complete end-to-end privacy/security testing in a running app and perform an independent review.
 - [ ] Re-run CI against the final Phase 4 implementation commits and inspect every job result before considering the branch ready for review.
@@ -63,20 +64,17 @@ npm run firebase:callable:test
 The Firestore rules suite requires the configured local Firestore emulator. The repository's CI workflow runs the automated typecheck/build, rules, callable, and prototype checks.
 
 
-## Assistant Core server connection (2026-10-29)
+## Independent model boundary (2026-10-29)
 
-- Added authenticated `runAssistant` callable; it requires a signed-in user and a trusted device.
-- Added a configurable OpenAI-compatible chat-completions adapter. Configure Firebase secret `AWWAB_MODEL_API_KEY` and server environment values `AWWAB_MODEL_BASE_URL` and `AWWAB_MODEL_NAME`. No endpoint or model is silently selected.
-- The web composer sends requests to the callable and displays returned plans. Memory is opt-in per request; only the server-side trusted memory filter is used, and memory is labeled untrusted.
-- Plans are never executed: the runtime has no tool executor and returns `executed: false`.
-- No provider credentials are included in source. Until configuration is supplied, requests fail closed with a provider-not-configured message.
-- Deployment remains separate and has not been performed.
+- The owner decision in [AWWAB_INDEPENDENT_AI_DECISION.md](https://github.com/mdanasaaq-design/Awwab/blob/phase-4-memory-research-safety/project/AWWAB_INDEPENDENT_AI_DECISION.md) is authoritative.
+- The previous OpenAI-compatible adapter and provider-configurable request path have been disconnected from the active Assistant Core path. The active callable does not bind an AI API secret or call an external AI provider.
+- Awwab's own model interface reports `not_trained` and fails closed. The web UI does not submit assistant generation requests and explains why generation is unavailable.
+- The older provider adapter/runtime tests remain legacy contract tests only; they do not represent the active application path. Do not configure or enable that adapter.
+- No model training, model/data download, secret configuration, deployment, billing change, or paid infrastructure was performed.
 
+## Cost and privacy boundary
 
-## Free-start cost and request safeguards (2026-10-29)
-
-- Provider requests have a 30-second timeout and a hard maximum of 1,024 generated tokens per response.
-- The authenticated server callable enforces per-user limits of 3 requests per minute and 20 requests per UTC day before calling the configured model provider.
-- Requests fail closed when provider configuration is missing; no automatic paid fallback or provider switching is performed.
-- These controls cap request frequency and output length, but they do not guarantee zero charges if an administrator later configures a billable provider/account. Keep billing disabled unless explicitly approved and verify provider-specific free-tier settings before adding credentials.
-- Provider comparison: Groq is the recommended first trial to investigate because its documented Free Plan says over-limit requests are rate-limited rather than billed; Google Gemini also offers free-tier models, but its free-tier data-use terms deserve careful review before sending personal memories. Provider choice is not hard-coded into the runtime.
+- No AI provider is configured or invoked by the active Assistant Core path.
+- The active model boundary makes no network request and has no remote fallback.
+- Firebase Authentication, device state, and saved memories remain existing cloud dependencies; this work does not make the app fully offline.
+- No deployment, billing change, credential creation, model/data download, or paid infrastructure was performed.
