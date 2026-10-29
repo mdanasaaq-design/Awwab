@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 import random
 
 try:
@@ -13,14 +14,21 @@ from checkpoint import load_checkpoint
 from tokenizer import BOS_ID, EOS_ID, encode, decode
 
 
+def prepare_prompt_tokens(prompt: str) -> list[int]:
+    if not isinstance(prompt, str):
+        raise TypeError("prompt must be a string")
+    # Prompt ends at its final UTF-8 byte; EOS belongs to training targets, not the prompt.
+    return [BOS_ID] + encode(prompt, add_special_tokens=False)
+
+
 @torch.no_grad()
 def generate(model, prompt: str, *, max_new_tokens: int, seed: int, temperature: float = 0.8) -> str:
-    if max_new_tokens < 1 or temperature <= 0:
+    if max_new_tokens < 1 or not math.isfinite(temperature) or temperature <= 0:
         raise ValueError("max_new_tokens and temperature must be positive")
     random.seed(seed)
     torch.manual_seed(seed)
     device = next(model.parameters()).device
-    prompt_tokens = encode(prompt)
+    prompt_tokens = prepare_prompt_tokens(prompt)
     # Keep the most recent context so generation remains inside the configured window.
     tokens = prompt_tokens[:]
     for _ in range(max_new_tokens):
