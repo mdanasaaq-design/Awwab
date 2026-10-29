@@ -1,6 +1,7 @@
 """Standard-library tests for data provenance and tokenizer; no model weights/network needed."""
 from __future__ import annotations
 
+import ast
 import json
 from pathlib import Path
 import sys
@@ -12,6 +13,29 @@ sys.path.insert(0, str(ROOT))
 
 from data import load_jsonl, write_synthetic
 from tokenizer import BOS_ID, EOS_ID, TOKENIZER_VERSION, VOCAB_SIZE, decode, encode
+
+
+class IndependenceBoundaryTests(unittest.TestCase):
+    def test_model_lab_has_no_network_or_pretrained_model_imports(self):
+        blocked_roots = {
+            "requests", "httpx", "urllib", "socket", "openai",
+            "transformers", "sentence_transformers", "huggingface_hub",
+        }
+        blocked_calls = {"from_pretrained", "download_url_to_file"}
+        for source_path in ROOT.glob("*.py"):
+            tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    roots = {alias.name.split(".")[0] for alias in node.names}
+                    self.assertFalse(roots & blocked_roots, f"network/pretrained import in {source_path}")
+                elif isinstance(node, ast.ImportFrom):
+                    root = (node.module or "").split(".")[0]
+                    self.assertNotIn(root, blocked_roots, f"network/pretrained import in {source_path}")
+                elif isinstance(node, ast.Call):
+                    function_name = node.func.attr if isinstance(node.func, ast.Attribute) else (
+                        node.func.id if isinstance(node.func, ast.Name) else ""
+                    )
+                    self.assertNotIn(function_name, blocked_calls, f"pretrained download call in {source_path}")
 
 
 class TokenizerTests(unittest.TestCase):
