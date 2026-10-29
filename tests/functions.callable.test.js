@@ -590,7 +590,7 @@ async function seedMemoryAsEmulatorAdmin(uid, memoryId, overrides = {}) {
     updatedAt: { timestampValue: now.toISOString() },
     expiresAt: expiresAt
       ? { timestampValue: new Date(expiresAt).toISOString() }
-      : { nullValue: "NULL_VALUE" },
+      : { nullValue: null },
     userVisible: { booleanValue: true },
     confirmedByUser: { booleanValue: true },
   };
