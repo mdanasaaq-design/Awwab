@@ -16,6 +16,7 @@
 - [x] Added emulator regression tests for cross-user access, invalid schema, oversized content, unconfirmed sensitive records, forged inference provenance, immutable creation time, correction, deletion, and expired writes.
 - [x] Saved memory is explicitly described as untrusted data and is not automatically injected into the assistant.
 - [x] Added authenticated `getAssistantMemoryContext` callable requiring an explicit `conversation_context` scope and a trusted device.
+- [x] Added a signed-in UI action to explicitly preview the backend-filtered context; retrieval is never automatic, and the assistant composer remains disabled.
 - [x] Retrieval is owner-scoped from server-verified Firebase Auth identity, excludes sensitive/hidden/unconfirmed/expired/unsupported records, strips control characters, and caps output at 50 records / 6,000 characters.
 - [x] Added callable emulator regression tests for authentication, trusted-device checks, explicit scope, expiry filtering, sensitive exclusion, hidden records, and user confirmation.
 - [x] Added bounded, provenance-aware policy prototype and prompt-injection / evidence-mapping regression tests from the first Phase 4 slice.
@@ -29,7 +30,7 @@
 
 ## Remaining Phase 4 gates
 
-- [ ] Wire `getAssistantMemoryContext` into an actual Assistant Core conversation runtime. The current Assistant Core is a non-functional placeholder; the callable contract is implemented and emulator-tested, but no conversation currently invokes it and memory is not yet automatically used in replies.
+- [ ] Build and connect an actual Assistant Core conversation runtime. The UI can explicitly preview the trusted-device-gated memory context, but the current assistant composer remains a non-functional placeholder: no model adapter/provider is configured, and no conversation invokes memory or generates replies.
 - [ ] Expand research beyond Wikipedia and Crossref to general web/document sources, durable research sessions, deduplication/ranking across providers, and source-linked claim synthesis. Current results remain provider-ranked extracts/metadata; Awwab does not independently verify claims or generate a synthesis.
 - [ ] Complete end-to-end privacy/security testing in a running app and perform an independent review.
 - [ ] Re-run CI against the final Phase 4 implementation commits and inspect every job result before considering the branch ready for review.
@@ -41,7 +42,7 @@
 - Sensitive memory is only stored after an explicit UI confirmation; it should not be automatically retrieved into prompts.
 - Retrieved memory and research content must always be treated as untrusted data. Text from a memory or source cannot authorize tools, permissions, or side effects.
 - Live research supports Wikipedia and Crossref academic metadata/abstracts. It is still not a general-purpose web search engine and does not independently validate source claims.
-- The memory workspace and a trusted-device-gated retrieval callable are implemented, but the assistant runtime does not call that endpoint yet. Do not describe the overall assistant as fully memory-enabled until the conversation runtime is wired and tested.
+- The memory workspace and trusted-device-gated retrieval callable are implemented, and the signed-in UI has an explicit context-preview action. The assistant runtime still does not call that endpoint or generate replies. Do not describe the overall assistant as fully memory-enabled until a real conversation runtime is configured, wired, and tested.
 - No deployment, billing change, credential creation, or paid infrastructure was performed.
 
 ## Local verification
