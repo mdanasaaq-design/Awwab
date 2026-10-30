@@ -155,3 +155,10 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 - Commits: `156a2391d53b046db7f030d7018a26afa2b179ed` (Rules), `6284409d460d861e0bad5f1148284819e4b957ea` (tests).
 - CI run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) is pending; inspect all six jobs before marking this slice validated.
 - Keep task/project linking disabled until the branch Rules change is reviewed, merged and explicitly deployed to the target Firebase project. Do not deploy or merge without explicit owner approval.
+
+
+### Latest Rules test correction — 2026-10-30
+
+- First run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) failed because the task update rule still called `validTask` with one argument. The emulator error identified the missing `uid` parameter.
+- Corrected update to pass `uid` in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1`.
+- Re-run the complete CI suite on the current PR head before claiming success. Keep project linking disabled until reviewed/merged Rules are explicitly deployed. No merge/deploy authorized.
