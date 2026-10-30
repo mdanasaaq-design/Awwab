@@ -71,3 +71,8 @@
 - Add task creation with priority/due date, status filtering and updates, and deletion.
 - Keep project references disabled until same-user reference validation is present in the active Firestore Rules.
 - CI, emulator and browser validation are pending; no deployment or live Rules change was performed.
+
+
+### Activity history — 2026-10-30
+- Add a read-only, account-scoped view of the latest 100 backend-recorded activity events.
+- The feed reports only stored events; it does not synthesize success or create new audit entries. Live content depends on the backend recording events.
