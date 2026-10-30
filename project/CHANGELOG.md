@@ -92,3 +92,12 @@
 - All six CI jobs passed on tested head `60ca4f9aacf76239ea57082e70a5483974067402` in [run 41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092).
 - Firestore Rules and backend callable emulator suites passed with the workspace lifecycle and completion-state changes.
 - Browser acceptance and live Rules deployment remain pending; no merge or deployment was performed.
+
+
+### Backend reliability and trusted-device architecture — 2026-10-30
+- Made device registration and its audit event transactional; concurrent duplicate registration is retry-idempotent.
+- Made user profile initialization transactional to avoid concurrent first-create races.
+- Added callable emulator tests for duplicate registration races, profile initialization races, and a known device caller-ID spoofing limitation.
+- Added Settings disclosure: current device records authenticate the account session, not cryptographic possession of the browser.
+- Retained Firebase Auth + Firestore. No alternate backend/provider, cloud resource, migration, billing change or deployment.
+- Production trusted-device security remains NO-GO until a reviewed server-verifiable key proof and hard-$0 execution path are available.
