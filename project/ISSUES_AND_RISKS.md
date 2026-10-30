@@ -303,3 +303,15 @@
 - **Risk:** Mozilla Readability parses a DOM document but does not fetch URLs. Browser cross-origin fetch restrictions still apply; adding the parser alone does not enable arbitrary website extraction.
 - **Mitigation:** Keep parser pure; separately design safe URL fetch/allowlist and local or backend fetch boundary. No CORS proxy or private-network fetch.
 - **Acceptance:** URL fetching and parsing are separately tested; block localhost/private/link-local destinations and redirects to them; cap response size/time; preserve source URL/provenance.
+
+
+### AWW-020 — Task project references could point outside the user's project set
+
+- **Priority:** P1
+- **Type:** Data integrity / authorization boundary
+- **Status:** Rules and emulator tests implemented on `opensource-reuse-strategy`; CI pending; not deployed.
+- **Risk:** A task could contain a dangling or cross-user project ID, creating misleading associations and unsafe future backend assumptions.
+- **Mitigation:** Task validation receives the owning UID and checks the referenced document exists beneath that user's `/projects` path. Create and update both enforce the condition; null/omitted references remain valid.
+- **Regression coverage:** valid same-owner reference, null, missing project, cross-user project, valid update, and invalid missing/cross-user updates.
+- **Evidence:** Rules commit `156a239`; test commit `6284409`; CI run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) pending.
+- **Hard limit:** repository branch changes do not alter live Firebase Rules. Keep project linking disabled until review, merge and explicit Rules deployment. No deployment was performed.
