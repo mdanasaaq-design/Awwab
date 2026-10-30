@@ -33,6 +33,8 @@ jobs:
         run: node --test project/prototypes/memory-research-policy-mock.test.mjs
       - name: Readability adapter and source provenance tests
         run: node --experimental-strip-types --test tests/research-article-parser.test.mjs
+      - name: Device lifecycle and key-proof protocol model tests
+        run: node --test project/prototypes/device-lifecycle-mock.test.mjs project/prototypes/device-key-proof-mock.test.mjs
 
   web:
     name: Web typecheck and build
