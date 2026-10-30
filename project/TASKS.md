@@ -316,3 +316,14 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [x] Diagnose CI failure: update rule omitted the newly required `uid` validator argument.
 - [x] Correct update rule to call `validTask(request.resource.data, uid)` in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1`.
 - [ ] Re-run all CI jobs on the corrected PR head and verify the Firestore Rules emulator suite.
+
+
+## Workspace Security and Data Integrity phase — 2026-10-30
+
+- [x] Deny hard deletion of projects in Firestore Rules.
+- [x] Remove project delete action from the UI; retain archive/restore.
+- [x] Require task completion timestamps to match `done` state.
+- [x] Stamp completion with server request time, preserve it during completed-task edits, and clear it when reopening.
+- [x] Add emulator regressions for project deletion and task completion lifecycle.
+- [ ] Run and pass all six CI jobs on the latest branch head.
+- [ ] Review/merge/deploy Rules only after explicit owner approval; keep project linking disabled until then.
