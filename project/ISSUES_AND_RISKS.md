@@ -362,3 +362,10 @@
 - **Fix:** `registerDevice` now transactionally creates/updates the device and matching activity event; `ensureUserProfile` now transactionally reads and creates/updates the user profile.
 - **Coverage:** concurrent same-ID registration verifies all calls succeed, one `device_registered` event and subsequent `device_seen` events; concurrent profile initialization verifies all calls succeed.
 - **Evidence:** backend commit `8441553`, test commit `73cdbc1`; CI pending.
+
+
+### AWW-022 / AWW-023 — validation update (2026-10-30)
+
+- AWW-023 transactional registration/profile fixes passed the backend callable emulator suite in [run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634).
+- AWW-022 caller-ID spoofing remains confirmed by the intentionally passing characterization test. It is not mitigated by this run. Device-key proof is still not wired into the production client/backend, and current Functions remain undeployed.
+- All six CI jobs passed on tested head `1e0ef8537ab5481c8842292510fffe2d1092903f`. This is source/emulator evidence only.

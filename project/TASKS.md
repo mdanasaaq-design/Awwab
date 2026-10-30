@@ -356,3 +356,12 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [x] Record explicit NO-GO for production trusted-device security until device-key proof and a hard-$0 server path are verified.
 - [ ] Implement and independently review server-side device-key proof, challenge consumption, recovery and rotation when an approved backend runtime is available.
 - [ ] Revisit the $0 runtime gate only with explicit owner approval; no Blaze upgrade or deployment is authorized.
+
+
+### Backend Independence and Trusted Device — validation result
+
+- [x] All six CI jobs passed in [run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634) on head `1e0ef8537ab5481c8842292510fffe2d1092903f`.
+- [x] CI runs the device lifecycle and Ed25519 key-proof local model tests; both passed.
+- [x] Backend callable emulator suite passed, including concurrency/idempotency tests and the explicit known-limitation spoofing test.
+- [x] Web build, Functions/shared checks, Firestore Rules, memory/research, and Model Lab jobs passed.
+- [ ] Production trusted-device proof-of-possession remains blocked; do not treat this phase as production security approval.

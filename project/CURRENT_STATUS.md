@@ -1,6 +1,6 @@
 # Current Status
 
-**Last reviewed:** 2026-10-27  
+**Last reviewed:** 2026-10-30  
 **Repository:** `mdanasaaq-design/Awwab`  
 **Reviewed baseline:** `876b747fd02c210a19bddd565d015d7800f5ec68` — `main` before the repository-organization pass  
 **Current planning focus:** Web command-center UX first, then foundation hardening  
@@ -368,3 +368,12 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Firebase Auth + Firestore remain the existing foundation. Cloud Functions v2 source is not deployed because the project is on Spark; enabling Blaze is not authorized. No alternate backend, database, service account, cloud resource, migration or billing change was introduced.
 - Code commits: backend `8441553`, callable tests `73cdbc1`, Settings disclosure `5592ff4`. Full CI on the latest phase head is required before marking automated validation complete.
 - **Open blocker:** do not treat current device approval/revocation as high-assurance. A production implementation requires an independently reviewed key-proof protocol, atomic challenge consumption, recovery/rotation, rate limits, and a separately approved $0-compatible server execution path.
+
+
+### Backend Independence and Trusted Device phase — CI result
+
+- Full CI run [41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634) passed all six jobs on tested head `1e0ef8537ab5481c8842292510fffe2d1092903f`.
+- The Phase 4 policy job now includes the device lifecycle and Ed25519 proof-model test suites; both passed.
+- Backend callable emulator tests passed, including concurrent registration/profile initialization and the two-session caller-ID spoofing characterization.
+- Web build/typecheck, Functions/shared typecheck, Firestore Rules emulator, Phase 4, and Model Lab jobs all passed.
+- Automated branch validation is complete. The confirmed caller-ID spoofing limitation remains a P0 production gate; no secure device proof is integrated.

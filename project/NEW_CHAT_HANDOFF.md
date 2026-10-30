@@ -200,3 +200,11 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 - Architecture decision: keep Firebase Auth + Firestore; do not add another backend/database/provider. Cloud Functions v2 are not deployed on Spark; no Blaze upgrade or deployment is authorized under $0 constraint.
 - Phase outcome is source/reliability complete but **NO-GO for production trusted-device security** until a server-verifiable proof-of-possession protocol and atomic challenge consumption are implemented and a verified hard-$0 server path exists.
 - Latest full CI must be checked on the final head. No merge, deployment, migration, service account, or billing change.
+
+
+### Backend Independence and Trusted Device — verification result (2026-10-30)
+
+- All six CI jobs passed in [run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634) on tested head `1e0ef8537ab5481c8842292510fffe2d1092903f`.
+- CI includes and passed the device lifecycle + Ed25519 key-proof local model suites.
+- Backend callable emulator tests passed concurrent registration/profile initialization and the caller-ID spoofing characterization. The latter confirms the known P0 limitation; it is not a security pass.
+- Phase outcome: reliability fixes and architecture review complete; production trusted-device security remains NO-GO. Keep Firebase Auth + Firestore; no second backend, Blaze upgrade, or deployment.

@@ -28,7 +28,7 @@ Reviewed `project/prototypes/device-key-proof-mock.mjs` and its Node.js tests. T
 - [x] Unsafe expiry arithmetic is rejected.
 - [x] Invalid signatures do not consume the challenge in the sequential model.
 - [x] A revoked device cannot use a previously issued challenge.
-- [ ] Run the updated Node.js tests locally and record the exact result.
+- [x] Run the updated Node.js tests in CI; device lifecycle and Ed25519 proof-model suites passed in [run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634).
 - [ ] Design and prove a secure, atomic server-side Firestore path within the strict $0 constraint before implementing live device binding.
 
 ## Verification command
@@ -55,3 +55,6 @@ Passing this command validates only the local model's tested behavior. It does n
 - [ ] Independently review enrollment/recovery, key rotation, atomic challenge consumption, replay/rate-limit behavior before any production use.
 
 **Phase outcome:** architecture and source review completed; live trusted-device implementation is explicitly NO-GO. This is not a production security approval.
+
+
+The backend callable emulator suite also passed in [run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634), including the known caller-ID spoofing characterization. The spoofing limitation remains unresolved and is a P0 production gate. CI success is not production security approval.

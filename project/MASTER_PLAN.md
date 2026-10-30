@@ -343,3 +343,8 @@ All six GitHub Actions jobs passed in [run 41070757092](https://github.com/mdana
 - No alternative backend has been proven to satisfy verified Firebase identity, secret isolation, atomic Firestore mutations, replay/rate protection and a guaranteed hard-$0 ceiling for this account.
 
 **Outcome:** architecture/source review and reliability fixes are complete; production trusted-device capability is **NO-GO**. Do not deploy, change billing, or describe device approval/revocation as high-assurance until a reviewed server-verifiable key proof and acceptable runtime exist.
+
+
+### Backend Independence and Trusted Device — automated validation result
+
+All six jobs passed in [CI run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634) on tested head `1e0ef8537ab5481c8842292510fffe2d1092903f`. The Phase 4 job now includes local device lifecycle and Ed25519 key-proof model tests. Callable emulator tests passed with concurrent registration/profile checks and the known caller-ID spoofing characterization. This validates the source and local models; it does not resolve the spoofing issue or prove live deployment/$0 operation. Production trusted-device security remains NO-GO.

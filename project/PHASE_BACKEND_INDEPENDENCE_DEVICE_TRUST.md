@@ -86,3 +86,18 @@ A future implementation must:
 - No Firebase Blaze upgrade or billing change.
 - No new backend provider, database, service account, secret or cloud resource.
 - No migration or production data change.
+
+
+## Automated validation result — 2026-10-30
+
+GitHub Actions run [41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634) passed all six jobs on head `1e0ef8537ab5481c8842292510fffe2d1092903f`:
+
+- Web typecheck and build — passed.
+- Functions and shared typecheck/build — passed.
+- Firestore Rules emulator tests — passed.
+- Backend callable emulator tests — passed, including concurrent registration/profile tests and the explicit caller-ID spoofing characterization.
+- Phase 4 memory/research policy tests — passed.
+- Model Lab tokenizer/data checks — passed.
+- The Phase 4 job now also runs the local device lifecycle and Ed25519 key-proof model tests — passed.
+
+This is automated source/emulator validation only. The spoofing test intentionally demonstrates the known device-trust limitation. It does not make that limitation safe, and no live backend was deployed.
