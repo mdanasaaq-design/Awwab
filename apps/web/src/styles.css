@@ -443,3 +443,37 @@ button:disabled { cursor: not-allowed; opacity: .56; }
 .assistant-plan li { padding-left: 4px; }
 .assistant-plan > p:last-child { margin: 14px 0 0; }
 @media (max-width: 640px) { .assistant-plan { padding: 14px; } }
+
+
+/* Workspace CRUD — project and task registers */
+.workspace-data { display: grid; gap: 16px; min-width: 0; }
+.workspace-record-list { display: grid; gap: 10px; min-width: 0; }
+.workspace-record { min-width: 0; }
+.workspace-record > p { margin: 12px 0; color: var(--muted); font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.memory-record-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.memory-record-heading > div { display: grid; gap: 6px; min-width: 0; }
+.memory-record-heading strong { color: var(--text); font-size: 14px; font-weight: 550; overflow-wrap: anywhere; }
+.workspace-data .memory-form input:not([type="checkbox"]) {
+  width: 100%; min-height: 40px; padding: 10px 12px; color: var(--text);
+  background: var(--canvas); border: 1px solid var(--line); border-radius: 8px;
+}
+.workspace-data .memory-form input[type="date"] { color-scheme: dark; }
+.workspace-data .memory-form .memory-submit-row small { text-align: left; }
+.task-filter { display: flex; flex-wrap: wrap; gap: 6px; }
+.task-filter button {
+  min-height: 30px; padding: 6px 9px; border: 1px solid var(--line);
+  border-radius: 6px; background: var(--surface); color: var(--muted);
+  font-size: 10px; cursor: pointer;
+}
+.task-filter button.task-filter-active { border-color: var(--accent); color: var(--text); background: #20251f; }
+.task-status-control { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; }
+.task-status-control select {
+  min-height: 34px; padding: 6px 9px; color: var(--text); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px;
+}
+.task-actions { align-items: center; flex-wrap: wrap; }
+@media (max-width: 640px) {
+  .memory-record-heading { align-items: flex-start; }
+  .task-status-control { width: 100%; justify-content: space-between; }
+  .task-status-control select { flex: 1; max-width: 220px; }
+}
