@@ -280,3 +280,11 @@ The owner clarified that useful public GitHub source code should be copied/adapt
 ### R1 CI completion — 2026-10-30
 
 Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064652230) passed all six jobs. The earlier implementation run [41064461385](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064461385) also passed all six jobs. Manual browser testing of the Research UI and representative article output remains outstanding.
+
+
+## Assistant plan-output validation follow-up — 2026-10-30
+
+- Tightened the plan-only runtime validator to reject unknown top-level/step properties and duplicate step IDs. Regression tests cover injected metadata, injected step fields, and duplicate IDs.
+- Commits: `2ef5666` (validator) and `b069548` (tests); the Phase 4 record and changelog were updated afterward.
+- **Validation state:** no workflow run or status check has yet been surfaced for the new commits. The previous six-job CI success does not cover this follow-up. Do not treat it as validated until a fresh run completes.
+- **Capability state unchanged:** Awwab's own model remains untrained; generation remains disabled; the runtime is plan-only and no tools or external side effects are enabled.
