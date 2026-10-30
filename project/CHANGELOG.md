@@ -76,3 +76,6 @@
 ### Activity history — 2026-10-30
 - Add a read-only, account-scoped view of the latest 100 backend-recorded activity events.
 - The feed reports only stored events; it does not synthesize success or create new audit entries. Live content depends on the backend recording events.
+
+- Extend task management with edit support for title, description, priority, and due date.
+- Update command-center availability copy for the connected workspace sections.
