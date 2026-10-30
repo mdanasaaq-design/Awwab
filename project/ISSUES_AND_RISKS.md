@@ -340,3 +340,25 @@
 
 - All six CI jobs passed in [run 41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092) on tested head `60ca4f9aacf76239ea57082e70a5483974067402`, including Firestore Rules emulator tests.
 - Branch mitigation is automated-test validated. Live Rules are not deployed; manual browser acceptance and owner approval for merge/deployment remain open. Do not treat this as a live production control until deployed.
+
+
+### AWW-022 — Caller-supplied device ID is not proof of device possession
+
+- **Priority:** P0 — release/security gate
+- **Type:** Device authorization / account-session compromise boundary
+- **Status:** Confirmed by callable emulator characterization test; not fixed in the live protocol; no deployment.
+- **Finding:** `listDevices`, `approveDevice`, `revokeDevice`, memory context and assistant callables accept a client-supplied device identifier and check a user-scoped device record's status. A second authenticated session for the same UID can claim a known trusted ID. The backend authenticates the account, not possession of the enrolled device key.
+- **Evidence:** test `known limitation: a second account session can claim a trusted caller device ID` in `tests/functions.callable.test.js`; local Ed25519 challenge model is not wired into the client or Functions.
+- **Impact:** device approval/revocation must not be treated as high-assurance or proof of a physical device. A second session can defeat the intended pending-device approval boundary.
+- **Mitigation/status:** Settings discloses the limitation. Keep current Firebase Auth + Firestore; do not deploy or enable Blaze. Production remains NO-GO until an independently reviewed server-verifiable proof-of-possession flow and atomic challenge consumption are integrated.
+- **$0 gate:** no alternate backend/provider has been proven to guarantee verified Firebase tokens, secret isolation, atomic Firestore operations, abuse controls and a hard $0 ceiling for this account. No cloud resources or billing changes authorized.
+
+### AWW-023 — Registration and profile initialization retry races
+
+- **Priority:** P2
+- **Type:** Backend reliability / idempotency
+- **Status:** Mitigated in development branch; full CI pending.
+- **Finding:** read-then-create flows could race under concurrent sign-in/registration attempts; device registration audit writes were separate from device state mutation.
+- **Fix:** `registerDevice` now transactionally creates/updates the device and matching activity event; `ensureUserProfile` now transactionally reads and creates/updates the user profile.
+- **Coverage:** concurrent same-ID registration verifies all calls succeed, one `device_registered` event and subsequent `device_seen` events; concurrent profile initialization verifies all calls succeed.
+- **Evidence:** backend commit `8441553`, test commit `73cdbc1`; CI pending.
