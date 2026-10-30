@@ -355,3 +355,16 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Passing jobs: web typecheck/build; Functions/shared typecheck; Firestore Security Rules emulator tests; backend callable emulator tests; Phase 4 memory/research policy tests; Model Lab tokenizer/data checks.
 - The Rules emulator suite confirms same-user project reference validation, project deletion denial, task completion timestamp consistency, and compatibility with non-done tasks that omit `completedAt`.
 - Workspace Security phase is **automated-validation complete on the development branch**. Manual browser acceptance and live Rules deployment remain outstanding. No merge, deployment, migration, or billing change occurred.
+
+
+## Backend Independence and Trusted Device Architecture phase — 2026-10-30
+
+- **Phase outcome:** source reliability work and architecture/security review completed; production trusted-device implementation is **NO-GO** until server-verifiable device-key proof and a verified hard-$0 server runtime exist.
+- Confirmed the current weakness with an emulator test: a second Firebase Auth session for the same UID can submit the first session's trusted device ID as `callerDeviceId` and approve its own pending device. The ID is not proof of possession.
+- Backend reliability improvements: `registerDevice` now commits the device record and its audit event in one Firestore transaction; concurrent duplicate registration becomes an idempotent refresh. `ensureUserProfile` now uses a transaction to avoid concurrent first-create races.
+- Added emulator tests for concurrent same-ID registration, transactional audit counts, concurrent profile initialization, and the known caller-ID spoofing limitation.
+- Settings UI now discloses that device records verify the signed-in account, not cryptographic possession of the browser.
+- Local Ed25519 challenge model remains isolated; it is not wired into the client or Functions. It is not physical-device attestation.
+- Firebase Auth + Firestore remain the existing foundation. Cloud Functions v2 source is not deployed because the project is on Spark; enabling Blaze is not authorized. No alternate backend, database, service account, cloud resource, migration or billing change was introduced.
+- Code commits: backend `8441553`, callable tests `73cdbc1`, Settings disclosure `5592ff4`. Full CI on the latest phase head is required before marking automated validation complete.
+- **Open blocker:** do not treat current device approval/revocation as high-assurance. A production implementation requires an independently reviewed key-proof protocol, atomic challenge consumption, recovery/rotation, rate limits, and a separately approved $0-compatible server execution path.
