@@ -103,3 +103,8 @@ No code was copied in this documentation pass. The full source/licence matrix an
 ## Reuse programme update — R1 parser foundation (2026-10-30)
 
 Mozilla Readability has now been vendored from a pinned upstream commit under Apache-2.0, with the licence retained and attribution recorded in `THIRD_PARTY_NOTICES.md`. Awwab has a pure parser wrapper with bounded HTML/text sizes and HTTP(S) source attribution. The current ResearchPanel has not yet been wired to it. Safe fetching, CORS behavior, redirect/private-network protections, parser fixture validation and end-to-end UI testing remain required before claiming article extraction is available.
+
+
+### Research parser integration update — 2026-10-30
+
+The existing Wikipedia path now fetches HTML only from the fixed CORS-enabled Wikipedia parse API endpoint and cleans it locally with the vendored Mozilla Readability parser. The UI receives plain text, and it falls back to the original provider search excerpt when extraction fails or is too short. Crossref is unchanged. This is not arbitrary URL crawling. CI has passed parser adapter/provenance tests and web build/typecheck for the implementation commit; manual browser validation and the remaining CI jobs are still required.

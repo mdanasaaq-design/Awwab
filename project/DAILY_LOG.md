@@ -53,3 +53,12 @@ This documentation update does not claim local builds, emulator tests, real Fire
 - Added a typed wrapper that parses caller-supplied HTML only, rejects oversized input and non-HTTP(S) attribution URLs, caps plain-text output, and performs no network calls.
 - Added Node wrapper/provenance tests and wired them into the CI workflow. Full CI/browser validation remains pending.
 - Did not yet change ResearchPanel, fetch arbitrary URLs, bypass CORS, or add any external service.
+
+
+### 2026-10-30 — R1 Research integration
+
+- Wired the vendored Mozilla Readability parser into the existing Wikipedia research path using Wikipedia's fixed CORS-enabled parse API endpoint.
+- Kept URL fetching separate from parsing; only the known Wikipedia API is fetched. No arbitrary URL fetch, crawler, proxy or SSRF-capable user URL path was introduced.
+- The parser returns normalized plain text; the UI falls back to the search excerpt when parsing fails or returns too little content. Crossref remains unchanged.
+- CI confirmed parser adapter/provenance tests and web typecheck/build for implementation commit `02546c3`; full workflow run [41064461385](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064461385) is still in progress for remaining jobs.
+- Manual browser/source-quality validation remains pending.

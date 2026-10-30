@@ -266,3 +266,12 @@ The owner clarified that useful public GitHub source code should be copied/adapt
 - Added a typed Awwab wrapper with HTML size cap, HTTP(S)-only source provenance, plain-text output and no network access.
 - Added deterministic wrapper/provenance tests and a CI step; CI result is pending because the new branch has not yet been run through a PR workflow.
 - The existing ResearchPanel is not yet wired to this parser. URL fetching/CORS and SSRF protections are separate work and remain open.
+
+
+### R1 Research integration update — 2026-10-30
+
+- ResearchPanel now calls the fixed Wikipedia parse API for full page HTML and passes it to the locally vendored Readability parser.
+- The UI displays plain-text article extracts; parser failure/short content falls back to the original search excerpt. Crossref behavior is unchanged.
+- No arbitrary URL fetcher, CORS proxy, crawler, model call or third-party service was added.
+- The implementation commit's CI already passed the Readability wrapper/provenance tests and web typecheck/build. Remaining jobs in run [41064461385](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064461385) are still being checked.
+- Manual browser testing against multiple Wikipedia pages, non-English pages, very long pages and parser fallback is still required.
