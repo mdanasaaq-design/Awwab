@@ -108,3 +108,11 @@ Mozilla Readability has now been vendored from a pinned upstream commit under Ap
 ### Research parser integration update — 2026-10-30
 
 The existing Wikipedia path now fetches HTML only from the fixed CORS-enabled Wikipedia parse API endpoint and cleans it locally with the vendored Mozilla Readability parser. The UI receives plain text, and it falls back to the original provider search excerpt when extraction fails or is too short. Crossref is unchanged. This is not arbitrary URL crawling. CI has passed parser adapter/provenance tests and web build/typecheck for the implementation commit; manual browser validation and the remaining CI jobs are still required.
+
+
+## Assistant plan-schema hardening — 2026-10-30
+
+- Tightened the provider-response boundary in `backend/functions/src/assistantRuntime.ts`: reject non-object/array payloads, unexpected top-level or step fields, malformed step IDs, and duplicate step IDs.
+- Added regression coverage for unexpected provider metadata, injected step fields, and duplicate identifiers in `tests/assistant-runtime.test.mjs`.
+- Changes are on the open-source reuse branch in commits `2ef5666` and `b069548`. CI for these latest commits has not yet been observed; earlier six-job success does not validate this follow-up.
+- This remains a plan-only, no-tools, no-side-effects boundary. It does not connect a trained model or enable assistant generation.
