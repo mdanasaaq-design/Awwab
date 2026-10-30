@@ -173,3 +173,10 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 - Commits: Rules `52721d3`, tests `85d7430`, UI `44944a4`.
 - Prior head `2278f744` passed all six jobs in CI run [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336). Current changes need fresh full CI.
 - No merge, deployment, migration or billing change. Keep project linking disabled until the final Rules are reviewed, merged and explicitly deployed.
+
+
+### Latest workspace Rules correction — 2026-10-30
+
+- Run [41070451570](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070451570) failed Rules tests because legacy/non-done tasks may omit `completedAt`; the update condition accessed the missing field directly.
+- Updated the non-done condition to accept an omitted or null field. `done` still requires a timestamp; transition into done must set request time.
+- Fix commit: `9adcf652c466358934896e206f51e8695e507e12`. Fresh full CI on the latest head is pending.
