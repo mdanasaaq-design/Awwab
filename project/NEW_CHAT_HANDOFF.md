@@ -180,3 +180,11 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 - Run [41070451570](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070451570) failed Rules tests because legacy/non-done tasks may omit `completedAt`; the update condition accessed the missing field directly.
 - Updated the non-done condition to accept an omitted or null field. `done` still requires a timestamp; transition into done must set request time.
 - Fix commit: `9adcf652c466358934896e206f51e8695e507e12`. Fresh full CI on the latest head is pending.
+
+
+### Workspace Security phase — verification result (2026-10-30)
+
+- Full CI passed all six jobs in [41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092) on tested head `60ca4f9aacf76239ea57082e70a5483974067402`.
+- Firestore Rules emulator tests and backend callable emulator tests passed, along with web build, Functions/shared checks, Phase 4 policy, and Model Lab checks.
+- Automated branch validation is complete. Still not done: manual browser acceptance, live Firebase Rules status verification, merge, and explicit live Rules deployment.
+- No merge/deploy/migration/billing change. PR #23 remains draft.
