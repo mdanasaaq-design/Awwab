@@ -146,3 +146,12 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 - Review Firestore rules compatibility in `tests/firestore.rules.test.js`: project create/archive/update and task create/status update/delete contracts are covered by the existing emulator suite. The UI's task fields (`dueAt`, nullable `projectId`, `completedAt`) match the current rule schema.
 - No same-user task-to-project link is offered because current rules do not enforce reference ownership.
 - **Automated validation passed:** CI run [41068393446](https://github.com/mdanasaaq-design/Awwab/actions/runs/41068393446) passed all six jobs on code commit `4782136a6eb487b57effb28fae866fa6288a9293`, including web typecheck/build and Firestore/callable emulator suites. Subsequent commits are documentation-only. Browser acceptance and live Firebase Rules status remain outstanding.
+
+
+## Latest continuation point — 2026-10-30
+
+- Active branch: `opensource-reuse-strategy`; open draft PR #23 targets `phase-4-memory-research-safety` (PR #22 is also draft). Neither PR is merged.
+- Latest bounded change: same-user task/project reference validation in `firestore.rules` and emulator regressions in `tests/firestore.rules.test.js`.
+- Commits: `156a2391d53b046db7f030d7018a26afa2b179ed` (Rules), `6284409d460d861e0bad5f1148284819e4b957ea` (tests).
+- CI run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) is pending; inspect all six jobs before marking this slice validated.
+- Keep task/project linking disabled until the branch Rules change is reviewed, merged and explicitly deployed to the target Firebase project. Do not deploy or merge without explicit owner approval.
