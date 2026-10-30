@@ -315,3 +315,8 @@ The first full run [41069341725](https://github.com/mdanasaaq-design/Awwab/actio
 - Commits: Rules `52721d3`, tests `85d7430`, UI `44944a4`.
 - CI for the preceding head `2278f744` passed all six jobs in [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336); the current phase commits require a new complete CI run before closure.
 - Preserve no-merge/no-deploy boundary. Do not enable project linking until matching Rules are reviewed, merged and explicitly deployed.
+
+
+### Workspace Security CI correction — 2026-10-30
+
+The first full run [41070451570](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070451570) caught a compatibility defect: existing non-done tasks without a `completedAt` field failed ordinary updates. Rules now allow the field to be omitted or null unless status is `done`. Fix committed as `9adcf652c466358934896e206f51e8695e507e12`. Require a fresh complete CI pass before closing this phase.
