@@ -306,3 +306,10 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - The UI displays only backend-recorded event type, action, tool, actor type, outcome, and timestamp. It does not create or infer activity events.
 - The view may remain empty because live backend callables are not deployed on the current Firebase plan. No backend, Rules, or production deployment was performed.
 - Fresh CI and browser validation are still pending for the workspace/activity changes.
+
+
+### Workspace feature completeness update — 2026-10-30
+
+- Task records now support editing title, description, priority and due date in addition to status changes and deletion.
+- The command-center workspace overview now labels Projects, Tasks, Research and Memory as available in this development branch. Activity is available as a read-only history view; Automations remains explicitly not connected.
+- The workspace UI source and Firestore Rules contract align for the fields currently written by the panels. This is a source-level review only; emulator and browser acceptance remain pending.
