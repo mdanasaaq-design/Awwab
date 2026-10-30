@@ -58,3 +58,9 @@
 - Added a bounded plain-text parser wrapper and connected it to the existing Wikipedia Research path through the fixed CORS-enabled Wikipedia parse API, with search-excerpt fallback. Crossref remains unchanged.
 - Added wrapper/provenance tests. Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064652230) passed all six jobs.
 - Manual browser/source-quality acceptance remains pending; this does not add arbitrary website crawling.
+
+
+### Assistant plan-schema hardening — 2026-10-30
+- Reject provider responses with unexpected fields, non-object payloads, malformed step records, or duplicate step IDs.
+- Add regression tests for extra top-level metadata, injected step fields, and duplicate identifiers.
+- Latest CI validation is pending; no trained model, assistant activation, or deployment is claimed.
