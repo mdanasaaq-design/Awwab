@@ -208,25 +208,12 @@ export function ProjectsPanel({ uid }: { uid: string }) {
     }
   }
 
-  async function removeProject(project: ProjectRecord) {
-    if (!window.confirm(`Delete “${project.name}”? This does not delete any tasks.`)) return;
-    if (!firebaseApp) return;
-    setBusy(true);
-    setError("");
-    try {
-      await deleteDoc(doc(getFirestore(firebaseApp), "users", uid, "projects", project.id));
-    } catch (cause) {
-      setError(firestoreError(cause, "Could not delete the project."));
-    } finally {
-      setBusy(false);
-    }
-  }
 
   return (
     <section className="workspace-data" aria-label="Project workspace">
       <div className="memory-policy-note">
         <strong>Projects · account-scoped workspace data</strong>
-        <p>Projects are stored under your signed-in account in Firestore. You can create, edit, archive, restore, or delete them. Deleting a project does not delete tasks.</p>
+        <p>Projects are stored under your signed-in account in Firestore. You can create, edit, archive, or restore them. Projects are archived instead of deleted so task references remain valid.</p>
       </div>
       <form className="memory-form" onSubmit={(event) => void createProject(event)}>
         <label>
@@ -273,7 +260,6 @@ export function ProjectsPanel({ uid }: { uid: string }) {
                 <div className="memory-actions">
                   <button className="secondary" type="button" disabled={busy} onClick={() => beginEdit(project)}>Edit</button>
                   <button className="secondary" type="button" disabled={busy} onClick={() => void changeProjectStatus(project)}>{project.status === "active" ? "Archive" : "Restore"}</button>
-                  <button className="danger" type="button" disabled={busy} onClick={() => void removeProject(project)}>Delete</button>
                 </div>
               </>
             )}
