@@ -275,3 +275,8 @@ The owner clarified that useful public GitHub source code should be copied/adapt
 - No arbitrary URL fetcher, CORS proxy, crawler, model call or third-party service was added.
 - The implementation commit's CI already passed the Readability wrapper/provenance tests and web typecheck/build. Remaining jobs in run [41064461385](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064461385) are still being checked.
 - Manual browser testing against multiple Wikipedia pages, non-English pages, very long pages and parser fallback is still required.
+
+
+### R1 CI completion — 2026-10-30
+
+Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064652230) passed all six jobs. The earlier implementation run [41064461385](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064461385) also passed all six jobs. Manual browser testing of the Research UI and representative article output remains outstanding.

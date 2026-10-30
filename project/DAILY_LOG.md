@@ -62,3 +62,10 @@ This documentation update does not claim local builds, emulator tests, real Fire
 - The parser returns normalized plain text; the UI falls back to the search excerpt when parsing fails or returns too little content. Crossref remains unchanged.
 - CI confirmed parser adapter/provenance tests and web typecheck/build for implementation commit `02546c3`; full workflow run [41064461385](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064461385) is still in progress for remaining jobs.
 - Manual browser/source-quality validation remains pending.
+
+
+### R1 CI completion
+
+- Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064652230) passed all six jobs.
+- Confirmed parser/provenance tests, web typecheck/build, Functions/shared typecheck, Firestore rules and backend callable emulator tests all passed.
+- Manual browser testing remains outstanding; no deployment or merge performed.

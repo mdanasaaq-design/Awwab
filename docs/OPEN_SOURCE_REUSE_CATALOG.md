@@ -254,3 +254,8 @@ A deterministic Node test suite and CI step have been added. CI has not yet run 
 ### R1 implementation update — 2026-10-30
 
 The Readability parser is now vendored and wired into the existing Wikipedia Research path. After Wikipedia search, Awwab requests page HTML from the fixed `en.wikipedia.org/w/api.php?action=parse` endpoint with CORS enabled, parses the returned HTML locally, and displays plain text only. If parsing fails or yields insufficient text, Awwab falls back to the provider's search excerpt. Crossref behavior is unchanged. This is a bounded integration, not arbitrary website crawling. CI has confirmed the parser tests and web typecheck/build on the implementation commit; remaining backend/rules jobs are tracked separately. Manual browser review of representative Wikipedia pages remains outstanding.
+
+
+### R1 CI result — 2026-10-30
+
+<code>CI run 41064652230</code> on latest branch head `c36830480c1c85d91624804c88195dab7f3355f8` completed with all six jobs successful: parser/provenance tests, Model Lab checks, web typecheck/build, Functions/shared typecheck, Firestore rules, and backend callable emulator tests. This does not replace manual browser testing of the actual Wikipedia article output.

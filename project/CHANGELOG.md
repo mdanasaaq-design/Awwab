@@ -51,3 +51,10 @@
 - Added phased integration order, source-copy checklist, licence exclusions and acceptance criteria.
 - Updated 20 active planning/architecture/security/testing/model/project Markdown files on the strategy branch. Historical phase acceptance records were preserved.
 - No third-party source code, dependency, model/data file, cloud resource, secret or deployment was added by this documentation update.
+
+
+### R1 implementation and validation
+- Vendored Mozilla Readability at a pinned upstream commit under Apache-2.0, retained the full licence and recorded provenance in `THIRD_PARTY_NOTICES.md`.
+- Added a bounded plain-text parser wrapper and connected it to the existing Wikipedia Research path through the fixed CORS-enabled Wikipedia parse API, with search-excerpt fallback. Crossref remains unchanged.
+- Added wrapper/provenance tests. Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064652230) passed all six jobs.
+- Manual browser/source-quality acceptance remains pending; this does not add arbitrary website crawling.
