@@ -327,3 +327,10 @@
 - **Regression coverage:** project delete denied and project remains readable; valid completion; edit while completed; forged completion timestamp denied; reopening clears completion; done without timestamp denied.
 - **Evidence:** Rules `52721d3`, tests `85d7430`, UI `44944a4`; CI for this latest phase pending.
 - **Boundary:** no live Rules deployment or merge. Keep project linking disabled until the reviewed Rules are merged and explicitly deployed.
+
+
+### AWW-021 validation update — 2026-10-30
+
+- First CI attempt [41070451570](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070451570) failed because the new non-done update condition assumed legacy task documents always contained `completedAt`. The emulator confirmed that an absent field causes a Rules evaluation error.
+- Corrected to allow `completedAt` to be omitted or null unless the task is `done`; the `done` state still requires a timestamp. Fix: `9adcf652c466358934896e206f51e8695e507e12`.
+- Fresh full CI remains required before closure; no live Rules deployment or merge.
