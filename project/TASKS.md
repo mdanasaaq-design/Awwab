@@ -334,3 +334,11 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [x] Diagnose failure for legacy non-done tasks without `completedAt`.
 - [x] Allow the completion field to be omitted or null for non-done tasks while still requiring it for `done`.
 - [ ] Re-run all CI jobs on latest head and verify the Rules emulator suite.
+
+
+### Workspace Security and Data Integrity — validation result
+
+- [x] All six CI jobs passed on tested head `60ca4f9aacf76239ea57082e70a5483974067402` in [run 41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092).
+- [x] Firestore Rules emulator and backend callable emulator jobs passed.
+- [ ] Manual browser acceptance remains outstanding.
+- [ ] Review/merge/deploy Rules only after explicit owner approval; project linking remains disabled until then.
