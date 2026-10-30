@@ -98,3 +98,8 @@ Potential Phase 4 improvements:
 - Promptfoo-inspired local regression/adversarial tests, without remote model-provider calls.
 
 No code was copied in this documentation pass. The full source/licence matrix and R1–R7 plan are in [OPEN_SOURCE_REUSE_CATALOG.md](../docs/OPEN_SOURCE_REUSE_CATALOG.md). Existing memory controls and current Wikipedia/Crossref behavior must remain intact during integration.
+
+
+## Reuse programme update — R1 parser foundation (2026-10-30)
+
+Mozilla Readability has now been vendored from a pinned upstream commit under Apache-2.0, with the licence retained and attribution recorded in `THIRD_PARTY_NOTICES.md`. Awwab has a pure parser wrapper with bounded HTML/text sizes and HTTP(S) source attribution. The current ResearchPanel has not yet been wired to it. Safe fetching, CORS behavior, redirect/private-network protections, parser fixture validation and end-to-end UI testing remain required before claiming article extraction is available.

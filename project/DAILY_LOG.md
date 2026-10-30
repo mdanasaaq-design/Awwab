@@ -44,3 +44,12 @@ This documentation update does not claim local builds, emulator tests, real Fire
 - Updated active planning, architecture, security, testing, model and project-tracking docs in one documentation commit.
 - Started R1 source review: Mozilla Readability upstream commit `ab4027a8b37669745016869a37a504727992b2ba`; source `Readability.js` (90,944 bytes); Apache-2.0. The parser accepts an existing DOM Document and does not fetch pages. CORS/fetch design and a suitable test harness must be solved before UI integration.
 - No third-party source code or dependency has been copied/added yet. No model/data download, paid service, deployment, billing change, secret or cloud resource was used.
+
+
+## 2026-10-30 — R1 first source transplant
+
+- Inspected Mozilla Readability upstream commit `ab4027a8b37669745016869a37a504727992b2ba`, source header and Apache-2.0 licence.
+- Vendored its standalone `Readability.js` source and full licence into Awwab; added one ESM export required by Vite.
+- Added a typed wrapper that parses caller-supplied HTML only, rejects oversized input and non-HTTP(S) attribution URLs, caps plain-text output, and performs no network calls.
+- Added Node wrapper/provenance tests and wired them into the CI workflow. Full CI/browser validation remains pending.
+- Did not yet change ResearchPanel, fetch arbitrary URLs, bypass CORS, or add any external service.

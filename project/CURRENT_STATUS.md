@@ -258,3 +258,11 @@ The owner clarified that useful public GitHub source code should be copied/adapt
 - No third-party pretrained model weights, external AI API, hosted agent, teacher distillation or remote fallback is allowed.
 - No source code has been copied by this documentation update. The next implementation phase must pin upstream commit SHA and exact file list before the transplant.
 - Latest observed CI run [40872007847](https://github.com/mdanasaaq-design/Awwab/actions/runs/40872007847) passed all six jobs on `d81779e`. PR #22 remains open and draft. The new documentation branch has not been merged or deployed.
+
+
+## R1 Readability source import — 2026-10-30
+
+- Vendored Mozilla Readability `Readability.js` from exact upstream commit `ab4027a8b37669745016869a37a504727992b2ba` (Apache-2.0) and copied the full licence.
+- Added a typed Awwab wrapper with HTML size cap, HTTP(S)-only source provenance, plain-text output and no network access.
+- Added deterministic wrapper/provenance tests and a CI step; CI result is pending because the new branch has not yet been run through a PR workflow.
+- The existing ResearchPanel is not yet wired to this parser. URL fetching/CORS and SSRF protections are separate work and remain open.

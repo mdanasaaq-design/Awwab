@@ -242,3 +242,10 @@ Acceptance criteria:
 
 ---
 This is a research-backed candidate list, not blanket permission to copy every listed repository. Exact source-file and licence review is required before each transplant.
+
+
+## R1 source-import progress — 2026-10-30
+
+**Completed substep:** Mozilla Readability source has been vendored at `apps/web/src/vendor/mozilla/Readability.js` from upstream commit `ab4027a8b37669745016869a37a504727992b2ba`. Its Apache-2.0 licence is copied alongside it. Awwab adds only an ES-module default export and a typed, bounded wrapper at `apps/web/src/research/articleParser.ts`. The wrapper accepts already-fetched HTML, accepts only HTTP(S) provenance URLs, caps input at 1 MB and output at 12,000 characters, and returns plain text only. It performs no fetching or model calls.
+
+A deterministic Node test suite and CI step have been added. CI has not yet run for this branch; the PR must report the actual result. The Research UI is not wired to the parser yet. The next R1 substep is to design a safe source adapter (the parser does not bypass CORS), then connect Wikipedia HTML extraction and preserve current Crossref/Wikipedia behavior. Manual browser parser acceptance remains required.
