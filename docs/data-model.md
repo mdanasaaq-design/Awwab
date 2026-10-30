@@ -46,7 +46,7 @@ Fields: `name`, `description`, `repositoryReferences`, `status`, `tags`, `create
 - Required client fields: `name`, `status`, `createdAt`, `updatedAt`.
 - Name is 1–160 characters; description is optional and at most 4,000 characters.
 - Status is `active` or `archived`.
-- Tags and repository references are optional lists bounded to 20 entries.
+- Tags and repository references are optional lists; the current Rules bound them to 20 entries but do not yet validate individual element types or lengths.
 - Create timestamps must use server timestamps; `createdAt` is immutable and `updatedAt` must be a server timestamp on update.
 
 ## Task
@@ -58,9 +58,10 @@ Client-writable fields: `title`, `description`, `status`, `priority`, `dueAt`, `
 - Status is `todo`, `in_progress`, `done`, `blocked`, or `cancelled`; priority is `low`, `medium`, `high`, or `urgent`.
 - Client-created tasks must use `source: "user"`; source cannot be changed later.
 - Create timestamps must use server timestamps; `createdAt` is immutable and `updatedAt` must be a server timestamp on update.
+- A task may omit `projectId` or set it to null. A non-null value must be a string naming an existing project under the same user's `/users/{uid}/projects` collection; create and update are both checked by `exists()` in Rules.
 - `recurrence` is not client-writable until its schema and allowed transitions are defined.
 
-Tasks should preserve provenance between user commitments and AI suggestions. List element validation, project/task cross-document consistency, and detailed status-transition policy remain follow-ups; no backend executor may trust these fields until those contracts are enforced.
+Tasks should preserve provenance between user commitments and AI suggestions. Same-user project-reference integrity is implemented and emulator-tested on the development branch only; the matching Rules are not deployed to Firebase. List element validation and detailed status-transition policy remain follow-ups; no backend executor may trust these fields until those contracts are enforced.
 
 ## Conversation/message
 
@@ -162,3 +163,10 @@ The `/users/{uid}/system/firstDeviceBootstrap` document is a backend-only concur
 ## Memory algorithm reuse (2026-10-30)
 
 Awwab may adapt deterministic memory candidate merge, deduplication, conflict and temporal-provenance algorithms from Mem0/Graphiti. These algorithms must map onto the existing Awwab user-scoped Firestore hierarchy and preserve explicit confirmation, sensitivity, provenance, expiry, correction and deletion controls. Do not import provider adapters or vector stores as a side effect. See [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Task/project reference security update — 2026-10-30
+
+- `validTask(data, uid)` now requires every non-null `projectId` to resolve under `/users/{uid}/projects/{projectId}`. Both task create and update paths pass the owning UID into the validator.
+- Emulator regressions cover a valid same-owner project, null project, missing project, cross-user project, and create/update reference changes.
+- This is a repository-branch change only. CI is pending for commit `6284409`; live Firestore Rules have not been deployed. Keep task-to-project linking disabled in the UI until review/merge and explicit live Rules deployment.
