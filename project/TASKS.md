@@ -299,3 +299,13 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [ ] R7: add Promptfoo-inspired local red-team/evaluation fixtures and minimal OpenTelemetry only if useful.
 
 See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for source links, licences, exclusions, implementation order and acceptance criteria. Do not start an item before exact-file licence and dependency review.
+
+
+## Task/project reference security — 2026-10-30
+
+- [x] Pass the owner UID into task validation on both create and update.
+- [x] Require every non-null task `projectId` to exist under that same user's project collection.
+- [x] Add emulator coverage for same-owner, null, missing, cross-user and update-path references.
+- [ ] Confirm all six CI jobs pass on current branch head `6284409d460d861e0bad5f1148284819e4b957ea` (run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) pending at documentation time).
+- [ ] Review and approve the Rules change before merge.
+- [ ] Deploy matching Rules only after explicit owner authorization; keep UI project linking disabled until then.
