@@ -8,7 +8,7 @@ Awwab is a personal AI operating assistant intended to help with planning, resea
 **Next product phase:** Refine the web command center first, then harden the foundation.  
 **Hosting:** Live Hosting has an existing release (last listed release: 2026-10-16); temporary preview channel `awwab-check` was refreshed on 2026-10-27. No production deployment was performed as part of the repository-organization pass.
 
-The web interface includes sign-in, device-management UI, user-controlled memory, source research, and project/task CRUD panels on the open development branch. The assistant runtime is not connected, and generation remains disabled because Awwab's own model is not trained. Automations and activity remain placeholders. Project/task panels require the matching Firestore Rules to be deployed in the target environment; this branch change does not deploy them.
+The web interface includes sign-in, device-management UI, user-controlled memory, source research, and project/task CRUD panels on the open development branch. The assistant runtime is not connected, and generation remains disabled because Awwab's own model is not trained. Automations remain a placeholder. Activity is a read-only register for backend-recorded events and may remain empty while backend callables are unavailable. Project/task panels require the matching Firestore Rules to be deployed in the target environment; this branch change does not deploy them.
 
 Use these terms consistently:
 - **Implemented** — present in the repository.
