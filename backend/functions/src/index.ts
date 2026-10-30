@@ -85,39 +85,66 @@ export const registerDevice = onCall(async (request) => {
   const parsed = parseDeviceInput(request.data);
   const userRef = db.doc(`users/${uid}`);
   const deviceRef = userRef.collection("devices").doc(parsed.deviceId);
-  const existing = await deviceRef.get();
+  const activityRef = db.collection(`users/${uid}/activity`).doc();
+  let resultStatus: DeviceStatus = "pending";
 
-  if (existing.exists) {
-    const status = existing.get("status") as DeviceStatus | undefined;
-    if (status === "revoked") {
-      throw new HttpsError("permission-denied", "This device has been revoked and cannot self-reactivate.");
-    }
+  // Device state and its audit event commit together. A transaction retry turns
+  // concurrent duplicate registrations into an idempotent refresh instead of
+  // an ALREADY_EXISTS error or a success response without a matching audit row.
+  await db.runTransaction(async (transaction) => {
+    const existing = await transaction.get(deviceRef);
+    const timestamp = FieldValue.serverTimestamp();
 
-    await deviceRef.set(
-      {
-        lastSeenAt: FieldValue.serverTimestamp(),
+    if (existing.exists) {
+      const status = existing.get("status") as DeviceStatus | undefined;
+      if (status === "revoked") {
+        throw new HttpsError("permission-denied", "This device has been revoked and cannot self-reactivate.");
+      }
+
+      resultStatus = status ?? "pending";
+      transaction.update(deviceRef, {
+        lastSeenAt: timestamp,
         appVersion: parsed.appVersion,
         deviceName: parsed.deviceName,
-      },
-      { merge: true },
-    );
+      });
+      transaction.create(activityRef, {
+        eventType: "security",
+        actorType: "user",
+        deviceId: parsed.deviceId,
+        tool: "device-management",
+        action: "device_seen",
+        targetType: "device",
+        targetReference: parsed.deviceId,
+        outcome: "success",
+        createdAt: timestamp,
+      });
+      return;
+    }
 
-    await writeActivity(uid, parsed.deviceId, "device_seen", "success");
-    return { ok: true, deviceId: parsed.deviceId, status: status ?? "pending" };
-  }
-
-  await deviceRef.create({
-    platform: parsed.platform,
-    appVersion: parsed.appVersion,
-    deviceName: parsed.deviceName,
-    status: "pending",
-    createdAt: FieldValue.serverTimestamp(),
-    lastSeenAt: FieldValue.serverTimestamp(),
-    notificationTokenStatus: "not_registered",
+    resultStatus = "pending";
+    transaction.create(deviceRef, {
+      platform: parsed.platform,
+      appVersion: parsed.appVersion,
+      deviceName: parsed.deviceName,
+      status: "pending",
+      createdAt: timestamp,
+      lastSeenAt: timestamp,
+      notificationTokenStatus: "not_registered",
+    });
+    transaction.create(activityRef, {
+      eventType: "security",
+      actorType: "user",
+      deviceId: parsed.deviceId,
+      tool: "device-management",
+      action: "device_registered",
+      targetType: "device",
+      targetReference: parsed.deviceId,
+      outcome: "success",
+      createdAt: timestamp,
+    });
   });
 
-  await writeActivity(uid, parsed.deviceId, "device_registered", "success");
-  return { ok: true, deviceId: parsed.deviceId, status: "pending" };
+  return { ok: true, deviceId: parsed.deviceId, status: resultStatus };
 });
 
 export const bootstrapFirstDevice = onCall(async (request) => {
@@ -306,20 +333,25 @@ export const revokeDevice = onCall(async (request) => {
 export const ensureUserProfile = onCall(async (request) => {
   const uid = requireAuth(request);
   const userRef = db.doc(`users/${uid}`);
-  const existing = await userRef.get();
-
   const email = request.auth?.token.email;
   const displayName = request.auth?.token.name;
 
-  if (!existing.exists) {
-    await userRef.create({
-      email: typeof email === "string" ? email.slice(0, 320) : null,
-      displayName: typeof displayName === "string" ? displayName.slice(0, 100) : null,
-      createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-  } else {
-    await userRef.set(
+  // Read and create/update in one transaction so concurrent sign-ins cannot
+  // race through a stale existence check and surface an ALREADY_EXISTS error.
+  await db.runTransaction(async (transaction) => {
+    const existing = await transaction.get(userRef);
+    if (!existing.exists) {
+      transaction.create(userRef, {
+        email: typeof email === "string" ? email.slice(0, 320) : null,
+        displayName: typeof displayName === "string" ? displayName.slice(0, 100) : null,
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return;
+    }
+
+    transaction.set(
+      userRef,
       {
         email: typeof email === "string" ? email.slice(0, 320) : existing.get("email") ?? null,
         displayName:
@@ -328,7 +360,7 @@ export const ensureUserProfile = onCall(async (request) => {
       },
       { merge: true },
     );
-  }
+  });
 
   return { ok: true, uid };
 });
@@ -431,22 +463,3 @@ export const runAssistant = onCall(async (request) => {
   }
 });
 
-async function writeActivity(
-  uid: string,
-  deviceId: string,
-  action: string,
-  outcome: string,
-  targetReference = deviceId,
-) {
-  await db.collection(`users/${uid}/activity`).add({
-    eventType: "security",
-    actorType: "user",
-    deviceId,
-    tool: "device-management",
-    action,
-    targetType: "device",
-    targetReference,
-    outcome,
-    createdAt: FieldValue.serverTimestamp(),
-  });
-}
