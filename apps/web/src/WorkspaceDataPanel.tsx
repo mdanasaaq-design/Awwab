@@ -6,6 +6,9 @@ import {
   doc,
   getFirestore,
   onSnapshot,
+  orderBy,
+  limit,
+  query,
   serverTimestamp,
   Timestamp,
   updateDoc,
@@ -511,6 +514,80 @@ export function TasksPanel({ uid }: { uid: string }) {
                 </div>
               </>
             )}
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+
+type ActivityRecord = {
+  id: string;
+  action: string;
+  eventType: string;
+  outcome: string;
+  tool: string;
+  actorType: string;
+  createdAt: Timestamp | null;
+};
+
+export function ActivityPanel({ uid }: { uid: string }) {
+  const [events, setEvents] = useState<ActivityRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!firebaseApp) {
+      setError("Firebase is not configured for this environment.");
+      setLoading(false);
+      return;
+    }
+    const reference = query(
+      collection(getFirestore(firebaseApp), "users", uid, "activity"),
+      orderBy("createdAt", "desc"),
+      limit(100),
+    );
+    return onSnapshot(reference, (snapshot) => {
+      setEvents(snapshot.docs.map((item) => {
+        const data = item.data();
+        return {
+          id: item.id,
+          action: typeof data.action === "string" ? data.action : "recorded_event",
+          eventType: typeof data.eventType === "string" ? data.eventType : "activity",
+          outcome: typeof data.outcome === "string" ? data.outcome : "unknown",
+          tool: typeof data.tool === "string" ? data.tool : "system",
+          actorType: typeof data.actorType === "string" ? data.actorType : "unknown",
+          createdAt: timestampOrNull(data.createdAt),
+        };
+      }));
+      setLoading(false);
+      setError("");
+    }, (cause) => {
+      setError(firestoreError(cause, "Could not load activity history."));
+      setLoading(false);
+    });
+  }, [uid]);
+
+  return (
+    <section className="workspace-data" aria-label="Activity history">
+      <div className="memory-policy-note">
+        <strong>Activity · read-only event history</strong>
+        <p>This view shows events recorded by Awwab's trusted backend. It does not invent or infer actions. The current register is limited to the latest 100 records.</p>
+      </div>
+      {error && <p className="error" role="alert">{error}</p>}
+      {loading && <p className="muted" role="status">Loading activity…</p>}
+      {!loading && events.length === 0 && !error && (
+        <div className="empty-state"><h2>No activity recorded.</h2><p>Security and workspace events will appear here when the corresponding trusted backend workflows are available and recording events.</p></div>
+      )}
+      <div className="workspace-record-list">
+        {events.map((event) => (
+          <article className="memory-record workspace-record activity-record" key={event.id}>
+            <div className="memory-record-heading">
+              <div><strong>{event.action.replaceAll("_", " ")}</strong><span className="quiet-label">{event.eventType.toUpperCase()} · {event.tool.toUpperCase()} · {event.actorType.toUpperCase()}</span></div>
+              <span className={event.outcome === "success" ? "device-badge trusted" : "device-badge"}>{event.outcome}</span>
+            </div>
+            <p>{formatDate(event.createdAt)}</p>
           </article>
         ))}
       </div>
