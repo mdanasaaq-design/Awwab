@@ -347,3 +347,11 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Run [41070451570](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070451570) failed the Rules suite. Existing tasks without a `completedAt` field were rejected during ordinary updates because the non-done branch accessed the missing field directly.
 - Corrected the rule to allow `completedAt` to be omitted or null whenever status is not `done`; `done` still requires a timestamp and transition into done still requires `request.time`.
 - Correction commit: `9adcf652c466358934896e206f51e8695e507e12`. A new full CI run on this head is required; phase remains unvalidated until it passes.
+
+
+### Workspace Security and Data Integrity — CI verification complete (2026-10-30)
+
+- GitHub Actions run [41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092) passed all six jobs on tested head `60ca4f9aacf76239ea57082e70a5483974067402`.
+- Passing jobs: web typecheck/build; Functions/shared typecheck; Firestore Security Rules emulator tests; backend callable emulator tests; Phase 4 memory/research policy tests; Model Lab tokenizer/data checks.
+- The Rules emulator suite confirms same-user project reference validation, project deletion denial, task completion timestamp consistency, and compatibility with non-done tasks that omit `completedAt`.
+- Workspace Security phase is **automated-validation complete on the development branch**. Manual browser acceptance and live Rules deployment remain outstanding. No merge, deployment, migration, or billing change occurred.
