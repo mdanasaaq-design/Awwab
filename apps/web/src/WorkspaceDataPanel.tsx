@@ -447,7 +447,7 @@ export function TasksPanel({ uid }: { uid: string }) {
     <section className="workspace-data" aria-label="Task workspace">
       <div className="memory-policy-note">
         <strong>Tasks · account-scoped workspace data</strong>
-        <p>Tasks are stored under your signed-in account. You can track status, priority, and due dates. Project linking is intentionally not enabled until same-user project-reference validation is complete.</p>
+        <p>Tasks are stored under your signed-in account. You can track status, priority, and due dates. Project linking remains disabled until the owner-scoped Rules change is reviewed, merged, and deployed to the active Firebase project.</p>
       </div>
       <form className="memory-form" onSubmit={(event) => void createTask(event)}>
         <label>
