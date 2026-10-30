@@ -484,3 +484,5 @@ button:disabled { cursor: not-allowed; opacity: .56; }
   background: var(--canvas); border: 1px solid var(--line); border-radius: 8px;
 }
 .workspace-data .memory-edit input[type="date"] { color-scheme: dark; }
+
+.activity-record > p { margin: 8px 0 0; color: var(--quiet); font: 10px var(--mono); }
