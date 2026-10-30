@@ -79,3 +79,10 @@
 
 - Extend task management with edit support for title, description, priority, and due date.
 - Update command-center availability copy for the connected workspace sections.
+
+
+### Workspace security and lifecycle hardening — 2026-10-30
+- Deny hard deletion of projects in Firestore Rules and remove the project delete UI action; archive/restore preserves task references.
+- Enforce consistency between task `done` status and `completedAt`, using server request time for completion and clearing it when reopening.
+- Add emulator regressions for project deletion denial, valid completion, completed-task edits, forged completion timestamps, and reopening.
+- Fresh CI on these commits is pending; no live Rules deployment or merge was performed.
