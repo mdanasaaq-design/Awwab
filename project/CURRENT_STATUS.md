@@ -322,3 +322,10 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Commits: Rules `156a239`; emulator tests `6284409`.
 - GitHub Actions run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) is pending on the current PR head. Do not claim validation until all jobs complete successfully.
 - **Deployment boundary:** no live Firestore Rules deployment occurred. Task-to-project linking stays disabled until review/merge and explicit deployment to the target Firebase project. The prior Phase 2I draft PR #21 is not merged and is not the live policy.
+
+
+### Rules CI diagnosis and correction — 2026-10-30
+
+- CI run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) failed the Firestore Rules suite. Log diagnosis: the task update rule still called `validTask(request.resource.data)` with one argument after the validator signature changed to `validTask(data, uid)`. The create rule already passed `uid`.
+- Corrected the update path in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1` to call `validTask(request.resource.data, uid)` as well.
+- The failed run is not evidence of a passing Rules implementation. A fresh complete CI run on the corrected head is still required. Keep task/project linking disabled; no live Rules deployment or merge.
