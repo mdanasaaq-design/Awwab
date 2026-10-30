@@ -309,9 +309,21 @@
 
 - **Priority:** P1
 - **Type:** Data integrity / authorization boundary
-- **Status:** Rules and emulator tests implemented on `opensource-reuse-strategy`; CI pending; not deployed.
+- **Status:** Same-user reference validation passed all six CI jobs on head `2278f744`; subsequent lifecycle hardening is implemented on `opensource-reuse-strategy` and awaiting fresh CI. Nothing is deployed.
 - **Risk:** A task could contain a dangling or cross-user project ID, creating misleading associations and unsafe future backend assumptions.
 - **Mitigation:** Task validation receives the owning UID and checks the referenced document exists beneath that user's `/projects` path. Create and update both enforce the condition; null/omitted references remain valid.
 - **Regression coverage:** valid same-owner reference, null, missing project, cross-user project, valid update, and invalid missing/cross-user updates.
-- **Evidence:** Rules commit `156a239`; test commit `6284409`; CI run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) pending.
+- **Evidence:** original reference fix Rules `156a239` + tests `6284409`; UID correction `3b5405e`; all-six-job CI pass [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336) on head `2278f744`; lifecycle hardening Rules `52721d3`, tests `85d7430`, UI `44944a4` awaits fresh CI.
 - **Hard limit:** repository branch changes do not alter live Firebase Rules. Keep project linking disabled until review, merge and explicit Rules deployment. No deployment was performed.
+
+
+### AWW-021 — Project deletion can orphan task references and completion metadata can contradict task status
+
+- **Priority:** P1
+- **Type:** Workspace integrity / authorization boundary
+- **Status:** Mitigation implemented on `opensource-reuse-strategy`; fresh CI pending; not deployed.
+- **Risk:** Hard-deleting a project could leave tasks with dangling `projectId` values. Task `status` and `completedAt` could previously disagree or a client could forge completion times.
+- **Mitigation:** Deny project deletion in Rules and remove the delete control from the UI; use archive/restore. Require `completedAt` exactly when status is `done`; entering done must use `request.time`, edits preserve the existing completion timestamp, and reopening clears it.
+- **Regression coverage:** project delete denied and project remains readable; valid completion; edit while completed; forged completion timestamp denied; reopening clears completion; done without timestamp denied.
+- **Evidence:** Rules `52721d3`, tests `85d7430`, UI `44944a4`; CI for this latest phase pending.
+- **Boundary:** no live Rules deployment or merge. Keep project linking disabled until the reviewed Rules are merged and explicitly deployed.
