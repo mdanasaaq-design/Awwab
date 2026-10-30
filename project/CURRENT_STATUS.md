@@ -320,7 +320,7 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Updated `firestore.rules`: `validTask` now receives the owning UID and checks that any non-null `projectId` exists under that same user's `/projects` collection. Create and update both use the check.
 - Extended `tests/firestore.rules.test.js` for valid same-owner references, null references, missing projects, cross-user projects, and changing a task's reference on update.
 - Commits: Rules `156a239`; emulator tests `6284409`.
-- GitHub Actions run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) is pending on the current PR head. Do not claim validation until all jobs complete successfully.
+- The initial run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) failed on a missing UID argument. The correction was validated by all six jobs in run [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336) on head `2278f744`; subsequent Workspace Security phase changes still require their own fresh CI run.
 - **Deployment boundary:** no live Firestore Rules deployment occurred. Task-to-project linking stays disabled until review/merge and explicit deployment to the target Firebase project. The prior Phase 2I draft PR #21 is not merged and is not the live policy.
 
 
@@ -328,4 +328,15 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 
 - CI run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) failed the Firestore Rules suite. Log diagnosis: the task update rule still called `validTask(request.resource.data)` with one argument after the validator signature changed to `validTask(data, uid)`. The create rule already passed `uid`.
 - Corrected the update path in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1` to call `validTask(request.resource.data, uid)` as well.
-- The failed run is not evidence of a passing Rules implementation. A fresh complete CI run on the corrected head is still required. Keep task/project linking disabled; no live Rules deployment or merge.
+- The failed run was superseded by successful all-six-job run [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336) on head `2278f744`. Later Workspace Security phase changes require a fresh CI run. Keep task/project linking disabled; no live Rules deployment or merge.
+
+
+## Workspace Security and Data Integrity phase — 2026-10-30
+
+- **Scope:** project/task Firestore lifecycle, task state integrity, owner-scoped references, client UI behavior, emulator regressions and documentation.
+- Projects can no longer be hard-deleted from the client UI; Firestore Rules deny project deletion. Archive/restore is the supported lifecycle so task references remain resolvable.
+- Task creation is constrained to `todo` with a null/omitted completion timestamp. A task marked `done` must have `completedAt`; transition into `done` uses server request time; edits preserve the original completion time; reopening clears it.
+- Added emulator cases for project deletion denial and completion timestamp lifecycle, alongside the existing same-user/missing/cross-user project-reference cases.
+- Code commits: Rules `52721d3`; tests `85d7430`; workspace UI `44944a4`.
+- Latest previously completed full CI run [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336) passed all six jobs on earlier head `2278f744`. This phase's code commits are newer; fresh full CI is pending and required before this phase is marked validated.
+- No merge, live Firestore Rules deployment, data migration, production deployment or billing change occurred. Task/project linking remains disabled until the final Rules change is reviewed, merged and explicitly deployed.
