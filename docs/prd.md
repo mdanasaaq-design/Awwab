@@ -95,3 +95,8 @@ Never optimize metrics in ways that reward fabricated success or unsafe autonomy
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Open-source implementation policy (2026-10-30)
+
+The product may incorporate selected open-source source code for workflow orchestration, browser automation, memory algorithms, research/document parsing, training infrastructure and evaluation. This is a delivery strategy, not a change to Awwab's identity: Awwab owns its user experience, data, contracts, security policy and independent model weights. No third-party pretrained model, hosted agent or external AI API is allowed. See [the source catalogue and integration plan](OPEN_SOURCE_REUSE_CATALOG.md).

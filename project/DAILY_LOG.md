@@ -33,3 +33,14 @@ This documentation update does not claim local builds, emulator tests, real Fire
 - Local extracted ZIP copy passed functions typecheck/build and web build; Node 22 parity and GitHub-main parity remain unverified.
 - Added a master plan that separates completed code changes from pending manual, emulator, live-environment and production checks.
 - No Hosting, Rules or Functions deployment was performed; no alternate backend was selected or provisioned.
+
+
+## 2026-10-30 — Open-source reuse strategy
+
+- Owner clarified that selected public GitHub source code should be copied/adapted and integrated directly into Awwab, rather than used only as inspiration.
+- Added a detailed catalogue and R1–R7 integration plan covering workflow orchestration, Readability, memory, Playwright, model-training engineering, document parsing and evaluation.
+- Recorded exact repository-level licence checks and deferred GPL/AGPL/unresolved-licence projects.
+- Confirmed the independent-model requirement remains unchanged: no third-party pretrained weights, external AI APIs, hosted agents or teacher-model distillation.
+- Updated active planning, architecture, security, testing, model and project-tracking docs in one documentation commit.
+- Started R1 source review: Mozilla Readability upstream commit `ab4027a8b37669745016869a37a504727992b2ba`; source `Readability.js` (90,944 bytes); Apache-2.0. The parser accepts an existing DOM Document and does not fetch pages. CORS/fetch design and a suitable test harness must be solved before UI integration.
+- No third-party source code or dependency has been copied/added yet. No model/data download, paid service, deployment, billing change, secret or cloud resource was used.

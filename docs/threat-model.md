@@ -101,3 +101,20 @@ No capability moves to autonomous execution until permissions, failure modes, au
 ---
 
 > **Planning sync — 2026-10-27:** Current blockers and decisions are tracked centrally in [Master Plan and Work Audit](../project/MASTER_PLAN.md). Historical acceptance criteria and prior CI results must not be interpreted as proof that live Firebase integration works.
+
+
+## Third-party code transplant threats (2026-10-30)
+
+Adding upstream source code creates a supply-chain boundary even when the source is public. Threats include malicious or compromised commits, hidden network/provider calls, postinstall scripts, unreviewed transitive dependencies, binary/model assets, licence mismatch, unsafe deserialization, telemetry leakage, and upstream defaults that bypass Awwab policy.
+
+Mitigations:
+- pin repository and commit SHA; inspect exact files and imports;
+- verify file-level licence, NOTICE and generated/submodule provenance;
+- review dependencies, scripts, binaries, network access, telemetry and model assets;
+- isolate imported code behind Awwab-owned typed interfaces;
+- strip provider-specific and hosted-service paths;
+- preserve attribution and record copied files in `THIRD_PARTY_NOTICES.md`;
+- add regression tests for no hidden AI API/network calls, user-scope isolation, permission checks and bounded resource use;
+- reject GPL/AGPL and unresolved-licence code until the owner makes a separate licensing decision.
+
+See [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).

@@ -276,3 +276,30 @@
 - Approval mutation and its audit event are atomic. Regression test covers attempts by a revoked caller to approve and revoke a pending device.
 - CI passed all four jobs on commit `317e742b368d3f37e0948270978c50096e858974`: https://github.com/mdanasaaq-design/Awwab/actions/runs/40685807443
 - Scope limitation: emulator coverage is not a live deployment test; backend Functions are still not deployed to the Firebase project.
+
+
+## New reuse-programme risks (2026-10-30)
+
+### AWW-REUSE-001 — Upstream source/licence mismatch
+- **Priority:** P1
+- **Type:** Supply-chain / legal
+- **Status:** Mitigation defined; no source imported yet.
+- **Risk:** Repository-level licence labels can hide per-directory, generated, vendored, model, dataset or submodule licence differences.
+- **Mitigation:** Pin exact commit and inspect every copied file/import; retain notices; record in `THIRD_PARTY_NOTICES.md`; defer GPL/AGPL and unresolved licence sources.
+- **Acceptance:** Every copied source path has a reviewed licence record and automated/manual dependency/security checks.
+
+### AWW-REUSE-002 — Upstream agent code may introduce external model calls
+- **Priority:** P0
+- **Type:** Independence / privacy
+- **Status:** Open; no source imported yet.
+- **Risk:** Agent frameworks often bundle provider adapters, telemetry, hosted APIs or pretrained model paths.
+- **Mitigation:** Copy deterministic components only; remove provider adapters and network defaults; add no-network tests; retain Awwab's random-init model boundary.
+- **Acceptance:** Imported modules pass source review and tests proving no external AI provider/model fallback.
+
+### AWW-REUSE-003 — Research article extraction cannot bypass browser CORS
+- **Priority:** P1
+- **Type:** Architecture / security
+- **Status:** Open; discovered during R1 source inspection.
+- **Risk:** Mozilla Readability parses a DOM document but does not fetch URLs. Browser cross-origin fetch restrictions still apply; adding the parser alone does not enable arbitrary website extraction.
+- **Mitigation:** Keep parser pure; separately design safe URL fetch/allowlist and local or backend fetch boundary. No CORS proxy or private-network fetch.
+- **Acceptance:** URL fetching and parsing are separately tested; block localhost/private/link-local destinations and redirects to them; cap response size/time; preserve source URL/provenance.

@@ -41,3 +41,13 @@
 - Recorded the owner decision to stay on the current Firebase plan and treat Cloudflare Workers as a research candidate only.
 - Distinguished local extracted-copy build success from GitHub main, emulator, live integration and production evidence.
 - No application code, Firebase Rules, Hosting, Functions, or cloud resources were deployed/changed by this documentation update.
+
+
+## 2026-10-30 — Open-source code reuse strategy
+
+- Added a detailed candidate catalogue covering agent workflows, browser automation, memory, research/document parsing, model training, evaluation/security, and speech.
+- Reversed the earlier reference-only/no-copy rule: selected source code may be copied/adapted into Awwab after exact-file licence and security review.
+- Preserved the independent-AI boundary: no third-party pretrained weights, external AI APIs, hosted agents, teacher distillation or remote fallback.
+- Added phased integration order, source-copy checklist, licence exclusions and acceptance criteria.
+- Updated 20 active planning/architecture/security/testing/model/project Markdown files on the strategy branch. Historical phase acceptance records were preserved.
+- No third-party source code, dependency, model/data file, cloud resource, secret or deployment was added by this documentation update.
