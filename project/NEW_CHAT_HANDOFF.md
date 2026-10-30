@@ -118,3 +118,15 @@ The owner explicitly wants us to take useful source code from public GitHub proj
 - Do not deploy, merge, enable billing, create cloud resources, download model/data weights or use paid APIs without explicit approval.
 
 When resuming, inspect the current branch head and CI, then begin R1 rather than restarting the research phase.
+
+
+## A5 continuation — workspace CRUD implementation (2026-10-30)
+
+- Active development branch: `opensource-reuse-strategy`; open draft PR #23 targets `phase-4-memory-research-safety`, which itself is an unmerged draft PR #22 against `main`.
+- The branch is 106 commits ahead of `main` and 0 behind at the latest observed compare. Do not merge either PR without explicit owner approval.
+- Added `apps/web/src/WorkspaceDataPanel.tsx`: Firestore-backed project CRUD (create/edit/archive/restore/delete) and task CRUD (create, priority/due date, status filter/update, delete). App routes Projects and Tasks to these panels; responsive styles added.
+- Task-to-project links remain disabled because current active Rules only check that projectId is a string, not that it references a project owned by the same user.
+- Latest workspace code commits: `1b19052` (panel), `2e4209a` (App integration), `6bc18ee` (styles), `41606e7` (remove duplicate placeholder rendering).
+- **Validation pending:** latest CI run is not visible through the available GitHub run lookup; no local typecheck/build or emulator/browser run has been performed for this slice. Do not claim it passes until observed.
+- No production deploy, Firestore Rules deploy, billing change, cloud resource creation, or merge was performed.
+- Assistant generation remains unavailable because Awwab's own model has not yet been trained. Automations/activity remain placeholders; memory/research need manual browser acceptance. Continue with validation and a UI review before starting another broad feature.
