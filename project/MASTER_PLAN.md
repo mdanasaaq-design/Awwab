@@ -325,3 +325,21 @@ The first full run [41070451570](https://github.com/mdanasaaq-design/Awwab/actio
 ### Workspace Security and Data Integrity — validation result (2026-10-30)
 
 All six GitHub Actions jobs passed in [run 41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092) on tested head `60ca4f9aacf76239ea57082e70a5483974067402`. This includes the Firestore Rules emulator suite and backend callable emulator suite. The phase is automated-validation complete on the development branch; browser acceptance and live Rules verification/deployment remain separate gates. No merge or deployment.
+
+
+## Backend Independence and Trusted Device Architecture — 2026-10-30
+
+### Implemented on development branch
+- Made device registration and its activity event transactional and retry-idempotent.
+- Made user profile initialization transactional.
+- Added callable-emulator coverage for concurrent same-device registration, concurrent profile initialization, and a second authenticated session claiming another trusted device ID.
+- Added an explicit Settings disclosure about the current account-session-only device trust boundary.
+- Retained Firebase Auth + Firestore; did not add a second provider, database, service account or cloud resource.
+
+### Architecture/security decision
+- The current `callerDeviceId` is caller-supplied and is not cryptographic proof of device possession. The emulator characterization test reproduces successful approval by a second session for the same UID.
+- The local Ed25519 challenge model is not wired into the app/backend and is not a production mitigation.
+- Firebase Functions v2 remain undeployed on Spark. Enabling Blaze is not authorized under the $0 constraint.
+- No alternative backend has been proven to satisfy verified Firebase identity, secret isolation, atomic Firestore mutations, replay/rate protection and a guaranteed hard-$0 ceiling for this account.
+
+**Outcome:** architecture/source review and reliability fixes are complete; production trusted-device capability is **NO-GO**. Do not deploy, change billing, or describe device approval/revocation as high-assurance until a reviewed server-verifiable key proof and acceptable runtime exist.
