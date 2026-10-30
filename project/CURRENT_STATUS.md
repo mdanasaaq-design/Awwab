@@ -313,3 +313,12 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Task records now support editing title, description, priority and due date in addition to status changes and deletion.
 - The command-center workspace overview now labels Projects, Tasks, Research and Memory as available in this development branch. Activity is available as a read-only history view; Automations remains explicitly not connected.
 - The workspace UI source and Firestore Rules contract align for the fields currently written by the panels; the Firestore Rules emulator suite passed in run [41068393446](https://github.com/mdanasaaq-design/Awwab/actions/runs/41068393446). This does not prove the same Rules are deployed in the live Firebase project; browser acceptance remains pending.
+
+
+## Task/project reference security hardening — 2026-10-30
+
+- Updated `firestore.rules`: `validTask` now receives the owning UID and checks that any non-null `projectId` exists under that same user's `/projects` collection. Create and update both use the check.
+- Extended `tests/firestore.rules.test.js` for valid same-owner references, null references, missing projects, cross-user projects, and changing a task's reference on update.
+- Commits: Rules `156a239`; emulator tests `6284409`.
+- GitHub Actions run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) is pending on the current PR head. Do not claim validation until all jobs complete successfully.
+- **Deployment boundary:** no live Firestore Rules deployment occurred. Task-to-project linking stays disabled until review/merge and explicit deployment to the target Firebase project. The prior Phase 2I draft PR #21 is not merged and is not the live policy.
