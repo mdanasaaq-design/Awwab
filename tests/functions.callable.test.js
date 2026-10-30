@@ -29,6 +29,25 @@ async function createAuthUser(label) {
   return body;
 }
 
+async function signInAuthUser(email) {
+  const response = await fetch(
+    `${AUTH_BASE}/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=fake-api-key`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password: "Awwab-emulator-test-123!",
+        returnSecureToken: true,
+      }),
+    },
+  );
+  const body = await response.json();
+  assert.equal(response.ok, true, `Auth emulator sign-in failed: ${JSON.stringify(body)}`);
+  assert.equal(typeof body.idToken, "string");
+  return body;
+}
+
 async function invokeCallable(name, data, idToken) {
   const headers = { "content-type": "application/json" };
   if (idToken) headers.authorization = `Bearer ${idToken}`;
@@ -142,6 +161,27 @@ test("first-device bootstrap is atomic and requires an authenticated first enrol
   );
   assert.equal(legacyBootstrap.ok, false);
   assert.equal(legacyBootstrap.error.status, "FAILED_PRECONDITION");
+});
+
+test("concurrent duplicate device registrations are idempotent and audit atomically", async () => {
+  const user = await createAuthUser("registration-race");
+  const deviceId = newDeviceId();
+  const results = await Promise.all(
+    Array.from({ length: 5 }, () =>
+      invokeCallable("registerDevice", bootstrapPayload(deviceId), user.idToken),
+    ),
+  );
+
+  assert.equal(results.every((result) => result.ok), true, JSON.stringify(results));
+  assert.equal(results.every((result) => result.result.deviceId === deviceId), true);
+  assert.equal(results.every((result) => result.result.status === "pending"), true);
+
+  const activity = await listActivity(user.localId, user.idToken);
+  const registrationEvents = activity.filter((event) => event.action === "device_registered");
+  const seenEvents = activity.filter((event) => event.action === "device_seen");
+  assert.equal(registrationEvents.length, 1, JSON.stringify(activity));
+  assert.equal(seenEvents.length, 4, JSON.stringify(activity));
+  assert.equal(activity.length, 5);
 });
 
 test("concurrent revocations cannot remove the final trusted device", async () => {
@@ -411,12 +451,11 @@ test("protected callables validate authentication, inputs, and device state", as
   assert.equal(missingRevoke.ok, false);
   assert.equal(missingRevoke.error.status, "NOT_FOUND");
 
-  const profileFirst = await invokeCallable("ensureUserProfile", {}, trustedUser.idToken);
-  const profileSecond = await invokeCallable("ensureUserProfile", {}, trustedUser.idToken);
-  assert.equal(profileFirst.ok, true);
-  assert.equal(profileSecond.ok, true);
-  assert.equal(profileFirst.result.uid, trustedUser.localId);
-  assert.equal(profileSecond.result.uid, trustedUser.localId);
+  const profileResults = await Promise.all(
+    Array.from({ length: 6 }, () => invokeCallable("ensureUserProfile", {}, trustedUser.idToken)),
+  );
+  assert.equal(profileResults.every((result) => result.ok), true, JSON.stringify(profileResults));
+  assert.equal(profileResults.every((result) => result.result.uid === trustedUser.localId), true);
 });
 
 
@@ -616,6 +655,39 @@ async function seedMemoryAsEmulatorAdmin(uid, memoryId, overrides = {}) {
   const body = await response.json();
   assert.equal(response.ok, true, `Memory seed failed: ${JSON.stringify(body)}`);
 }
+
+test("known limitation: a second account session can claim a trusted caller device ID", async () => {
+  // This is an explicit security-characterization test, not a passing security
+  // guarantee: Firebase Auth identifies the account, while callerDeviceId is
+  // still caller-supplied and is not cryptographic proof of device possession.
+  const firstSession = await createAuthUser("device-id-spoof");
+  const secondSession = await signInAuthUser(firstSession.email);
+  const trustedDeviceId = newDeviceId();
+  const pendingDeviceId = newDeviceId();
+
+  const bootstrap = await invokeCallable(
+    "bootstrapFirstDevice",
+    bootstrapPayload(trustedDeviceId),
+    firstSession.idToken,
+  );
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  const registration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDeviceId),
+    secondSession.idToken,
+  );
+  assert.equal(registration.ok, true, JSON.stringify(registration));
+  assert.equal(registration.result.status, "pending");
+
+  const spoofedApproval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: trustedDeviceId, targetDeviceId: pendingDeviceId },
+    secondSession.idToken,
+  );
+  assert.equal(spoofedApproval.ok, true, JSON.stringify(spoofedApproval));
+  assert.equal(spoofedApproval.result.status, "trusted");
+});
 
 test("assistant memory context requires auth, explicit scope, and a trusted device", async () => {
   const deviceId = newDeviceId();
