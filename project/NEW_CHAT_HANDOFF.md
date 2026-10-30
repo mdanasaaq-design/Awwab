@@ -130,3 +130,11 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 - **Validation pending:** latest CI run is not visible through the available GitHub run lookup; no local typecheck/build or emulator/browser run has been performed for this slice. Do not claim it passes until observed.
 - No production deploy, Firestore Rules deploy, billing change, cloud resource creation, or merge was performed.
 - Assistant generation remains unavailable because Awwab's own model has not yet been trained. Automations/activity remain placeholders; memory/research need manual browser acceptance. Continue with validation and a UI review before starting another broad feature.
+
+
+### Activity view follow-up — 2026-10-30
+
+- Added `ActivityPanel` to `apps/web/src/WorkspaceDataPanel.tsx`, reading the latest 100 events from the signed-in user's activity collection; connected it in `App.tsx` and styled event timestamps.
+- Updated command-center copy so project/task/research/memory/activity sections are labelled available; assistant generation and automations remain unavailable.
+- Activity is read-only and may be empty until a backend that records events is available. No event writes, Rules changes, backend deployment or production deployment were added.
+- Latest observed commit before documentation sync: `e68b50b` for workspace status copy; activity implementation commits: `b3a0b47`, `e606ba2`, `5b4ff07`.
