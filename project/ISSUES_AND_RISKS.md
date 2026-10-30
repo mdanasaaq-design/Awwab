@@ -334,3 +334,9 @@
 - First CI attempt [41070451570](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070451570) failed because the new non-done update condition assumed legacy task documents always contained `completedAt`. The emulator confirmed that an absent field causes a Rules evaluation error.
 - Corrected to allow `completedAt` to be omitted or null unless the task is `done`; the `done` state still requires a timestamp. Fix: `9adcf652c466358934896e206f51e8695e507e12`.
 - Fresh full CI remains required before closure; no live Rules deployment or merge.
+
+
+### AWW-021 validation result — 2026-10-30
+
+- All six CI jobs passed in [run 41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092) on tested head `60ca4f9aacf76239ea57082e70a5483974067402`, including Firestore Rules emulator tests.
+- Branch mitigation is automated-test validated. Live Rules are not deployed; manual browser acceptance and owner approval for merge/deployment remain open. Do not treat this as a live production control until deployed.
