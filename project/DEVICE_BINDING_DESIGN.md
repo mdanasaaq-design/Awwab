@@ -57,3 +57,20 @@ A local-only prototype may use synthetic identities and in-memory challenge stor
 - Documentation clearly says this is a protocol model, not proof of production security or physical-device identity.
 
 No code in this document is wired to Awwab's live app or backend.
+
+
+## Architecture decision update — 2026-10-30
+
+The Ed25519 challenge protocol remains the selected **design candidate**, not a production implementation. The repository now has a callable-emulator characterization test proving that a second authenticated session for the same UID can claim a trusted `callerDeviceId` and approve a pending device. This confirms the live-source design still lacks proof-of-possession.
+
+The existing Firebase Functions v2 code is not deployed because the project remains on Spark and deploying Cloud Functions requires Blaze. No other server runtime has been demonstrated to meet all of these constraints simultaneously:
+
+- Verify Firebase ID tokens and derive UID only from verified claims.
+- Keep private service credentials out of the browser and repository.
+- Issue action/target-bound short-lived challenges.
+- Verify Ed25519 signatures against an immutable enrolled public key.
+- Atomically consume challenges with approval/revocation and audit writes.
+- Enforce rate limits, expiry, replay protection, key lifecycle and account recovery.
+- Guarantee a hard $0 ceiling with no automatic paid upgrade or billable overage for the actual account.
+
+**Decision: NO-GO for live device-key trust until both a reviewed server design and an explicitly acceptable $0 execution path exist.** Do not add a second provider/database or deploy resources to work around the Spark restriction. Keep the existing Firebase Auth/Firestore foundation; Functions remain source-only. The Settings UI discloses the current limitation. This protocol model must not be presented as production device security.
