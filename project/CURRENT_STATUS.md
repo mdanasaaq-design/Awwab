@@ -295,7 +295,7 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Added `apps/web/src/WorkspaceDataPanel.tsx` with signed-in-user-scoped Firestore CRUD for projects and tasks.
 - Projects: create, edit name/description, archive/restore, and delete. Tasks: create with priority and optional due date, filter by status, update status, and delete.
 - All writes use the existing `users/{uid}/projects` and `users/{uid}/tasks` paths and match the current client-writable Firestore field contracts. Task-to-project linking is intentionally withheld because current Rules do not yet validate same-user project references.
-- Connected the panels in `apps/web/src/App.tsx` and added responsive styles. Existing empty placeholders remain for automations and activity.
+- Connected the panels in `apps/web/src/App.tsx` and added responsive styles. Automations remains an empty placeholder; activity is a read-only backend-event view.
 - **Automated validation:** GitHub Actions run [41068393446](https://github.com/mdanasaaq-design/Awwab/actions/runs/41068393446) passed all six jobs on code commit `4782136a6eb487b57effb28fae866fa6288a9293`, including web typecheck/build, Functions/shared typecheck/build, Firestore Rules emulator tests, callable emulator tests, assistant runtime contracts, parser provenance tests, and Model Lab standard-library checks. Later commits only updated documentation. **Manual browser acceptance and live Firebase Rules status remain unverified.** Client writes will be denied if the matching Rules are not deployed in the target Firebase project. No Rules deployment, data migration, production deployment, or billing change was performed.
 - Assistant generation remains disabled until Awwab's own randomly initialized model is actually trained, evaluated, and integrated. This workspace work does not make Awwab v1.0 release-ready.
 
@@ -305,11 +305,11 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Added an account-scoped, read-only activity feed using the existing `users/{uid}/activity` collection and the latest 100 records.
 - The UI displays only backend-recorded event type, action, tool, actor type, outcome, and timestamp. It does not create or infer activity events.
 - The view may remain empty because live backend callables are not deployed on the current Firebase plan. No backend, Rules, or production deployment was performed.
-- Fresh CI and browser validation are still pending for the workspace/activity changes.
+- GitHub Actions run [41068393446](https://github.com/mdanasaaq-design/Awwab/actions/runs/41068393446) passed all six jobs for the workspace/activity code. Manual browser acceptance and live Firebase Rules status remain pending.
 
 
 ### Workspace feature completeness update — 2026-10-30
 
 - Task records now support editing title, description, priority and due date in addition to status changes and deletion.
 - The command-center workspace overview now labels Projects, Tasks, Research and Memory as available in this development branch. Activity is available as a read-only history view; Automations remains explicitly not connected.
-- The workspace UI source and Firestore Rules contract align for the fields currently written by the panels. This is a source-level review only; emulator and browser acceptance remain pending.
+- The workspace UI source and Firestore Rules contract align for the fields currently written by the panels; the Firestore Rules emulator suite passed in run [41068393446](https://github.com/mdanasaaq-design/Awwab/actions/runs/41068393446). This does not prove the same Rules are deployed in the live Firebase project; browser acceptance remains pending.
