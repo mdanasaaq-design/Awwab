@@ -87,3 +87,8 @@ The Awwab project has a default Firestore Native database in asia-south1, but th
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Reuse programme and Firebase boundary (2026-10-30)
+
+The open-source reuse plan does not authorize a Firebase plan upgrade, Functions deployment, new cloud resource, service account, migration or secret configuration. Imported code is reviewed and integrated in the repository first; backend hosting decisions remain governed by [the backend architecture gate](../project/BACKEND_ARCHITECTURE_OPTIONS.md). See [the source reuse catalogue](OPEN_SOURCE_REUSE_CATALOG.md).

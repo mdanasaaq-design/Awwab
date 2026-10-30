@@ -75,3 +75,8 @@ No account, cloud resource, secret, billing setting, production code, Firestore 
 The previous “no secure live $0 path demonstrated” finding remains correct, but should not be read as proof that no possible path exists. A more concrete candidate is documented in [Free/Zero Firestore Backend Feasibility](FREE_ZERO_FIRESTORE_BACKEND_FEASIBILITY.md): a Cloudflare Worker, strict Firebase ID-token verification, and a server-only Google service identity calling Firestore REST.
 
 This remains a **research candidate only**. Google OAuth access bypasses Firestore Security Rules and therefore makes IAM scope, Worker code, and credential lifecycle critical. No implementation is approved until IAM blast radius, key handling/rotation, token revocation policy, transactional challenge consumption and device invariants, quotas, and true zero-cost operation are demonstrated. Do not create a Worker, service identity, secret, or other cloud resource without explicit owner approval. The safe current state remains Spark plus restrictive Rules and deferred live device management.
+
+
+## Open-source code reuse does not decide backend hosting (2026-10-30)
+
+The owner has approved a reuse-first engineering strategy: selected source code can be copied/adapted into Awwab. This does not select a backend provider, create resources or change the existing Firebase billing decision. LangGraph/Playwright/Readability/Mem0-style modules can be developed and tested locally without provisioning a new cloud service. Any server-side runtime or hosting change still requires the separate architecture decision and explicit owner approval.

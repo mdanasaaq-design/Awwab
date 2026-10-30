@@ -157,3 +157,8 @@ The `/users/{uid}/system/firstDeviceBootstrap` document is a backend-only concur
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Memory algorithm reuse (2026-10-30)
+
+Awwab may adapt deterministic memory candidate merge, deduplication, conflict and temporal-provenance algorithms from Mem0/Graphiti. These algorithms must map onto the existing Awwab user-scoped Firestore hierarchy and preserve explicit confirmation, sensitivity, provenance, expiry, correction and deletion controls. Do not import provider adapters or vector stores as a side effect. See [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).

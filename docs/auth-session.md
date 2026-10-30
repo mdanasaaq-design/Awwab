@@ -72,3 +72,8 @@ References:
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Imported-code boundary (2026-10-30)
+
+Reused agent/browser/memory libraries never authenticate a user or establish device trust. They receive only the minimum already-authorized context from Awwab and cannot read tokens, mint identity claims, approve actions or alter device state. Awwab's Firebase Auth and device authorization contracts remain authoritative. See [the reuse catalogue](OPEN_SOURCE_REUSE_CATALOG.md).
