@@ -188,3 +188,15 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 - Firestore Rules emulator tests and backend callable emulator tests passed, along with web build, Functions/shared checks, Phase 4 policy, and Model Lab checks.
 - Automated branch validation is complete. Still not done: manual browser acceptance, live Firebase Rules status verification, merge, and explicit live Rules deployment.
 - No merge/deploy/migration/billing change. PR #23 remains draft.
+
+
+## Backend Independence and Trusted Device Architecture — continuation point (2026-10-30)
+
+- Active branch remains `opensource-reuse-strategy`; PR #23 remains draft/open/unmerged unless updated separately.
+- Backend source change `8441553`: device registration and activity event now share one transaction; profile initialization is transactional.
+- Callable tests `73cdbc1`: concurrent duplicate registration/audit consistency, concurrent profile initialization, and explicit caller-ID spoofing characterization.
+- Settings disclosure `5592ff4`: explains that device records currently verify account session, not cryptographic possession of the browser.
+- Confirmed high-priority issue: second authenticated session for same UID can claim a trusted `callerDeviceId` and approve a pending device. The Ed25519 challenge mock is local-only and not wired in.
+- Architecture decision: keep Firebase Auth + Firestore; do not add another backend/database/provider. Cloud Functions v2 are not deployed on Spark; no Blaze upgrade or deployment is authorized under $0 constraint.
+- Phase outcome is source/reliability complete but **NO-GO for production trusted-device security** until a server-verifiable proof-of-possession protocol and atomic challenge consumption are implemented and a verified hard-$0 server path exists.
+- Latest full CI must be checked on the final head. No merge, deployment, migration, service account, or billing change.
