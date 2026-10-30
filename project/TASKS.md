@@ -327,3 +327,10 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [x] Add emulator regressions for project deletion and task completion lifecycle.
 - [ ] Run and pass all six CI jobs on the latest branch head.
 - [ ] Review/merge/deploy Rules only after explicit owner approval; keep project linking disabled until then.
+
+
+### Workspace Rules compatibility fix — 2026-10-30
+
+- [x] Diagnose failure for legacy non-done tasks without `completedAt`.
+- [x] Allow the completion field to be omitted or null for non-done tasks while still requiring it for `done`.
+- [ ] Re-run all CI jobs on latest head and verify the Rules emulator suite.
