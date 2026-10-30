@@ -342,3 +342,17 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [x] Firestore Rules emulator and backend callable emulator jobs passed.
 - [ ] Manual browser acceptance remains outstanding.
 - [ ] Review/merge/deploy Rules only after explicit owner approval; project linking remains disabled until then.
+
+
+## Backend Independence and Trusted Device Architecture — 2026-10-30
+
+- [x] Review Firebase Auth, Firestore, Functions v2 and deployment constraints.
+- [x] Confirm caller-supplied trusted device ID is not proof of possession with a two-session emulator characterization test.
+- [x] Make device registration + activity event transactional and idempotent under concurrent retries.
+- [x] Make profile initialization transactional under concurrent first sign-in.
+- [x] Add callable emulator tests for registration races, audit consistency and profile initialization races.
+- [x] Add Settings disclosure explaining current device trust limitation.
+- [x] Record architecture decision: retain Firebase Auth + Firestore; no second backend or billing change.
+- [x] Record explicit NO-GO for production trusted-device security until device-key proof and a hard-$0 server path are verified.
+- [ ] Implement and independently review server-side device-key proof, challenge consumption, recovery and rotation when an approved backend runtime is available.
+- [ ] Revisit the $0 runtime gate only with explicit owner approval; no Blaze upgrade or deployment is authorized.
