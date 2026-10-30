@@ -340,3 +340,10 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Code commits: Rules `52721d3`; tests `85d7430`; workspace UI `44944a4`.
 - Latest previously completed full CI run [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336) passed all six jobs on earlier head `2278f744`. This phase's code commits are newer; fresh full CI is pending and required before this phase is marked validated.
 - No merge, live Firestore Rules deployment, data migration, production deployment or billing change occurred. Task/project linking remains disabled until the final Rules change is reviewed, merged and explicitly deployed.
+
+
+### Workspace Security CI diagnosis — 2026-10-30
+
+- Run [41070451570](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070451570) failed the Rules suite. Existing tasks without a `completedAt` field were rejected during ordinary updates because the non-done branch accessed the missing field directly.
+- Corrected the rule to allow `completedAt` to be omitted or null whenever status is not `done`; `done` still requires a timestamp and transition into done still requires `request.time`.
+- Correction commit: `9adcf652c466358934896e206f51e8695e507e12`. A new full CI run on this head is required; phase remains unvalidated until it passes.
