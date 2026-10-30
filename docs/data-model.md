@@ -46,8 +46,9 @@ Fields: `name`, `description`, `repositoryReferences`, `status`, `tags`, `create
 - Required client fields: `name`, `status`, `createdAt`, `updatedAt`.
 - Name is 1–160 characters; description is optional and at most 4,000 characters.
 - Status is `active` or `archived`.
-- Tags and repository references are optional lists; the current Rules bound them to 20 entries but do not yet validate individual element types or lengths.
+- Tags and repository references are optional lists, each bounded to 20 entries. The current Rules do not validate each element's type or length; treat these lists as untrusted metadata and do not feed them into backend actions.
 - Create timestamps must use server timestamps; `createdAt` is immutable and `updatedAt` must be a server timestamp on update.
+- Projects are archived/restored rather than hard-deleted. Rules deny client project deletion so tasks cannot be left with dangling project references.
 
 ## Task
 
@@ -58,10 +59,12 @@ Client-writable fields: `title`, `description`, `status`, `priority`, `dueAt`, `
 - Status is `todo`, `in_progress`, `done`, `blocked`, or `cancelled`; priority is `low`, `medium`, `high`, or `urgent`.
 - Client-created tasks must use `source: "user"`; source cannot be changed later.
 - Create timestamps must use server timestamps; `createdAt` is immutable and `updatedAt` must be a server timestamp on update.
-- A task may omit `projectId` or set it to null. A non-null value must be a string naming an existing project under the same user's `/users/{uid}/projects` collection; create and update are both checked by `exists()` in Rules.
+- Client-created tasks start in `todo`; `completedAt` must be null or omitted until completion.
+- A task in `done` state must have a timestamp `completedAt`. Transitioning into `done` sets it to `request.time`; edits to an already-done task preserve the original completion time. Leaving `done` clears it to null.
+- A task may omit `projectId` or set it to null. A non-null value must be a string naming an existing project under the same user's `/users/{uid}/projects` collection; create and update are both checked by `exists()` in Rules. Client project deletion is denied; use archive/restore to preserve references.
 - `recurrence` is not client-writable until its schema and allowed transitions are defined.
 
-Tasks should preserve provenance between user commitments and AI suggestions. Same-user project-reference integrity is implemented and emulator-tested on the development branch only; the matching Rules are not deployed to Firebase. List element validation and detailed status-transition policy remain follow-ups; no backend executor may trust these fields until those contracts are enforced.
+Tasks should preserve provenance between user commitments and AI suggestions. Same-user project-reference integrity, non-deletable project lifecycle, and completion timestamp consistency are implemented on the development branch and covered by emulator tests; the matching Rules are not deployed to Firebase. List element validation and a more granular status-transition policy remain follow-ups; no backend executor may trust unvalidated metadata until those contracts are enforced.
 
 ## Conversation/message
 
@@ -139,9 +142,10 @@ Audit history is backend-controlled and append-oriented.
 ## Firestore client mutation matrix
 
 - **Backend-write-only:** root profile, devices, conversations/messages, automations, preferences, approvals, activity, notifications content, jobs, connections, and the system bootstrap guard.
-- **Owner-readable/deletable:** memories are owner-readable and owner-deletable; memory creation/updates are backend-controlled until provenance and classification validation is implemented.
+- **Owner read/delete plus constrained create/update:** memories are owner-readable and owner-deletable; create is limited to `user_explicit`, while update requires `user_corrected`, with strict schema, sensitivity and confirmation checks.
 - **Owner read plus narrow update:** notifications are owner-readable and the client may change only the boolean `read` field.
-- **Owner CRUD for now:** projects and tasks remain owner CRUD, but their field-level schemas and allowed state transitions still require a separate hardening pass. Backend automation must not treat client-written fields as trusted until that contract is enforced.
+- **Projects:** owner read/create/update; hard delete denied. Archive/restore is the supported lifecycle.
+- **Tasks:** owner read/create/update/delete with field allowlists, immutable provenance, owner-scoped project references, and completion timestamp consistency. Fine-grained status-transition policy and unvalidated list metadata remain follow-ups. Backend automation must not treat client-written fields as trusted beyond the enforced contract.
 - **No client access:** jobs, connections, and system guard paths rely on the default-deny Rules.
 
 This matrix is enforced by `firestore.rules`; Rules tests are the executable source for each allowed and denied mutation.
@@ -170,3 +174,11 @@ Awwab may adapt deterministic memory candidate merge, deduplication, conflict an
 - `validTask(data, uid)` now requires every non-null `projectId` to resolve under `/users/{uid}/projects/{projectId}`. Both task create and update paths pass the owning UID into the validator.
 - Emulator regressions cover a valid same-owner project, null project, missing project, cross-user project, and create/update reference changes.
 - This is a repository-branch change only. CI is pending for commit `6284409`; live Firestore Rules have not been deployed. Keep task-to-project linking disabled in the UI until review/merge and explicit live Rules deployment.
+
+
+## Workspace lifecycle and state-integrity hardening — 2026-10-30
+
+- Project hard deletion is denied in Rules and removed from the workspace UI; archive/restore preserves task references.
+- Task completion state is internally consistent: new tasks start `todo`; `done` requires `completedAt`; entering `done` stamps server request time; edits preserve the timestamp; reopening clears it.
+- Emulator tests cover denied project deletion, successful read after denied deletion, valid completion, edits to completed tasks, forged completion timestamps, reopening, and invalid completion state.
+- This is branch-only until review, merge and explicit Rules deployment.
