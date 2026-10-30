@@ -650,7 +650,7 @@ export function App() {
           </div>
         )}
 
-        {activeSection !== "assistant" && activeSection !== "settings" && activeSection !== "memories" && activeSection !== "research" && (
+        {activeSection !== "assistant" && activeSection !== "settings" && activeSection !== "memories" && activeSection !== "research" && activeSection !== "projects" && activeSection !== "tasks" && (
           <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
             <div className="page-intro">
               <p className="eyebrow">{sectionCopy[activeSection].eyebrow}</p>
