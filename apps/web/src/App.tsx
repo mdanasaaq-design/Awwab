@@ -5,6 +5,7 @@ import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
 import { MemoryPanel } from "./MemoryPanel";
 import { ResearchPanel } from "./ResearchPanel";
+import { ProjectsPanel, TasksPanel } from "./WorkspaceDataPanel";
 
 const sections = [
   { id: "assistant", label: "Assistant", glyph: "⌘", group: "WORKSPACE" },
@@ -624,6 +625,28 @@ export function App() {
               </div>
               <button type="button" className="text-action" onClick={() => setActiveSection("settings")}>Manage devices <span aria-hidden="true">→</span></button>
             </section>
+          </div>
+        )}
+
+        {activeSection === "projects" && (
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
+            <div className="page-intro">
+              <p className="eyebrow">WORKSPACE / PROJECTS</p>
+              <h1>Projects, with the context intact.</h1>
+              <p className="page-description">Create and maintain your projects, descriptions, and active/archive state. Data is scoped to your signed-in account.</p>
+            </div>
+            <ProjectsPanel key={user.uid} uid={user.uid} />
+          </div>
+        )}
+
+        {activeSection === "tasks" && (
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
+            <div className="page-intro">
+              <p className="eyebrow">WORKSPACE / TASKS</p>
+              <h1>A clear view of what needs doing.</h1>
+              <p className="page-description">Create tasks, set priorities and due dates, and track progress. Every change is saved to your account workspace.</p>
+            </div>
+            <TasksPanel key={user.uid} uid={user.uid} />
           </div>
         )}
 
