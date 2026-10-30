@@ -150,3 +150,10 @@ Do not assume a single callable invocation is suitable for long-running research
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Reused implementation components (2026-10-30)
+
+The agent loop remains Awwab-owned, but its deterministic mechanics need not all be handwritten. Selected LangGraph.js state/checkpoint primitives, Mem0 memory algorithms, and Playwright browser helpers may be vendored/adapted after exact-file licence review. These components implement bounded mechanics only; Awwab policy remains authoritative.
+
+Imported code must not decide identity, permissions, approval, risk, budgets or success. Model output, browser content, memories and tool output remain untrusted. The detailed source and integration plan is in [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).

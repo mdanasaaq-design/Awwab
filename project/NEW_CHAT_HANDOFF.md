@@ -102,3 +102,19 @@ Do not jump directly to unrestricted tool execution. First complete the already 
 - Acceptance criteria are recorded in [Phase 1H Command Center Overview](PHASE_1H_COMMAND_CENTER_OVERVIEW.md); task and status records are updated.
 - GitHub Actions run [40684572657](https://github.com/mdanasaaq-design/Awwab/actions/runs/40684572657) subsequently passed all four jobs, including web typecheck/build and both Firebase emulator suites. Browser/manual review remains pending.
 - No deployment, Rules change, billing upgrade, or backend migration was performed.
+
+
+## Owner direction correction — open-source code reuse (2026-10-30)
+
+The owner explicitly wants us to take useful source code from public GitHub projects, adapt it, and integrate it directly into Awwab. Do not repeat the earlier instruction that all external projects are reference-only. Awwab remains independently owned; this is code reuse, not a request to run another company's agent or use its AI model.
+
+- Read [Open-Source Reuse Catalogue and Integration Plan](../docs/OPEN_SOURCE_REUSE_CATALOG.md) first.
+- New planning branch: `opensource-reuse-strategy`, based on `d81779e9996c69b88e6c140ea473eb4b603c4a17`.
+- PR #22 remains draft/open; latest run [40872007847](https://github.com/mdanasaaq-design/Awwab/actions/runs/40872007847) passed all six jobs on its head.
+- First code task: inspect exact Mozilla Readability source commit/files/licence, then integrate the pure article parser into Research with tests and attribution.
+- Next: LangGraph.js state/checkpoint primitives; Mem0 memory algorithms; Playwright local browser adapter; LitGPT/nanoGPT training improvements; MarkItDown parser patterns; Promptfoo evaluation.
+- No third-party pretrained weights, AI APIs, hosted agents, teacher distillation or remote fallback.
+- Every copied file requires exact-file licence/security review and a `THIRD_PARTY_NOTICES.md` entry. Avoid GPL/AGPL and unresolved licences pending a separate owner decision.
+- Do not deploy, merge, enable billing, create cloud resources, download model/data weights or use paid APIs without explicit approval.
+
+When resuming, inspect the current branch head and CI, then begin R1 rather than restarting the research phase.

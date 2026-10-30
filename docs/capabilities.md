@@ -67,3 +67,10 @@ The model never grants itself permission.
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Reuse policy for capability implementation (2026-10-30)
+
+Capability code may be adapted from reviewed open-source projects: browser mechanics from Playwright, article extraction from Mozilla Readability, memory algorithms from Mem0/Graphiti, workflow state from LangGraph.js, and test/evaluation utilities from Promptfoo. Awwab's own capability registry, scope checks, risk classifications, approval UX, ownership checks and audit remain authoritative.
+
+Do not expose a reused library's entire tool surface automatically. Register each imported operation individually with Awwab-owned schemas, least-privilege scopes, limits and verification. See [the reuse catalogue](OPEN_SOURCE_REUSE_CATALOG.md).

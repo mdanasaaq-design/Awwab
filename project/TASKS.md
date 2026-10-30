@@ -286,3 +286,16 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [ ] Obtain explicit owner approval before creating any account, resource, secret, or deployment.
 
 **Important:** Phase 3 research/decision is complete; backend implementation/provisioning acceptance is not. Existing backend acceptance-gate items above remain unchecked.
+
+
+## Open-source reuse programme (added 2026-10-30)
+
+- [ ] R1: inspect exact Mozilla Readability commit, source files, Apache-2.0 notices and tests; integrate a pure article parser into Research.
+- [ ] R2: inspect LangGraph.js and port only the minimal deterministic workflow/checkpoint primitives Awwab needs.
+- [ ] R3: inspect Mem0 deterministic merge/deduplication logic and Graphiti temporal provenance patterns; preserve Awwab consent and Firestore ownership.
+- [ ] R4: implement a local read-only Playwright adapter with a narrow allowlist and sandbox.
+- [ ] R5: compare LitGPT/nanoGPT training code and port selected random-init training/checkpoint optimizations; no pretrained weights.
+- [ ] R6: adapt selected MarkItDown document parsing for explicitly supported file types.
+- [ ] R7: add Promptfoo-inspired local red-team/evaluation fixtures and minimal OpenTelemetry only if useful.
+
+See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for source links, licences, exclusions, implementation order and acceptance criteria. Do not start an item before exact-file licence and dependency review.

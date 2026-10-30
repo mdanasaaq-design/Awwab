@@ -114,3 +114,14 @@ The local Windows folder was extracted from a ZIP and is not a Git clone. Region
 ---
 
 > **Planning sync — 2026-10-27:** Current blockers and decisions are tracked centrally in [Master Plan and Work Audit](MASTER_PLAN.md). Historical acceptance criteria and prior CI results must not be interpreted as proof that live Firebase integration works.
+
+
+## ADR-020 — Reuse and adapt open-source source code inside Awwab
+**Status:** Accepted — 2026-10-30
+
+Awwab should not recreate mature engineering unnecessarily. The project may copy, adapt and maintain selected source files/modules from public repositories inside Awwab after exact-file licence, provenance, dependency and security review. Prefer small deterministic components over whole agent products. Awwab retains its own contracts, identity, data model, policy, permissions, approval, execution, verification and audit. Maintain upstream attribution and a `THIRD_PARTY_NOTICES.md` register. GPL/AGPL and unresolved licences require a separate owner licensing decision.
+
+## ADR-021 — Open-source code reuse does not relax independent-model requirements
+**Status:** Accepted — 2026-10-30
+
+Awwab may reuse training algorithms, tensor utilities, optimizers, model architecture implementation patterns, checkpoint code and evaluation tools, but Awwab's own model weights must start from random initialization. No third-party pretrained weights, model API, hosted agent, teacher-model distillation or remote AI fallback. User conversations are not training data without separate explicit opt-in. The source catalogue is [OPEN_SOURCE_REUSE_CATALOG.md](../docs/OPEN_SOURCE_REUSE_CATALOG.md).

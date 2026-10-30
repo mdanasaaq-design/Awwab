@@ -85,3 +85,16 @@ The Firestore rules suite requires the configured local Firestore emulator. The 
 Awwab's first independent model workbench is now in `model-lab/`: versioned byte-level tokenizer, JSONL data provenance checks, randomly initialized causal decoder-only Transformer, reproducible small-corpus training script, atomic versioned local checkpoints, local autoregressive inference, and next-token loss/perplexity evaluation. It contains no pretrained weights or external AI provider. A small synthetic fixture can be generated locally; no fixture corpus, checkpoint, or model weights are committed.
 
 The CI workflow checks Python syntax and standard-library tokenizer/data tests without installing PyTorch, downloading datasets, or running training. PyTorch-backed training, checkpoint round-trip, generation, and actual quality evaluation remain unverified until an explicit local dependency setup and smoke test. The production assistant remains disabled and does not load these checkpoints. Do not claim Awwab has a trained assistant until an actual checkpoint has been trained from random initialization, evaluated, and later integrated under a separate phase.
+
+
+## Open-source reuse direction — 2026-10-30
+
+The owner has clarified that Awwab should incorporate selected public source code rather than only study external projects. This is compatible with the independent-model decision: reuse deterministic engineering, not third-party learned weights or external AI APIs.
+
+Potential Phase 4 improvements:
+- Mozilla Readability parser for article extraction, with source provenance and no network inside the parser.
+- Mem0-derived memory merge/deduplication/conflict algorithms, adapted to Awwab's explicit-confirmation and Firestore ownership model.
+- Graphiti temporal fact/provenance patterns only if current memory schema needs evolving facts.
+- Promptfoo-inspired local regression/adversarial tests, without remote model-provider calls.
+
+No code was copied in this documentation pass. The full source/licence matrix and R1–R7 plan are in [OPEN_SOURCE_REUSE_CATALOG.md](../docs/OPEN_SOURCE_REUSE_CATALOG.md). Existing memory controls and current Wikipedia/Crossref behavior must remain intact during integration.

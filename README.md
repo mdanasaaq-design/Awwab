@@ -70,7 +70,7 @@ Awwab should understand outcomes, recover relevant context, plan multi-step work
 - [Roadmap](docs/roadmap.md)
 
 ### Agent runtime research and handoff
-- [Standalone agent-runtime research and decision](docs/agent-runtime-research.md)
+- [Open-source reuse catalogue and integration plan](docs/OPEN_SOURCE_REUSE_CATALOG.md)\n- [Agent runtime and reuse strategy](docs/agent-runtime-research.md)
 - [New-chat handoff and next bounded task](project/NEW_CHAT_HANDOFF.md)
 
 ### Project tracking
@@ -88,3 +88,4 @@ Awwab should understand outcomes, recover relevant context, plan multi-step work
 4. Keep Firebase on the current plan; Cloud Functions deployment is blocked by the Blaze requirement. Do not retry deployment or provision an alternative backend until the architecture comparison is approved.
 5. Implement no new assistant execution until the backend, authentication, device trust, data ownership, and test gates pass.
 6. Treat production release as a separate phase requiring explicit owner authorization.
+\n\n## Open-source reuse strategy (2026-10-30)\n\nAwwab reuses, adapts and maintains selected open-source code inside its own codebase. It does not become a wrapper around another agent or AI provider. Awwab owns product identity, policies, data boundaries and its randomly initialized model. See [the detailed repository catalogue and phased integration plan](docs/OPEN_SOURCE_REUSE_CATALOG.md).\n

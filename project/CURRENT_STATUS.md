@@ -243,3 +243,18 @@ See [Master Plan](MASTER_PLAN.md) for the full planned-vs-done audit and exact n
 - Updated [Phase 1H acceptance record](PHASE_1H_COMMAND_CENTER_OVERVIEW.md) and [Tasks](TASKS.md) to distinguish source-verified criteria from outstanding visual/manual acceptance.
 - Automated CI evidence for the relevant frontend baseline and keyboard-focus CSS is recorded in runs [40684572657](https://github.com/mdanasaaq-design/Awwab/actions/runs/40684572657) and [40685073409](https://github.com/mdanasaaq-design/Awwab/actions/runs/40685073409). Browser review across desktop and narrow mobile, keyboard interaction, focus appearance, and screen-reader behavior remain outstanding.
 - No application code, backend, Firebase Rules/configuration, dependency, secret, or deployment setting changed in this audit. No deployment was performed.
+
+
+## Open-source reuse strategy update — 2026-10-30
+
+**Current planning branch:** `opensource-reuse-strategy`, based on `d81779e9996c69b88e6c140ea473eb4b603c4a17`.
+
+The owner clarified that useful public GitHub source code should be copied/adapted and integrated into Awwab itself. Previous reference-only/no-copy wording is superseded. This is code reuse, not dependence on another AI model or hosted agent.
+
+- Detailed catalogue: [OPEN_SOURCE_REUSE_CATALOG.md](../docs/OPEN_SOURCE_REUSE_CATALOG.md).
+- First planned code task: inspect and vendor/adapt Mozilla Readability's pure article parser (Apache-2.0), with attribution and tests.
+- Subsequent candidates: LangGraph.js workflow primitives, Mem0 memory algorithms, Playwright browser engine, Promptfoo evaluation patterns, and LitGPT/nanoGPT training optimizations.
+- Firecrawl (AGPL-3.0), Piper (GPL-3.0), Whisper pretrained weights, and repositories with unresolved licences are not approved for copying/use.
+- No third-party pretrained model weights, external AI API, hosted agent, teacher distillation or remote fallback is allowed.
+- No source code has been copied by this documentation update. The next implementation phase must pin upstream commit SHA and exact file list before the transplant.
+- Latest observed CI run [40872007847](https://github.com/mdanasaaq-design/Awwab/actions/runs/40872007847) passed all six jobs on `d81779e`. PR #22 remains open and draft. The new documentation branch has not been merged or deployed.

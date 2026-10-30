@@ -234,3 +234,33 @@ The lockfile backup is already verified. If local synchronization is needed, run
 - Added [Backend Architecture Options](BACKEND_ARCHITECTURE_OPTIONS.md), comparing staying on Spark/deferred live device management, a Cloudflare Worker API with existing Firebase Auth/Firestore, and Supabase Edge Functions/Postgres/Auth.
 - **No architecture is selected.** Keep the existing Firebase project unchanged and do not upgrade billing, create accounts/resources, migrate data, or deploy alternate infrastructure without explicit owner approval.
 - Cloudflare Workers Free currently lists 100,000 requests/day and 10 ms CPU per request; Supabase Free currently lists 500,000 Edge Function invocations/month and 500 MB database per project. These are vendor-published quotas, not guarantees of free operation or proof that Awwab's security requirements are met. Source links and the required security proof are in the comparison document.
+
+
+## 2026-10-30 strategy correction — reuse open-source code inside Awwab
+
+The owner clarified the intended approach: do not merely study other agent repositories; select useful source code, adapt it, and incorporate it into Awwab so the project can move faster. Earlier statements in this plan that prohibited copying all third-party code are superseded.
+
+Awwab remains independent at the product and intelligence level:
+- Awwab owns the product, UI, contracts, data boundaries, permissions, approvals, tools, audit and model weights.
+- Reused code supplies bounded engineering components (workflow state, browser mechanics, parsers, memory algorithms, training optimizations, evaluation and tracing).
+- No third-party pretrained weights, teacher distillation, external AI API, hosted agent runtime or silent remote fallback.
+- Every copied file needs exact-commit/file licence review, attribution, dependency/security review, tests and a `THIRD_PARTY_NOTICES.md` entry.
+- GPL/AGPL and unresolved-licence sources are excluded until a separate licensing decision.
+
+The authoritative candidate matrix, what to copy, what to avoid, and phased acceptance criteria are in [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md).
+
+### New implementation order
+
+1. R1 — Mozilla Readability pure parser integration for Research.
+2. R2 — minimal LangGraph.js-derived workflow/checkpoint primitives.
+3. R3 — Mem0/Graphiti-derived memory merge, conflict and temporal provenance improvements.
+4. R4 — local read-only Playwright browser adapter, with explicit sandbox and domain/action allowlists.
+5. R5 — LitGPT/nanoGPT-derived training optimizations with random initialization only.
+6. R6 — local document parsing adapted from selected MarkItDown code.
+7. R7 — Promptfoo-derived evaluation fixtures and minimal OpenTelemetry.
+
+The first code task is R1 source inspection and bounded parser integration. This does not authorize a crawler, CORS bypass, private-network fetching, external service, dependency sprawl or production deployment.
+
+### Latest verification snapshot
+
+On 2026-10-30, GitHub Actions run [40872007847](https://github.com/mdanasaaq-design/Awwab/actions/runs/40872007847) passed all six jobs on `d81779e9996c69b88e6c140ea473eb4b603c4a17`. PR #22 remains open/draft. This new documentation branch is separate; no merge/deploy has occurred.

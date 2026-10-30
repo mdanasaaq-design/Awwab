@@ -78,3 +78,12 @@ References:
 ---
 
 > **Planning sync — 2026-10-27:** Current blockers and decisions are tracked centrally in [Master Plan and Work Audit](../project/MASTER_PLAN.md). Historical acceptance criteria and prior CI results must not be interpreted as proof that live Firebase integration works.
+
+
+## Third-party source reuse and supply-chain gate (2026-10-30)
+
+Awwab intentionally reuses selected open-source source code, but every transplant is a supply-chain change. Before copying code, pin the upstream commit, inspect the exact file and imported files, verify licence/NOTICE obligations, review install scripts/binaries/network/telemetry/provider calls, preserve attribution, record the changes in `THIRD_PARTY_NOTICES.md`, and add Awwab-specific security tests.
+
+Never copy GPL/AGPL code without an explicit owner licensing decision. Repositories with unresolved licences (including candidates whose GitHub metadata reports `NOASSERTION`) remain reference-only until verified. No imported code can weaken Awwab authentication, user scoping, device trust, policy, approval, audit or prompt-injection controls.
+
+See [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md) for the reviewed candidate list and exact-copy workflow.

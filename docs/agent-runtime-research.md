@@ -1,93 +1,90 @@
-# Awwab Standalone Agent Runtime — Research and Decision
+# Awwab Agent Runtime and Open-Source Reuse Strategy
 
-**Reviewed:** 2026-10-18  
-**Status:** Architecture direction accepted; no framework selected; no runtime code added  
-**Scope:** Source-level ecosystem research to inform an Awwab-owned implementation
+**Reviewed:** 2026-10-30  
+**Decision:** Awwab owns the product, architecture, model, policies and runtime boundaries; selected open-source source code may be copied, adapted and maintained inside Awwab after exact-file licence/security review.  
+**Detailed catalogue:** [Open-Source Reuse Catalogue and Integration Plan](OPEN_SOURCE_REUSE_CATALOG.md)
 
-## Decision in one paragraph
+## Corrected owner direction
 
-Awwab remains a separate, standalone product. The projects below informed the design, but Awwab will not copy their code or make them runtime dependencies as a result of this research. The immediate technical direction is to build a small native TypeScript/Node.js 22 plan-only assistant pipeline inside the existing Firebase backend boundary, using Awwab-owned contracts, state, policy and tests. We should defer framework selection and long-running worker infrastructure until a measured need justifies them.
+Awwab must not become a wrapper around another agent product, hosted agent, external AI API, or third-party pretrained model. However, that does **not** mean every line of engineering must be invented from scratch.
 
-## What the research suggests
+The owner explicitly wants us to reuse useful code from public repositories, adapt it, and incorporate the required pieces directly into Awwab so development is faster. Earlier statements in this document saying “reference only; do not copy” are superseded by this decision.
 
-| Project / standard | Useful pattern to study | Fit for Awwab | Decision |
-|---|---|---|---|
-| [Mastra](https://github.com/mastra-ai/mastra) | TypeScript agent/workflow APIs, memory, approvals, evaluation and observability | Strong ecosystem comparison; verify Node 22, persistence, Functions compatibility and licensing if ever reconsidered | Reference only; no dependency |
-| [LangGraph.js](https://github.com/langchain-ai/langgraphjs) | Explicit graph state, checkpoints, interrupts and resumable workflows | Strong alternative for durable, explicit state transitions; adds framework concepts and persistence choices | Reference only; no dependency |
-| [OpenClaw](https://github.com/openclaw/openclaw) | Gateway/session boundaries, tool policy, sandboxing and prompt-injection threat model | Useful architecture/security study; broad product/runtime footprint is not a direct fit | Reference only; do not transplant |
-| [Dodaios](https://github.com/Dodaios/Dodaios) | Personal-agent UX, multimodal/desktop integrations and broad agent workflows | Useful product inspiration; Python/desktop orientation differs from Awwab web/Firebase/Node baseline | Reference only |
-| [Khoj](https://github.com/khoj-ai/khoj) | Personal knowledge retrieval and self-hosted second-brain patterns | Useful retrieval ideas; AGPL-3.0 licensing deserves careful review before any code reuse | Reference only; no code reuse |
-| [OpenAgent](https://github.com/the-open-agent/openagent) | RAG, tool integrations and agent-loop ideas | Backend is Go-oriented; not a direct Firebase Functions integration | Reference only |
-| [MCP reference servers](https://github.com/modelcontextprotocol/servers) | A common tool/data interoperability protocol | Potential future boundary for selected integrations; individual servers need production security review | Optional future interoperability; never an authorization system |
+## What stays Awwab-owned
 
-## Standalone implementation rules
+- Product identity, UI, user experience and roadmap.
+- Request, conversation, workflow, job and tool contracts.
+- Authentication, user/device ownership, authorization and approval policy.
+- Memory consent, sensitivity, provenance, retention and deletion controls.
+- Tool registry, budgets, risk policy, execution, verification and audit.
+- Independent model architecture choices, random initialization, training data governance, model weights and evaluation thresholds.
+- Integration boundaries, release decisions and user-facing claims.
 
-1. Awwab owns request/plan/job schemas, tool contracts, permission checks, approvals, execution, verification and audit.
-2. Third-party research may influence concepts, not silently introduce source code, packages, services or operational assumptions.
-3. Any future dependency proposal must include a concrete use case, license review, security assessment, Node.js 22/Firebase compatibility, operational cost and an exit strategy.
-4. Model output is untrusted data. Deterministic code enforces identity, ownership, scopes, risk, budgets and state transitions.
-5. No unrestricted shell, generic code execution, browser control or background autonomy in the first runtime slice.
-6. Do not mark an operation successful without independently checkable evidence.
+## What may be reused
 
-## Recommended architecture
+Selected source code and algorithms for:
+- agent workflow/state machines, checkpointing and interrupt/resume;
+- deterministic browser automation, DOM/accessibility snapshots and action verification;
+- memory candidate merge/deduplication and temporal fact representation;
+- article extraction and document parsing;
+- training optimizations, batching, checkpoint resume and evaluation utilities;
+- red-team test cases, regression harnesses, tracing and metrics.
 
-    Web / Android clients
-            |
-    Firebase Auth + device authorization + App Check (where enforced)
-            |
-    Awwab-owned callable request boundary
-            |
-    Input schema + server-derived identity + request limits
-            |
-    Provider-neutral model adapter -> structured plan
-            |
-    Awwab-owned schema validation + capability allowlist
-            |
-    User-scoped plan/job persistence + append-oriented audit
-            |
-    Return plan with status=planned (no side effects)
+We prefer small vendored/adapted modules with attribution over wholesale import of an entire agent product. A pinned dependency is acceptable temporarily when copying is disproportionate, but it must be replaceable and explicitly documented.
 
-A later increment may add approval and a deterministic executor. A still later increment may add durable workers if measured workloads exceed safe callable execution limits. Firestore persistence is not, by itself, a guarantee of exactly-once external side effects.
+## Candidate selection
 
-## First bounded proof of concept
+The current candidate matrix and priority decisions live in [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md). Initial source donors:
+- LangGraph.js (MIT): selected TypeScript workflow/checkpoint primitives.
+- Mozilla Readability (Apache-2.0): pure article extraction.
+- Mem0 (Apache-2.0): deterministic memory merge/deduplication patterns, not provider adapters.
+- Microsoft Playwright (Apache-2.0): deterministic browser engine and tests.
+- Promptfoo (MIT): local deterministic evaluation and red-team test patterns.
+- LitGPT (Apache-2.0), with nanoGPT (MIT) as a readable comparison: from-scratch training code only.
 
-**Goal:** prove the trust boundary and structured-plan contract without doing anything externally.
+Mastra, Stagehand, Browser Use, Graphiti, MarkItDown, Chroma, Qdrant, OpenTelemetry and other candidates are documented with narrower dispositions. AGPL/GPL projects and repositories with unresolved licences are not copied without a separate owner licensing decision.
 
-### Acceptance criteria
+## Architecture rule
 
-- [ ] Request identity is derived from verified backend auth; client-supplied user IDs are ignored/rejected.
-- [ ] Input length, request shape and budgets are validated.
-- [ ] Model output must pass a runtime schema; malformed/partial output becomes a typed failure.
-- [ ] Unknown tool IDs and invalid tool arguments are rejected before any execution path.
-- [ ] No tool execution or external side effects are reachable from this slice.
-- [ ] Plans/jobs can only be read by their authenticated owner.
-- [ ] Request IDs/idempotency prevent duplicate plan records on safe retries.
-- [ ] Errors are sanitized; audit events use correlation IDs and avoid secrets.
-- [ ] Tests cover unauthenticated requests, malformed output, permission failures, duplicate requests, timeouts and cross-user reads.
-- [ ] Build/typecheck and emulator tests run on Node.js 22 and actual outcomes are recorded.
-- [ ] Web composer remains disabled; no deployment occurs.
+```
+Awwab-owned UI and product contracts
+             |
+Awwab Core: context, workflow, memory policy, permissions,
+approvals, tools, budgets, execution, verification, audit
+             |
+Small vendored/adapted deterministic modules
+             |
+Awwab-owned model architecture + randomly initialized weights
+```
 
-### Explicitly out of scope
+Imported code is a component, not an authority. It cannot determine identity, ownership, permission, risk, approval, budget, or success. All imported output is untrusted until Awwab validates it.
 
-- Choosing or embedding Mastra/LangGraph.js or any other researched agent project.
-- Real tool execution, sensitive-action approvals, arbitrary shell/browser control, scheduled autonomy, multi-agent orchestration or production deployment.
-- A separate worker/microservice before a measured need is demonstrated.
+## Source-copying gate
 
-## Important existing project gates
+Before a file is copied:
+1. Pin the upstream repository and exact commit SHA.
+2. Inspect the exact file's licence, headers, NOTICE, generated status and imports.
+3. Review transitive dependencies, install scripts, binaries, telemetry, network calls and model/weight assets.
+4. Remove provider-specific or hosted-service paths not required by Awwab.
+5. Preserve required notices and add a row to `THIRD_PARTY_NOTICES.md`.
+6. Port to Awwab-owned types and add tests for no hidden API/model/network calls.
+7. Run security, licence, dependency, build and integration checks.
 
-Awwab's current status documents show that the assistant runtime is disconnected, the composer is disabled, and project/task/research/automation/activity pages are not yet live workflows. Security and validation gates are tracked in [Current Status](../project/CURRENT_STATUS.md) and [Issues and Risks](../project/ISSUES_AND_RISKS.md). Re-read those files and current main before implementing the next increment.
+The Awwab repository had no root-level licence file in the reviewed tree. This plan does not select an Awwab licence. GPL/AGPL source is deferred pending an explicit distribution/licensing decision.
 
-## Research links
+## Implementation order
 
-- [Mastra repository](https://github.com/mastra-ai/mastra) · [Mastra docs](https://mastra.ai/docs)
-- [LangGraph.js repository](https://github.com/langchain-ai/langgraphjs) · [Persistence concepts](https://github.com/langchain-ai/langgraphjs/blob/main/docs/docs/concepts/persistence.md) · [Human-in-the-loop](https://github.com/langchain-ai/langgraphjs/blob/main/docs/docs/agents/human-in-the-loop.md)
-- [OpenClaw repository](https://github.com/openclaw/openclaw) · [Security overview](https://github.com/openclaw/openclaw/blob/main/docs/gateway/security/index.md) · [Prompt-injection guidance](https://github.com/openclaw/openclaw/blob/main/docs/gateway/security/prompt-injection.md)
-- [Dodaios repository](https://github.com/Dodaios/Dodaios)
-- [Khoj repository and license](https://github.com/khoj-ai/khoj)
-- [OpenAgent repository](https://github.com/the-open-agent/openagent)
-- [MCP reference servers](https://github.com/modelcontextprotocol/servers)
+1. R1: Readability parser source review and integration into Research; pure parser, no fetching.
+2. R2: minimal workflow state/checkpoint primitives from LangGraph.js.
+3. R3: memory merge/conflict/temporal provenance improvements based on Mem0 and Graphiti.
+4. R4: local read-only Playwright browser adapter with sandbox and allowlist.
+5. R5: LitGPT/nanoGPT-derived training improvements for Awwab's random-init Model Lab.
+6. R6: local document ingestion based on selected MarkItDown parsing patterns.
+7. R7: Promptfoo-inspired evaluation and minimal OpenTelemetry.
+8. Release gates, manual testing and owner-authorized deployment.
 
+See the catalogue for detailed acceptance criteria, project links and rejected/deferred options.
 
----
+## Current state
 
-> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+This document update does not itself copy third-party code or add dependencies. The independent model boundary and Model Lab scaffold remain in place. The latest CI run [40872007847](https://github.com/mdanasaaq-design/Awwab/actions/runs/40872007847) passed six jobs on `d81779e`; PR #22 remains draft/open. No deployment, billing change, paid API, model/data download, secret configuration or cloud resource creation occurred.

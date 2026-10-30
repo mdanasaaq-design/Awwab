@@ -57,3 +57,18 @@ Awwab/
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Third-party source integration layout (2026-10-30)
+
+When source code is copied/adapted, keep it isolated and attributable rather than mixing it invisibly into unrelated application files. Proposed layout:
+
+- `packages/awwab-core/` — Awwab-owned contracts, workflow policy and orchestration.
+- `packages/awwab-research/` — Awwab-owned fetch policy, provenance and vendored/adapted Readability parser.
+- `packages/awwab-memory/` — Awwab-owned memory lifecycle and adapted deterministic algorithms.
+- `packages/awwab-browser/` — narrow Playwright adapter and sandbox policy.
+- `model-lab/` — Awwab model and training code; selected LitGPT/nanoGPT-derived files clearly isolated.
+- `third_party/` — only when vendored source must remain recognizably separate; include upstream source and licence notices.
+- `THIRD_PARTY_NOTICES.md` — repository-wide source, commit, copied path, licence, attribution and modification register.
+
+This is a proposed organization, not a claim that these packages/directories already exist. Use the existing workspace conventions after inspecting the actual package layout. Full plan: [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).

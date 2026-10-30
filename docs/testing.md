@@ -82,3 +82,10 @@ The user's extracted Windows ZIP copy passed functions typecheck, functions buil
 ---
 
 > **Planning sync — 2026-10-27:** Current blockers and decisions are tracked centrally in [Master Plan and Work Audit](../project/MASTER_PLAN.md). Historical acceptance criteria and prior CI results must not be interpreted as proof that live Firebase integration works.
+
+
+## Open-source test reuse (2026-10-30)
+
+Use Promptfoo's MIT-licensed evaluation and red-team patterns as source material for Awwab-owned deterministic test fixtures. Tests must run against mocks or Awwab's own local model; do not configure remote provider adapters, API keys or paid evaluation calls. Reuse Playwright fixtures for deterministic browser behavior and preserve upstream notices for any copied code.
+
+Every imported module needs tests for no hidden network/model call, input limits, malformed output, permission isolation, failure handling and attribution. The detailed catalogue is [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).

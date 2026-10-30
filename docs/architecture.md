@@ -170,3 +170,12 @@ The first slice should define its own request, plan, job-status and error contra
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Reuse-first implementation boundary (2026-10-30)
+
+The earlier “do not copy source code” rule is superseded. Awwab should incorporate selected, reviewed open-source modules directly into its own repository to avoid reinventing mature engineering. Prefer small vendored/adapted modules over whole agent frameworks.
+
+Initial donors: LangGraph.js (workflow state/checkpoint primitives), Mozilla Readability (pure article parsing), Mem0 (deterministic memory merge/deduplication patterns), Playwright (deterministic browser engine), Promptfoo (evaluation fixtures), and LitGPT/nanoGPT (from-scratch training improvements). Exact uses, licences, exclusions and phases are documented in [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).
+
+Awwab owns the contracts and trust boundary around every imported module. Reused code may execute a bounded algorithm, but may not authorize an action, select a user scope, approve a sensitive operation, or declare success. No third-party pretrained model weights or external AI APIs are allowed.

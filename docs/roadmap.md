@@ -89,3 +89,19 @@ No unrestricted autonomous execution, financial actions, arbitrary code executio
 ## 2026-10-27 plan correction: backend billing blocker
 
 The Firebase project has a default Firestore Native database in asia-south1, but no Cloud Functions are deployed. A live Functions deployment attempt stopped because the project must be on Blaze. The owner chose to stay on the current plan. Therefore Cloudflare Workers or another free-tier backend is a research candidate only, not an adopted architecture. Do not create resources, migrate data, change live Rules, or deploy while comparing options. See [Master Plan](../project/MASTER_PLAN.md) for the detailed decision process and ordered execution plan.
+
+
+## Reuse-first delivery correction (2026-10-30)
+
+The owner has clarified that Awwab should copy/adapt useful open-source code into its own repository rather than treating all projects as reference-only. This changes implementation efficiency, not product ownership or the independent-model rule.
+
+Ordered reuse work:
+1. Readability parser integration into Research.
+2. Small LangGraph.js-derived workflow/checkpoint primitives.
+3. Mem0/Graphiti-derived memory merge and temporal provenance improvements.
+4. Playwright-based local, read-only browser adapter.
+5. LitGPT/nanoGPT-derived training improvements using random initialization only.
+6. MarkItDown-derived local document parsing for formats Awwab actually supports.
+7. Promptfoo-derived local evaluation and optional OpenTelemetry.
+
+Each phase has a separate source-copy, licence, security, test and acceptance gate in [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md). Do not import entire frameworks or add unrelated services. No production deployment, paid service, cloud resource, model/data download or billing change is authorized by this roadmap.

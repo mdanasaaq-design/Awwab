@@ -65,3 +65,10 @@ Evaluate whether Awwab can prove what it did, not merely whether its final prose
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Reuse of evaluation infrastructure (2026-10-30)
+
+Awwab will adapt Promptfoo's MIT-licensed test-case, assertion, red-team and regression-reporting patterns, not its hosted-provider integrations. Benchmark execution must be local and deterministic where possible, using mock tools and Awwab's own randomly initialized/trained model. Use OpenTelemetry JS patterns only when trace visibility is needed and after licence/dependency review. Never transmit personal prompts, memories or documents to hosted observability.
+
+See [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).
