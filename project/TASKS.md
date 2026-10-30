@@ -309,3 +309,10 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [ ] Confirm all six CI jobs pass on current branch head `6284409d460d861e0bad5f1148284819e4b957ea` (run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) pending at documentation time).
 - [ ] Review and approve the Rules change before merge.
 - [ ] Deploy matching Rules only after explicit owner authorization; keep UI project linking disabled until then.
+
+
+### Task/project Rules test correction — 2026-10-30
+
+- [x] Diagnose CI failure: update rule omitted the newly required `uid` validator argument.
+- [x] Correct update rule to call `validTask(request.resource.data, uid)` in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1`.
+- [ ] Re-run all CI jobs on the corrected PR head and verify the Firestore Rules emulator suite.
