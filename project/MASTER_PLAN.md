@@ -283,7 +283,7 @@ On 2026-10-30, GitHub Actions run [40872007847](https://github.com/mdanasaaq-des
 - Awwab's own model has not been trained from random initialization or evaluated for useful conversational capability; generation is disabled.
 - Cloud Functions are not deployed under the current Firebase plan. Device lifecycle and activity logging are therefore not proven live. Do not upgrade billing or deploy without separate approval.
 - Verify the live Firestore Rules before relying on project/task/memory writes. Emulator success is not proof that live Rules match the repository.
-- Automations are not implemented. Task-to-project linking is disabled until same-user reference validation is implemented and tested.
+- Automations are not implemented. Task-to-project linking remains disabled until the owner-scoped reference Rules change is reviewed, merged, and explicitly deployed; branch implementation and emulator regressions are present, but current CI is pending.
 - Manual browser acceptance, accessibility review, mobile review, Android build/device acceptance, and release/rollback checks remain outstanding.
 
 ### Owner constraints
@@ -291,3 +291,12 @@ On 2026-10-30, GitHub Actions run [40872007847](https://github.com/mdanasaaq-des
 - Keep the $0 budget; no paid APIs, third-party pretrained weights, model downloads, or cloud resources.
 - Keep Awwab independent. Reuse code only with pinned upstream commits, licences, attribution, and tests.
 - No merge, production Hosting deployment, Firestore Rules deployment, Functions deployment, migration, or billing change without explicit approval.
+
+
+### Task/project reference security slice — 2026-10-30
+
+- Added same-user project existence validation to task create/update Rules; null or omitted references remain allowed.
+- Added emulator cases for valid same-owner, null, missing, cross-user, and update-path references.
+- Rules commit: `156a2391d53b046db7f030d7018a26afa2b179ed`; test commit: `6284409d460d861e0bad5f1148284819e4b957ea`.
+- CI run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) is pending. This change is not validated until the complete workflow passes.
+- Keep task/project linking disabled until the Rules change is reviewed, merged and explicitly deployed. No deployment or merge was performed.
