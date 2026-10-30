@@ -182,3 +182,13 @@ Awwab may adapt deterministic memory candidate merge, deduplication, conflict an
 - Task completion state is internally consistent: new tasks start `todo`; `done` requires `completedAt`; entering `done` stamps server request time; edits preserve the timestamp; reopening clears it.
 - Emulator tests cover denied project deletion, successful read after denied deletion, valid completion, edits to completed tasks, forged completion timestamps, reopening, and invalid completion state.
 - This is branch-only until review, merge and explicit Rules deployment.
+
+
+## Device registration and audit transaction contract — 2026-10-30
+
+- Device registration now reads and creates/updates the user-scoped device document inside a Firestore transaction.
+- The matching `device_registered` or `device_seen` activity event is created in the same transaction as the device mutation. Concurrent retries for one device ID should result in one initial registration event and subsequent seen events, not an `ALREADY_EXISTS` race.
+- User profile initialization also reads and creates/updates the profile inside one transaction to avoid concurrent first-sign-in races.
+- The device ID remains a caller-supplied identifier. It is not a proof of possession. A second authenticated session for the same UID can claim a trusted ID in the current callable protocol. See [the device backend security review](../project/DEVICE_BACKEND_SECURITY_REVIEW.md).
+- The local Ed25519 challenge prototype is not connected to this data model. Do not use device status as a high-assurance authorization boundary until server-side proof-of-possession and atomic challenge consumption are implemented.
+- These changes are branch-only source/emulator work. Firebase Functions remain undeployed on Spark; no billing change or deployment occurred.
