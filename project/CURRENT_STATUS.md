@@ -298,3 +298,11 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Connected the panels in `apps/web/src/App.tsx` and added responsive styles. Existing empty placeholders remain for automations and activity.
 - **Validation pending:** no fresh web typecheck/build, emulator test, or browser test has been observed for these commits. Client writes will be denied if the matching Rules are not deployed in the target Firebase project. No Rules deployment, data migration, production deployment, or billing change was performed.
 - Assistant generation remains disabled until Awwab's own randomly initialized model is actually trained, evaluated, and integrated. This workspace work does not make Awwab v1.0 release-ready.
+
+
+### Read-only activity view — 2026-10-30
+
+- Added an account-scoped, read-only activity feed using the existing `users/{uid}/activity` collection and the latest 100 records.
+- The UI displays only backend-recorded event type, action, tool, actor type, outcome, and timestamp. It does not create or infer activity events.
+- The view may remain empty because live backend callables are not deployed on the current Firebase plan. No backend, Rules, or production deployment was performed.
+- Fresh CI and browser validation are still pending for the workspace/activity changes.
