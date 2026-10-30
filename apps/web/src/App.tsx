@@ -713,6 +713,7 @@ export function App() {
                   <p className="eyebrow">SECURITY</p>
                   <h2>Trusted devices</h2>
                   <p className="settings-description">Approve new devices or revoke access you no longer trust.</p>
+                  <p className="muted" role="note">Important: device records currently verify the signed-in account, not cryptographic possession of this browser. Approval and revocation are not yet a high-assurance device-security boundary.</p>
                 </div>
                 <button className="secondary" type="button" disabled={devicesLoading} onClick={() => void refreshDevices()}>{devicesLoading ? "Refreshing…" : "Refresh list"}</button>
               </div>
