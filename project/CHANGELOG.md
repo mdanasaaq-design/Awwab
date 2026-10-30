@@ -101,3 +101,10 @@
 - Added Settings disclosure: current device records authenticate the account session, not cryptographic possession of the browser.
 - Retained Firebase Auth + Firestore. No alternate backend/provider, cloud resource, migration, billing change or deployment.
 - Production trusted-device security remains NO-GO until a reviewed server-verifiable key proof and hard-$0 execution path are available.
+
+
+### Backend/device phase validation — 2026-10-30
+- All six CI jobs passed in [run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634) on tested head `1e0ef8537ab5481c8842292510fffe2d1092903f`.
+- Added CI coverage for the local device lifecycle and Ed25519 key-proof model tests; both passed.
+- Callable emulator coverage passed for transactional registration/profile setup and documented the known caller-ID spoofing limitation.
+- The phase is source/reliability validated; production trusted-device security remains NO-GO pending integrated proof-of-possession and a verified $0 server path.
