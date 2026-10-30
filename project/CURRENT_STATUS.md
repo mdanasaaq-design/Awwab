@@ -288,3 +288,13 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Commits: `2ef5666` (validator) and `b069548` (tests); the Phase 4 record and changelog were updated afterward.
 - **Validation state:** no workflow run or status check has yet been surfaced for the new commits. The previous six-job CI success does not cover this follow-up. Do not treat it as validated until a fresh run completes.
 - **Capability state unchanged:** Awwab's own model remains untrained; generation remains disabled; the runtime is plan-only and no tools or external side effects are enabled.
+
+
+## Project and task workspace implementation — 2026-10-30
+
+- Added `apps/web/src/WorkspaceDataPanel.tsx` with signed-in-user-scoped Firestore CRUD for projects and tasks.
+- Projects: create, edit name/description, archive/restore, and delete. Tasks: create with priority and optional due date, filter by status, update status, and delete.
+- All writes use the existing `users/{uid}/projects` and `users/{uid}/tasks` paths and match the current client-writable Firestore field contracts. Task-to-project linking is intentionally withheld because current Rules do not yet validate same-user project references.
+- Connected the panels in `apps/web/src/App.tsx` and added responsive styles. Existing empty placeholders remain for automations and activity.
+- **Validation pending:** no fresh web typecheck/build, emulator test, or browser test has been observed for these commits. Client writes will be denied if the matching Rules are not deployed in the target Firebase project. No Rules deployment, data migration, production deployment, or billing change was performed.
+- Assistant generation remains disabled until Awwab's own randomly initialized model is actually trained, evaluated, and integrated. This workspace work does not make Awwab v1.0 release-ready.
