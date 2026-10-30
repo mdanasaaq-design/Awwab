@@ -305,3 +305,13 @@ On 2026-10-30, GitHub Actions run [40872007847](https://github.com/mdanasaaq-des
 ### Task/project Rules follow-up — CI correction (2026-10-30)
 
 The first full run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) caught a missing UID argument on the task update path (`validTask` expected two arguments). The create path passed; update did not. Corrected update to pass `uid` in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1`. Do not mark this security slice validated until a fresh full CI run passes on the corrected PR head. No deployment or merge.
+
+
+### Workspace Security and Data Integrity phase — 2026-10-30
+
+- Deny hard deletion of projects in Firestore Rules and remove project delete from the UI; archive/restore preserves references.
+- Enforce task completion timestamp consistency and server-time completion transitions.
+- Add emulator regressions for denied project deletion and completion lifecycle.
+- Commits: Rules `52721d3`, tests `85d7430`, UI `44944a4`.
+- CI for the preceding head `2278f744` passed all six jobs in [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336); the current phase commits require a new complete CI run before closure.
+- Preserve no-merge/no-deploy boundary. Do not enable project linking until matching Rules are reviewed, merged and explicitly deployed.
