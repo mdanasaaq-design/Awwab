@@ -178,7 +178,8 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
-  await assertSucceeds(deleteDoc(project));
+  await assertFails(deleteDoc(project));
+  await assertSucceeds(getDoc(project));
 
   const task = doc(aliceDb, "users/alice/tasks/task-1");
   const taskProject = doc(aliceDb, "users/alice/projects/task-project");
@@ -243,6 +244,29 @@ test("projects and tasks enforce owner schemas and timestamp integrity", async (
   await assertSucceeds(getDoc(task));
   await assertSucceeds(updateDoc(task, {
     status: "in_progress",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(updateDoc(task, {
+    status: "done",
+    completedAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(updateDoc(task, {
+    title: "Completed task title updated",
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    completedAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  }));
+  await assertSucceeds(updateDoc(task, {
+    status: "todo",
+    completedAt: null,
+    updatedAt: serverTimestamp(),
+  }));
+  await assertFails(updateDoc(task, {
+    status: "done",
+    completedAt: null,
     updatedAt: serverTimestamp(),
   }));
   await assertSucceeds(updateDoc(task, {
