@@ -86,3 +86,9 @@
 - Enforce consistency between task `done` status and `completedAt`, using server request time for completion and clearing it when reopening.
 - Add emulator regressions for project deletion denial, valid completion, completed-task edits, forged completion timestamps, and reopening.
 - Fresh CI on these commits is pending; no live Rules deployment or merge was performed.
+
+
+### Workspace Security and Data Integrity — automated validation passed (2026-10-30)
+- All six CI jobs passed on tested head `60ca4f9aacf76239ea57082e70a5483974067402` in [run 41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092).
+- Firestore Rules and backend callable emulator suites passed with the workspace lifecycle and completion-state changes.
+- Browser acceptance and live Rules deployment remain pending; no merge or deployment was performed.
