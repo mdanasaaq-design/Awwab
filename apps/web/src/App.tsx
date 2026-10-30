@@ -584,7 +584,7 @@ export function App() {
                   <span>WORKSPACE DATA</span>
                 </div>
                 <strong className="overview-value status-pending">Partially connected</strong>
-                <p>Memory management and live Wikipedia source lookup are available. Projects, tasks, and assistant retrieval remain disconnected.</p>
+                <p>Projects, tasks, memory management, live source lookup, and read-only activity history are available in this development build. Assistant retrieval and automations remain disconnected.</p>
               </article>
             </section>
 
@@ -610,7 +610,7 @@ export function App() {
                       <strong>{item.title}</strong>
                       <small>{item.description}</small>
                     </span>
-                    <span className="workspace-row-status">{item.id === "research" || item.id === "memories" ? "AVAILABLE" : "NOT CONNECTED"}</span>
+                    <span className="workspace-row-status">"AVAILABLE"</span>
                     <span className="workspace-row-arrow" aria-hidden="true">↗</span>
                   </button>
                 ))}
