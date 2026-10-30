@@ -64,3 +64,10 @@
 - Reject provider responses with unexpected fields, non-object payloads, malformed step records, or duplicate step IDs.
 - Add regression tests for extra top-level metadata, injected step fields, and duplicate identifiers.
 - Latest CI validation is pending; no trained model, assistant activation, or deployment is claimed.
+
+
+### Project and task workspace — 2026-10-30
+- Add account-scoped Firestore project creation, editing, archive/restore, and deletion.
+- Add task creation with priority/due date, status filtering and updates, and deletion.
+- Keep project references disabled until same-user reference validation is present in the active Firestore Rules.
+- CI, emulator and browser validation are pending; no deployment or live Rules change was performed.
