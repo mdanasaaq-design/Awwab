@@ -162,3 +162,14 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 - First run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) failed because the task update rule still called `validTask` with one argument. The emulator error identified the missing `uid` parameter.
 - Corrected update to pass `uid` in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1`.
 - Re-run the complete CI suite on the current PR head before claiming success. Keep project linking disabled until reviewed/merged Rules are explicitly deployed. No merge/deploy authorized.
+
+
+## Workspace Security and Data Integrity — current continuation point (2026-10-30)
+
+- Active branch: `opensource-reuse-strategy`; PR #23 remains draft/open and unmerged.
+- Added project lifecycle protection: Rules deny project hard deletion; UI now offers archive/restore only. This prevents dangling task references.
+- Added task completion invariants: create starts `todo`; `done` requires `completedAt`; transition into done uses request time; completed-task edits preserve completion time; reopening clears it.
+- Emulator tests added for project deletion denial and completion state/timestamp behavior.
+- Commits: Rules `52721d3`, tests `85d7430`, UI `44944a4`.
+- Prior head `2278f744` passed all six jobs in CI run [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336). Current changes need fresh full CI.
+- No merge, deployment, migration or billing change. Keep project linking disabled until the final Rules are reviewed, merged and explicitly deployed.
