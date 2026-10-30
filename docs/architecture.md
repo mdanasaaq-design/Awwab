@@ -179,3 +179,14 @@ The earlier “do not copy source code” rule is superseded. Awwab should incor
 Initial donors: LangGraph.js (workflow state/checkpoint primitives), Mozilla Readability (pure article parsing), Mem0 (deterministic memory merge/deduplication patterns), Playwright (deterministic browser engine), Promptfoo (evaluation fixtures), and LitGPT/nanoGPT (from-scratch training improvements). Exact uses, licences, exclusions and phases are documented in [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).
 
 Awwab owns the contracts and trust boundary around every imported module. Reused code may execute a bounded algorithm, but may not authorize an action, select a user scope, approve a sensitive operation, or declare success. No third-party pretrained model weights or external AI APIs are allowed.
+
+
+## Backend independence and trusted-device decision — 2026-10-30
+
+Awwab keeps Firebase Authentication and Cloud Firestore as its existing identity and user-data foundation. The existing Firebase Functions v2 TypeScript package remains the intended privileged backend boundary in source, but it is **not deployed** on the current Spark project. Cloud Functions deployment requires Blaze, and changing the billing plan is outside the owner's $0 constraint and is not authorized.
+
+No second backend provider, database, worker, service account, or cloud resource is selected. A candidate alternative is not acceptable merely because it advertises a free tier: it must be shown to verify Firebase ID tokens, isolate privileged credentials, perform atomic Firestore operations, handle abuse/rate limits, and hard-stop within a guaranteed $0 ceiling for this actual account. That proof does not currently exist.
+
+The current device callable protocol has a confirmed limitation: a second authenticated session for the same UID can submit another device's trusted ID as `callerDeviceId` and pass the status check. The Ed25519 challenge model is local-only and not wired into the client or Functions. Therefore device records must not be represented as cryptographic or physical-device identity, and device approval/revocation is not a high-assurance security boundary.
+
+The next production-grade device phase requires a reviewed server-verifiable key proof, atomic one-time challenge consumption with state changes and audit records, key recovery/rotation, replay protection, and a separately approved $0-compatible runtime. Until then, keep the existing data/auth stack, disclose the limitation in Settings, and do not deploy Functions or change billing.
