@@ -64,6 +64,15 @@ function formatDate(value: Timestamp | null): string {
   });
 }
 
+function dateInputValue(value: Timestamp | null): string {
+  if (!value) return "";
+  const date = value.toDate();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function firestoreError(error: unknown, fallback: string): string {
   if (typeof error === "object" && error !== null && "code" in error) {
     const code = (error as { code?: unknown }).code;
@@ -279,6 +288,11 @@ export function TasksPanel({ uid }: { uid: string }) {
   const [priority, setPriority] = useState<TaskPriority>("medium");
   const [dueDate, setDueDate] = useState("");
   const [filter, setFilter] = useState<"all" | TaskStatus>("all");
+  const [editingTaskId, setEditingTaskId] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editPriority, setEditPriority] = useState<TaskPriority>("medium");
+  const [editDueDate, setEditDueDate] = useState("");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -357,6 +371,42 @@ export function TasksPanel({ uid }: { uid: string }) {
     }
   }
 
+  function beginEditTask(task: TaskRecord) {
+    setEditingTaskId(task.id);
+    setEditTitle(task.title);
+    setEditDescription(task.description);
+    setEditPriority(task.priority);
+    setEditDueDate(dateInputValue(task.dueAt));
+    setError("");
+  }
+
+  async function saveTask(task: TaskRecord) {
+    const cleanTitle = editTitle.trim();
+    const cleanDescription = editDescription.trim();
+    if (!cleanTitle || cleanTitle.length > 200 || cleanDescription.length > 4000) {
+      setError("Task titles must be 1–200 characters and descriptions no longer than 4,000 characters.");
+      return;
+    }
+    if (!firebaseApp) return;
+    setBusy(true);
+    setError("");
+    try {
+      const dueAt = editDueDate ? Timestamp.fromDate(new Date(`${editDueDate}T23:59:59`)) : null;
+      await updateDoc(doc(getFirestore(firebaseApp), "users", uid, "tasks", task.id), {
+        title: cleanTitle,
+        description: cleanDescription,
+        priority: editPriority,
+        dueAt,
+        updatedAt: serverTimestamp(),
+      });
+      setEditingTaskId("");
+    } catch (cause) {
+      setError(firestoreError(cause, "Could not update the task."));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function updateTaskStatus(task: TaskRecord, status: TaskStatus) {
     if (!firebaseApp || status === task.status) return;
     setBusy(true);
@@ -430,19 +480,37 @@ export function TasksPanel({ uid }: { uid: string }) {
       <div className="workspace-record-list">
         {visibleTasks.map((task) => (
           <article className="memory-record workspace-record" key={task.id}>
-            <div className="memory-record-heading">
-              <div><strong>{task.title}</strong><span className="quiet-label">{task.priority.toUpperCase()} PRIORITY · {task.dueAt ? `DUE ${formatDate(task.dueAt)}` : "NO DUE DATE"}</span></div>
-              <span className="device-badge">{task.status.replaceAll("_", " ")}</span>
-            </div>
-            <p>{task.description || "No additional details."}</p>
-            <div className="memory-actions task-actions">
-              <label className="task-status-control">Status
-                <select value={task.status} disabled={busy} onChange={(event) => void updateTaskStatus(task, event.target.value as TaskStatus)}>
-                  {taskStatuses.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
-                </select>
-              </label>
-              <button className="danger" type="button" disabled={busy} onClick={() => void removeTask(task)}>Delete</button>
-            </div>
+            {editingTaskId === task.id ? (
+              <div className="memory-edit">
+                <label>Task title<input value={editTitle} onChange={(event) => setEditTitle(event.target.value)} maxLength={200} /></label>
+                <label>Description<textarea value={editDescription} onChange={(event) => setEditDescription(event.target.value)} maxLength={4000} rows={3} /></label>
+                <div className="memory-form-row">
+                  <label>Priority<select value={editPriority} onChange={(event) => setEditPriority(event.target.value as TaskPriority)}>{priorities.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
+                  <label>Due date<input type="date" value={editDueDate} onChange={(event) => setEditDueDate(event.target.value)} /></label>
+                </div>
+                <div className="memory-actions">
+                  <button className="primary" type="button" disabled={busy} onClick={() => void saveTask(task)}>Save changes</button>
+                  <button className="secondary" type="button" disabled={busy} onClick={() => setEditingTaskId("")}>Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="memory-record-heading">
+                  <div><strong>{task.title}</strong><span className="quiet-label">{task.priority.toUpperCase()} PRIORITY · {task.dueAt ? `DUE ${formatDate(task.dueAt)}` : "NO DUE DATE"}</span></div>
+                  <span className="device-badge">{task.status.replaceAll("_", " ")}</span>
+                </div>
+                <p>{task.description || "No additional details."}</p>
+                <div className="memory-actions task-actions">
+                  <label className="task-status-control">Status
+                    <select value={task.status} disabled={busy} onChange={(event) => void updateTaskStatus(task, event.target.value as TaskStatus)}>
+                      {taskStatuses.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+                    </select>
+                  </label>
+                  <button className="secondary" type="button" disabled={busy} onClick={() => beginEditTask(task)}>Edit</button>
+                  <button className="danger" type="button" disabled={busy} onClick={() => void removeTask(task)}>Delete</button>
+                </div>
+              </>
+            )}
           </article>
         ))}
       </div>
