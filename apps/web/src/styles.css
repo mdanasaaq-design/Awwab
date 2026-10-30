@@ -477,3 +477,10 @@ button:disabled { cursor: not-allowed; opacity: .56; }
   .task-status-control { width: 100%; justify-content: space-between; }
   .task-status-control select { flex: 1; max-width: 220px; }
 }
+
+.workspace-data .memory-edit input:not([type="checkbox"]),
+.workspace-data .memory-edit select {
+  width: 100%; min-height: 40px; padding: 9px 11px; color: var(--text);
+  background: var(--canvas); border: 1px solid var(--line); border-radius: 8px;
+}
+.workspace-data .memory-edit input[type="date"] { color-scheme: dark; }
