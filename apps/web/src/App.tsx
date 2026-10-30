@@ -5,7 +5,7 @@ import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
 import { MemoryPanel } from "./MemoryPanel";
 import { ResearchPanel } from "./ResearchPanel";
-import { ProjectsPanel, TasksPanel } from "./WorkspaceDataPanel";
+import { ActivityPanel, ProjectsPanel, TasksPanel } from "./WorkspaceDataPanel";
 
 const sections = [
   { id: "assistant", label: "Assistant", glyph: "⌘", group: "WORKSPACE" },
@@ -650,7 +650,18 @@ export function App() {
           </div>
         )}
 
-        {activeSection !== "assistant" && activeSection !== "settings" && activeSection !== "memories" && activeSection !== "research" && activeSection !== "projects" && activeSection !== "tasks" && (
+                {activeSection === "activity" && (
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
+            <div className="page-intro">
+              <p className="eyebrow">SYSTEM / ACTIVITY</p>
+              <h1>A record of what Awwab actually did.</h1>
+              <p className="page-description">Review recent events recorded by the trusted backend. This history is read-only and shows only recorded outcomes.</p>
+            </div>
+            <ActivityPanel key={user.uid} uid={user.uid} />
+          </div>
+        )}
+
+{activeSection !== "assistant" && activeSection !== "settings" && activeSection !== "memories" && activeSection !== "research" && activeSection !== "projects" && activeSection !== "tasks" && activeSection !== "activity" && (
           <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
             <div className="page-intro">
               <p className="eyebrow">{sectionCopy[activeSection].eyebrow}</p>
