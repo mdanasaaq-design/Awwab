@@ -125,7 +125,7 @@ service cloud.firestore {
           && request.resource.data.createdAt == request.time
           && request.resource.data.updatedAt == request.time;
         allow update: if isOwner(uid)
-          && validTask(request.resource.data)
+          && validTask(request.resource.data, uid)
           && request.resource.data.source == resource.data.source
           && request.resource.data.createdAt == resource.data.createdAt
           && request.resource.data.updatedAt == request.time;
