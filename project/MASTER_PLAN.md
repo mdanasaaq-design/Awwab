@@ -300,3 +300,8 @@ On 2026-10-30, GitHub Actions run [40872007847](https://github.com/mdanasaaq-des
 - Rules commit: `156a2391d53b046db7f030d7018a26afa2b179ed`; test commit: `6284409d460d861e0bad5f1148284819e4b957ea`.
 - CI run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) is pending. This change is not validated until the complete workflow passes.
 - Keep task/project linking disabled until the Rules change is reviewed, merged and explicitly deployed. No deployment or merge was performed.
+
+
+### Task/project Rules follow-up — CI correction (2026-10-30)
+
+The first full run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) caught a missing UID argument on the task update path (`validTask` expected two arguments). The create path passed; update did not. Corrected update to pass `uid` in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1`. Do not mark this security slice validated until a fresh full CI run passes on the corrected PR head. No deployment or merge.
