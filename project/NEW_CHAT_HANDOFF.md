@@ -138,3 +138,11 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 - Updated command-center copy so project/task/research/memory/activity sections are labelled available; assistant generation and automations remain unavailable.
 - Activity is read-only and may be empty until a backend that records events is available. No event writes, Rules changes, backend deployment or production deployment were added.
 - Latest observed commit before documentation sync: `e68b50b` for workspace status copy; activity implementation commits: `b3a0b47`, `e606ba2`, `5b4ff07`.
+
+
+### Workspace acceptance follow-up — 2026-10-30
+
+- Tasks also support editing title, description, priority, and due date; status transitions and deletion remain available.
+- Review Firestore rules compatibility in `tests/firestore.rules.test.js`: project create/archive/update and task create/status update/delete contracts are covered by the existing emulator suite. The UI's task fields (`dueAt`, nullable `projectId`, `completedAt`) match the current rule schema.
+- No same-user task-to-project link is offered because current rules do not enforce reference ownership.
+- CI must be observed on the latest PR #23 head; prior six-job green evidence is for earlier commits and does not validate this workspace slice. Browser acceptance and live Firebase Rules status remain outstanding.
