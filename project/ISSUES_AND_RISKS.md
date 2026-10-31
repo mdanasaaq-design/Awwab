@@ -1,3 +1,21 @@
+> **CURRENT RISK SNAPSHOT — 2026-10-31**  
+> Use [Pending Work Audit](PENDING_WORK_AUDIT.md) and [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md) as the current work source. Historical risk entries below are retained for traceability and must be revalidated before reuse.
+>
+> | ID | Priority | Current risk | Status / required control |
+> |---|---|---|---|
+> | AWW-022 | P0 | Caller-supplied callerDeviceId is not proof of device possession; a second session for the same UID can impersonate a trusted ID | Confirmed by emulator characterization; no production high-assurance device trust or privileged action authorization |
+> | AWW-017 | P0/P1 | Firebase Functions deployment requires Blaze on current path; project remains Spark/$0 | No Functions deployed; do not upgrade or create alternate hosted resources without approval |
+> | AWW-MODEL-001 | P0 | Awwab model is untrained; generation disabled | Model Lab scaffold only; no capability claim before random-init training and held-out evaluation |
+> | AWW-SELF-001 | P1 | Self-development code execution could damage stable source or expose secrets | No developer agent yet; require isolated worktree, sandbox, allowlists, no secrets, tests and owner review |
+> | AWW-SELF-002 | P1 | Model/repository prompt injection could alter plans or tool use | Treat repository, memory, web, model, terminal and agent outputs as untrusted; deterministic policy only |
+> | AWW-SELF-003 | P1 | Multiple agents can amplify errors/conflicts | Defer multi-agent until one Developer agent is evaluated; typed handoffs and isolated permissions |
+> | AWW-SELF-004 | P1 | Version/model/data provenance may be lost during self-evolution | Version code, model, agent profile, data manifest and evaluation suite separately |
+> | AWW-SELF-005 | P1 | Unbounded autonomous loops may consume resources or continue after cancellation | Require budgets, retry caps, cancellation, expiry and kill switch |
+> | AWW-LIVE-001 | P1 | Branch Firestore Rules tests do not prove live project Rules are deployed | Read-only verification first; deployment requires explicit owner approval |
+> | AWW-PR-001 | P1 | PR #22 and #23 are layered draft branches and not merged into main | Reconcile ancestry and fresh CI before any merge; owner approval required |
+>
+> ---
+>
 # Awwab Issues and Risks
 
 **Last reviewed:** 2026-10-18  
