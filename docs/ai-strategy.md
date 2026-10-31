@@ -1,95 +1,52 @@
 # Awwab AI and Model Strategy
 
+**Controlling decision:** Awwab uses its own model trained from random initialization. This document supersedes older provider-neutral wording that could be read as permission to call external AI providers.
+
 ## Objective
 
-Use the best available model for each task without making Awwab dependent on one vendor.
+Build Awwab's independent intelligence while keeping the cognitive architecture, memory, goals, policies, tools and identity independent of any one Awwab model checkpoint.
 
-## Model roles
+## Model independence rules
 
-- **Fast:** routing, extraction, simple transformations.
-- **Reasoning:** complex planning and analysis.
-- **Multimodal:** images, screenshots, documents.
-- **Speech:** STT/TTS and real-time voice.
-- **Specialized:** coding, embeddings or local inference only when justified.
+- No external AI APIs or hosted inference.
+- No third-party pretrained weights, fine-tuning from external checkpoints, teacher-model distillation or silent remote fallback.
+- Awwab's model architecture and weights are Awwab-owned and initialized randomly.
+- Reuse deterministic software and training-engineering code after exact-file licence/security review.
+- Do not use user conversations as training data without separate explicit opt-in and privacy/deletion controls.
+- No automatic model/data downloads, paid compute, or large training jobs without explicit owner approval.
 
-## Model router
+## Awwab Model Runtime
 
-Consider task class, quality, context length, tools, latency, cost, privacy and availability.
+The runtime may select among Awwab-owned model versions/checkpoints based on measured task capability, resource requirements and compatibility. It is not a marketplace or external provider router.
 
-## Provider abstraction
+The interface should standardize model/checkpoint identity, architecture and tokenizer versions, input/context format, structured output schemas, cancellation/resource limits, inference errors, capability status, latency and evaluation metadata.
 
-The internal provider interface should represent input, model selection, tools, structured output, streaming, usage and errors without leaking vendor-specific state into the product.
+If no suitable Awwab checkpoint exists, the system must say so or use deterministic/retrieval features. It must never silently call another AI.
 
-## Tool calling
+## Cognitive core vs model
 
-The model may propose a call. Backend must validate tool existence/schema, permissions, risk, approval, execute, verify and sanitize the result.
+Identity, memory, goals, planning state, policies, tool scopes, approvals, audit and development history belong to Awwab's cognitive core. The model supplies learned language and reasoning capability. Replacing a checkpoint must not erase the core's state or change its permissions.
 
-## Structured output
+## Model Lab roadmap
 
-Prefer schemas for intent, plan, tool call, memory candidate, research claim, automation and execution result.
+1. Review the current random-init Transformer, tokenizer, data loader, training loop, checkpoint and inference code.
+2. Verify a local PyTorch environment and run a tiny smoke test only after owner approval of the dependency/environment.
+3. Establish lawful, owner-controlled training data with exact source/licence provenance and held-out splits.
+4. Add reproducibility, checkpoint resume, deduplication, loss/perplexity, structured-output, instruction-following, safety and task benchmarks.
+5. Measure quality, latency, RAM, CPU/battery and device compatibility.
+6. Train from random initialization and document actual results in a model card.
+7. Integrate only after capability gates pass; begin with plan-only output.
 
-## Context
+A tiny synthetic-corpus model proves that training code executes; it does not prove useful general reasoning. High-quality general intelligence from scratch requires substantial lawful data, compute and evaluation. Do not promise frontier-level capability or fixed timelines without evidence.
 
-Use recent conversation, compact summaries, active task/project, relevant memory, retrieved documents and tool state. Avoid indiscriminate context stuffing.
+## Deterministic intelligence before model readiness
 
-## Memory
+The cognitive core can be developed without generative inference: typed identity/memory/goal state, deterministic context filtering, repository inventory, static analysis, workflow state machines and test execution. These features must be described accurately; they do not substitute for a capable model.
 
-The model may propose memory. Deterministic policy decides durability, sensitivity, confidence, expiry and confirmation.
+## Open-source training reuse
 
-## Hallucination controls
-
-Retrieve evidence for current facts, cite sources, state uncertainty, never invent tool results and verify side effects.
+LitGPT/nanoGPT may supply selected random-init training, batching, optimizer, checkpoint-resume and evaluation engineering. Do not use their pretrained checkpoints, model catalog downloads or data. All copied files require exact-file review and attribution.
 
 ## Evaluation
 
-Candidate providers/models must be tested against the Awwab benchmark for quality, safety, tool correctness, factuality, latency, cost and context handling.
-
-## Provider decision
-
-Do not select a permanent provider before evaluation. Choose by measured task performance and operational constraints.
-
-## Current ecosystem note
-
-Modern agent APIs increasingly support web/file tools, function calling, remote MCP and computer-use patterns. These are building blocks, not substitutes for Awwab's own authorization and verification.
-
-References:
-- https://platform.openai.com/docs/
-- https://modelcontextprotocol.io/
-
-
-## Independent agent-runtime direction (research update — 2026-10-18)
-
-Awwab will implement its own runtime and product logic. Research into Mastra, LangGraph.js, OpenClaw, Dodaios, Khoj, OpenAgent and MCP is architectural reconnaissance only. Do not copy their code, import their runtime, or make Awwab depend on any of those projects as part of this direction. Any future third-party dependency requires a separate explicit decision, license review, compatibility review, and measurable benefit.
-
-Use the research to inform requirements, not dictate implementation:
-
-- **Durable workflow state:** model jobs, steps, attempts, checkpoints, cancellation and recovery explicitly.
-- **Human approval:** approval must bind to a specific action, target, arguments/payload digest, expiry and requester; re-check authorization at execution time.
-- **Trust boundaries:** treat retrieved webpages, documents, tool output and model-produced arguments as untrusted input.
-- **Provider neutrality:** keep model-provider interfaces replaceable and avoid provider-specific state in product contracts.
-- **Tool contracts:** allowlisted tools have versioned schemas, scopes, risk, data classes, idempotency, timeout/retry policy, approval policy and verification rules.
-- **Evidence-first completion:** record tool results and verification evidence; never infer success from the absence of an exception.
-- **Bounded execution:** enforce step, token/cost, wall-clock and tool-call budgets; support cancellation and safe failure states.
-
-### Framework research disposition
-
-Mastra and LangGraph.js remain comparison references only; no framework has been selected. The first Awwab proof of concept should be a native, minimal request-to-structured-plan pipeline, not a framework integration. Select infrastructure only after validating Node.js 22, Cloud Functions execution limits, Firestore persistence needs, recovery semantics and operational cost.
-
-### Initial model/runtime experiment
-
-The first experiment should not execute external side effects. It should:
-1. authenticate a request in the backend;
-2. validate a bounded request envelope;
-3. ask a provider-neutral model adapter for a schema-validated plan;
-4. validate every proposed step against an Awwab-owned capability registry;
-5. persist request/plan/status with user ownership and correlation IDs;
-6. return the plan and explicit non-execution status;
-7. test malformed output, unauthorized access, timeouts, retries and cross-user isolation.
-
-Sensitive approval and actual tool execution belong to a later increment after this foundation passes tests.
-
-
----
-
-> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
-\n\n## Open-source implementation reuse (2026-10-30)\n\nAwwab may copy/adapt permissively licensed deterministic source code for orchestration, memory algorithms, browser automation, parsing, evaluation and training infrastructure. This does not authorize third-party pretrained model weights, teacher distillation, hosted agent runtimes or external AI APIs. Awwab's model starts from random initialization. All source transplants require exact-file licence/NOTICE review, dependency/security review, attribution, Awwab-owned contracts and regression tests. The candidate list and decisions are in [the Open-Source Reuse Catalogue](OPEN_SOURCE_REUSE_CATALOG.md). This section supersedes earlier language that treated all external code as reference-only.\n
+Evaluate the Awwab model on held-out data and Awwab-specific tasks: instruction following, structured plans, context use, factuality, refusal/safety, tool proposal correctness, code task reasoning, latency, memory and energy. Security failures are hard failures. Keep benchmark datasets and user conversations separate.
