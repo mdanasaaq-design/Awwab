@@ -75,3 +75,8 @@ Awwab may adapt selected training-engineering code from [LitGPT](https://github.
 **The model-independence rule is unchanged:** do not use their pretrained model weights, model downloads, fine-tuning starting checkpoints, external AI APIs or teacher-model distillation. Awwab's model must initialize its own weights randomly. Reusing software engineering and tensor/training algorithms is allowed; reusing another model's learned weights is not.
 
 The source review and staged plan are in [../docs/OPEN_SOURCE_REUSE_CATALOG.md](../docs/OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Next role in Awwab self-development — 2026-10-31
+
+Model Lab is the source of Awwab's own learned reasoning capability, but the current scaffold has no trained checkpoint and the application does not load it. The Cognitive Core can be built first using deterministic contracts and tests. Model Lab viability is a separate gate: approve the local PyTorch environment, verify training/checkpoint/inference mechanics, define lawful provenance-backed data and held-out evaluations, then train from random initialization only when resources/data are approved. Synthetic data proves pipeline mechanics, not useful assistant reasoning. Never add external model APIs, pretrained weights, teacher distillation, automatic downloads or a silent fallback.
