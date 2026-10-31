@@ -1,3 +1,7 @@
+> **2026-10-31 — superseding current master plan:** The current controlling roadmap is [Awwab Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), with the exhaustive pending-work register in [Pending Work Audit](PENDING_WORK_AUDIT.md). The objective is now to build Awwab's persistent cognitive architecture and then its safe self-development/evolution capability. The former “R1 Readability is the first code task” recommendation is obsolete: R1 is already implemented and integrated into the fixed Wikipedia research path. The old plan below is retained as historical evidence; use the new master plan for all new execution and the active queue in `project/TASKS.md`.
+>
+> ---
+>
 # Awwab Master Plan and Work Audit
 
 **Reviewed:** 2026-10-30  
