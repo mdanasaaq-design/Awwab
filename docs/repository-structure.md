@@ -72,3 +72,23 @@ When source code is copied/adapted, keep it isolated and attributable rather tha
 - `THIRD_PARTY_NOTICES.md` — repository-wide source, commit, copied path, licence, attribution and modification register.
 
 This is a proposed organization, not a claim that these packages/directories already exist. Use the existing workspace conventions after inspecting the actual package layout. Full plan: [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Planned cognitive and evolution modules — 2026-10-31
+
+The following is a **target logical structure**, not a claim that these directories already exist. Create only when a bounded implementation phase needs them:
+
+```
+core/
+  identity/ cognition/ memory/ goals/ reasoning/ planning/ perception/ reflection/
+agents/
+  runtime/ profiles/ orchestration/
+tools/
+  github/ filesystem/ terminal/ research/
+evolution/
+  versions/ evaluation/ rollback/
+security/
+  policy/ approvals/ audit/ sandbox/
+```
+
+Keep the current `apps/`, `backend/`, `packages/`, `model-lab/` and `tests/` boundaries intact. Do not create empty architecture folders or split services before a working vertical slice requires them. Evaluate a local owner-controlled development runner first; do not assume a new hosted backend.
