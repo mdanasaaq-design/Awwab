@@ -116,3 +116,17 @@ The existing Wikipedia path now fetches HTML only from the fixed CORS-enabled Wi
 - Added regression coverage for unexpected provider metadata, injected step fields, and duplicate identifiers in `tests/assistant-runtime.test.mjs`.
 - Changes are on the open-source reuse branch in commits `2ef5666` and `b069548`. CI for these latest commits has not yet been observed; earlier six-job success does not validate this follow-up.
 - This remains a plan-only, no-tools, no-side-effects boundary. It does not connect a trained model or enable assistant generation.
+
+
+## Self-development memory direction — 2026-10-31
+
+The existing Memory workspace is user-controlled storage and explicit context preview; it is not yet a complete cognitive memory system or an automatically wired conversation memory. Preserve those consent controls. The next memory design should distinguish:
+- working memory (temporary active request/task context);
+- episodic memory (evidence-linked events and outcomes);
+- semantic memory (verified facts and relationships with provenance/freshness);
+- procedural memory (tested repeatable procedures);
+- development memory (architecture, decisions, commits, test evidence and failed attempts).
+
+Add goal/subgoal tracking and deterministic context selection with sensitivity filtering, relevance and hard context budgets. Do not silently promote model guesses to durable memory. Do not use saved conversations as training data without separate explicit opt-in. Keep current Firestore rules/ownership and live deployment limitations; no schema migration or Rules deployment is implied.
+
+The controlling implementation order is now Cognitive Core v0, followed by Model Lab viability and plan-only reasoning. See [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md).
