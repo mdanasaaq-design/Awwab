@@ -1,3 +1,21 @@
+> **LATEST HANDOFF — 2026-10-31**  
+> We completed a repository-wide Markdown audit and consolidated the direction around **Awwab Self-Development**. Read these first:
+> 1. [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md) — controlling architecture, phases and acceptance criteria.
+> 2. [Pending Work Audit](PENDING_WORK_AUDIT.md) — completed work, pending work, P0 blockers and 65-file Markdown inventory.
+> 3. [Current Status](CURRENT_STATUS.md) — current implementation/validation state.
+> 4. [Tasks](TASKS.md) — active work queue.
+> 5. [Issues and Risks](ISSUES_AND_RISKS.md) — current security and delivery blockers.
+>
+> **Next implementation phase:** Cognitive Core v0 (identity/constitution, typed memory, goals, context selection and evidence-linked experience/reflection). Do not start multiple agents or unrestricted self-modification first.
+>
+> **Hard constraints:** Awwab's own model only, random initialization; no external AI APIs, third-party pretrained weights, hosted agent runtimes, teacher distillation or silent fallback. Strict $0; no paid services, billing upgrade, new cloud resource, secrets, large downloads, migration, merge or deployment without explicit approval.
+>
+> **Current blockers:** model untrained/generation disabled; Firebase Functions undeployed on Spark; AWW-022 callerDeviceId spoofing confirmed P0; live Firestore Rules not verified; PR #22/#23 draft/open/unmerged; manual browser and Android validation outstanding.
+>
+> **No application code was changed in the planning update.** The documentation branch is `opensource-reuse-strategy`; preserve draft PRs and do not merge/deploy.
+>
+> ---
+>
 # New Chat Handoff — Awwab
 
 **Updated:** 2026-10-27  
