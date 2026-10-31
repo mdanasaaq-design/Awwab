@@ -125,3 +125,19 @@ Awwab should not recreate mature engineering unnecessarily. The project may copy
 **Status:** Accepted — 2026-10-30
 
 Awwab may reuse training algorithms, tensor utilities, optimizers, model architecture implementation patterns, checkpoint code and evaluation tools, but Awwab's own model weights must start from random initialization. No third-party pretrained weights, model API, hosted agent, teacher-model distillation or remote AI fallback. User conversations are not training data without separate explicit opt-in. The source catalogue is [OPEN_SOURCE_REUSE_CATALOG.md](../docs/OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## ADR-022 — Awwab cognitive core is independent of model checkpoints (2026-10-31)
+**Status:** Accepted as target architecture. Identity, memory, goals, policies, task state and development history belong to Awwab-owned persistent state and survive model upgrades. The model supplies learned reasoning capability but does not own permissions or identity.
+
+## ADR-023 — One developer agent before multi-agent autonomy (2026-10-31)
+**Status:** Accepted. Prove one isolated Developer agent end-to-end before adding specialist agents or parallel execution. Initial roles share Awwab's own model; they are not separate neural models.
+
+## ADR-024 — Local owner-controlled development execution is the first candidate (2026-10-31)
+**Status:** Accepted for evaluation, not yet implemented. Evaluate Windows/Termux local execution before provisioning a hosted backend because Firebase Functions are undeployed on Spark and no alternate backend is approved. No local bridge or broad shell access is authorized by this decision alone.
+
+## ADR-025 — Self-evolution is candidate-based and owner-promoted (2026-10-31)
+**Status:** Accepted. Agent experiments occur in isolated branches/worktrees. Awwab may prepare, test and compare candidates; only the owner may approve merge, release, deployment, Rules changes, secrets, billing or migrations.
+
+## ADR-026 — No consciousness or capability overclaim (2026-10-31)
+**Status:** Accepted. “Own mind” refers to an engineered cognitive architecture, not subjective awareness. A tiny synthetic-trained model is a pipeline proof, not a capable assistant. Capability claims require measured evaluations.
