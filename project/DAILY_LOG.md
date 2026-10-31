@@ -69,3 +69,13 @@ This documentation update does not claim local builds, emulator tests, real Fire
 - Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwab/actions/runs/41064652230) passed all six jobs.
 - Confirmed parser/provenance tests, web typecheck/build, Functions/shared typecheck, Firestore rules and backend callable emulator tests all passed.
 - Manual browser testing remains outstanding; no deployment or merge performed.
+
+
+## 2026-10-31 — Self-development roadmap and full Markdown audit
+- Enumerated 65 Markdown files on `opensource-reuse-strategy`; reviewed product, architecture, model, security, phase, handoff, risk and vendor documentation.
+- Found stale top-level status and next-task recommendations; identified provider-neutral AI wording that conflicted with the owner decision to prohibit external AI APIs and pretrained weights.
+- Created a controlling self-development master plan and pending-work audit.
+- Defined the cognitive architecture: identity, working/episodic/semantic/procedural/development memory, goals, reasoning, planning, perception, action, reflection/evaluation, evolution and agent orchestration.
+- Set the delivery order: Cognitive Core v0 → Model Lab viability → plan-only reasoning → repository perception/tools → one Developer agent → version/evolution → multi-agent → controlled autonomy → Android/release.
+- Preserved $0, random-init model, no external AI API/pretrained model, no unapproved resources/billing, and no merge/deployment boundaries.
+- No application code or live resources changed.
