@@ -259,3 +259,18 @@ The Readability parser is now vendored and wired into the existing Wikipedia Res
 ### R1 CI result — 2026-10-30
 
 <code>CI run 41064652230</code> on latest branch head `c36830480c1c85d91624804c88195dab7f3355f8` completed with all six jobs successful: parser/provenance tests, Model Lab checks, web typecheck/build, Functions/shared typecheck, Firestore rules, and backend callable emulator tests. This does not replace manual browser testing of the actual Wikipedia article output.
+
+
+## Self-development priority alignment — 2026-10-31
+
+R1 Mozilla Readability is complete: the parser is vendored with Apache-2.0 attribution and integrated into the fixed Wikipedia parse path. Do not repeat R1 or claim arbitrary URL crawling.
+
+The current reuse priority is aligned to the Self-Development Master Plan:
+1. R2 minimal deterministic workflow/checkpoint primitives (LangGraph.js-derived) only if the Cognitive Core needs them; no full framework adoption.
+2. R3 Mem0-derived memory merge/deduplication/conflict logic, adapted to Awwab's consent, provenance, sensitivity and owner-scope policy.
+3. R5 LitGPT/nanoGPT-derived random-initialization training improvements; no pretrained weights, external model APIs or dataset downloads.
+4. R4 Playwright-based read-only repository/documentation browser mechanics with strict sandbox and allowlist.
+5. R7 Promptfoo-inspired local red-team/evaluation fixtures; no hosted provider integrations.
+6. R6 selected local document parsing only for formats actually supported.
+
+This is a priority order, not permission to copy code immediately. Cognitive Core contracts and acceptance tests come first; each source transplant requires pinned commit, exact-file licence/NOTICE/import review, dependency/security review, attribution and regression tests. Awwab's model, policies, data boundaries and authorization remain independent. See [Self-Development Master Plan](../project/SELF_DEVELOPMENT_MASTER_PLAN.md).
