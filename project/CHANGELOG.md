@@ -108,3 +108,12 @@
 - Added CI coverage for the local device lifecycle and Ed25519 key-proof model tests; both passed.
 - Callable emulator coverage passed for transactional registration/profile setup and documented the known caller-ID spoofing limitation.
 - The phase is source/reliability validated; production trusted-device security remains NO-GO pending integrated proof-of-possession and a verified $0 server path.
+
+
+## 2026-10-31 — Awwab Self-Development planning consolidation
+- Audited all 65 Markdown files on `opensource-reuse-strategy` and classified active product/architecture docs, historical phase evidence, and third-party vendor/licence files.
+- Added [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md) and [Pending Work Audit](PENDING_WORK_AUDIT.md).
+- Reframed the roadmap around Awwab's persistent cognitive core, Awwab-owned random-init model, repository perception, one safe Developer agent, version/evolution management, multi-agent orchestration and controlled autonomy.
+- Corrected stale summaries and superseded the old R1-first next task; Mozilla Readability R1 is already integrated into the fixed Wikipedia research path.
+- Recorded that the model is untrained, generation is disabled, Firebase Functions are undeployed on Spark, AWW-022 remains P0, and PR #22/#23 remain draft/open/unmerged.
+- Documentation only: no application code, dependency, training, merge, deployment, billing, migration or cloud-resource change.
