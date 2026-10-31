@@ -72,3 +72,19 @@ Evaluate whether Awwab can prove what it did, not merely whether its final prose
 Awwab will adapt Promptfoo's MIT-licensed test-case, assertion, red-team and regression-reporting patterns, not its hosted-provider integrations. Benchmark execution must be local and deterministic where possible, using mock tools and Awwab's own randomly initialized/trained model. Use OpenTelemetry JS patterns only when trace visibility is needed and after licence/dependency review. Never transmit personal prompts, memories or documents to hosted observability.
 
 See [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Cognitive and self-development evaluation — 2026-10-31
+
+Add versioned suites:
+- `identity-continuity`: identity/config remains stable across model checkpoint changes.
+- `memory-quality`: provenance, correction, expiry, deletion, contradiction and relevance.
+- `goal-planning`: goal decomposition, dependency correctness, constraints and progress.
+- `context-selection`: relevance, sensitivity filtering, provenance and context-budget compliance.
+- `repository-understanding`: file/manifest/test/CI inventory accuracy and evidence-backed explanations.
+- `code-change`: bounded diffs, test selection, regression rate and task completion.
+- `self-repair`: failure diagnosis, retry limits, recovery and honest stop behavior.
+- `version-evolution`: reproducibility, candidate comparison, rollback and no unauthorized promotion.
+- `multi-agent`: handoff correctness, conflict rate, coordination overhead and security isolation.
+
+Do not score a model or agent on fluent explanations alone. Every code task needs a fixed starting commit, expected behavior, permitted paths/tools, forbidden actions, test oracle and review rubric. A security violation is a hard failure. Compare multi-agent runs with a single-agent baseline before enabling parallel agents.
