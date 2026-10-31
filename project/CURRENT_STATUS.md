@@ -391,3 +391,13 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Backend callable emulator tests passed, including concurrent registration/profile initialization and the two-session caller-ID spoofing characterization.
 - Web build/typecheck, Functions/shared typecheck, Firestore Rules emulator, Phase 4, and Model Lab jobs all passed.
 - Automated branch validation is complete. The confirmed caller-ID spoofing limitation remains a P0 production gate; no secure device proof is integrated.
+
+
+## Self-Development planning consolidation — 2026-10-31
+
+- Added the controlling [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md) and [Pending Work Audit](PENDING_WORK_AUDIT.md).
+- Updated README, architecture, AI/model strategy, agent system, roadmap, product requirements, capabilities, evaluation, testing, security, threat model, engineering rules, repository structure, data-model proposal, independent-model decision, memory/research status, open-source reuse priorities, Android/Firebase boundaries, active task/risk/decision/handoff records and changelog.
+- Audited 65 pre-existing Markdown files; two new planning documents bring the branch total to 67. Historical acceptance records and upstream vendor/licence documents were preserved as historical/legal evidence.
+- The new first implementation phase is Cognitive Core v0. Model Lab verification is a separate owner-approved workstream. Self-development proceeds through read-only repository perception, one isolated Developer agent, candidate versioning/rollback, then multi-agent and controlled autonomy.
+- No application code, dependencies, model training, data download, cloud resource, billing, secret, migration, merge or deployment changed.
+- CI was not rerun because this update is documentation-only; prior six-job evidence remains tied to commit `1ed8ee271d1fc0dd610a92e6505b0bccd00bcc3b` and does not validate future code.
