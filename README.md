@@ -1,91 +1,39 @@
 # Awwab
 
-Awwab is a personal AI operating assistant intended to help with planning, research, memory, projects, tools, automation, and follow-through under user control.
+Awwab is an independent personal AI operating assistant intended to help with planning, research, memory, projects, development tools, automation and follow-through under owner control.
 
-## Current reality
+## Current reality — 2026-10-31
 
-**Implementation maturity:** Early foundation; assistant capabilities are not production-complete.  
-**Next product phase:** Refine the web command center first, then harden the foundation.  
-**Hosting:** Live Hosting has an existing release (last listed release: 2026-10-16); temporary preview channel `awwab-check` was refreshed on 2026-10-27. No production deployment was performed as part of the repository-organization pass.
+Awwab has a web foundation, Firebase sign-in UI, user-controlled memory, bounded Wikipedia/Crossref research, project/task workspace code, an activity view, plan-output validation, and an independent Model Lab scaffold. The development branch's latest documented CI run passed all six jobs.
 
-The web interface includes sign-in, device-management UI, user-controlled memory, source research, and project/task CRUD panels on the open development branch. The assistant runtime is not connected, and generation remains disabled because Awwab's own model is not trained. Automations remain a placeholder. Activity is a read-only register for backend-recorded events and may remain empty while backend callables are unavailable. Project/task panels require the matching Firestore Rules to be deployed in the target environment; this branch change does not deploy them.
+**Awwab is not yet a capable conversational assistant or self-developing agent.** Its own model is untrained and generation remains disabled. There is no integrated cognitive core, repository-aware developer, safe code-execution loop, version-evolution manager, multi-agent orchestration, or scheduled autonomy. Firebase Functions are not deployed on the current Spark plan; device trust has a confirmed P0 limitation.
 
-Use these terms consistently:
-- **Implemented** — present in the repository.
-- **Validated** — exercised with observed evidence.
-- **Planned** — designed but not implemented.
-- **Proposed** — an option requiring a decision.
-- **Blocked** — waiting on an external dependency or decision.
+## Product direction
 
-A successful build proves the checked code compiles and bundles; it does not prove production security or end-to-end behavior.
+Build Awwab's own persistent cognitive architecture—identity, memory, goals, reasoning, planning, perception, action, reflection and evaluation—independently of a specific Awwab model checkpoint. Then give it a safe development loop so it can inspect, modify, test and prepare new versions of its own code under the owner's direction.
 
-## Product promise
-
-Awwab should understand outcomes, recover relevant context, plan multi-step work, use least-privilege tools, ask for approval before sensitive actions, verify important results, explain failures, and offer useful follow-through without becoming noisy.
-
-## Target clients
-
-- **Web/laptop:** primary command center for conversation, research, projects, tasks, approvals, automation, and developer workflows.
-- **Android:** first-class mobile assistant for quick actions, voice/text, notifications, Today, and approvals.
-- **Future surfaces:** voice-first and desktop/system integrations only when they provide real value.
+“Own mind” means an engineered cognitive architecture, not a claim of consciousness.
 
 ## Non-negotiable principles
 
-- Security before autonomy; user control over consequential actions.
-- Least privilege; no secrets in clients or source control.
-- Never claim success without evidence.
-- Never treat model confidence as authorization.
-- Treat retrieved content and tool output as untrusted data.
-- Prefer deterministic code for permissions and state transitions.
-- Make important decisions observable and auditable.
-- Build incrementally and optimize for user value, reliability, and maintainability.
+- Awwab remains a standalone product with its own policies, data boundaries and model.
+- Its model starts from random initialization. No external AI APIs, third-party pretrained weights, hosted agent runtimes, teacher-model distillation or silent fallback.
+- Reuse selected deterministic open-source engineering code only after exact-file licence, dependency, security, attribution and test review.
+- Keep the $0 constraint. No paid APIs/compute, billing upgrade, new cloud resources, secrets, large downloads or deployment without explicit approval.
+- Least privilege, owner control, isolated experiments, auditable changes and verified rollback.
+- Never claim success without observed evidence.
 
 ## Planning source of truth
 
-- [Master Plan and Work Audit](project/MASTER_PLAN.md) — current audit of planned vs completed work, backend billing blocker, detailed phased sequence, acceptance gates, and explicit no-deploy constraints.
+- [Self-Development Master Plan](project/SELF_DEVELOPMENT_MASTER_PLAN.md) — controlling architecture, roadmap and acceptance gates.
+- [Pending Work Audit](project/PENDING_WORK_AUDIT.md) — completed work, open work, blockers and Markdown audit.
+- [Current Status](project/CURRENT_STATUS.md) — implementation and validation snapshot.
+- [Tasks](project/TASKS.md) — active work queue.
+- [Issues and Risks](project/ISSUES_AND_RISKS.md) — unresolved risks and release gates.
+- [New Chat Handoff](project/NEW_CHAT_HANDOFF.md) — continuation instructions.
 
-## Documentation map
+## Development workflow
 
-### Product and architecture
-- [Product requirements](docs/prd.md)
-- [Architecture](docs/architecture.md)
-- [Agent system](docs/agent-system.md)
-- [Capabilities and permissions](docs/capabilities.md)
-- [AI strategy](docs/ai-strategy.md)
+Inspect → plan → reuse reviewed code → implement in an isolated scope → test → security review → document → present evidence. Awwab may prepare changes independently, but merge, release, deployment, billing, secrets, live Rules and migrations require explicit owner approval.
 
-### Security and data
-- [Security model](docs/security.md)
-- [Threat model](docs/threat-model.md)
-- [Data model](docs/data-model.md)
-- [Authentication and session model](docs/auth-session.md)
-- [Engineering rules](docs/rules.md)
-
-### Design, validation, and operations
-- [Design direction](docs/design.md)
-- [Testing strategy](docs/testing.md)
-- [Evaluation framework](docs/evaluation.md)
-- [Firebase setup](docs/firebase-setup.md)
-- [Repository structure and naming conventions](docs/repository-structure.md)
-- [Windows desktop cleanup and synchronization](docs/desktop-cleanup.md)
-- [Roadmap](docs/roadmap.md)
-
-### Agent runtime research and handoff
-- [Open-source reuse catalogue and integration plan](docs/OPEN_SOURCE_REUSE_CATALOG.md)\n- [Agent runtime and reuse strategy](docs/agent-runtime-research.md)
-- [New-chat handoff and next bounded task](project/NEW_CHAT_HANDOFF.md)
-
-### Project tracking
-- [Current status](project/CURRENT_STATUS.md)
-- [Detailed phase plan](project/PHASE_PLAN.md)
-- [Tasks](project/TASKS.md)
-- [Issues and risks](project/ISSUES_AND_RISKS.md)
-- [Architecture decisions](project/DECISIONS.md)
-
-## Current next steps
-
-1. Read the [Master Plan and Work Audit](project/MASTER_PLAN.md) before starting new implementation.
-2. Reconcile the extracted ZIP and actual Git clone; do not assume local edits exist on GitHub.
-3. Finish manual command-center UX acceptance checks and record evidence.
-4. Keep Firebase on the current plan; Cloud Functions deployment is blocked by the Blaze requirement. Do not retry deployment or provision an alternative backend until the architecture comparison is approved.
-5. Implement no new assistant execution until the backend, authentication, device trust, data ownership, and test gates pass.
-6. Treat production release as a separate phase requiring explicit owner authorization.
-\n\n## Open-source reuse strategy (2026-10-30)\n\nAwwab reuses, adapts and maintains selected open-source code inside its own codebase. It does not become a wrapper around another agent or AI provider. Awwab owns product identity, policies, data boundaries and its randomly initialized model. See [the detailed repository catalogue and phased integration plan](docs/OPEN_SOURCE_REUSE_CATALOG.md).\n
+See [architecture](docs/architecture.md), [agent system](docs/agent-system.md), [AI strategy](docs/ai-strategy.md), and [roadmap](docs/roadmap.md).
