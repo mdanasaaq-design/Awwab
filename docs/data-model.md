@@ -192,3 +192,19 @@ Awwab may adapt deterministic memory candidate merge, deduplication, conflict an
 - The device ID remains a caller-supplied identifier. It is not a proof of possession. A second authenticated session for the same UID can claim a trusted ID in the current callable protocol. See [the device backend security review](../project/DEVICE_BACKEND_SECURITY_REVIEW.md).
 - The local Ed25519 challenge prototype is not connected to this data model. Do not use device status as a high-assurance authorization boundary until server-side proof-of-possession and atomic challenge consumption are implemented.
 - These changes are branch-only source/emulator work. Firebase Functions remain undeployed on Spark; no billing change or deployment occurred.
+
+
+## Cognitive state model proposal — 2026-10-31
+
+These are proposed logical records, not approved Firestore writes or a migration. Preserve the existing user-scoped hierarchy and validate live Rules before relying on client writes.
+
+- **IdentityProfile:** version, purpose, owner-controlled principles, capability declarations and limitations.
+- **Goal:** owner, objective, priority, constraints, status, parent goal, progress and evidence references.
+- **WorkingContext:** short-lived request/task context with expiry and bounded context budget.
+- **ExperienceRecord:** event type, request/job ID, timestamp, observed result, evidence references, confidence and correction status.
+- **MemoryItem:** kind (episodic/semantic/procedural/development), provenance, sensitivity, confidence, validity/expiry, visibility, confirmation and correction/deletion metadata.
+- **Plan/Job:** typed steps, dependencies, status transitions, attempts, budgets, cancellation, approval references and verification evidence.
+- **AgentRun:** role profile version, task ownership, isolated workspace, allowed capabilities, input/output references, budget and terminal status.
+- **VersionCandidate:** code commit, model checkpoint/version, agent profile, data manifest, evaluation suite/results, review state and rollback reference.
+
+Do not conflate saved memory with training data; an agent profile with a separately trained model; a code commit with a model checkpoint; model confidence with authorization; or a tool return with verified external state. Any persistence change requires owner-scoped rules, field allowlists, retention/deletion behavior, migration/backup review and explicit deployment approval.
