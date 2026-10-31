@@ -1,3 +1,7 @@
+> **2026-10-31 planning reset:** This document's older phase sequence and append-only checklists are historical. The controlling phase order is now [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md): Cognitive Core v0 → Model Lab viability → plan-only reasoning → repository perception/development tools → one Developer agent → version/evolution manager → multi-agent orchestration → controlled autonomy → Android/multimodal/release. See [Pending Work Audit](PENDING_WORK_AUDIT.md) for current blockers and [TASKS.md](TASKS.md) for the active queue. Do not restart R1; it is implemented.
+>
+> ---
+>
 # Awwab Phase Plan
 
 **Status:** Planning baseline  
