@@ -231,3 +231,8 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 ## Documentation consolidation completion — 2026-10-31
 
 The self-development plan and pending-work audit are now in the repository. Start the next session by reading [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), [Pending Work Audit](PENDING_WORK_AUDIT.md), [Current Status](CURRENT_STATUS.md), and [Tasks](TASKS.md). The active first implementation phase is Cognitive Core v0. The old R1-first task is superseded because Readability is already integrated. No application code was changed and no CI rerun was performed for this docs-only update. Preserve PR #22/#23 as draft/unmerged; no merge, deployment, billing, cloud resource or migration is authorized.
+
+
+## Exact branch handoff — 2026-10-31
+
+The final documentation handoff starts from branch `opensource-reuse-strategy`. The status update immediately preceding this handoff is commit `8979ee84fcab3542258a8856fd2747804729d980`; this handoff update follows it. Fetch the branch head before continuing. The final planning changes are documentation-only and do not authorize implementation, merge, CI/deployment, billing, cloud resources, or migration. Next implementation phase remains Cognitive Core v0.
