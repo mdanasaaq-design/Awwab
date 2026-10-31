@@ -86,3 +86,8 @@ Firebase Authentication establishes the signed-in account. The current device ma
 Do not use the current status check as high-assurance device-bound authorization. The local Ed25519 challenge prototype is not integrated into the app or deployed backend. Settings discloses this limitation. Device-key proof, recovery/rotation and atomic replay protection remain production blockers.
 
 Cloud Functions are source-only on the current Spark project; no billing upgrade or deployment is authorized. Keep Firebase Auth as account identity and do not claim the current device list proves physical-device identity.
+
+
+## Device-trust limitation and self-development boundary — 2026-10-31
+
+The current callable protocol accepts a client-supplied callerDeviceId and does not prove possession of a device private key. A second authenticated session for the same UID can claim a trusted ID; this is a confirmed P0 limitation. Current device records must not authorize high-assurance self-development operations, secret access, approvals, or privileged external actions. A local owner-controlled development runner must enforce its own OS/user boundary and explicit local confirmation until a reviewed server-verifiable device-key protocol and an approved hard-$0 server path exist. Do not treat the local Ed25519 mock as production authentication.
