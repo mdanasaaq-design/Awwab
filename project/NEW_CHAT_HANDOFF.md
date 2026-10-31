@@ -226,3 +226,8 @@ When resuming, inspect the current branch head and CI, then begin R1 rather than
 - CI includes and passed the device lifecycle + Ed25519 key-proof local model suites.
 - Backend callable emulator tests passed concurrent registration/profile initialization and the caller-ID spoofing characterization. The latter confirms the known P0 limitation; it is not a security pass.
 - Phase outcome: reliability fixes and architecture review complete; production trusted-device security remains NO-GO. Keep Firebase Auth + Firestore; no second backend, Blaze upgrade, or deployment.
+
+
+## Documentation consolidation completion — 2026-10-31
+
+The self-development plan and pending-work audit are now in the repository. Start the next session by reading [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), [Pending Work Audit](PENDING_WORK_AUDIT.md), [Current Status](CURRENT_STATUS.md), and [Tasks](TASKS.md). The active first implementation phase is Cognitive Core v0. The old R1-first task is superseded because Readability is already integrated. No application code was changed and no CI rerun was performed for this docs-only update. Preserve PR #22/#23 as draft/unmerged; no merge, deployment, billing, cloud resource or migration is authorized.
