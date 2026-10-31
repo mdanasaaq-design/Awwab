@@ -82,3 +82,16 @@ Still prohibited: third-party pretrained model weights, model APIs, hosted agent
 The model itself remains Awwab's own randomly initialized architecture/weights. We may adapt LitGPT/nanoGPT training code and other training engineering without importing their learned weights. Awwab remains the product owner of its UI, contracts, policies, user data boundaries, tool authorization and model lifecycle.
 
 The detailed candidate catalogue and phase gates are in [OPEN_SOURCE_REUSE_CATALOG.md](../docs/OPEN_SOURCE_REUSE_CATALOG.md). This clarification supersedes any earlier statement that third-party source code must never be copied.
+
+
+## Self-development architecture alignment — 2026-10-31
+
+The independent-model decision remains unchanged: Awwab's model starts from random initialization; no external AI APIs, third-party pretrained weights, hosted agent runtimes, teacher-model distillation or silent fallback. Reusing deterministic software/training engineering remains permitted after exact-file review.
+
+The next product architecture is an Awwab-owned cognitive core that persists independently of model checkpoints: identity/constitution, working and long-term memory, goals, context selection, planning state, perception, reflection and development history. The model supplies learned reasoning; deterministic Awwab code owns policy, authorization, budgets, state transitions, audit and verification.
+
+The first implementation phase is Cognitive Core v0 and does not require model inference. Model Lab viability and training are a separate gate: local dependency setup, lawful data provenance, resource use and any compute-heavy training require owner approval. Synthetic-corpus output is not proof of assistant capability.
+
+The self-development sequence is read-only repository understanding → isolated file/Git/test tools → one Developer agent → candidate version comparison/rollback → specialist agents → bounded scheduled autonomy. Agent roles initially share Awwab's own model; they are not separate trained models. No agent can edit stable directly, self-approve, merge, deploy, change billing or access secrets.
+
+See [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md) and [Pending Work Audit](PENDING_WORK_AUDIT.md). These supersede the older “Stage 2 verification is the next bounded task” wording above; Model Lab verification remains a separate owner-approved workstream.
