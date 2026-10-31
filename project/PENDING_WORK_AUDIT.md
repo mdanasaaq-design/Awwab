@@ -128,3 +128,8 @@ Historical phase acceptance documents remain records of their original scope/evi
 ## 9. Immediate next action
 
 Start **Phase 1 — Cognitive Core v0**, with schemas/contracts and deterministic tests first. Do not start with multi-agent autonomy or broad source imports. Prepare a separate Model Lab verification decision for the owner; do not install heavy dependencies or run resource-intensive training without approval.
+
+
+## Audit inventory count clarification
+
+The audit enumerated and reviewed **65 pre-existing Markdown files** at baseline commit `1ed8ee271d1fc0dd610a92e6505b0bccd00bcc3b`. This planning update added two new controlling documents—this audit and the Self-Development Master Plan—so the branch now contains **67 Markdown files** before any later documentation-only additions. Historical phase acceptance records and upstream vendor licence files remain preserved rather than rewritten.
