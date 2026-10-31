@@ -1,3 +1,44 @@
+> **ACTIVE TASK QUEUE — 2026-10-31 (supersedes older unchecked historical lists below)**  
+> Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). Full work inventory: [Pending Work Audit](PENDING_WORK_AUDIT.md). Historical checklists below are retained as records and must not be treated as the active queue without revalidation.
+>
+> ## P0 — blockers / gates
+> - [ ] Keep assistant generation disabled until an Awwab-owned random-init checkpoint passes held-out capability/safety evaluation.
+> - [ ] Keep high-assurance device actions disabled: AWW-022 callerDeviceId spoofing remains confirmed; no production device trust claim.
+> - [ ] Keep privileged backend operations blocked until a hard-$0 secure runtime is proven and explicitly approved; no Blaze upgrade or hosted resource creation.
+> - [ ] Reconcile PR #22 → PR #23 branch chain and exact main ancestry before any merge; no merge is authorized by this plan.
+> - [ ] Verify live Firestore Rules state read-only; no Rules deployment without approval.
+>
+> ## P1 — next implementation phase: Cognitive Core v0
+> - [ ] Define versioned Awwab identity/constitution contracts.
+> - [ ] Define working, episodic, semantic, procedural and development memory types.
+> - [ ] Define owner-controlled goals/subgoals, priority, constraints and progress.
+> - [ ] Implement deterministic context selection with provenance, sensitivity filters and context budgets.
+> - [ ] Add evidence-linked experience/decision records and reflection contracts.
+> - [ ] Add deterministic tests for ownership, expiry, correction/deletion, conflicts, relevance and context budgets.
+> - [ ] Preserve existing memory UI/data; do not silently auto-inject or train on saved memories.
+>
+> ## P1 — Model Lab readiness (separate approval gate)
+> - [ ] Decide local PyTorch environment and run tiny smoke tests only after owner approval.
+> - [ ] Define a lawful, provenance-recorded, owner-controlled training corpus and held-out evaluation plan.
+> - [ ] Add reproducibility, checkpoint resume, structured-task, instruction-following, safety and resource benchmarks.
+> - [ ] Train/evaluate an actual random-init checkpoint only after explicit resource/data approval.
+>
+> ## P1 — after Cognitive Core and model gates
+> - [ ] Build read-only repository inventory/indexer and GitHub inspection.
+> - [ ] Evaluate a local Windows/Termux development runner; no hosted backend assumption.
+> - [ ] Add sandboxed file edit, Git worktree, allowlisted test execution, cancellation and redacted audit.
+> - [ ] Prove one Developer agent end-to-end on a low-risk issue and produce a reviewable diff.
+> - [ ] Add version candidate metadata, comparison, reproducibility and rollback.
+>
+> ## P2 — later
+> - [ ] Add specialist agent profiles and sequential coordination; parallelize only after measured benefit.
+> - [ ] Add durable scheduled autonomy with budgets, cancellation, expiry and kill switch.
+> - [ ] Continue selected open-source reuse R2–R7 after exact-file licence/security review.
+> - [ ] Complete manual browser/accessibility/mobile acceptance and Android build/device validation.
+> - [ ] Revisit device-key proof only when a secure $0 server execution path exists or the owner explicitly changes constraints.
+>
+> ---
+>
 # Awwab Tasks
 
 **Last reviewed:** 2026-10-28  
