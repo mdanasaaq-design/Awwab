@@ -88,3 +88,8 @@ See the catalogue for detailed acceptance criteria, project links and rejected/d
 ## Current state
 
 This document update does not itself copy third-party code or add dependencies. The independent model boundary and Model Lab scaffold remain in place. The latest CI run [40872007847](https://github.com/mdanasaaq-design/Awwab/actions/runs/40872007847) passed six jobs on `d81779e`; PR #22 remains draft/open. No deployment, billing change, paid API, model/data download, secret configuration or cloud resource creation occurred.
+
+
+## Self-development target alignment — 2026-10-31
+
+The research disposition is now governed by [Awwab Self-Development Master Plan](../project/SELF_DEVELOPMENT_MASTER_PLAN.md). Build the Cognitive Core and deterministic contracts first; then prove one Developer agent before multi-agent orchestration. The preferred first development execution candidate is a local owner-controlled Windows/Termux runner, evaluated without provisioning cloud resources. Awwab must use its own random-init trained model; external AI APIs, pretrained weights, hosted agent runtimes and teacher distillation remain prohibited. Reuse deterministic workflow, memory, browser, training and evaluation code only after exact-file review. The current model is untrained, so no open-ended code-reasoning capability is claimed.
