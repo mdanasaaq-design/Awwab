@@ -1,3 +1,17 @@
+> **Current controlling snapshot — 2026-10-31**  
+> Repository: `mdanasaaq-design/Awwab`; planning baseline `opensource-reuse-strategy` at `1ed8ee271d1fc0dd610a92e6505b0bccd00bcc3b` before this documentation consolidation.  
+> **Product direction:** Awwab Self-Development — persistent cognitive core + Awwab-owned model + safe developer/evolution loop. See [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md) and [Pending Work Audit](PENDING_WORK_AUDIT.md). These supersede older “next task” recommendations below.
+>
+> **Current implemented branch capabilities:** web command center/sign-in UI; user-controlled memory and explicit context preview; Wikipedia/Crossref research with Readability parsing on the fixed Wikipedia path; project/task workspace code; read-only activity view; plan-output validation; independent Model Lab scaffold; transactional device/profile reliability fixes.
+>
+> **Not implemented / not proven:** trained Awwab model and assistant generation; integrated cognitive core (identity/goals/episodic/procedural/development memory/reflection); repository-aware developer; sandboxed file/terminal tools; version/evolution manager; multi-agent orchestration; scheduled autonomy. Manual browser acceptance and live Firestore Rules status remain outstanding.
+>
+> **Critical blockers:** Awwab model is `not_trained`; Firebase Functions are not deployed on Spark; AWW-022 caller-device-ID spoofing is confirmed P0; PR #22/#23 remain draft/open/unmerged. Six CI jobs passed on the documented pre-planning head `1ed8ee2`; that run does not validate the new documentation commit or any live behavior.
+>
+> **Owner constraints:** strict $0; no external AI APIs/pretrained weights/hosted agents; no billing upgrade, new cloud resource, secret, model/data download, migration, merge, Rules/Functions/Hosting deployment or production action without explicit approval. No application code changed in this planning pass.
+>
+> ---
+>
 # Current Status
 
 **Last reviewed:** 2026-10-30  
