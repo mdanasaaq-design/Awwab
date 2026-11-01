@@ -402,7 +402,9 @@ async function loadAssistantMemoryContextForTrustedDevice(uid: string, callerDev
       if (typeof expiry.toMillis !== "function" || expiry.toMillis() <= now) continue;
     }
     const content = value.content.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim();
-    if (!content || content.length > remainingChars) continue;
+    // Match the legacy MemoryPanel/Firestore Rules per-record content bound.
+    // Admin-seeded or malformed records must not bypass the 2,000-char limit.
+    if (!content || content.length > 2000 || content.length > remainingChars) continue;
     memories.push({
       id: doc.id, type: value.type, content, sourceKind: value.sourceKind,
       updatedAt: typeof value.updatedAt?.toDate === "function" ? value.updatedAt.toDate().toISOString() : null,
