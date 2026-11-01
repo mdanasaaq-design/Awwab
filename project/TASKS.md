@@ -457,3 +457,12 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [ ] Build a read-only mapper over synthetic fixtures and reject ambiguous type conversions.
 - [ ] Add round-trip and adapter conformance tests before considering integration.
 - [ ] Review Rules compatibility and obtain explicit approval before any schema/Rules/live-data change.
+ 
+### Cognitive memory compatibility mapper — 2026-11-01
+- [x] Implement a pure, read-only mapper for unambiguous existing MemoryPanel records.
+- [x] Reject ambiguous goal/project types and non-expiring temporary context rather than guessing.
+- [x] Preserve owner scope, source provenance, confirmation, sensitivity, confidence, visibility, expiry and original legacy type.
+- [x] Add synthetic round-trip/rejection tests and CI coverage.
+- [ ] Run and inspect fresh CI for this mapper; do not claim validation until it completes.
+- [ ] Add adapter conformance tests and review Firestore Rules before proposing any integration.
+- [ ] Keep MemoryPanel/Firestore integration, schema changes, migrations and live writes disabled pending separate approval.
