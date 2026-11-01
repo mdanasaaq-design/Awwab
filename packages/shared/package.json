@@ -1,1 +1,13 @@
-{"name":"@awwab/shared","private":true,"version":"0.1.0","type":"module","exports":{"./contracts":"./src/contracts.ts"}}
+{
+  "name": "@awwab/shared",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./contracts": "./src/contracts.ts",
+    "./cognitive-core": {
+      "types": "./src/cognitive-core.d.mts",
+      "import": "./src/cognitive-core.mjs"
+    }
+  }
+}
