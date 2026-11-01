@@ -82,18 +82,27 @@ export function createIdentityProfile(input) {
 
 export function createIdentityRegistry(initialProfile) {
   let current = createIdentityProfile(initialProfile);
+  if (current.version !== 1) fail("invalid_identity_version", "An identity registry must begin at version 1.");
   const versions = new Map([[current.version, current]]);
+  const changes = new Map();
   return Object.freeze({
     getCurrent() { return current; },
     getVersion(version) { return versions.get(version) ?? null; },
     listVersions() { return [...versions.values()]; },
-    addVersion(input) {
+    getChange(version) { return changes.get(version) ?? null; },
+    addVersion(input, approval) {
+      object(approval, "identity revision approval");
+      if (approval.approvedByOwner !== true) fail("owner_approval_required", "A new identity version requires explicit owner approval.");
+      const reason = text(approval.reason, "identity revision reason", 1000);
+      const approvalReference = text(approval.reference, "identity approval reference", 500);
       const next = createIdentityProfile(input);
       if (next.id !== current.id) fail("identity_mismatch", "An identity version cannot change the identity ID.");
       if (next.version !== current.version + 1) fail("invalid_identity_version", "Identity versions must increase by exactly one.");
       if (next.createdAt !== current.createdAt) fail("immutable_field", "Identity creation time cannot change between versions.");
-      if (Date.parse(next.updatedAt) < Date.parse(current.updatedAt)) fail("invalid_identity_version", "Identity updatedAt cannot move backwards.");
+      if (Date.parse(next.updatedAt) <= Date.parse(current.updatedAt)) fail("invalid_identity_version", "Identity updatedAt must strictly increase between versions.");
+      const change = Object.freeze({ version: next.version, previousVersion: current.version, reason, approvalReference, approvedByOwner: true, approvedAt: next.updatedAt });
       versions.set(next.version, next);
+      changes.set(next.version, change);
       current = next;
       return next;
     },
