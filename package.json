@@ -9,7 +9,7 @@
     "web:typecheck": "npm --prefix apps/web run typecheck",
     "functions:build": "npm --prefix backend/functions run build",
     "functions:typecheck": "npm --prefix backend/functions run typecheck",
-    "shared:typecheck": "tsc --noEmit packages/shared/src/contracts.ts",
+    "shared:typecheck": "tsc --noEmit --target ES2022 --module NodeNext --moduleResolution NodeNext packages/shared/src/contracts.ts packages/shared/src/cognitive-core.d.mts",
     "firebase:emulators": "firebase emulators:start --project demo-awwab",
     "firebase:rules:test": "firebase emulators:exec --only firestore --project demo-awwab \"node --test tests/firestore.rules.test.js\"",
     "firebase:callable:test": "firebase emulators:exec --only auth,firestore,functions --project demo-awwab \"node --test tests/functions.callable.test.js\""
