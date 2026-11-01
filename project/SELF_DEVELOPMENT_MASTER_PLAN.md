@@ -284,3 +284,10 @@ This is not a durable adapter and does not prove that any backend meets the cont
 ### Existing Memory UI compatibility gate
 
 A source-only review of `apps/web/src/MemoryPanel.tsx` and `firestore.rules` is documented in [Cognitive Memory Compatibility](../docs/cognitive-memory-compatibility.md). The existing UI stores six product-specific types, Firestore Timestamps, a 2,000-character maximum, and only explicit/corrected user provenance. Several mappings to the new five-kind core are ambiguous. Keep the UI, schema and Rules unchanged; a read-only synthetic mapper and round-trip tests must precede any adapter proposal. No live integration or migration is authorized.
+
+
+### Phase 1 follow-up — versioned durable-adapter boundary (2026-11-01)
+
+Added contract version 1 to `@awwab/shared/cognitive-memory-policy`. The TypeScript interface now specifies object-shaped owner-scoped requests for get/list/create/update/delete/conflict-resolution operations. Mutation contracts require optimistic versions; conflict resolution is all-or-nothing; cross-owner reads must be indistinguishable from missing records. A compile-time fixture is included in `shared:typecheck`.
+
+This is intentionally a **type/shape contract**, not behavioral proof. `assertCognitiveMemoryAdapter` still checks method presence only. No durable adapter exists, and no Firestore schema, Rules, Memory UI, live records, or deployment changed. Remaining Phase 1 work includes isolated behavioral conformance tests, identity version evolution policy, and review of the existing memory UI/Rules before any integration proposal. CI run 41336954479 was pending when this update was recorded; the new fixture has not yet been validated locally by the owner.
