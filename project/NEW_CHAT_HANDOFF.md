@@ -236,3 +236,8 @@ The self-development plan and pending-work audit are now in the repository. Star
 ## Exact branch handoff — 2026-10-31
 
 The final documentation handoff starts from branch `opensource-reuse-strategy`. The status update immediately preceding this handoff is commit `8979ee84fcab3542258a8856fd2747804729d980`; this handoff update follows it. Fetch the branch head before continuing. The final planning changes are documentation-only and do not authorize implementation, merge, CI/deployment, billing, cloud resources, or migration. Next implementation phase remains Cognitive Core v0.
+
+
+## Phase 1 continuation — 2026-11-01
+
+Phase 1 has started. Read [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), [Tasks](TASKS.md), [Current Status](CURRENT_STATUS.md), and [Pending Work Audit](PENDING_WORK_AUDIT.md). The first shared Cognitive Core v0 module is `packages/shared/src/cognitive-core.mjs`; declarations are in `cognitive-core.d.mts`, export path is `@awwab/shared/cognitive-core`, and tests are `tests/cognitive-core.test.mjs`. CI includes the new test command. First check the latest PR CI run and fix any failures before extending the module. The store is in-memory only; do not claim durable memory or connect it to Firestore until Rules and adapter contracts are reviewed. No model, Firebase write, deployment, merge or billing change was made.
