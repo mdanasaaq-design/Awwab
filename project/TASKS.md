@@ -6,9 +6,12 @@
 > - [x] Memory conflict/retention policy prototype with owner-selected conflict commands and no automatic hard deletion.
 > - [x] Read-only legacy-memory compatibility mapper with synthetic round-trip tests; no live MemoryPanel/Firestore integration.
 > - [x] Versioned durable-adapter TypeScript contract, owner-scoped request shapes and compile-time contract fixture committed to development branch at `f324bb5`.
-> - [x] CI run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099) passed all six jobs on code head `4ff8e05`, including the adapter/reference tests and shared typecheck. [ ] Owner-local validation on the synchronized latest branch remains pending.
+> - [x] CI run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099) passed all six jobs on code head `4ff8e05`, including adapter/reference tests and shared typecheck.
+- [x] CI run [41337973262](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337973262) passed all six jobs on code head `d2eabce`, including identity evolution regressions.
+- [ ] Owner-local validation on the synchronized latest branch remains pending.
 > - [x] Add isolated reference-adapter behavior tests for owner isolation, duplicate IDs, optimistic concurrency, deletion, and all-or-nothing conflict resolution. This validates the test fixture only, not any future durable adapter.
-> - [ ] Formalize identity version evolution and correction/retention edge cases.
+> - [x] Formalize identity version evolution: start at v1, require sequential versions, immutable identity ID/creation time, strictly increasing timestamps, and revision reason/approval-reference metadata. The approval flag is a caller declaration, not authentication proof.
+- [ ] Expand correction/retention edge cases and review identity approval binding before any durable integration.
 > - [ ] Review existing MemoryPanel and Rules before proposing any integration; no writes/migration.
 >
 > ## Gates retained
