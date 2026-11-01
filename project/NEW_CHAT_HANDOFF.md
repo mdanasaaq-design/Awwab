@@ -1,14 +1,18 @@
 > **LATEST HANDOFF — 2026-11-02**  
-> Active branch: `opensource-reuse-strategy`; validated code head: `62b9c2521189e52dabab3027e5e3bdf967079fe7`. PR #23 remains draft/open/unmerged and targets PR #22's branch; do not merge either PR.  
-> Read first: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), [Pending Work Audit](PENDING_WORK_AUDIT.md), [Current Status](CURRENT_STATUS.md), [Tasks](TASKS.md), [Issues and Risks](ISSUES_AND_RISKS.md), and [Cognitive Memory Integration Audit](../docs/cognitive-memory-integration-audit.md).
+> Active branch: `opensource-reuse-strategy`; PR #23 remains draft/open/unmerged and targets PR #22's branch; do not merge either PR.
 >
-> **Owner-local validation:** code head `62b9c25` passed 32/32 targeted Node tests, `npm run shared:typecheck`, and `npm run web:build`. CI run [41338217980](https://github.com/mdanasaaq-design/Awwab/actions/runs/41338217980) passed all six jobs. The web build retains non-fatal bundle-size, CommonJS/ESM and ineffective dynamic-import warnings.
+> **Cognitive Core / memory-preview continuation:** the previous validated code head `62b9c2521189e52dabab3027e5e3bdf967079fe7` passed 32/32 targeted Node tests, shared typecheck, web build, and CI run [41338217980](https://github.com/mdanasaaq-design/Awwab/actions/runs/41338217980) passed all six jobs. That evidence predates the latest memory-preview changes below.
 >
-> **Memory integration review:** MemoryPanel/Firestore remain on the legacy schema; the Cognitive Core mapper is read-only and is not wired to persistence. Settings contains an explicit backend context-preview callable, not automatic retrieval. Its trusted-device gate still depends on caller-supplied device ID and is blocked by AWW-022. Full source-only findings are in [Cognitive Memory Integration Audit](../docs/cognitive-memory-integration-audit.md).
+> **Latest branch-only implementation:**
+> - `bbc9cc3` — backend memory-context preview now enforces the legacy 2,000-character per-record bound in addition to the existing 50-record / 6,000-character aggregate limits.
+> - `d1593b0` and `8856070` — callable emulator regressions cover malformed expiry, unsupported memory type/provenance, blank content, control-character sanitization, oversized records and authenticated-owner scoping. The existing second-session spoof test remains intentionally characterization-only.
+> - `3c4e44d` — refreshes the active task queue and validation gates.
 >
-> **Next bounded work:** resolve AWW-022 proof-of-possession with a separately scoped design and tests; add explicit backend memory-preview filtering/authorization regression tests; decide legacy ambiguous-type, expiry, archive/delete and correction/concurrency semantics; then design a synthetic-fixture Firestore adapter proposal. Do not connect durable storage, change Rules, migrate data, deploy, or write user records.
+> **Validation status:** fresh CI and owner-local callable emulator tests for these latest changes are pending. Do not claim the earlier CI run validates them. The new test fixtures use emulator-admin synthetic data only.
 >
-> ---
+> **Next bounded work:** (1) run fresh CI and owner-local callable tests; (2) review the 2026-11-02 [device proof-of-possession proposal](../docs/device-proof-of-possession-design.md) and record platform/recovery decisions without deploying; (3) decide legacy ambiguous-type, temporary-expiry, archive/delete and correction/concurrency semantics; (4) prepare a read-only Firestore adapter proposal and conformance matrix using synthetic fixtures only.
+>
+> **Hard constraints:** strict $0; Awwab-owned random-init model only; no external AI APIs/pretrained weights/hosted agent runtime; no Blaze upgrade/new cloud resources; no merge, migration, Rules/Functions/Hosting deployment, secrets, or live data mutation without explicit owner approval. Keep assistant generation disabled and high-assurance device actions blocked while AWW-022 remains unresolved. Do not connect durable storage or wire MemoryPanel.
 >
 > **LATEST HANDOFF — 2026-11-01**  
 > Active branch: `opensource-reuse-strategy`; latest recorded implementation commit before this handoff refresh: `f324bb50ba492e5baffc04d6636a6cb604964c1d`. PR #23 remains draft/open/unmerged and targets PR #22's branch; do not merge either PR.  
