@@ -272,3 +272,10 @@ CI coverage is added in `tests/cognitive-core.test.mjs`. Remaining Phase 1 work:
 ### Phase 1 validation checkpoint — 2026-11-01
 
 The initial Cognitive Core v0 slice passed CI on `05fbe89f018e238fce89ff1257cb29665565b68b`: [run 41305026578](https://github.com/mdanasaaq-design/Awwab/actions/runs/41305026578), all six jobs successful. The dedicated Cognitive Core suite passed 13/13. Phase 1 is **not complete**: conflict/retention semantics, storage adapter contract, identity change policy and safe existing-memory integration review remain outstanding. No durable storage or live integration is claimed.
+
+
+### Phase 1 follow-up — memory storage boundary and retention
+
+Added the policy-only layer in `packages/shared/src/cognitive-memory-policy.mjs` and declarations. The future adapter contract requires trusted owner scope on every operation, optimistic concurrency for mutations, and one all-or-nothing transaction for an owner-selected conflict resolution. Awwab does not infer contradictions from lexical similarity; the owner chooses the winning record and provides a reason. Expiry excludes records from context but is not a deletion instruction. Six regression tests and a CI step cover these rules.
+
+This is not a durable adapter and does not prove that any backend meets the contract. Before a durable implementation, add adapter conformance/security tests, review the existing Memory UI and Firestore Rules, and confirm a viable $0 architecture. No schema, Rules, live data, billing or deployment change is included.
