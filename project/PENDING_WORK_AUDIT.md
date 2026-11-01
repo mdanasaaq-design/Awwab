@@ -152,3 +152,8 @@ This closes the contract-definition gap only. It does not implement a durable ad
 ## 11. Adapter reference test scope — 2026-11-01
 
 A test-only in-memory reference adapter and CI suite now exercise the v1 contract's owner isolation, duplicate handling, optimistic concurrency, monotonic updates, explicit deletion, and atomic conflict-resolution behavior. This is evidence about the fixture, not about any future durable implementation. The production adapter remains unimplemented; live Firestore, Rules, user memory, and deployment remain untouched. Latest CI was pending at run 41337235183 before the documentation refresh.
+
+
+## 12. Adapter contract CI evidence — 2026-11-01
+
+CI run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099) passed all six jobs on code head `4ff8e0542a1ca2fb146806c42ea1ece419f0213c). The memory/research job reported 32 passing tests, and the shared typecheck included the compile-time adapter fixture. The web build, Functions build/typecheck, Firestore Rules tests, Model Lab checks, and backend callable emulator tests also passed. Owner-local validation of the latest branch remains pending. This does not prove any production adapter or live Firebase state.
