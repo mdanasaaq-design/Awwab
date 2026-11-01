@@ -440,3 +440,10 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Conflict decisions are owner-selected; no model or lexical heuristic silently rewrites memory. Expired data is excluded from context but not automatically deleted.
 - Added tests and CI coverage. Validation is pending on the new branch head.
 - This remains a contract/policy prototype: no durable adapter, Firestore schema/Rules change, live write, Memory UI integration, migration, deployment, merge or billing change.
+
+
+## Existing Memory UI compatibility review — 2026-11-01
+
+- Inspected `apps/web/src/MemoryPanel.tsx` and the current memory Rules. Existing records are owner-entered Firestore documents with six UI-specific types, Firestore Timestamp values, a 2,000-character limit, and only user-entered/user-corrected provenance.
+- Recorded a proposal-only mapping and blockers in [Cognitive Memory Compatibility](../docs/cognitive-memory-compatibility.md). Key mismatches include six existing types vs five core kinds, ambiguous goal/project mapping, no archived status in existing schema, and a stricter existing content limit.
+- Decision: keep the current Memory UI/schema unchanged and separate. No mapper, adapter, Rules change, migration, live write or deployment is enabled.
