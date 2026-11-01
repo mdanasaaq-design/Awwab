@@ -252,3 +252,18 @@ A phase is complete only when code exists, relevant automated/manual tests have 
 Work in substantial phases: inspect source → define bounded scope/acceptance → reuse reviewed code → implement → test → review security/failure paths → update docs/backlog/handoff → report evidence. Avoid fragmented changes and speculative infrastructure.
 
 **This plan authorizes documentation/planning only.** It does not authorize application-code changes, training runs requiring extra resources, new services, billing changes, merges, migrations or deployment.
+
+
+## Phase 1 implementation log — 2026-11-01
+
+**State: In progress; initial deterministic core slice committed to the development branch.**
+
+Implemented in `packages/shared/src/cognitive-core.mjs` with `cognitive-core.d.mts` declarations and export `@awwab/shared/cognitive-core`:
+- versioned identity profile contract;
+- five typed memory kinds with owner/provenance/confidence/sensitivity/expiry/confirmation controls;
+- deterministic in-memory reference store with owner isolation, correction and deletion;
+- owner-scoped goal/subgoal records with priority, constraints, progress, terminal-state and cycle checks;
+- evidence-linked experience/decision records;
+- lexical context selection with inclusion/exclusion explanations and strict record/character budgets.
+
+CI coverage is added in `tests/cognitive-core.test.mjs`. Remaining Phase 1 work: observe the CI result; review and harden implementation against failures; expand context relevance/conflict/retention tests; add explicit identity version evolution rules; define and test a storage adapter contract without live Firestore writes; then decide whether and how to connect the existing Memory UI. No Firestore schema migration, live database write, model inference, external side effect or assistant activation is part of this slice.
