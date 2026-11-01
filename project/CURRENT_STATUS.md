@@ -421,3 +421,13 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Added `tests/cognitive-core.test.mjs` and CI step. Shared typecheck now includes the cognitive declarations.
 - Latest CI must be checked before any pass claim. This is not durable memory or a live app integration: no Firestore adapter/writes, migration, assistant activation, model inference, tool execution, deployment or merge.
 - Remaining phase work: test results/fixes; conflict and retention semantics; storage adapter contract; review existing Memory UI integration; document exact acceptance evidence.
+
+
+## Cognitive Core v0 CI validation — 2026-11-01
+
+- Latest code-validation head: `05fbe89f018e238fce89ff1257cb29665565b68b`.
+- GitHub Actions run [41305026578](https://github.com/mdanasaaq-design/Awwab/actions/runs/41305026578) completed successfully: all six jobs passed.
+- Cognitive Core test suite: 13 passed, 0 failed. The broader Phase 4 policy job also passed 21 policy tests, 6 Readability/provenance tests and 27 device lifecycle/key-proof tests.
+- Web typecheck/build, Functions typecheck/build, shared contract/declaration typecheck, Firestore Rules emulator tests, backend callable emulator tests and Model Lab standard-library tests all passed.
+- This validates the code at the stated commit in CI only. It does not establish durable cognitive persistence, Firestore/live Rules integration, browser acceptance, trained-model quality, or self-development capability.
+- Phase 1 remains **in progress**. The first deterministic core slice is implemented and CI-validated; adapter design, conflict/retention semantics, UI integration review and remaining acceptance coverage are still open.
