@@ -37,3 +37,8 @@ Build Awwab's own persistent cognitive architecture—identity, memory, goals, r
 Inspect → plan → reuse reviewed code → implement in an isolated scope → test → security review → document → present evidence. Awwab may prepare changes independently, but merge, release, deployment, billing, secrets, live Rules and migrations require explicit owner approval.
 
 See [architecture](docs/architecture.md), [agent system](docs/agent-system.md), [AI strategy](docs/ai-strategy.md), and [roadmap](docs/roadmap.md).
+
+
+## Cognitive Core implementation status — 2026-11-01
+
+The first dependency-free Cognitive Core v0 module is now present on the development branch: versioned identity, typed memory, owner-scoped goals, evidence-linked experiences and deterministic context selection. Its in-memory store is a test/reference adapter only. It is not connected to Firestore, the web assistant or model inference; assistant generation remains disabled until Awwab's own model is trained and evaluated.
