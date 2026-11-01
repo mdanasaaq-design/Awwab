@@ -1,3 +1,15 @@
+> **LATEST HANDOFF — 2026-11-01**  
+> Active branch: `opensource-reuse-strategy`; latest recorded implementation commit before this handoff refresh: `f324bb50ba492e5baffc04d6636a6cb604964c1d`. PR #23 remains draft/open/unmerged and targets PR #22's branch; do not merge either PR.  
+> Read first: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), [Pending Work Audit](PENDING_WORK_AUDIT.md), [Current Status](CURRENT_STATUS.md), [Tasks](TASKS.md), and [Issues and Risks](ISSUES_AND_RISKS.md).  
+>
+> **Current progress:** Cognitive Core v0 initial code, policy layer, legacy compatibility mapper and v1 memory adapter type contract are on the branch. Owner locally verified the previous head `4663db1`: 27 tests passed, shared typecheck passed, web build passed. New adapter-contract commits still need fresh CI and local validation.
+>
+> **Next bounded work:** add isolated behavioral adapter conformance tests; then formalize identity version evolution and memory conflict/retention edge cases. Review MemoryPanel/Rules before proposing any integration. Do not connect a durable store, alter Firestore, or write user data.
+>
+> **Hard constraints:** strict $0; Awwab-owned random-init model only; no external AI APIs/pretrained weights/hosted agent runtime; no Blaze upgrade/new cloud resources; no merge, migration, Rules/Functions/Hosting deployment, secrets, or live data mutation without explicit owner approval. Keep assistant generation disabled and high-assurance device actions blocked while AWW-022 remains unresolved.
+>
+> ---
+>
 > **LATEST HANDOFF — 2026-10-31**  
 > We completed a repository-wide Markdown audit and consolidated the direction around **Awwab Self-Development**. Read these first:
 > 1. [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md) — controlling architecture, phases and acceptance criteria.
