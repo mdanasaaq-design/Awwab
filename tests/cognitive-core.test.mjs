@@ -58,6 +58,13 @@ test("observed and imported memory require a provenance reference", () => {
     (error) => error.code === "invalid_input" && /provenance reference/.test(error.message));
 });
 
+test("memory and goal timestamps cannot move backwards", () => {
+  assert.throws(() => store().createMemory({ kind: "semantic", content: "Bad time", createdAt: "2026-11-01T12:00:00.000Z", updatedAt: "2026-11-01T11:00:00.000Z" }),
+    (error) => error.code === "invalid_input" && /updatedAt/.test(error.message));
+  assert.throws(() => store().createGoal({ title: "Bad time", createdAt: "2026-11-01T12:00:00.000Z", updatedAt: "2026-11-01T11:00:00.000Z" }),
+    (error) => error.code === "invalid_input" && /updatedAt/.test(error.message));
+});
+
 test("memory correction preserves ID and provenance; deletion removes the record", () => {
   const db = store();
   const saved = db.createMemory({ id: "m1", kind: "semantic", content: "Old fact" });
@@ -133,6 +140,8 @@ test("verified experience requires evidence and can link only to an owned goal",
   db.createGoal({ id: "g1", title: "A goal" });
   assert.throws(() => db.recordExperience({ kind: "verification", summary: "It worked", goalId: "g1", verification: "verified" }),
     (error) => error.code === "invalid_input");
+  assert.throws(() => db.recordExperience({ kind: "verification", summary: "Claimed success", goalId: "g1", outcome: "success" }),
+    (error) => error.code === "invalid_input" && /evidence-verified/.test(error.message));
   const record = db.recordExperience({
     kind: "verification", summary: "The goal passed its acceptance test", goalId: "g1",
     taskRef: "task:42", planRef: "plan:42", actionRef: "commit:abc",
