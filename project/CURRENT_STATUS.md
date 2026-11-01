@@ -447,3 +447,11 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Inspected `apps/web/src/MemoryPanel.tsx` and the current memory Rules. Existing records are owner-entered Firestore documents with six UI-specific types, Firestore Timestamp values, a 2,000-character limit, and only user-entered/user-corrected provenance.
 - Recorded a proposal-only mapping and blockers in [Cognitive Memory Compatibility](../docs/cognitive-memory-compatibility.md). Key mismatches include six existing types vs five core kinds, ambiguous goal/project mapping, no archived status in existing schema, and a stricter existing content limit.
 - Decision: keep the current Memory UI/schema unchanged and separate. No mapper, adapter, Rules change, migration, live write or deployment is enabled.
+
+
+### Cognitive memory policy implementation — automated validation
+
+- GitHub Actions run [41306843643](https://github.com/mdanasaaq-design/Awwab/actions/runs/41306843643) passed all six jobs on code head `17abc62c794c0381731e662c0f942fd9d32264cf`.
+- The Phase 4 memory/research policy job passed, including the Cognitive Core and new cognitive-memory-policy test suites. Functions/shared typecheck, web typecheck/build, Firestore Rules emulator, backend callable emulator and Model Lab checks all passed.
+- Subsequent commit `b51980e` only adds documentation of the existing Memory UI compatibility assessment; its documentation-sync CI run [41307028024](https://github.com/mdanasaaq-design/Awwab/actions/runs/41307028024) is still in progress at the time of this note.
+- The result validates the policy code at `17abc62`, not a durable adapter or live integration. No merge, deployment, migration, Rules change, live database write or billing change occurred.
