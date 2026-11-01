@@ -31,8 +31,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: Run isolated policy regression tests
         run: node --test project/prototypes/memory-research-policy-mock.test.mjs
-      - name: Cognitive Core deterministic contract tests
-        run: node --test tests/cognitive-core.test.mjs tests/cognitive-memory-policy.test.mjs
+      - name: Cognitive Core and memory compatibility contract tests
+        run: node --test tests/cognitive-core.test.mjs tests/cognitive-memory-policy.test.mjs tests/cognitive-memory-compatibility.test.mjs
       - name: Readability adapter and source provenance tests
         run: node --experimental-strip-types --test tests/research-article-parser.test.mjs
       - name: Device lifecycle and key-proof protocol model tests
@@ -133,8 +133,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Setup Java
