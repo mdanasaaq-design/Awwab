@@ -619,6 +619,11 @@ async function seedMemoryAsEmulatorAdmin(uid, memoryId, overrides = {}) {
   const expiresAt = Object.hasOwn(overrides, "expiresAt")
     ? overrides.expiresAt
     : null;
+  const expiresAtField = expiresAt && typeof expiresAt === "object" && Object.hasOwn(expiresAt, "firestoreField")
+    ? expiresAt.firestoreField
+    : expiresAt
+      ? { timestampValue: new Date(expiresAt).toISOString() }
+      : { nullValue: null };
   const fields = {
     content: { stringValue: "I prefer concise project updates." },
     type: { stringValue: "explicit_preference" },
@@ -627,16 +632,15 @@ async function seedMemoryAsEmulatorAdmin(uid, memoryId, overrides = {}) {
     sensitivity: { stringValue: "normal" },
     createdAt: { timestampValue: now.toISOString() },
     updatedAt: { timestampValue: now.toISOString() },
-    expiresAt: expiresAt
-      ? { timestampValue: new Date(expiresAt).toISOString() }
-      : { nullValue: null },
+    expiresAt: expiresAtField,
     userVisible: { booleanValue: true },
     confirmedByUser: { booleanValue: true },
   };
 
   for (const [key, value] of Object.entries(overrides)) {
     if (key === "expiresAt") continue;
-    if (typeof value === "string") fields[key] = { stringValue: value };
+    if (value && typeof value === "object" && Object.hasOwn(value, "firestoreField")) fields[key] = value.firestoreField;
+    else if (typeof value === "string") fields[key] = { stringValue: value };
     else if (typeof value === "boolean") fields[key] = { booleanValue: value };
     else if (typeof value === "number") fields[key] = { doubleValue: value };
   }
@@ -821,4 +825,65 @@ test("assistant callable requires authentication and a trusted device", async ()
   assert.equal(notConfigured.ok, false, JSON.stringify(notConfigured));
   assert.equal(notConfigured.error.status, "FAILED_PRECONDITION");
   assert.match(notConfigured.error.message, /Awwab\x27s own model has not been trained yet/i);
+});
+
+
+test("assistant memory context rejects malformed and unsupported records and bounds each record", async () => {
+  const user = await createAuthUser("memory-context-malformed");
+  const deviceId = newDeviceId();
+  const bootstrap = await invokeCallable("bootstrapFirstDevice", bootstrapPayload(deviceId), user.idToken);
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  await seedMemoryAsEmulatorAdmin(user.localId, "valid-sanitized", {
+    content: "Keep\\u0000 the interface concise.",
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "unknown-type", {
+    type: "unrecognized_memory_type",
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "unsupported-source", {
+    sourceKind: "system_generated",
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "blank-content", {
+    content: "   ",
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "malformed-expiry", {
+    expiresAt: { firestoreField: { stringValue: "not-a-timestamp" } },
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "oversized-record", {
+    content: "x".repeat(2001),
+  });
+
+  const result = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId, scope: "conversation_context" },
+    user.idToken,
+  );
+  assert.equal(result.ok, true, JSON.stringify(result));
+  assert.deepEqual(result.result.memories.map((memory) => memory.id), ["valid-sanitized"]);
+  assert.equal(result.result.memories[0].content, "Keep the interface concise.");
+  assert.ok(result.result.totalChars <= result.result.maxChars);
+});
+
+test("assistant memory context is scoped to the authenticated owner, not request fields", async () => {
+  const owner = await createAuthUser("memory-context-owner");
+  const other = await createAuthUser("memory-context-other");
+  const ownerDevice = newDeviceId();
+  const otherDevice = newDeviceId();
+
+  const ownerBootstrap = await invokeCallable("bootstrapFirstDevice", bootstrapPayload(ownerDevice), owner.idToken);
+  const otherBootstrap = await invokeCallable("bootstrapFirstDevice", bootstrapPayload(otherDevice), other.idToken);
+  assert.equal(ownerBootstrap.ok, true, JSON.stringify(ownerBootstrap));
+  assert.equal(otherBootstrap.ok, true, JSON.stringify(otherBootstrap));
+
+  await seedMemoryAsEmulatorAdmin(owner.localId, "owner-only-memory", { content: "Owner private note." });
+  await seedMemoryAsEmulatorAdmin(other.localId, "other-only-memory", { content: "Other private note." });
+
+  const result = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId: otherDevice, scope: "conversation_context", ownerId: owner.localId },
+    other.idToken,
+  );
+  assert.equal(result.ok, true, JSON.stringify(result));
+  assert.deepEqual(result.result.memories.map((memory) => memory.id), ["other-only-memory"]);
+  assert.equal(result.result.memories.some((memory) => memory.id === "owner-only-memory"), false);
 });
