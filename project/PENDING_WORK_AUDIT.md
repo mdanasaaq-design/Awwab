@@ -147,3 +147,8 @@ Not yet complete: CI verification on the latest commit; expanded conflict/releva
 The development branch now includes a versioned TypeScript durable-memory adapter contract (v1), object-shaped owner-scoped method inputs, optimistic-concurrency requirements, atomic conflict-resolution semantics, and a compile-time fixture in `shared:typecheck`.
 
 This closes the contract-definition gap only. It does not implement a durable adapter or demonstrate runtime enforcement. Remaining work: behavioral conformance tests using an isolated fake adapter, identity version evolution rules, edge-case tests for conflict/retention, and a source review of MemoryPanel/Firestore Rules before proposing integration. Owner's 27-test/typecheck/web-build evidence is from prior head `4663db1`; new commits require fresh CI and local validation. No live storage writes, migration, Rules change or deployment.
+
+
+## 11. Adapter reference test scope — 2026-11-01
+
+A test-only in-memory reference adapter and CI suite now exercise the v1 contract's owner isolation, duplicate handling, optimistic concurrency, monotonic updates, explicit deletion, and atomic conflict-resolution behavior. This is evidence about the fixture, not about any future durable implementation. The production adapter remains unimplemented; live Firestore, Rules, user memory, and deployment remain untouched. Latest CI was pending at run 41337235183 before the documentation refresh.
