@@ -308,8 +308,9 @@ export function createInMemoryCognitiveStore({ ownerId, clock = () => new Date()
     createMemory(input) {
       object(input, "memory");
       const createdAt = now();
+      if (input.ownerId != null && input.ownerId !== ownerId) fail("owner_mismatch", "Cannot create memory for another owner.");
       const record = validateMemoryRecord({
-        id: input.id ?? newId(), ownerId, ...input,
+        ...input, id: input.id ?? newId(), ownerId,
         source: input.source ?? { kind: "owner_entered", reference: null },
         confidence: input.confidence ?? 1,
         sensitivity: input.sensitivity ?? "normal",
@@ -344,8 +345,9 @@ export function createInMemoryCognitiveStore({ ownerId, clock = () => new Date()
     createGoal(input) {
       object(input, "goal");
       const at = now();
+      if (input.ownerId != null && input.ownerId !== ownerId) fail("owner_mismatch", "Cannot create a goal for another owner.");
       const record = validateGoal({
-        id: input.id ?? newId(), ownerId, ...input,
+        ...input, id: input.id ?? newId(), ownerId,
         createdAt: input.createdAt ?? at, updatedAt: input.updatedAt ?? at,
       });
       if (record.ownerId !== ownerId) fail("owner_mismatch", "Cannot create a goal for another owner.");
@@ -372,8 +374,9 @@ export function createInMemoryCognitiveStore({ ownerId, clock = () => new Date()
     recordExperience(input) {
       object(input, "experience");
       const at = now();
+      if (input.ownerId != null && input.ownerId !== ownerId) fail("owner_mismatch", "Cannot record experience for another owner.");
       const record = validateExperienceRecord({
-        id: input.id ?? newId(), ownerId, ...input,
+        ...input, id: input.id ?? newId(), ownerId,
         recordedAt: input.recordedAt ?? at,
       });
       if (record.ownerId !== ownerId) fail("owner_mismatch", "Cannot record experience for another owner.");
