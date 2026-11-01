@@ -93,3 +93,17 @@ Use bounded timeouts, retries, idempotency, cancellation, resource budgets and v
 ## Current implementation boundary
 
 The web UI, memory/research/workspace features and Model Lab scaffold exist on the development branch. The trained model, cognitive core, development tools, evolution engine and multi-agent runtime do not. See the master plan and pending-work audit for exact status.
+
+
+## Cognitive Core v0 — first implementation slice (2026-11-01)
+
+The first Awwab-owned cognitive module lives in `packages/shared/src/cognitive-core.mjs` with TypeScript declarations in `cognitive-core.d.mts`. It is dependency-free and deliberately separate from Firebase, the web UI and model inference.
+
+Current deterministic contracts cover:
+- versioned identity profiles with explicit purpose, principles and hard boundaries;
+- five memory classes (working, episodic, semantic, procedural and development), owner scope, provenance, confidence, sensitivity, visibility, owner confirmation, expiry and correction/deletion;
+- owner-scoped goals/subgoals, priority, constraints, progress and guarded status transitions;
+- experience records linking goal/task/plan/action references to evidence, outcome and verification state;
+- lexical context retrieval with explicit selection/exclusion reasons, sensitive/unconfirmed filtering, working-memory expiry and hard record/character limits.
+
+The in-memory store is a testable reference adapter, not durable persistence. No Firestore schema, client write, migration, automatic memory injection, model call or tool execution is added. Retrieved content remains untrusted data and cannot authorize actions. Firebase integration is blocked until owner-scoped Rules and live behavior are independently verified.
