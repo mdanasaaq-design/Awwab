@@ -96,10 +96,7 @@ export function validateMemoryRecord(input) {
     ownerId: text(input.ownerId, "memory.ownerId", 256),
     kind: enumValue(input.kind, MEMORY_KINDS, "memory.kind"),
     content: text(input.content, "memory.content", 8000),
-    source: Object.freeze({
-      kind: enumValue(input.source?.kind, MEMORY_SOURCES, "memory.source.kind"),
-      reference: input.source?.reference == null ? null : text(input.source.reference, "memory.source.reference", 500),
-    }),
+    source: Object.freeze({ kind: sourceKind, reference: sourceReference }),
     confidence: confidence(input.confidence),
     sensitivity: enumValue(input.sensitivity, SENSITIVITIES, "memory.sensitivity"),
     createdAt: isoDate(input.createdAt, "createdAt"),
