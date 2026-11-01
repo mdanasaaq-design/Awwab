@@ -76,7 +76,7 @@ Sources: `backend/functions/src/index.ts`, `apps/web/src/App.tsx`, and `apps/web
 
 1. Keep the MemoryPanel, Firestore schema, Rules and live data unchanged.
 2. Fix AWW-022 through a separately bounded proof-of-possession design and emulator tests before relying on trusted-device authorization.
-3. Add explicit tests for the current preview loader's filtering, per-record bounds, expiry and caller authorization; do not broaden access.
+3. Keep regression coverage for preview filtering and expiry. The new second-session preview-spoof characterization test makes the AWW-022 impact explicit; invert it to a denial expectation after proof-of-possession is implemented. Add a per-record content bound and malformed timestamp cases before adapter work.
 4. Define owner decisions for ambiguous legacy types, temporary-memory expiry, archive/delete behavior and correction/concurrency UX.
 5. Design a read-only Firestore adapter prototype against synthetic emulator fixtures only; derive `ownerId` from verified server auth and test owner isolation, stale versions, transaction rollback and Rules compatibility.
 6. Submit a separate integration proposal with exact schema/Rules diff and rollback plan. Obtain explicit approval before any production Rules deployment, migration or live writes.
