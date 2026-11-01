@@ -64,6 +64,7 @@ export function createIdentityProfile(input) {
   object(input, "identity");
   const createdAt = isoDate(input.createdAt, "createdAt");
   const updatedAt = isoDate(input.updatedAt ?? input.createdAt, "updatedAt");
+  if (Date.parse(updatedAt) < Date.parse(createdAt)) fail("invalid_input", "identity.updatedAt cannot precede createdAt.");
   const principles = stringList(input.principles, "principles", 40, 500);
   const boundaries = stringList(input.boundaries, "boundaries", 40, 500);
   if (!Number.isInteger(input.version) || input.version < 1) fail("invalid_input", "identity.version must be a positive integer.");
@@ -110,7 +111,10 @@ export function validateMemoryRecord(input) {
   if ((sourceKind === "observed_evidence" || sourceKind === "reviewed_import") && !sourceReference) {
     fail("invalid_input", "Observed and imported memories require a provenance reference.");
   }
-  if (expiresAt && Date.parse(expiresAt) <= Date.parse(input.createdAt)) fail("invalid_input", "expiresAt must be later than createdAt.");
+  const createdAt = isoDate(input.createdAt, "createdAt");
+  const updatedAt = isoDate(input.updatedAt, "updatedAt");
+  if (Date.parse(updatedAt) < Date.parse(createdAt)) fail("invalid_input", "memory.updatedAt cannot precede createdAt.");
+  if (expiresAt && Date.parse(expiresAt) <= Date.parse(createdAt)) fail("invalid_input", "expiresAt must be later than createdAt.");
   return Object.freeze({
     id: text(input.id, "memory.id", 128),
     ownerId: text(input.ownerId, "memory.ownerId", 256),
@@ -119,8 +123,8 @@ export function validateMemoryRecord(input) {
     source: Object.freeze({ kind: sourceKind, reference: sourceReference }),
     confidence: confidence(input.confidence),
     sensitivity: enumValue(input.sensitivity, SENSITIVITIES, "memory.sensitivity"),
-    createdAt: isoDate(input.createdAt, "createdAt"),
-    updatedAt: isoDate(input.updatedAt, "updatedAt"),
+    createdAt,
+    updatedAt,
     expiresAt,
     userVisible: input.userVisible,
     confirmedByOwner: input.confirmedByOwner,
@@ -133,6 +137,9 @@ export function validateGoal(input) {
   const progress = input.progress ?? 0;
   if (!Number.isInteger(progress) || progress < 0 || progress > 100) fail("invalid_input", "goal.progress must be an integer from 0 to 100.");
   const status = enumValue(input.status ?? "draft", GOAL_STATUSES, "goal.status");
+  const createdAt = isoDate(input.createdAt, "createdAt");
+  const updatedAt = isoDate(input.updatedAt, "updatedAt");
+  if (Date.parse(updatedAt) < Date.parse(createdAt)) fail("invalid_input", "goal.updatedAt cannot precede createdAt.");
   if (status === "completed" && progress !== 100) fail("invalid_input", "A completed goal must have 100% progress.");
   if (status !== "completed" && progress === 100) fail("invalid_input", "Only a completed goal may have 100% progress.");
   return Object.freeze({
@@ -146,8 +153,8 @@ export function validateGoal(input) {
     constraints: Object.freeze(stringList(input.constraints ?? [], "goal.constraints", 30, 500)),
     progress,
     source: enumValue(input.source ?? "owner_requested", ["owner_requested", "owner_approved_suggestion"], "goal.source"),
-    createdAt: isoDate(input.createdAt, "createdAt"),
-    updatedAt: isoDate(input.updatedAt, "updatedAt"),
+    createdAt,
+    updatedAt,
   });
 }
 
@@ -155,6 +162,8 @@ export function validateExperienceRecord(input) {
   object(input, "experience");
   const evidenceRefs = stringList(input.evidenceRefs ?? [], "experience.evidenceRefs", 50, 500);
   const verification = enumValue(input.verification ?? "unverified", VERIFICATION, "experience.verification");
+  const outcome = enumValue(input.outcome ?? "unknown", OUTCOMES, "experience.outcome");
+  if (outcome === "success" && verification !== "verified") fail("invalid_input", "A successful experience must be evidence-verified.");
   if (verification === "verified" && evidenceRefs.length === 0) {
     fail("invalid_input", "Verified experience requires at least one evidence reference.");
   }
@@ -168,7 +177,7 @@ export function validateExperienceRecord(input) {
     planRef: input.planRef == null ? null : text(input.planRef, "experience.planRef", 500),
     actionRef: input.actionRef == null ? null : text(input.actionRef, "experience.actionRef", 500),
     evidenceRefs: Object.freeze(evidenceRefs),
-    outcome: enumValue(input.outcome ?? "unknown", OUTCOMES, "experience.outcome"),
+    outcome,
     verification,
     confidence: confidence(input.confidence ?? 0),
     recordedAt: isoDate(input.recordedAt, "recordedAt"),
