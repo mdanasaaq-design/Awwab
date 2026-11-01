@@ -6,8 +6,8 @@
 > - [x] Memory conflict/retention policy prototype with owner-selected conflict commands and no automatic hard deletion.
 > - [x] Read-only legacy-memory compatibility mapper with synthetic round-trip tests; no live MemoryPanel/Firestore integration.
 > - [x] Versioned durable-adapter TypeScript contract, owner-scoped request shapes and compile-time contract fixture committed to development branch at `f324bb5`.
-> - [ ] Observe CI for adapter contract update and run the new type fixture/tests locally after owner sync.
-> - [ ] Add behavioral conformance tests against an isolated in-memory adapter implementation; do not represent method-shape/type checks as security conformance.
+> - [ ] Observe CI for adapter contract and reference-adapter tests; run the new type fixture/tests locally after owner sync.
+> - [x] Add isolated reference-adapter behavior tests for owner isolation, duplicate IDs, optimistic concurrency, deletion, and all-or-nothing conflict resolution. This validates the test fixture only, not any future durable adapter.
 > - [ ] Formalize identity version evolution and correction/retention edge cases.
 > - [ ] Review existing MemoryPanel and Rules before proposing any integration; no writes/migration.
 >
