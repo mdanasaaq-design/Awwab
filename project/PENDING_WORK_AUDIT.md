@@ -133,3 +133,10 @@ Start **Phase 1 — Cognitive Core v0**, with schemas/contracts and deterministi
 ## Audit inventory count clarification
 
 The audit enumerated and reviewed **65 pre-existing Markdown files** at baseline commit `1ed8ee271d1fc0dd610a92e6505b0bccd00bcc3b`. This planning update added two new controlling documents—this audit and the Self-Development Master Plan—so the branch now contains **67 Markdown files** before any later documentation-only additions. Historical phase acceptance records and upstream vendor licence files remain preserved rather than rewritten.
+
+
+## Phase 1 execution update — 2026-11-01
+
+**Cognitive Core v0 is now in progress.** The first code slice adds a dependency-free shared module, TypeScript declarations, package export, deterministic Node tests and a CI test step. Implemented contracts include identity versioning, five memory kinds, provenance/owner/sensitivity/expiry controls, in-memory owner-scoped memory CRUD/correction, goal/subgoal lifecycle, evidence-linked experiences and deterministic context selection with explanations/budgets.
+
+Not yet complete: CI verification on the latest commit; expanded conflict/relevance/retention coverage; formal identity version migration rules; a storage adapter interface and durable adapter review; existing Memory UI integration; Firebase Rules/live validation. No Firebase writes, migration, model call, training, tool execution or deployment occurred.
