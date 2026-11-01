@@ -184,3 +184,10 @@
 - Added regression tests for owner isolation, duplicate IDs, optimistic concurrency, monotonic update timestamps, explicit deletion, and atomic conflict resolution.
 - Added the suite to the existing CI memory/research job.
 - This validates the fixture only; no durable adapter or live Firestore integration exists.
+
+
+## 2026-11-01 — Adapter contract CI validation
+
+- CI run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099) passed all six jobs on code head `4ff8e05`.
+- The memory/research job passed 32/32 tests; the compile-time adapter fixture passed within shared typecheck.
+- Owner-local validation of the latest branch remains outstanding.
