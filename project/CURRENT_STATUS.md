@@ -431,3 +431,12 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Web typecheck/build, Functions typecheck/build, shared contract/declaration typecheck, Firestore Rules emulator tests, backend callable emulator tests and Model Lab standard-library tests all passed.
 - This validates the code at the stated commit in CI only. It does not establish durable cognitive persistence, Firestore/live Rules integration, browser acceptance, trained-model quality, or self-development capability.
 - Phase 1 remains **in progress**. The first deterministic core slice is implemented and CI-validated; adapter design, conflict/retention semantics, UI integration review and remaining acceptance coverage are still open.
+
+
+## Cognitive memory adapter and retention policy — 2026-11-01
+
+- Added [Cognitive Memory Storage Contract](../docs/cognitive-memory-storage-contract.md): owner-scoped async adapter operations, optimistic concurrency, and atomic owner-selected conflict resolution.
+- Added dependency-free policy helpers in `packages/shared/src/cognitive-memory-policy.mjs` for structural adapter checks, explicit conflict command creation, and expiry classification.
+- Conflict decisions are owner-selected; no model or lexical heuristic silently rewrites memory. Expired data is excluded from context but not automatically deleted.
+- Added tests and CI coverage. Validation is pending on the new branch head.
+- This remains a contract/policy prototype: no durable adapter, Firestore schema/Rules change, live write, Memory UI integration, migration, deployment, merge or billing change.
