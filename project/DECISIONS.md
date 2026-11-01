@@ -141,3 +141,10 @@ Awwab may reuse training algorithms, tensor utilities, optimizers, model archite
 
 ## ADR-026 — No consciousness or capability overclaim (2026-10-31)
 **Status:** Accepted. “Own mind” refers to an engineered cognitive architecture, not subjective awareness. A tiny synthetic-trained model is a pipeline proof, not a capable assistant. Capability claims require measured evaluations.
+
+
+## ADR-027 — Cognitive Core is deterministic and model-independent (2026-11-01)
+**Status:** Accepted. Identity, memory, goals, context selection and evidence records live in an Awwab-owned shared module and must persist independently of model checkpoints. The first implementation is dependency-free and deterministic; the model cannot own permissions or state transitions.
+
+## ADR-028 — First Cognitive Core store is in-memory reference only (2026-11-01)
+**Status:** Accepted. Do not connect new cognitive records to Firestore until an explicit storage adapter contract, owner-scoped Rules, expiry/correction/deletion/retention behavior and live validation are reviewed. Existing Memory UI/schema remain unchanged in this phase slice. No migration or cloud writes are authorized.
