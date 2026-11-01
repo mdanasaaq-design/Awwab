@@ -8,6 +8,10 @@
     "./cognitive-core": {
       "types": "./src/cognitive-core.d.mts",
       "import": "./src/cognitive-core.mjs"
+    },
+    "./cognitive-memory-policy": {
+      "types": "./src/cognitive-memory-policy.d.mts",
+      "import": "./src/cognitive-memory-policy.mjs"
     }
   }
 }
