@@ -436,3 +436,15 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [ ] Specify the storage adapter contract and verify owner-scoped persistence requirements before implementing a durable adapter.
 - [ ] Define identity change/review policy beyond sequential immutable version history.
 - [ ] Review safe integration with existing Memory UI; do not enable live writes until Rules are verified.
+
+
+### Cognitive memory boundary and policy prototype — 2026-11-01
+
+- [x] Specify the owner-scoped async storage adapter surface, optimistic version checks and atomic conflict-resolution requirement in [Cognitive Memory Storage Contract](../docs/cognitive-memory-storage-contract.md).
+- [x] Add runtime adapter-shape assertion (shape only; not a security or transaction proof).
+- [x] Add owner-selected conflict-resolution command builder; no automatic contradiction inference or writes.
+- [x] Add deterministic expiry classification; expired data is excluded from context but never auto-hard-deleted.
+- [x] Add policy regression tests and CI coverage.
+- [ ] Verify the new CI run and fix any failures.
+- [ ] Implement adapter conformance tests before selecting any durable store.
+- [ ] Review existing Memory UI/schema and Firestore Rules compatibility; no live integration or writes until approved.
