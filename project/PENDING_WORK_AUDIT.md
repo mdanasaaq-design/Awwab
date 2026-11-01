@@ -164,3 +164,16 @@ CI run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/4133
 The identity registry now requires version 1 as its initial state, sequential revisions, immutable identity ID/creation time, strictly increasing update timestamps, and revision metadata containing reason, approval reference, prior/current version and timestamp. The `approvedByOwner` boolean is only a caller declaration; it is not proof of authenticated owner approval. A trusted approval binding is still required before persistent identity changes.
 
 CI run [41337973262](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337973262) passed all six jobs on code head `d2eabceb3f629db9bed00e018db863ca888e41d5`. Local validation on the owner's latest synchronized branch remains outstanding.
+
+
+## 14. Cognitive Memory integration source audit — 2026-11-02
+
+A source-only review of `apps/web/src/MemoryPanel.tsx`, `firestore.rules`, `tests/firestore.rules.test.js`, `backend/functions/src/index.ts`, and the Cognitive Core contracts is recorded in [Cognitive Memory Integration Audit](../docs/cognitive-memory-integration-audit.md).
+
+Key findings:
+- The existing UI and Firestore Rules remain on a six-type legacy schema; the Cognitive Core is a separate five-kind model with different ownership, timestamp and lifecycle contracts.
+- The Settings memory-context preview is an explicit backend callable, not automatic assistant retrieval. It filters hidden, unconfirmed, sensitive, expired and unsupported-provenance records and bounds the response.
+- The preview still relies on the caller-supplied trusted device ID. AWW-022 proof-of-possession remains unresolved, so this check is not strong device authentication.
+- No durable adapter, MemoryPanel integration, Rules edit/deployment, migration or live Firestore operation was performed.
+
+Owner locally verified code head `62b9c25`: 32/32 targeted Node tests passed, shared typecheck passed, and web build passed. The web build retains non-fatal bundle-size, CommonJS/ESM and ineffective dynamic-import warnings. CI run [41338217980](https://github.com/mdanasaaq-design/Awwab/actions/runs/41338217980) passed all six jobs.
