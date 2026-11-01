@@ -191,3 +191,12 @@
 - CI run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099) passed all six jobs on code head `4ff8e05`.
 - The memory/research job passed 32/32 tests; the compile-time adapter fixture passed within shared typecheck.
 - Owner-local validation of the latest branch remains outstanding.
+
+
+## 2026-11-01 — Identity revision policy and CI validation
+
+- Identity registries now start at version 1 and require sequential, owner-declared revisions with immutable ID/creation time and strictly increasing timestamps.
+- Revision reason, approval reference, and version history metadata are retained.
+- Clarified that the approval declaration is not authentication proof; production approval must be bound to a trusted owner session.
+- CI run [41337973262](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337973262) passed all six jobs.
+- Latest branch still requires owner-local validation.
