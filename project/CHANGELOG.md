@@ -146,3 +146,9 @@
 - Added explicit owner-selected conflict command builder and expiry classification; no automatic contradiction inference or hard deletion.
 - Added six deterministic policy tests and CI execution alongside the Cognitive Core suite.
 - No durable adapter, live database integration, migration, merge, deployment or billing change. CI validation pending.
+
+
+### Existing Memory UI compatibility assessment — 2026-11-01
+- Inspected the current MemoryPanel and Firestore Rules memory schema.
+- Documented proposal-only field/type/provenance/timestamp mapping and incompatibilities in `docs/cognitive-memory-compatibility.md`.
+- Existing Memory UI and Firestore data remain unchanged; integration requires synthetic mapper tests, adapter conformance, Rules review and separate owner approval.
