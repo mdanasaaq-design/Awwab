@@ -45,3 +45,21 @@ The panel explicitly tells the owner that saved content is not used by the assis
 6. Only then propose a separate schema/Rules change and request owner approval before any live writes or migration.
 
 **Decision for this phase:** no MemoryPanel integration, Firestore adapter, schema migration, Rules edit/deployment, or live database write. The in-memory Cognitive Core remains separate from existing user-entered memory.
+
+
+## Read-only mapper prototype — 2026-11-01
+
+**Implementation status:** Added a dependency-free mapper in `packages/shared/src/cognitive-memory-compatibility.mjs`, exported as `@awwab/shared/cognitive-memory-compatibility`. It is not connected to `MemoryPanel`, Firestore listeners, or any write path.
+
+- Maps `explicit_preference`, `stable_profile_fact`, and `learned_preference` to `semantic`, retaining the original legacy discriminator in the mapping envelope.
+- Maps `temporary_context` to `working` only when an explicit expiry exists. Non-expiring temporary records are rejected rather than assigned an invented expiry.
+- Rejects `goal_commitment` and `project_context` as ambiguous; neither is silently converted to a goal, episodic memory, or semantic memory.
+- Enforces the legacy 2,000-character limit and requires the caller to supply the owner ID from the authenticated document path.
+- Converts Firestore Timestamp-like values, Date objects and ISO-compatible values to canonical ISO strings; preserves null expiry.
+- Preserves owner-entered/user-corrected provenance, source reference, confidence, sensitivity, visibility and owner confirmation.
+- Export requires the original legacy type explicitly, refuses archived records and refuses provenance kinds unsupported by the current Firestore Rules.
+- Export returns a plain data object with ISO timestamps. A future adapter must convert timestamps using the approved Firestore boundary; this module does not write anything.
+
+The regression suite uses synthetic records only and covers every existing type: four representable types round-trip with their original discriminator; the two ambiguous types are rejected. It also covers owner requirement, malformed records, expiry, timestamp conversion, provenance, confirmation and export restrictions.
+
+**Safety boundary:** This is a pure conversion utility, not an authenticated adapter, authorization mechanism, persistence layer, Firestore transaction, or migration. The existing Memory UI remains unchanged, and no live Firestore data is read or written by the mapper.
