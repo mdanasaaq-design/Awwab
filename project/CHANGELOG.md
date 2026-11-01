@@ -139,3 +139,10 @@
 - CI run [41305026578](https://github.com/mdanasaaq-design/Awwab/actions/runs/41305026578) passed all six jobs on code head `05fbe89f018e238fce89ff1257cb29665565b68b`.
 - Cognitive Core deterministic suite passed 13/13; web build/typecheck, Functions/shared typechecks, Firestore Rules emulator, backend callable emulator and Model Lab checks also passed.
 - Phase 1 remains in progress; no durable persistence, Firebase integration, model inference, autonomous development, merge or deployment is claimed.
+
+
+### Cognitive memory contract and policy prototype — 2026-11-01
+- Added owner-scoped async adapter contract with optimistic concurrency and atomic conflict resolution requirements.
+- Added explicit owner-selected conflict command builder and expiry classification; no automatic contradiction inference or hard deletion.
+- Added six deterministic policy tests and CI execution alongside the Cognitive Core suite.
+- No durable adapter, live database integration, migration, merge, deployment or billing change. CI validation pending.
