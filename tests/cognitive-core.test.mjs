@@ -4,6 +4,7 @@ import {
   CognitiveCoreError,
   COGNITIVE_UNTRUSTED_DATA_NOTICE,
   createIdentityProfile,
+  createIdentityRegistry,
   createInMemoryCognitiveStore,
   selectMemoryContext,
 } from "../packages/shared/src/cognitive-core.mjs";
@@ -30,6 +31,17 @@ test("identity profile is versioned, immutable and rejects invalid versions", ()
   assert.ok(Object.isFrozen(identity));
   assert.throws(() => createIdentityProfile({ id: "awwab", version: 0, purpose: "x", principles: [], boundaries: [], createdAt: clock() }),
     (error) => error instanceof CognitiveCoreError && error.code === "invalid_input");
+});
+
+test("identity registry keeps immutable history and only accepts the next version", () => {
+  const first = { id: "awwab", version: 1, purpose: "Personal assistant", principles: ["Be truthful"], boundaries: ["No self-approval"], createdAt: clock() };
+  const registry = createIdentityRegistry(first);
+  const second = registry.addVersion({ ...first, version: 2, purpose: "Personal assistant under owner control", updatedAt: "2026-11-01T11:00:00.000Z" });
+  assert.equal(registry.getCurrent().version, 2);
+  assert.equal(registry.getVersion(1).purpose, "Personal assistant");
+  assert.equal(registry.getVersion(2), second);
+  assert.throws(() => registry.addVersion({ ...first, version: 4 }), (error) => error.code === "invalid_identity_version");
+  assert.throws(() => registry.addVersion({ ...first, id: "different", version: 3 }), (error) => error.code === "identity_mismatch");
 });
 
 test("memory is owner-scoped and cross-owner reads fail as not found", () => {
