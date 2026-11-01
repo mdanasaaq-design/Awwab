@@ -98,3 +98,10 @@ Before model integration, add deterministic tests for identity versioning, memor
 Before enabling development tools, test repository path confinement and symlink/path traversal rejection; read-only mode and write-scope allowlists; command allowlist, environment sanitization, secret redaction and resource/time limits; cancellation, process cleanup, retry budgets and workspace quotas; branch/worktree isolation and clean-base verification; patch validation and no writes to stable branch; test-result capture and repository-state read-back; prompt injection through README/code comments/issues/tool output; rollback/recovery and candidate/stable comparison; and owner approval for merge/release/deploy.
 
 Model tests must separate dependency-free checks from PyTorch-backed training/inference. Synthetic fixtures test mechanics only. No model-quality claim without held-out, provenance-reviewed evaluation. Run local tests before CI; CI success is not live backend or browser evidence.
+
+
+## Cognitive Core v0 tests — 2026-11-01
+
+CI runs `node --test tests/cognitive-core.test.mjs` without third-party dependencies. The suite covers identity versioning, owner isolation, memory correction/deletion and provenance, sensitive/hidden/unconfirmed/expired filtering, working-memory expiry, deterministic relevance, hard context budgets, goal progress/status transitions, parent ownership/cycle prevention, and evidence-linked experience records.
+
+The in-memory store is a reference implementation only. These tests do not prove Firestore persistence, live Rules, UI integration, model quality, semantic retrieval, or autonomous behavior. Extend the suite before adding any durable adapter or model-driven memory candidate path.
