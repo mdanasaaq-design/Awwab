@@ -13,7 +13,8 @@
 > - [x] Formalize identity version evolution: start at v1, require sequential versions, immutable identity ID/creation time, strictly increasing timestamps, and revision reason/approval-reference metadata. The approval flag is a caller declaration, not authentication proof.
 - [ ] Expand correction/retention edge cases and review identity approval binding before any durable integration.
 > - [x] Source-only review of MemoryPanel, Firestore Rules, backend context preview and Cognitive Core compatibility recorded in [Cognitive Memory Integration Audit](../docs/cognitive-memory-integration-audit.md). No code, Rules, deployment, migration or live data changed.
-- [ ] Resolve AWW-022 proof-of-possession before relying on trusted-device authorization for memory preview.
+- [x] Add an explicitly labeled emulator security-characterization test showing that a second session for the same UID can preview owner memory by claiming a known trusted device ID. This documents the AWW-022 impact; it is not a security pass.
+- [ ] Resolve AWW-022 proof-of-possession before relying on trusted-device authorization for memory preview; invert the characterization test to require denial after the fix.
 - [ ] Define owner decisions for ambiguous legacy types, temporary-memory expiry, archive/delete semantics and correction/concurrency UX.
 - [ ] Design a read-only Firestore adapter prototype using synthetic emulator fixtures only; prove owner isolation, stale-version handling, transaction rollback and Rules compatibility.
 >
