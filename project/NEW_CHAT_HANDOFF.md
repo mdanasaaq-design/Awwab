@@ -4,7 +4,7 @@
 >
 > **Current progress:** Cognitive Core v0 initial code, policy layer, legacy compatibility mapper and v1 memory adapter type contract are on the branch. Owner locally verified the previous head `4663db1`: 27 tests passed, shared typecheck passed, web build passed. New adapter-contract commits still need fresh CI and local validation.
 >
-> **Next bounded work:** add isolated behavioral adapter conformance tests; then formalize identity version evolution and memory conflict/retention edge cases. Review MemoryPanel/Rules before proposing any integration. Do not connect a durable store, alter Firestore, or write user data.
+> **Next bounded work:** observe CI and run the new adapter contract/type fixture and reference-adapter tests locally after sync. Then formalize identity version evolution and memory conflict/retention edge cases. Review MemoryPanel/Rules before proposing any integration. The reference tests cover only a test fixture, not a durable adapter. Do not connect a durable store, alter Firestore, or write user data.
 >
 > **Hard constraints:** strict $0; Awwab-owned random-init model only; no external AI APIs/pretrained weights/hosted agent runtime; no Blaze upgrade/new cloud resources; no merge, migration, Rules/Functions/Hosting deployment, secrets, or live data mutation without explicit owner approval. Keep assistant generation disabled and high-assurance device actions blocked while AWW-022 remains unresolved.
 >
