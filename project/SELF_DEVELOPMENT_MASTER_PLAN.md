@@ -279,3 +279,8 @@ The initial Cognitive Core v0 slice passed CI on `05fbe89f018e238fce89ff1257cb29
 Added the policy-only layer in `packages/shared/src/cognitive-memory-policy.mjs` and declarations. The future adapter contract requires trusted owner scope on every operation, optimistic concurrency for mutations, and one all-or-nothing transaction for an owner-selected conflict resolution. Awwab does not infer contradictions from lexical similarity; the owner chooses the winning record and provides a reason. Expiry excludes records from context but is not a deletion instruction. Six regression tests and a CI step cover these rules.
 
 This is not a durable adapter and does not prove that any backend meets the contract. Before a durable implementation, add adapter conformance/security tests, review the existing Memory UI and Firestore Rules, and confirm a viable $0 architecture. No schema, Rules, live data, billing or deployment change is included.
+
+
+### Existing Memory UI compatibility gate
+
+A source-only review of `apps/web/src/MemoryPanel.tsx` and `firestore.rules` is documented in [Cognitive Memory Compatibility](../docs/cognitive-memory-compatibility.md). The existing UI stores six product-specific types, Firestore Timestamps, a 2,000-character maximum, and only explicit/corrected user provenance. Several mappings to the new five-kind core are ambiguous. Keep the UI, schema and Rules unchanged; a read-only synthetic mapper and round-trip tests must precede any adapter proposal. No live integration or migration is authorized.
