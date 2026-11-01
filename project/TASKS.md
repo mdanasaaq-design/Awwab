@@ -427,3 +427,12 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [ ] Review whether existing Memory UI can safely consume the new contracts; no live integration until Rules are verified.
 
 </details>
+
+
+## Cognitive Core v0 validation result — 2026-11-01
+
+- [x] Verify CI on code head `05fbe89f018e238fce89ff1257cb29665565b68b`: [run 41305026578](https://github.com/mdanasaaq-design/Awwab/actions/runs/41305026578), all six jobs passed; Cognitive Core suite 13/13.
+- [ ] Expand tests for memory conflict handling, retention and context relevance edge cases.
+- [ ] Specify the storage adapter contract and verify owner-scoped persistence requirements before implementing a durable adapter.
+- [ ] Define identity change/review policy beyond sequential immutable version history.
+- [ ] Review safe integration with existing Memory UI; do not enable live writes until Rules are verified.
