@@ -406,3 +406,24 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [x] Backend callable emulator suite passed, including concurrency/idempotency tests and the explicit known-limitation spoofing test.
 - [x] Web build, Functions/shared checks, Firestore Rules, memory/research, and Model Lab jobs passed.
 - [ ] Production trusted-device proof-of-possession remains blocked; do not treat this phase as production security approval.
+
+
+## Phase 1 progress — 2026-11-01
+
+<details>
+<summary>Initial Cognitive Core v0 slice (implementation started)</summary>
+
+- [x] Add dependency-free shared cognitive-core module and TypeScript declarations.
+- [x] Define versioned identity profile contract.
+- [x] Define five memory kinds and provenance/sensitivity/expiry/confirmation controls.
+- [x] Add owner-scoped in-memory reference store with correction/deletion.
+- [x] Add goal/subgoal lifecycle, progress and cycle guards.
+- [x] Add evidence-linked experience records.
+- [x] Add deterministic lexical context selection with exclusion reasons and hard budgets.
+- [x] Add dedicated Node test suite and CI step.
+- [ ] Verify latest CI run and fix any failures.
+- [ ] Expand tests for memory conflicts, retention and context relevance edge cases.
+- [ ] Specify identity version evolution and storage adapter contracts.
+- [ ] Review whether existing Memory UI can safely consume the new contracts; no live integration until Rules are verified.
+
+</details>
