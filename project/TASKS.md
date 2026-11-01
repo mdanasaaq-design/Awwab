@@ -12,7 +12,10 @@
 > - [x] Add isolated reference-adapter behavior tests for owner isolation, duplicate IDs, optimistic concurrency, deletion, and all-or-nothing conflict resolution. This validates the test fixture only, not any future durable adapter.
 > - [x] Formalize identity version evolution: start at v1, require sequential versions, immutable identity ID/creation time, strictly increasing timestamps, and revision reason/approval-reference metadata. The approval flag is a caller declaration, not authentication proof.
 - [ ] Expand correction/retention edge cases and review identity approval binding before any durable integration.
-> - [ ] Review existing MemoryPanel and Rules before proposing any integration; no writes/migration.
+> - [x] Source-only review of MemoryPanel, Firestore Rules, backend context preview and Cognitive Core compatibility recorded in [Cognitive Memory Integration Audit](../docs/cognitive-memory-integration-audit.md). No code, Rules, deployment, migration or live data changed.
+- [ ] Resolve AWW-022 proof-of-possession before relying on trusted-device authorization for memory preview.
+- [ ] Define owner decisions for ambiguous legacy types, temporary-memory expiry, archive/delete semantics and correction/concurrency UX.
+- [ ] Design a read-only Firestore adapter prototype using synthetic emulator fixtures only; prove owner isolation, stale-version handling, transaction rollback and Rules compatibility.
 >
 > ## Gates retained
 > - Assistant generation remains disabled until Awwab's own random-init checkpoint passes held-out capability/safety evaluation.
