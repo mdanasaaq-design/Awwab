@@ -167,3 +167,12 @@
 - Added synthetic round-trip and rejection tests, package export/type declarations, and CI coverage.
 - Kept the mapper disconnected from the UI and Firestore. No live reads/writes, adapter, schema/Rules changes, migration, merge, deployment or billing changes.
 - Automated validation is pending on the new branch head.
+
+
+## 2026-11-01 — Cognitive memory adapter contract v1
+
+- Added a versioned TypeScript contract with object-shaped owner-scoped requests for all durable memory operations.
+- Specified optimistic concurrency for update/delete, atomic all-or-nothing conflict resolution, and non-disclosing cross-owner reads.
+- Added a compile-time adapter fixture to the shared TypeScript check and regression coverage for the runtime shape assertion boundary.
+- Clarified that method-presence checks and type conformance do not prove runtime security or transactional behavior.
+- No durable adapter, Firestore integration, live data mutation, migration, Rules change, or deployment.
