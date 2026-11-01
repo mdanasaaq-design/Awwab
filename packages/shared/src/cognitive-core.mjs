@@ -79,6 +79,26 @@ export function createIdentityProfile(input) {
   });
 }
 
+export function createIdentityRegistry(initialProfile) {
+  let current = createIdentityProfile(initialProfile);
+  const versions = new Map([[current.version, current]]);
+  return Object.freeze({
+    getCurrent() { return current; },
+    getVersion(version) { return versions.get(version) ?? null; },
+    listVersions() { return [...versions.values()]; },
+    addVersion(input) {
+      const next = createIdentityProfile(input);
+      if (next.id !== current.id) fail("identity_mismatch", "An identity version cannot change the identity ID.");
+      if (next.version !== current.version + 1) fail("invalid_identity_version", "Identity versions must increase by exactly one.");
+      if (next.createdAt !== current.createdAt) fail("immutable_field", "Identity creation time cannot change between versions.");
+      if (Date.parse(next.updatedAt) < Date.parse(current.updatedAt)) fail("invalid_identity_version", "Identity updatedAt cannot move backwards.");
+      versions.set(next.version, next);
+      current = next;
+      return next;
+    },
+  });
+}
+
 export function validateMemoryRecord(input) {
   object(input, "memory");
   if (typeof input.userVisible !== "boolean" || typeof input.confirmedByOwner !== "boolean") {
