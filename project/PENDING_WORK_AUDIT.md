@@ -157,3 +157,10 @@ A test-only in-memory reference adapter and CI suite now exercise the v1 contrac
 ## 12. Adapter contract CI evidence — 2026-11-01
 
 CI run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099) passed all six jobs on code head `4ff8e0542a1ca2fb146806c42ea1ece419f0213c). The memory/research job reported 32 passing tests, and the shared typecheck included the compile-time adapter fixture. The web build, Functions build/typecheck, Firestore Rules tests, Model Lab checks, and backend callable emulator tests also passed. Owner-local validation of the latest branch remains pending. This does not prove any production adapter or live Firebase state.
+
+
+## 13. Identity version evolution and validation — 2026-11-01
+
+The identity registry now requires version 1 as its initial state, sequential revisions, immutable identity ID/creation time, strictly increasing update timestamps, and revision metadata containing reason, approval reference, prior/current version and timestamp. The `approvedByOwner` boolean is only a caller declaration; it is not proof of authenticated owner approval. A trusted approval binding is still required before persistent identity changes.
+
+CI run [41337973262](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337973262) passed all six jobs on code head `d2eabceb3f629db9bed00e018db863ca888e41d5`. Local validation on the owner's latest synchronized branch remains outstanding.
