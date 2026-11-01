@@ -410,3 +410,14 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - Compared against the pre-planning head: 32 existing Markdown files modified and two new planning documents added. Historical acceptance records and upstream vendor/licence files remain preserved.
 - PR #23 remains draft/open/unmerged, still targeting `phase-4-memory-research-safety`; no merge or deployment.
 - Documentation-only change; no full CI rerun. Prior six-job CI evidence remains tied to `1ed8ee271d1fc0dd610a92e6505b0bccd00bcc3b`.
+
+
+## Cognitive Core v0 — active implementation snapshot (2026-11-01)
+
+<badge>IN PROGRESS</badge>
+
+- Added shared dependency-free module `packages/shared/src/cognitive-core.mjs`, TypeScript declarations `cognitive-core.d.mts`, and package export `@awwab/shared/cognitive-core`.
+- Identity profile validation and immutable version registry; five typed memory kinds; provenance, owner scope, confidence, sensitivity, visibility, owner confirmation and expiry; in-memory memory correction/deletion; owner-scoped goals/subgoals and state transitions; evidence-linked experience records; deterministic lexical context retrieval with explanations and budgets.
+- Added `tests/cognitive-core.test.mjs` and CI step. Shared typecheck now includes the cognitive declarations.
+- Latest CI must be checked before any pass claim. This is not durable memory or a live app integration: no Firestore adapter/writes, migration, assistant activation, model inference, tool execution, deployment or merge.
+- Remaining phase work: test results/fixes; conflict and retention semantics; storage adapter contract; review existing Memory UI integration; document exact acceptance evidence.
