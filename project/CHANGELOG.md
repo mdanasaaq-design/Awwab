@@ -124,3 +124,12 @@
 - Updated current status and new-chat handoff to point to the controlling plan and active queue.
 - Confirmed that the documentation pass did not change application code, dependencies, training artifacts, billing, cloud resources, live data, merge state or deployment state.
 - Full CI was not rerun for this documentation-only change; prior CI evidence remains pinned to the commit recorded above.
+
+
+## 2026-11-01 — Phase 1 Cognitive Core v0 started
+- Added dependency-free `packages/shared/src/cognitive-core.mjs` and TypeScript declarations/export.
+- Added versioned identity, five typed memory classes, owner-scoped in-memory memory CRUD/correction/deletion, provenance/sensitivity/expiry controls, goal/subgoal state management, evidence-linked experience records and deterministic context retrieval with explanations/budgets.
+- Added dedicated Node tests and a CI step.
+- Updated architecture, data-model, testing, master plan, pending audit, active task queue and README.
+- No Firestore adapter/write, migration, model inference/training, external side effect, deployment, merge, billing or cloud-resource change.
+- Phase 1 remains in progress pending CI and further acceptance work.
