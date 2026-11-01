@@ -298,3 +298,8 @@ This is intentionally a **type/shape contract**, not behavioral proof. `assertCo
 Added a test-only in-memory implementation of the v1 adapter interface and a Node test suite covering owner-scoped reads/lists, duplicate rejection, owner mismatch, optimistic update/delete versions, monotonic update timestamps, and all-or-nothing conflict resolution when one expected version is stale. CI now includes this suite.
 
 These tests verify the written contract against the isolated fixture only. They do not prove a future Firestore or other durable adapter is secure, transactional, or deployable. The fixture is under `tests/fixtures` and is not exported by the runtime package. Fresh CI and owner-local validation are pending.
+
+
+### Phase 1 validation — adapter contract CI result (2026-11-01)
+
+CI run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099) passed all six jobs on code head `4ff8e0542a1ca2fb146806c42ea1ece419f0213c`. The memory/research job passed 32/32 tests, including the new isolated adapter behavior suite; Functions/shared typecheck, web typecheck/build, Model Lab checks, Firestore Rules tests, and callable emulator tests also passed. This is CI evidence only. The owner still needs to pull the latest branch and run the targeted tests/typecheck locally. No durable adapter or live integration is claimed.
