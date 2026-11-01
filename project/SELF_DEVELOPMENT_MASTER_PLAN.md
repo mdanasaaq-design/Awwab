@@ -303,3 +303,12 @@ These tests verify the written contract against the isolated fixture only. They 
 ### Phase 1 validation — adapter contract CI result (2026-11-01)
 
 CI run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099) passed all six jobs on code head `4ff8e0542a1ca2fb146806c42ea1ece419f0213c`. The memory/research job passed 32/32 tests, including the new isolated adapter behavior suite; Functions/shared typecheck, web typecheck/build, Model Lab checks, Firestore Rules tests, and callable emulator tests also passed. This is CI evidence only. The owner still needs to pull the latest branch and run the targeted tests/typecheck locally. No durable adapter or live integration is claimed.
+
+
+### Phase 1 follow-up — identity revision policy (2026-11-01)
+
+The in-memory identity registry now starts only at version 1 and accepts only the next sequential version. Identity ID and original creation time are immutable; each revision timestamp must strictly increase. Each change stores a reason, approval reference, previous/current version and approval timestamp. The registry exposes immutable revision metadata alongside immutable historical profiles.
+
+The `approvedByOwner` field is a caller-supplied declaration/record, **not authentication proof or a cryptographic approval token**. A production workflow must bind identity changes to a trusted owner session and an auditable approval event before durable identity changes are allowed.
+
+CI run [41337973262](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337973262) passed all six jobs on code head `d2eabceb3f629db9bed00e018db863ca888e41d5`. Owner-local validation of the latest branch remains pending.
