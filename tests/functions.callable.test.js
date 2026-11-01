@@ -689,6 +689,31 @@ test("known limitation: a second account session can claim a trusted caller devi
   assert.equal(spoofedApproval.result.status, "trusted");
 });
 
+test("known limitation: a second account session can preview memory by claiming a trusted device ID", async () => {
+  // Security-characterization only. This test must be inverted to expect
+  // permission-denied/not-found after AWW-022 proof-of-possession is fixed.
+  const firstSession = await createAuthUser("memory-context-device-spoof");
+  const secondSession = await signInAuthUser(firstSession.email);
+  const trustedDeviceId = newDeviceId();
+
+  const bootstrap = await invokeCallable(
+    "bootstrapFirstDevice",
+    bootstrapPayload(trustedDeviceId),
+    firstSession.idToken,
+  );
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+  await seedMemoryAsEmulatorAdmin(firstSession.localId, "owner-memory");
+
+  const spoofedPreview = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId: trustedDeviceId, scope: "conversation_context" },
+    secondSession.idToken,
+  );
+  assert.equal(spoofedPreview.ok, true, JSON.stringify(spoofedPreview));
+  assert.equal(spoofedPreview.result.memories.length, 1);
+  assert.equal(spoofedPreview.result.memories[0].id, "owner-memory");
+});
+
 test("assistant memory context requires auth, explicit scope, and a trusted device", async () => {
   const deviceId = newDeviceId();
   const unauthenticated = await invokeCallable(
