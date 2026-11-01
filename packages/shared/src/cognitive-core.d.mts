@@ -41,7 +41,12 @@ export interface MemoryContext {
 export class CognitiveCoreError extends Error { readonly code: string; }
 export const COGNITIVE_SCHEMA_VERSION: 1;
 export const COGNITIVE_UNTRUSTED_DATA_NOTICE: string;
-export function createIdentityProfile(input: Omit<IdentityProfile, "schemaVersion">): IdentityProfile;
+export function createIdentityProfile(input: Omit<IdentityProfile, "schemaVersion" | "updatedAt"> & {updatedAt?: string}): IdentityProfile;
+export interface IdentityRegistry {
+  getCurrent(): IdentityProfile; getVersion(version: number): IdentityProfile | null; listVersions(): IdentityProfile[];
+  addVersion(input: Omit<IdentityProfile, "schemaVersion" | "updatedAt"> & {updatedAt?: string}): IdentityProfile;
+}
+export function createIdentityRegistry(initialProfile: Omit<IdentityProfile, "schemaVersion" | "updatedAt"> & {updatedAt?: string}): IdentityRegistry;
 export function validateMemoryRecord(input: MemoryRecord): MemoryRecord;
 export function validateGoal(input: GoalRecord): GoalRecord;
 export function validateExperienceRecord(input: ExperienceRecord): ExperienceRecord;
