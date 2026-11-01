@@ -32,7 +32,7 @@ jobs:
       - name: Run isolated policy regression tests
         run: node --test project/prototypes/memory-research-policy-mock.test.mjs
       - name: Cognitive Core and memory compatibility contract tests
-        run: node --test tests/cognitive-core.test.mjs tests/cognitive-memory-policy.test.mjs tests/cognitive-memory-compatibility.test.mjs
+        run: node --test tests/cognitive-core.test.mjs tests/cognitive-memory-policy.test.mjs tests/cognitive-memory-compatibility.test.mjs tests/cognitive-memory-adapter.test.mjs
       - name: Readability adapter and source provenance tests
         run: node --experimental-strip-types --test tests/research-article-parser.test.mjs
       - name: Device lifecycle and key-proof protocol model tests
