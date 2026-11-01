@@ -2,7 +2,7 @@
 > Active branch: `opensource-reuse-strategy`; latest recorded implementation commit before this handoff refresh: `f324bb50ba492e5baffc04d6636a6cb604964c1d`. PR #23 remains draft/open/unmerged and targets PR #22's branch; do not merge either PR.  
 > Read first: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), [Pending Work Audit](PENDING_WORK_AUDIT.md), [Current Status](CURRENT_STATUS.md), [Tasks](TASKS.md), and [Issues and Risks](ISSUES_AND_RISKS.md).  
 >
-> **Current progress:** Cognitive Core v0 initial code, policy layer, legacy compatibility mapper and v1 memory adapter type contract are on the branch. Owner locally verified the previous head `4663db1`: 27 tests passed, shared typecheck passed, web build passed. New adapter-contract commits still need fresh CI and local validation.
+> **Current progress:** Cognitive Core v0 initial code, policy layer, legacy compatibility mapper and v1 memory adapter type contract are on the branch. Owner locally verified the previous head `4663db1`: 27 tests passed, shared typecheck passed, web build passed. New adapter-contract code passed all six CI jobs in run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099), including 32/32 memory/research tests; owner-local validation of the latest branch remains pending.
 >
 > **Next bounded work:** observe CI and run the new adapter contract/type fixture and reference-adapter tests locally after sync. Then formalize identity version evolution and memory conflict/retention edge cases. Review MemoryPanel/Rules before proposing any integration. The reference tests cover only a test fixture, not a durable adapter. Do not connect a durable store, alter Firestore, or write user data.
 >
