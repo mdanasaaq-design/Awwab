@@ -448,3 +448,12 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [ ] Verify the new CI run and fix any failures.
 - [ ] Implement adapter conformance tests before selecting any durable store.
 - [ ] Review existing Memory UI/schema and Firestore Rules compatibility; no live integration or writes until approved.
+
+
+### Existing Memory UI compatibility review — 2026-11-01
+
+- [x] Inspect `apps/web/src/MemoryPanel.tsx` and current `firestore.rules` memory contract.
+- [x] Document the proposed field/type/provenance/timestamp mapping and incompatibilities in [Cognitive Memory Compatibility](../docs/cognitive-memory-compatibility.md).
+- [ ] Build a read-only mapper over synthetic fixtures and reject ambiguous type conversions.
+- [ ] Add round-trip and adapter conformance tests before considering integration.
+- [ ] Review Rules compatibility and obtain explicit approval before any schema/Rules/live-data change.
