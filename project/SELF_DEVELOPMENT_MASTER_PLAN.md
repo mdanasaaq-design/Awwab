@@ -267,3 +267,8 @@ Implemented in `packages/shared/src/cognitive-core.mjs` with `cognitive-core.d.m
 - lexical context selection with inclusion/exclusion explanations and strict record/character budgets.
 
 CI coverage is added in `tests/cognitive-core.test.mjs`. Remaining Phase 1 work: observe the CI result; review and harden implementation against failures; expand context relevance/conflict/retention tests; add explicit identity version evolution rules; define and test a storage adapter contract without live Firestore writes; then decide whether and how to connect the existing Memory UI. No Firestore schema migration, live database write, model inference, external side effect or assistant activation is part of this slice.
+
+
+### Phase 1 validation checkpoint — 2026-11-01
+
+The initial Cognitive Core v0 slice passed CI on `05fbe89f018e238fce89ff1257cb29665565b68b`: [run 41305026578](https://github.com/mdanasaaq-design/Awwab/actions/runs/41305026578), all six jobs successful. The dedicated Cognitive Core suite passed 13/13. Phase 1 is **not complete**: conflict/retention semantics, storage adapter contract, identity change policy and safe existing-memory integration review remain outstanding. No durable storage or live integration is claimed.
