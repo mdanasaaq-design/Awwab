@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { createMemoryConflictResolution } from "../../packages/shared/src/cognitive-memory-policy.mjs";
+import { createMemoryConflictResolution } from "../packages/shared/src/cognitive-memory-policy.mjs";
 import { createMemoryAdapterFixture } from "./cognitive-memory-adapter.mjs";
 
 const at = "2026-11-01T10:00:00.000Z";
