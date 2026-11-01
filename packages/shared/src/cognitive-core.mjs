@@ -146,7 +146,7 @@ export function validateGoal(input) {
     id: text(input.id, "goal.id", 128),
     ownerId: text(input.ownerId, "goal.ownerId", 256),
     title: text(input.title, "goal.title", 200),
-    description: input.description == null ? "" : text(input.description, "goal.description", 4000),
+    description: input.description == null || input.description === "" ? "" : text(input.description, "goal.description", 4000),
     parentGoalId: input.parentGoalId == null ? null : text(input.parentGoalId, "goal.parentGoalId", 128),
     priority: enumValue(input.priority ?? "medium", PRIORITIES, "goal.priority"),
     status,
