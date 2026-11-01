@@ -1,23 +1,16 @@
-> **ACTIVE TASK QUEUE — 2026-11-01**  
-> Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). This block supersedes earlier active-queue summaries; historical checklists below remain evidence records.  
+> **ACTIVE TASK QUEUE — 2026-11-02**  
+> Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). This block supersedes earlier active-queue summaries; historical checklists below remain evidence records.
 >
-> ## Current phase — Cognitive Core v0
-> - [x] Initial deterministic core: versioned identity, five memory kinds, owner-scoped in-memory store, goals/subgoals, evidence-linked experiences and bounded context selection. Local validation recorded by owner on 2026-11-01: 27 tests passed, shared typecheck passed.
-> - [x] Memory conflict/retention policy prototype with owner-selected conflict commands and no automatic hard deletion.
-> - [x] Read-only legacy-memory compatibility mapper with synthetic round-trip tests; no live MemoryPanel/Firestore integration.
-> - [x] Versioned durable-adapter TypeScript contract, owner-scoped request shapes and compile-time contract fixture committed to development branch at `f324bb5`.
-> - [x] CI run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099) passed all six jobs on code head `4ff8e05`, including adapter/reference tests and shared typecheck.
-- [x] CI run [41337973262](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337973262) passed all six jobs on code head `d2eabce`, including identity evolution regressions.
-- [ ] Owner-local validation on the synchronized latest branch remains pending.
-> - [x] Add isolated reference-adapter behavior tests for owner isolation, duplicate IDs, optimistic concurrency, deletion, and all-or-nothing conflict resolution. This validates the test fixture only, not any future durable adapter.
-> - [x] Formalize identity version evolution: start at v1, require sequential versions, immutable identity ID/creation time, strictly increasing timestamps, and revision reason/approval-reference metadata. The approval flag is a caller declaration, not authentication proof.
-- [ ] Expand correction/retention edge cases and review identity approval binding before any durable integration.
-> - [x] Source-only review of MemoryPanel, Firestore Rules, backend context preview and Cognitive Core compatibility recorded in [Cognitive Memory Integration Audit](../docs/cognitive-memory-integration-audit.md). No code, Rules, deployment, migration or live data changed.
-- [x] Add an explicitly labeled emulator security-characterization test showing that a second session for the same UID can preview owner memory by claiming a known trusted device ID. This documents the AWW-022 impact; it is not a security pass.
-- [ ] Review and approve/revise the [device proof-of-possession design proposal](../docs/device-proof-of-possession-design.md), including browser/Android key support and the first-device recovery policy.
-- [ ] Resolve AWW-022 proof-of-possession before relying on trusted-device authorization for memory preview; invert both characterization tests to require denial after the fix.
-- [ ] Define owner decisions for ambiguous legacy types, temporary-memory expiry, archive/delete semantics and correction/concurrency UX.
-- [ ] Design a read-only Firestore adapter prototype using synthetic emulator fixtures only; prove owner isolation, stale-version handling, transaction rollback and Rules compatibility.
+> ## Current phase — Cognitive Core v0 integration boundary
+> - [x] Cognitive Core v0, memory policy, read-only legacy mapper, adapter contract and reference-adapter tests are implemented on this development branch.
+> - [x] Owner-local validation on code head `62b9c2521189e52dabab3027e5e3bdf967079fe7`: 32/32 targeted Node tests, shared typecheck and web build passed; CI run [41338217980](https://github.com/mdanasaaq-design/Awwab/actions/runs/41338217980) passed all six jobs.
+> - [x] Add a 2,000-character per-record limit to backend memory-context preview, matching the existing MemoryPanel/Firestore contract (commit `bbc9cc3`).
+> - [x] Add callable emulator regressions for malformed/unsupported memory records, control-character sanitization, oversized records and authenticated-owner scoping (commits `d1593b0`, `8856070`).
+> - [ ] Run fresh CI on the latest implementation commits; earlier run 41338217980 predates these changes.
+> - [ ] Run owner-local callable emulator tests after syncing the latest branch.
+> - [ ] Resolve AWW-022 proof-of-possession. The 2026-11-02 design proposal is not an implementation; keep the known-spoof characterization tests and high-assurance actions blocked.
+> - [ ] Decide legacy ambiguous types, non-expiring temporary-memory behavior, archive/delete semantics and correction/concurrency UX.
+> - [ ] Design a read-only Firestore adapter prototype using synthetic emulator fixtures only. No live reads/writes, schema change, Rules change, migration or MemoryPanel integration.
 >
 > ## Gates retained
 > - Assistant generation remains disabled until Awwab's own random-init checkpoint passes held-out capability/safety evaluation.
@@ -26,11 +19,14 @@
 > - PR #22 → PR #23 ancestry and exact main baseline must be reconciled before any merge; no merge authorized.
 > - Live Firestore Rules state remains unverified; no Rules deployment without approval.
 >
-> ## Next after Cognitive Core
-> - Prepare a separate, owner-approved Model Lab local smoke-test/data/evaluation decision. Do not install heavy dependencies, download data/model weights, or train until approved.
-> - Then build read-only repository inventory/indexing and evaluate a local Windows/Termux runner before any sandboxed file-edit or terminal execution.
+> ## Next sequence
+> 1. Fresh CI and owner-local callable test validation for the memory-preview bound/regressions.
+> 2. Review proof-of-possession design and record platform/recovery decisions; do not deploy.
+> 3. Record owner decisions for legacy-memory lifecycle semantics.
+> 4. Produce the synthetic-fixture, read-only adapter proposal and conformance matrix.
 >
 > ---
+>
 >
 > **ACTIVE TASK QUEUE — 2026-10-31 (supersedes older unchecked historical lists below)**  
 > Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). Full work inventory: [Pending Work Audit](PENDING_WORK_AUDIT.md). Historical checklists below are retained as records and must not be treated as the active queue without revalidation.
