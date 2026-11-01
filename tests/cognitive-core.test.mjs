@@ -121,6 +121,7 @@ test("goal state machine validates progress, terminal states, ownership and hier
   const child = db.createGoal({ id: "child", title: "Build memory", parentGoalId: parent.id });
   assert.equal(child.parentGoalId, parent.id);
   assert.throws(() => db.updateGoal(parent.id, { status: "completed" }), (error) => error.code === "invalid_input");
+  db.updateGoal(child.id, { status: "active" });
   const done = db.updateGoal(child.id, { status: "completed", progress: 100 });
   assert.equal(done.status, "completed");
   assert.throws(() => db.updateGoal(child.id, { status: "active", progress: 50 }), (error) => error.code === "invalid_transition");
