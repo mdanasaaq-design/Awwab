@@ -140,3 +140,10 @@ The audit enumerated and reviewed **65 pre-existing Markdown files** at baseline
 **Cognitive Core v0 is now in progress.** The first code slice adds a dependency-free shared module, TypeScript declarations, package export, deterministic Node tests and a CI test step. Implemented contracts include identity versioning, five memory kinds, provenance/owner/sensitivity/expiry controls, in-memory owner-scoped memory CRUD/correction, goal/subgoal lifecycle, evidence-linked experiences and deterministic context selection with explanations/budgets.
 
 Not yet complete: CI verification on the latest commit; expanded conflict/relevance/retention coverage; formal identity version migration rules; a storage adapter interface and durable adapter review; existing Memory UI integration; Firebase Rules/live validation. No Firebase writes, migration, model call, training, tool execution or deployment occurred.
+
+
+## 10. Cognitive Core follow-up status — 2026-11-01
+
+The development branch now includes a versioned TypeScript durable-memory adapter contract (v1), object-shaped owner-scoped method inputs, optimistic-concurrency requirements, atomic conflict-resolution semantics, and a compile-time fixture in `shared:typecheck`.
+
+This closes the contract-definition gap only. It does not implement a durable adapter or demonstrate runtime enforcement. Remaining work: behavioral conformance tests using an isolated fake adapter, identity version evolution rules, edge-case tests for conflict/retention, and a source review of MemoryPanel/Firestore Rules before proposing integration. Owner's 27-test/typecheck/web-build evidence is from prior head `4663db1`; new commits require fresh CI and local validation. No live storage writes, migration, Rules change or deployment.
