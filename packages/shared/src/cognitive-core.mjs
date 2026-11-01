@@ -85,6 +85,11 @@ export function validateMemoryRecord(input) {
     fail("invalid_input", "Memory visibility and owner-confirmation flags are required.");
   }
   const expiresAt = input.expiresAt === null ? null : isoDate(input.expiresAt, "expiresAt");
+  const sourceKind = enumValue(input.source?.kind, MEMORY_SOURCES, "memory.source.kind");
+  const sourceReference = input.source?.reference == null ? null : text(input.source.reference, "memory.source.reference", 500);
+  if ((sourceKind === "observed_evidence" || sourceKind === "reviewed_import") && !sourceReference) {
+    fail("invalid_input", "Observed and imported memories require a provenance reference.");
+  }
   if (expiresAt && Date.parse(expiresAt) <= Date.parse(input.createdAt)) fail("invalid_input", "expiresAt must be later than createdAt.");
   return Object.freeze({
     id: text(input.id, "memory.id", 128),
