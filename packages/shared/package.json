@@ -12,6 +12,10 @@
     "./cognitive-memory-policy": {
       "types": "./src/cognitive-memory-policy.d.mts",
       "import": "./src/cognitive-memory-policy.mjs"
+    },
+    "./cognitive-memory-compatibility": {
+      "types": "./src/cognitive-memory-compatibility.d.mts",
+      "import": "./src/cognitive-memory-compatibility.mjs"
     }
   }
 }
