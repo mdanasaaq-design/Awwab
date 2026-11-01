@@ -41,6 +41,11 @@ test("memory is owner-scoped and cross-owner reads fail as not found", () => {
     (error) => error.code === "owner_mismatch");
 });
 
+test("observed and imported memory require a provenance reference", () => {
+  assert.throws(() => store().createMemory({ kind: "semantic", content: "An observed fact", source: { kind: "observed_evidence" } }),
+    (error) => error.code === "invalid_input" && /provenance reference/.test(error.message));
+});
+
 test("memory correction preserves ID and provenance; deletion removes the record", () => {
   const db = store();
   const saved = db.createMemory({ id: "m1", kind: "semantic", content: "Old fact" });
