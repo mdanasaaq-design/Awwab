@@ -176,3 +176,11 @@
 - Added a compile-time adapter fixture to the shared TypeScript check and regression coverage for the runtime shape assertion boundary.
 - Clarified that method-presence checks and type conformance do not prove runtime security or transactional behavior.
 - No durable adapter, Firestore integration, live data mutation, migration, Rules change, or deployment.
+
+
+## 2026-11-01 — Isolated memory adapter reference tests
+
+- Added a test-only in-memory implementation of the v1 adapter interface.
+- Added regression tests for owner isolation, duplicate IDs, optimistic concurrency, monotonic update timestamps, explicit deletion, and atomic conflict resolution.
+- Added the suite to the existing CI memory/research job.
+- This validates the fixture only; no durable adapter or live Firestore integration exists.
