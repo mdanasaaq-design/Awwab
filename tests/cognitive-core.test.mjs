@@ -79,7 +79,7 @@ test("sensitive memory requires explicit opt-in and working memory must expire",
 
 test("context selection explains relevance and enforces a hard character budget", () => {
   const result = selectMemoryContext({
-    ownerId: "owner-a", query: "project plans", maxChars: 12, memories: [
+    ownerId: "owner-a", query: "project plans", maxChars: 13, memories: [
       memory({ id: "long", content: "A very long project planning preference" }),
       memory({ id: "short", content: "Project plans" }),
     ],
@@ -87,7 +87,8 @@ test("context selection explains relevance and enforces a hard character budget"
   assert.equal(result.selected.length, 1);
   assert.equal(result.selected[0].id, "short");
   assert.equal(result.selected[0].reason, "lexical_overlap");
-  assert.equal(result.totalChars, 13); // This test is expected to catch budget errors.
+  assert.equal(result.totalChars, 13);
+  assert.ok(result.totalChars <= result.maxChars);
 });
 
 test("goal state machine validates progress, terminal states, ownership and hierarchy", () => {
