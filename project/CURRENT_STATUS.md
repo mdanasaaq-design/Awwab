@@ -455,3 +455,10 @@ Latest branch-head CI run [41064652230](https://github.com/mdanasaaq-design/Awwa
 - The Phase 4 memory/research policy job passed, including the Cognitive Core and new cognitive-memory-policy test suites. Functions/shared typecheck, web typecheck/build, Firestore Rules emulator, backend callable emulator and Model Lab checks all passed.
 - Subsequent commit `b51980e` only adds documentation of the existing Memory UI compatibility assessment; its documentation-sync CI run [41307028024](https://github.com/mdanasaaq-design/Awwab/actions/runs/41307028024) is still in progress at the time of this note.
 - The result validates the policy code at `17abc62`, not a durable adapter or live integration. No merge, deployment, migration, Rules change, live database write or billing change occurred.
+
+ 
+## Cognitive memory compatibility mapper — 2026-11-01
+- Added a dependency-free, read-only mapper and declaration under `packages/shared/src`, with package export `@awwab/shared/cognitive-memory-compatibility`.
+- Added synthetic tests for every existing MemoryPanel type, including safe rejection of ambiguous goal/project records and non-expiring temporary context, plus round-trip checks for representable types.
+- CI now includes the mapper tests; shared declaration typecheck includes its declaration.
+- No MemoryPanel integration, Firestore adapter, live reads/writes, schema/Rules change, migration, deployment, merge or billing change. Fresh CI is required before marking automated validation complete.
