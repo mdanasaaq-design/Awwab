@@ -291,3 +291,10 @@ A source-only review of `apps/web/src/MemoryPanel.tsx` and `firestore.rules` is 
 Added contract version 1 to `@awwab/shared/cognitive-memory-policy`. The TypeScript interface now specifies object-shaped owner-scoped requests for get/list/create/update/delete/conflict-resolution operations. Mutation contracts require optimistic versions; conflict resolution is all-or-nothing; cross-owner reads must be indistinguishable from missing records. A compile-time fixture is included in `shared:typecheck`.
 
 This is intentionally a **type/shape contract**, not behavioral proof. `assertCognitiveMemoryAdapter` still checks method presence only. No durable adapter exists, and no Firestore schema, Rules, Memory UI, live records, or deployment changed. Remaining Phase 1 work includes isolated behavioral conformance tests, identity version evolution policy, and review of the existing memory UI/Rules before any integration proposal. CI run 41336954479 was pending when this update was recorded; the new fixture has not yet been validated locally by the owner.
+
+
+### Phase 1 follow-up — isolated adapter reference tests (2026-11-01)
+
+Added a test-only in-memory implementation of the v1 adapter interface and a Node test suite covering owner-scoped reads/lists, duplicate rejection, owner mismatch, optimistic update/delete versions, monotonic update timestamps, and all-or-nothing conflict resolution when one expected version is stale. CI now includes this suite.
+
+These tests verify the written contract against the isolated fixture only. They do not prove a future Firestore or other durable adapter is secure, transactional, or deployable. The fixture is under `tests/fixtures` and is not exported by the runtime package. Fresh CI and owner-local validation are pending.
