@@ -445,7 +445,7 @@ See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for sour
 - [x] Add owner-selected conflict-resolution command builder; no automatic contradiction inference or writes.
 - [x] Add deterministic expiry classification; expired data is excluded from context but never auto-hard-deleted.
 - [x] Add policy regression tests and CI coverage.
-- [ ] Verify the new CI run and fix any failures.
+- [x] Verify CI on code head `17abc62c794c0381731e662c0f942fd9d32264cf`: [run 41306843643](https://github.com/mdanasaaq-design/Awwab/actions/runs/41306843643), all six jobs passed; policy + Cognitive Core tests passed.
 - [ ] Implement adapter conformance tests before selecting any durable store.
 - [ ] Review existing Memory UI/schema and Firestore Rules compatibility; no live integration or writes until approved.
 
