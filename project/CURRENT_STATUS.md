@@ -1,3 +1,14 @@
+> **CURRENT CONTROLLING SNAPSHOT — 2026-11-01**  
+> Repository: `mdanasaaq-design/Awwab`; development branch: `opensource-reuse-strategy`; current code/documentation head at snapshot start: `f324bb50ba492e5baffc04d6636a6cb604964c1d` (subsequent tracking-only documentation commits may advance it).  
+> **Current phase:** Cognitive Core v0. Initial deterministic core, memory policy, legacy compatibility mapper and versioned storage-adapter type contract are implemented on the development branch.  
+> **Owner-observed local validation on prior head `4663db1`:** 27 Node tests passed; shared TypeScript declaration check passed; web production build passed. These results predate the new adapter-contract commits and do not validate them.  
+> **Current CI:** run `41336954479` on `f324bb5` was pending at last inspection.  
+> **Not complete:** no durable adapter; no behavioral adapter conformance proof; no live MemoryPanel integration; no Firestore migration/Rules deployment; no trained Awwab model; no assistant generation; no repository developer/execution loop.  
+> **Critical blockers:** AWW-022 device-ID spoofing; Firebase Functions deployment requires Blaze and remains unavailable under the $0 constraint; PR #22/#23 remain draft/open/unmerged; live Firestore Rules state and manual browser acceptance remain unverified.  
+> **Owner constraints:** preserve strict $0; no external AI APIs/pretrained weights/hosted agents; no billing upgrade, cloud resource, secret, large download, migration, merge, deployment, or live data mutation without explicit approval.
+>
+> ---
+>
 > **Current controlling snapshot — 2026-10-31**  
 > Repository: `mdanasaaq-design/Awwab`; planning baseline `opensource-reuse-strategy` at `1ed8ee271d1fc0dd610a92e6505b0bccd00bcc3b` before this documentation consolidation.  
 > **Product direction:** Awwab Self-Development — persistent cognitive core + Awwab-owned model + safe developer/evolution loop. See [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md) and [Pending Work Audit](PENDING_WORK_AUDIT.md). These supersede older “next task” recommendations below.
