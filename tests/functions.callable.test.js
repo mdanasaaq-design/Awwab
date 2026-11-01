@@ -835,7 +835,7 @@ test("assistant memory context rejects malformed and unsupported records and bou
   assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
 
   await seedMemoryAsEmulatorAdmin(user.localId, "valid-sanitized", {
-    content: "Keep\\u0000 the interface concise.",
+    content: "Keep\u0000 the interface concise.",
   });
   await seedMemoryAsEmulatorAdmin(user.localId, "unknown-type", {
     type: "unrecognized_memory_type",
