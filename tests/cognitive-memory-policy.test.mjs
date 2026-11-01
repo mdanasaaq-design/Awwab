@@ -5,6 +5,8 @@ import {
 } from "../packages/shared/src/cognitive-core.mjs";
 import {
   assertCognitiveMemoryAdapter,
+  COGNITIVE_MEMORY_ADAPTER_CONTRACT_VERSION,
+  COGNITIVE_MEMORY_ADAPTER_METHODS,
   createMemoryConflictResolution,
   evaluateMemoryRetention,
 } from "../packages/shared/src/cognitive-memory-policy.mjs";
@@ -15,13 +17,20 @@ const base = (overrides = {}) => ({
   expiresAt: null, ...overrides,
 });
 
-test("adapter contract rejects missing methods and accepts a complete structural adapter", () => {
+test("adapter v1 exposes the documented method set and shape-checks without invoking methods", () => {
   assert.throws(() => assertCognitiveMemoryAdapter({ getMemory() {} }),
     (error) => error instanceof CognitiveCoreError && error.code === "invalid_adapter");
   const adapter = Object.fromEntries([
     "getMemory", "listMemories", "createMemory", "updateMemory", "deleteMemory", "resolveMemoryConflict",
   ].map((name) => [name, () => {}]));
-  assert.equal(assertCognitiveMemoryAdapter(adapter), adapter);
+  assert.equal(COGNITIVE_MEMORY_ADAPTER_CONTRACT_VERSION, 1);
+  assert.deepEqual(COGNITIVE_MEMORY_ADAPTER_METHODS, [
+    "getMemory", "listMemories", "createMemory", "updateMemory", "deleteMemory", "resolveMemoryConflict",
+  ]);
+  let invoked = false;
+  const guarded = Object.fromEntries(Object.entries(adapter).map(([name]) => [name, () => { invoked = true; }]));
+  assert.equal(assertCognitiveMemoryAdapter(guarded), guarded);
+  assert.equal(invoked, false, "shape assertion must not execute adapter methods");
 });
 
 test("owner-selected conflict plan archives only same-owner active memories of the same kind", () => {
