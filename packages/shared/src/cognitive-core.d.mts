@@ -42,9 +42,23 @@ export class CognitiveCoreError extends Error { readonly code: string; }
 export const COGNITIVE_SCHEMA_VERSION: 1;
 export const COGNITIVE_UNTRUSTED_DATA_NOTICE: string;
 export function createIdentityProfile(input: Omit<IdentityProfile, "schemaVersion" | "updatedAt"> & {updatedAt?: string}): IdentityProfile;
+export interface IdentityRevisionApproval {
+  readonly approvedByOwner: true;
+  readonly reason: string;
+  readonly reference: string;
+}
+export interface IdentityRevisionChange {
+  readonly version: number;
+  readonly previousVersion: number;
+  readonly reason: string;
+  readonly approvalReference: string;
+  readonly approvedByOwner: true;
+  readonly approvedAt: string;
+}
 export interface IdentityRegistry {
   getCurrent(): IdentityProfile; getVersion(version: number): IdentityProfile | null; listVersions(): IdentityProfile[];
-  addVersion(input: Omit<IdentityProfile, "schemaVersion" | "updatedAt"> & {updatedAt?: string}): IdentityProfile;
+  getChange(version: number): IdentityRevisionChange | null;
+  addVersion(input: Omit<IdentityProfile, "schemaVersion" | "updatedAt"> & {updatedAt?: string}, approval: IdentityRevisionApproval): IdentityProfile;
 }
 export function createIdentityRegistry(initialProfile: Omit<IdentityProfile, "schemaVersion" | "updatedAt"> & {updatedAt?: string}): IdentityRegistry;
 export function validateMemoryRecord(input: MemoryRecord): MemoryRecord;
