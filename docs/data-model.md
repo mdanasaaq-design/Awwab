@@ -208,3 +208,18 @@ These are proposed logical records, not approved Firestore writes or a migration
 - **VersionCandidate:** code commit, model checkpoint/version, agent profile, data manifest, evaluation suite/results, review state and rollback reference.
 
 Do not conflate saved memory with training data; an agent profile with a separately trained model; a code commit with a model checkpoint; model confidence with authorization; or a tool return with verified external state. Any persistence change requires owner-scoped rules, field allowlists, retention/deletion behavior, migration/backup review and explicit deployment approval.
+
+
+## Cognitive Core v0 logical records — 2026-11-01
+
+The new deterministic module defines these versioned application-level records separately from the existing Firestore memory UI schema:
+
+- **IdentityProfile:** schema version, identity ID/version, purpose, principles, boundaries and timestamps.
+- **MemoryRecord:** owner ID, one of five memory kinds, content, source kind/reference, confidence, sensitivity, created/updated/expiry timestamps, visibility, owner confirmation and lifecycle status.
+- **GoalRecord:** owner ID, title/description, parent goal, priority, status, constraints, progress, source and timestamps.
+- **ExperienceRecord:** owner ID, event kind, summary, optional goal/task/plan/action references, evidence references, outcome, verification, confidence and timestamp.
+- **MemoryContext:** owner/query, selected records with score/reason/provenance, excluded record IDs with reasons, character usage/budget and an untrusted-data notice.
+
+These contracts are currently implemented in a dependency-free shared module with an in-memory reference store. They are **not a Firestore schema or migration**. Existing user-entered memory documents and UI remain unchanged. No live data is read or written by this module. Any durable adapter must define owner-scoped access, Rules tests, expiry, correction/deletion/export and retention before integration.
+
+Context selection is deterministic lexical overlap, not semantic/vector search. Sensitive records are excluded by default; unconfirmed and hidden records are excluded; working memory must expire; observed/imported memories require provenance references. Context content is always untrusted data, not instructions or permissions.
