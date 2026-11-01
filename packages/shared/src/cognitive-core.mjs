@@ -102,7 +102,7 @@ export function validateMemoryRecord(input) {
     expiresAt,
     userVisible: input.userVisible,
     confirmedByOwner: input.confirmedByOwner,
-    status: input.status ?? "active",
+    status: enumValue(input.status ?? "active", ["active", "archived"], "memory.status"),
   });
 }
 
