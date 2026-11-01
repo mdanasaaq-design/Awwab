@@ -33,15 +33,22 @@ test("identity profile is versioned, immutable and rejects invalid versions", ()
     (error) => error instanceof CognitiveCoreError && error.code === "invalid_input");
 });
 
-test("identity registry keeps immutable history and only accepts the next version", () => {
+test("identity registry requires owner-approved sequential revisions and preserves immutable history", () => {
   const first = { id: "awwab", version: 1, purpose: "Personal assistant", principles: ["Be truthful"], boundaries: ["No self-approval"], createdAt: clock() };
   const registry = createIdentityRegistry(first);
-  const second = registry.addVersion({ ...first, version: 2, purpose: "Personal assistant under owner control", updatedAt: "2026-11-01T11:00:00.000Z" });
+  const approval = { approvedByOwner: true, reason: "Owner clarified Awwab operating boundaries.", reference: "owner-approval:identity-v2" };
+  const second = registry.addVersion({ ...first, version: 2, purpose: "Personal assistant under owner control", updatedAt: "2026-11-01T11:00:00.000Z" }, approval);
   assert.equal(registry.getCurrent().version, 2);
   assert.equal(registry.getVersion(1).purpose, "Personal assistant");
   assert.equal(registry.getVersion(2), second);
-  assert.throws(() => registry.addVersion({ ...first, version: 4 }), (error) => error.code === "invalid_identity_version");
-  assert.throws(() => registry.addVersion({ ...first, id: "different", version: 3 }), (error) => error.code === "identity_mismatch");
+  assert.deepEqual(registry.getChange(2), { version: 2, previousVersion: 1, reason: approval.reason, approvalReference: approval.reference, approvedByOwner: true, approvedAt: "2026-11-01T11:00:00.000Z" });
+  assert.equal(registry.getChange(1), null);
+  assert.throws(() => registry.addVersion({ ...first, version: 3, updatedAt: "2026-11-01T12:00:00.000Z" }), (error) => error.code === "invalid_input");
+  assert.throws(() => registry.addVersion({ ...first, version: 4, updatedAt: "2026-11-01T12:00:00.000Z" }, approval), (error) => error.code === "invalid_identity_version");
+  assert.throws(() => registry.addVersion({ ...first, id: "different", version: 3, updatedAt: "2026-11-01T12:00:00.000Z" }, approval), (error) => error.code === "identity_mismatch");
+  assert.throws(() => registry.addVersion({ ...first, version: 3, updatedAt: "2026-11-01T11:00:00.000Z" }, approval), (error) => error.code === "invalid_identity_version");
+  assert.throws(() => registry.addVersion({ ...first, version: 3, createdAt: "2026-10-02T00:00:00.000Z", updatedAt: "2026-11-01T12:00:00.000Z" }, approval), (error) => error.code === "immutable_field");
+  assert.throws(() => createIdentityRegistry({ ...first, version: 2 }), (error) => error.code === "invalid_identity_version");
 });
 
 test("memory is owner-scoped and cross-owner reads fail as not found", () => {
