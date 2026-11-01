@@ -1,3 +1,29 @@
+> **ACTIVE TASK QUEUE — 2026-11-01**  
+> Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). This block supersedes earlier active-queue summaries; historical checklists below remain evidence records.  
+>
+> ## Current phase — Cognitive Core v0
+> - [x] Initial deterministic core: versioned identity, five memory kinds, owner-scoped in-memory store, goals/subgoals, evidence-linked experiences and bounded context selection. Local validation recorded by owner on 2026-11-01: 27 tests passed, shared typecheck passed.
+> - [x] Memory conflict/retention policy prototype with owner-selected conflict commands and no automatic hard deletion.
+> - [x] Read-only legacy-memory compatibility mapper with synthetic round-trip tests; no live MemoryPanel/Firestore integration.
+> - [x] Versioned durable-adapter TypeScript contract, owner-scoped request shapes and compile-time contract fixture committed to development branch at `f324bb5`.
+> - [ ] Observe CI for adapter contract update and run the new type fixture/tests locally after owner sync.
+> - [ ] Add behavioral conformance tests against an isolated in-memory adapter implementation; do not represent method-shape/type checks as security conformance.
+> - [ ] Formalize identity version evolution and correction/retention edge cases.
+> - [ ] Review existing MemoryPanel and Rules before proposing any integration; no writes/migration.
+>
+> ## Gates retained
+> - Assistant generation remains disabled until Awwab's own random-init checkpoint passes held-out capability/safety evaluation.
+> - High-assurance device actions remain disabled: AWW-022 callerDeviceId spoofing is unresolved.
+> - Privileged backend operations remain blocked until a secure hard-$0 runtime is proven and explicitly approved.
+> - PR #22 → PR #23 ancestry and exact main baseline must be reconciled before any merge; no merge authorized.
+> - Live Firestore Rules state remains unverified; no Rules deployment without approval.
+>
+> ## Next after Cognitive Core
+> - Prepare a separate, owner-approved Model Lab local smoke-test/data/evaluation decision. Do not install heavy dependencies, download data/model weights, or train until approved.
+> - Then build read-only repository inventory/indexing and evaluate a local Windows/Termux runner before any sandboxed file-edit or terminal execution.
+>
+> ---
+>
 > **ACTIVE TASK QUEUE — 2026-10-31 (supersedes older unchecked historical lists below)**  
 > Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). Full work inventory: [Pending Work Audit](PENDING_WORK_AUDIT.md). Historical checklists below are retained as records and must not be treated as the active queue without revalidation.
 >
