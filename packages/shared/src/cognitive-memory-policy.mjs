@@ -107,4 +107,5 @@ export function evaluateMemoryRetention(record, { now = new Date().toISOString()
   return Object.freeze({ state: "retained", excludeFromContext: false, hardDelete: false });
 }
 
+export const COGNITIVE_MEMORY_ADAPTER_CONTRACT_VERSION = 1;
 export const COGNITIVE_MEMORY_ADAPTER_METHODS = REQUIRED_METHODS;
