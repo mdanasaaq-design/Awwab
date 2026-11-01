@@ -158,3 +158,12 @@
 - CI run [41306843643](https://github.com/mdanasaaq-design/Awwab/actions/runs/41306843643) passed all six jobs on code head `17abc62c794c0381731e662c0f942fd9d32264cf`.
 - Cognitive memory policy tests, Cognitive Core tests, shared/Functions typecheck, web build, Firestore Rules emulator, backend callable emulator and Model Lab checks passed.
 - The following compatibility-assessment docs commit is documentation-only; its separate CI run is tracked in CURRENT_STATUS.md.
+
+ 
+## 2026-11-01 — Read-only Cognitive Memory compatibility mapper
+- Added an Awwab-owned, dependency-free mapper between the existing MemoryPanel document shape and Cognitive Core records.
+- Preserved the original legacy type discriminator for reversible export; rejected ambiguous `goal_commitment` and `project_context` records and non-expiring `temporary_context` records.
+- Enforced the legacy 2,000-character limit, explicit owner ID, supported provenance, confirmation/sensitivity/visibility metadata and canonical timestamp conversion.
+- Added synthetic round-trip and rejection tests, package export/type declarations, and CI coverage.
+- Kept the mapper disconnected from the UI and Firestore. No live reads/writes, adapter, schema/Rules changes, migration, merge, deployment or billing changes.
+- Automated validation is pending on the new branch head.
