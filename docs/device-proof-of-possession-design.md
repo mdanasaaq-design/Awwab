@@ -143,7 +143,7 @@ Therefore:
 6. Invert the known-spoof characterization tests and prove all protected callables reject the second session.
 7. Obtain independent security review and demonstrate a hard-$0 deployment/execution path before production approval.
 
-**Current decision:** keep AWW-022 open and all high-assurance device operations blocked. This document is a proposal, not an implementation or authorization to deploy.
+**Current decision:** keep AWW-022 open and all high-assurance device operations blocked. The isolated helper is a prototype slice only; the end-to-end proof protocol remains a proposal and is not authorization to deploy.
 
 
 ## A9 implementation slice 1 — cross-platform profile and isolated verifier (2026-11-06)
@@ -164,7 +164,7 @@ Therefore:
 ### Code now present on the development branch
 
 - `backend/functions/src/deviceProof.ts` contains isolated, dependency-free Node crypto helpers for strict challenge serialization, bounded canonical-payload SHA-256 hashing, P-256 SPKI key parsing and P1363 signature verification.
-- `tests/device-proof-crypto.test.mjs` covers deterministic/domain-separated serialization, malformed challenge fields, lifetime and payload bounds, valid P-256 signatures, altered messages, malformed encodings and wrong curves.
+- `tests/device-proof-crypto.test.mjs` covers deterministic/domain-separated serialization, malformed challenge fields, lifetime and payload bounds, valid P-256 signatures, altered messages, malformed encodings and wrong curves. It also exercises Node Web Crypto's P-256 output and a test-only DER-to-P1363 normalization reference. These are runtime/reference tests, not a real browser compatibility matrix or Android Keystore device test.
 - `npm run validate:local` now runs the focused crypto test after the Functions TypeScript build.
 
 ### Explicitly not implemented
