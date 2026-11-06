@@ -12,6 +12,8 @@ const BASE64URL_PATTERN = /^[A-Za-z0-9_-]+$/;
 const HASH_PATTERN = /^[a-f0-9]{64}$/;
 
 const PROTECTED_OPERATIONS = new Set([
+  "registerDevice",
+  "bootstrapFirstDevice",
   "listDevices",
   "approveDevice",
   "revokeDevice",
@@ -149,7 +151,8 @@ function importP256PublicKey(spkiBase64: string): KeyObject | null {
  */
 export function verifyDeviceProofSignature(input: DeviceProofVerificationInput): boolean {
   if (!input || typeof input !== "object" ||
-      typeof input.message !== "string" || input.message.length === 0 ||
+      typeof input.message !== "string" ||
+      !input.message.startsWith(`${DEVICE_PROOF_PROTOCOL}\\n`) ||
       Buffer.byteLength(input.message, "utf8") > 32_768) return false;
 
   const key = importP256PublicKey(input.publicKeySpkiBase64);
