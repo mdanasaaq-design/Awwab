@@ -7,7 +7,8 @@
 > - [x] Add isolated server-side challenge canonicalization, strict P-256 SPKI import, SHA-256 canonical-payload hashing and signature verification helpers in `backend/functions/src/deviceProof.ts`.
 > - [x] Add focused crypto regression tests and include them in `npm run validate:local`.
 > - [ ] Pull the A9 commits and run `npm run validate:local` on Node.js 22; record actual typecheck/build/test output before calling the helper validated.
-> - [ ] Add fixed cross-platform test vectors: browser Web Crypto output and Android Keystore DER-to-P1363 conversion, including malformed and boundary cases.
+> - [x] Add Node Web Crypto P-256 signature compatibility coverage and a test-only DER-to-P1363 normalization reference test.
+> - [ ] Verify the same fixed vectors in a real supported browser and on Android Keystore devices; test DER normalization in Android client code before claiming platform interoperability.
 > - [ ] Specify and test the server-side challenge issuance and atomic one-time consumption model against emulator-only fixtures.
 > - [ ] Implement the full protected-callable matrix, invert the spoofing characterization test, and prove replay/concurrency/revocation/rotation/recovery behavior.
 > - [ ] Keep AWW-022 open and high-assurance actions disabled until every protected callable is proof-gated and the secure hard-$0 runtime is independently reviewed and approved.
