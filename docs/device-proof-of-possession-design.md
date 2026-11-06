@@ -144,3 +144,34 @@ Therefore:
 7. Obtain independent security review and demonstrate a hard-$0 deployment/execution path before production approval.
 
 **Current decision:** keep AWW-022 open and all high-assurance device operations blocked. This document is a proposal, not an implementation or authorization to deploy.
+
+
+## A9 implementation slice 1 — cross-platform profile and isolated verifier (2026-11-06)
+
+### Platform evidence reviewed
+
+- Browser Web Crypto supports ECDSA signing and verification in secure contexts. The API exports public keys in SubjectPublicKeyInfo (SPKI) format; non-extractable private CryptoKeys can be persisted through structured-clone-capable storage such as IndexedDB. References: [MDN SubtleCrypto](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto), [MDN importKey](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/importKey), [MDN sign](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/sign).
+- Android Keystore documents EC key-pair generation for ECDSA with SHA-256 and identifies P-256 as a StrongBox-supported curve where hardware supports it. Android 10/API 29+ exposes `KeyInfo.getSecurityLevel()`; TEE/StrongBox must be detected per key/device rather than assumed. Reference: [Android Keystore system](https://developer.android.com/privacy-and-security/keystore).
+- This source review supports a shared **candidate** profile of ECDSA P-256 with SHA-256. It is not device-matrix testing or independent cryptographic approval.
+
+### Wire-format decision for the prototype
+
+- Public key: DER-encoded SPKI, standard base64. Browser Web Crypto exports SPKI; Android exposes an X.509-encoded public key compatible with the SPKI container.
+- Signature: fixed-width 64-byte IEEE-P1363 `r || s`, base64url on the wire. Browser Web Crypto uses this fixed-width signature representation. Android's `SHA256withECDSA` API returns an ASN.1 DER signature, so the Android client must explicitly normalize DER to P1363 and test boundary values before it can interoperate. No server-side dual-format fallback is allowed.
+- Challenge message: protocol prefix `awwab-device-proof-v1` plus a fixed-position JSON array. The fixed-position representation prevents object-key ordering ambiguity and binds challenge ID, nonce, UID, device ID, key version, operation, target, payload hash, issue time and expiry.
+- Challenge lifetime is capped at 120 seconds in the pure helper. The server must still enforce actual expiry using server time and atomically consume the challenge; helper validation is not replay protection.
+
+### Code now present on the development branch
+
+- `backend/functions/src/deviceProof.ts` contains isolated, dependency-free Node crypto helpers for strict challenge serialization, bounded canonical-payload SHA-256 hashing, P-256 SPKI key parsing and P1363 signature verification.
+- `tests/device-proof-crypto.test.mjs` covers deterministic/domain-separated serialization, malformed challenge fields, lifetime and payload bounds, valid P-256 signatures, altered messages, malformed encodings and wrong curves.
+- `npm run validate:local` now runs the focused crypto test after the Functions TypeScript build.
+
+### Explicitly not implemented
+
+- No callable imports or invokes this helper yet. No challenge issuance, Firestore challenge storage, transaction/one-time consumption, enrollment, key registration, fingerprint lifecycle, rotation, revocation binding, first-device recovery, web IndexedDB integration, Android Keystore client, DER-to-P1363 Android conversion, rate limiting or independent review has been implemented.
+- Existing callable trust checks still rely on caller-supplied device IDs. The known spoofing characterization remains valid; AWW-022 is **open**, not fixed.
+- No local execution of this A9 test slice has been observed yet. Pull the branch and run `npm run validate:local` before treating the new helper as validated.
+- No production path is approved: preserve the strict $0 boundary; no Blaze upgrade, new service, cloud resource, secret, deployment or live Rules change.
+
+**A9 acceptance gate:** first obtain a clean local typecheck/build and focused crypto test result; then add cross-platform fixed test vectors (browser Web Crypto and Android DER normalization); only after that design the emulator-only challenge store and atomic replay tests. Keep all high-assurance callables blocked until every protected operation uses the verified proof and the hard-$0 execution path is independently approved.
