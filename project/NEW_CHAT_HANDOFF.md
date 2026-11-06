@@ -291,3 +291,18 @@ Phase 1 has started. Read [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER
 - GitHub comparison against `main` reports this branch 351 commits ahead and 2 behind at the time of review. Reconcile exact ancestry before any merge; do not merge PRs without explicit owner approval.
 - No deployment, billing change, merge, migration, live data mutation, or production configuration change was performed.
 - Continue with AWW-022 proof-of-possession platform/recovery decisions, legacy-memory lifecycle decisions, and a synthetic-fixture read-only adapter proposal. Keep assistant generation and high-assurance device actions disabled.
+
+
+## A9 — device proof-of-possession crypto boundary (2026-11-06)
+
+- Active branch: `opensource-reuse-strategy`; continue from the latest branch head, not the older A8 code baseline.
+- A8 local validation was owner-observed on Node.js 22.23.4 before A9 files were added: 55 automated tests passed. It does not validate A9.
+- Official source review supports ECDSA P-256/SHA-256 as a provisional common profile: browser Web Crypto supports ECDSA and SPKI public-key export; Android Keystore documents EC P-256 signing and per-key hardware security-level inspection.
+- Added `backend/functions/src/deviceProof.ts`: strict fixed-position challenge serializer with `awwab-device-proof-v1` domain prefix, 120-second maximum challenge lifetime, operation allowlist, canonical-payload SHA-256 helper, P-256 SPKI parser and P1363 signature verifier.
+- Added `tests/device-proof-crypto.test.mjs`; root `npm run validate:local` runs this test after Functions build.
+- Wire format candidate: DER SPKI public key in standard base64; 64-byte IEEE-P1363 signature in base64url. Browser Web Crypto uses the fixed-width signature format. Android `SHA256withECDSA` returns DER and requires an explicit DER-to-P1363 client conversion; no dual-format server fallback.
+- **Not integrated:** no callable uses the helper; no challenge issue/consume flow, Firestore transaction, enrollment, web IndexedDB key storage, Android Keystore client, key rotation/recovery, replay protection or full protected-callable coverage exists.
+- **AWW-022 remains open**. Existing caller-ID spoofing is still possible. Keep high-assurance operations disabled.
+- **Next owner action:** `git pull --ff-only origin opensource-reuse-strategy`, then `npm run validate:local` in `C:\Users\rexy2\Awwab`. Record the actual results; do not call the A9 slice validated before that.
+- Next implementation sequence: add browser/Android fixed vectors and DER normalization tests; design emulator-only challenge storage and atomic replay consumption; only then integrate all protected callables.
+- No production deployment, Blaze upgrade, new cloud resource, secret, migration, live Rules change, merge or live data mutation was performed or authorized.
