@@ -1,3 +1,13 @@
+> **LATEST OWNER WORKFLOW — 2026-11-06**
+> - Owner has chosen Claude as the primary builder/developer.
+> - ChatGPT's role is now GitHub-only coordination: update requested files directly on GitHub, maintain documentation/status/task/handoff records, help review Claude's proposed work, and provide exact pull/deploy commands when asked. Do not independently implement product features.
+> - Root [`CLAUDE.md`](../CLAUDE.md) was added as the repository-level Claude guide. Claude should read it and the source-of-truth files listed there before changing code.
+> - Repository structure and README were audited/refreshed. Known gaps remain: Android minimal shell/no Gradle wrapper; no dedicated Windows desktop app; no capable trained model; assistant generation disabled; cognitive/memory integration incomplete; AWW-022 unresolved.
+> - This cleanup changed documentation only. No code validation, deployment, billing change, merge, live Rules/data change or cloud-resource creation was performed.
+> - Latest A9 crypto helper still requires owner-local validation using Node.js 22 and `npm run validate:local`; do not claim it passed until actual output is supplied.
+>
+> ---
+>
 > **LATEST HANDOFF — 2026-11-02**  
 > Active branch: `opensource-reuse-strategy`; PR #23 remains draft/open/unmerged and targets PR #22's branch; do not merge either PR.
 >
