@@ -1,14 +1,16 @@
-> **CURRENT CONTROLLING SNAPSHOT — 2026-11-02**  
-> Repository: `mdanasaaq-design/Awwab`; development branch: `opensource-reuse-strategy`; latest branch head: `50210f937233c9d2308ff83a821d7a5210a7e634`; latest code/test change: `19dfac03ed6993b5a0cd5e656035c2ffae15eb02`.  
-> **Current phase:** Cognitive Core v0. Deterministic core, memory policy, read-only legacy compatibility mapper, v1 storage-adapter contract, isolated reference-adapter behavior suite, and owner-declared identity revision metadata are implemented.  
-> **Owner-observed local validation on `62b9c25`:** 32 Node tests passed; shared TypeScript contract check passed; web TypeScript/Vite production build passed. Build completed with existing warnings for the large bundle, Readability CommonJS/ESM interop, and ineffective dynamic import of `device.ts`. The new AWW-022 memory-preview characterization test was added afterward and has CI validation but not yet owner-local validation.  
-> **Current CI:** run [41340413445](https://github.com/mdanasaaq-design/Awwab/actions/runs/41340413445) passed all six jobs on latest branch head `50210f9`; backend callable emulator suite passed 11/11 tests, including the new second-session memory-preview spoof characterization.  
-> **Memory integration review:** source-only review recorded in [Cognitive Memory Integration Audit](../docs/cognitive-memory-integration-audit.md). MemoryPanel/Firestore remain legacy and separate; no durable adapter, schema/Rules change, migration or live data operation. AWW-022 design proposal: [Device proof-of-possession](../docs/device-proof-of-possession-design.md).  
+> **CURRENT CONTROLLING SNAPSHOT — 2026-11-06**  
+> Repository: `mdanasaaq-design/Awwab`; development branch: `opensource-reuse-strategy`; verified branch head: `290c02f8807d97e889f3432c991bfd40b0029a8c`.  
+> **Current phase:** Cognitive Core v0 integration boundary. Deterministic core, memory policy, read-only legacy compatibility mapper, v1 storage-adapter contract, isolated reference-adapter behavior suite, and owner-declared identity revision metadata are implemented.  
+> **Owner-observed local validation on Node.js 22.23.4 at the exact branch head above:** shared contract typecheck; Functions typecheck/build; web typecheck/build; 27 cognitive/memory tests; 15 Firestore Rules emulator tests; and 13 callable Functions emulator tests all passed. Total: 55 automated tests, zero failures.  
+> **Build warnings:** Vite reports Readability CommonJS/ESM interop, a minified chunk above 500 kB, and an ineffective dynamic import of `device.ts`. These did not fail the build.  
+> **Test caveats:** expected permission-denied output appears in negative Rules tests. Callable tests continue to characterize callerDeviceId spoofing; they do not resolve AWW-022. Emulator output also reports App Check is not configured in this local test environment.  
+> **Repeatable validation:** root command `npm run validate:local` now runs the validated typechecks, builds and three test groups. Generated `backend/functions/lib/` output is ignored and remains reproducible from tracked TypeScript source.  
 > **Not complete:** no durable Cognitive Memory adapter; reference tests exercise only a synthetic fixture; no live MemoryPanel integration; no Firestore migration/Rules deployment; no trained Awwab model; no assistant generation; no repository developer/execution loop.  
-> **Critical blockers:** AWW-022 device-ID spoofing; Firebase Functions deployment requires Blaze and remains unavailable under the $0 constraint; PR #22/#23 remain draft/open/unmerged; live Firestore Rules state and manual browser acceptance remain unverified.  
+> **Critical blockers:** AWW-022 device-ID spoofing; Firebase Functions deployment requires Blaze and remains unavailable under the $0 constraint; PR #22/#23 ancestry and current main relationship require reconciliation; live Firestore Rules state and manual browser acceptance remain unverified. Branch comparison currently reports 351 commits ahead and 2 behind main.  
 > **Owner constraints:** preserve strict $0; no external AI APIs/pretrained weights/hosted agents; no billing upgrade, cloud resource, secret, large download, migration, merge, deployment, or live data mutation without explicit approval.
 >
 > ---
+>
 >
 > **Current controlling snapshot — 2026-10-31**  
 > Repository: `mdanasaaq-design/Awwab`; planning baseline `opensource-reuse-strategy` at `1ed8ee271d1fc0dd610a92e6505b0bccd00bcc3b` before this documentation consolidation.  
