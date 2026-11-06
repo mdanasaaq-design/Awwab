@@ -1,20 +1,27 @@
 > **ACTIVE TASK QUEUE — 2026-11-06**  
 > Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). This block supersedes earlier active-queue summaries; historical checklists below remain evidence records.
 >
-> ## Current phase — Cognitive Core v0 integration boundary
-> - [x] Cognitive Core v0, memory policy, read-only legacy mapper, adapter contract and reference-adapter tests are implemented on this development branch.
-> - [x] Owner-local full validation on Node.js 22.23.4 at branch head `290c02f8807d97e889f3432c991bfd40b0029a8c`: shared typecheck, Functions typecheck/build, web typecheck/build, 27 cognitive/memory tests, 15 Firestore Rules emulator tests and 13 callable emulator tests passed (55 tests total).
-> - [x] Add a repeatable root command, `npm run validate:local`, covering the exact checks above; add the generated Functions `lib/` directory to the root ignore rules.
-> - [ ] Run fresh CI on the latest implementation commits; local validation does not replace CI.
-> - [ ] Resolve AWW-022 proof-of-possession. The design proposal is not an implementation; keep known-spoof characterization tests and high-assurance actions blocked.
-> - [ ] Decide legacy ambiguous types, non-expiring temporary-memory behavior, archive/delete semantics and correction/concurrency UX.
+> ## Current phase — AWW-022 proof-of-possession, A9
+> - [x] Review official browser Web Crypto and Android Keystore documentation; select ECDSA P-256/SHA-256 as a provisional cross-platform candidate, not a device-tested or independently approved profile.
+> - [x] Define a single prototype wire format: DER SPKI public key, 64-byte IEEE-P1363 signature, base64url signature encoding; Android DER-to-P1363 normalization remains a client requirement.
+> - [x] Add isolated server-side challenge canonicalization, strict P-256 SPKI import, SHA-256 canonical-payload hashing and signature verification helpers in `backend/functions/src/deviceProof.ts`.
+> - [x] Add focused crypto regression tests and include them in `npm run validate:local`.
+> - [ ] Pull the A9 commits and run `npm run validate:local` on Node.js 22; record actual typecheck/build/test output before calling the helper validated.
+> - [ ] Add fixed cross-platform test vectors: browser Web Crypto output and Android Keystore DER-to-P1363 conversion, including malformed and boundary cases.
+> - [ ] Specify and test the server-side challenge issuance and atomic one-time consumption model against emulator-only fixtures.
+> - [ ] Implement the full protected-callable matrix, invert the spoofing characterization test, and prove replay/concurrency/revocation/rotation/recovery behavior.
+> - [ ] Keep AWW-022 open and high-assurance actions disabled until every protected callable is proof-gated and the secure hard-$0 runtime is independently reviewed and approved.
+>
+> ## Other active work
+> - [ ] Decide legacy-memory ambiguous types, non-expiring temporary-memory behavior, archive/delete semantics and correction/concurrency UX.
 > - [ ] Design a read-only Firestore adapter prototype using synthetic emulator fixtures only. No live reads/writes, schema change, Rules change, migration or MemoryPanel integration.
+> - [ ] Reconcile branch ancestry and run fresh CI when appropriate; do not merge without explicit owner approval.
 >
 > ## Validation notes
-> - Vite build completed with warnings: Readability CommonJS/ESM interop, bundle chunk above 500 kB, and ineffective dynamic import of `device.ts`. Build still passed.
-> - Emulator output included expected permission-denied cases from negative Rules tests. Callable characterization tests still demonstrate the unresolved callerDeviceId spoofing issue; passing tests do not resolve AWW-022.
-> - Firebase CLI reported App Check is not configured for the emulator test environment. No enforcement change was made.
-> - Branch comparison against `main` currently reports 351 commits ahead and 2 behind. Reconcile ancestry before any merge; no merge is authorized.
+> - A8 owner-observed validation remains evidence only for its tested baseline: 55 automated tests passed before the A9 source slice was added.
+> - A9 crypto tests are committed but have not yet been run locally by the owner; do not combine them with A8's 55 passing tests as if already executed.
+> - Existing Vite warnings remain: Readability CommonJS/ESM interop, bundle chunk above 500 kB, and ineffective dynamic import of `device.ts`.
+> - Existing callable tests still characterize callerDeviceId spoofing; they do not resolve AWW-022. Emulator App Check is not configured.
 >
 > ## Gates retained
 > - Assistant generation remains disabled until Awwab's own random-init checkpoint passes held-out capability/safety evaluation.
@@ -24,10 +31,10 @@
 > - Live Firestore Rules state remains unverified; no Rules deployment without approval.
 >
 > ## Next sequence
-> 1. Review proof-of-possession design and record platform/recovery decisions; do not deploy.
-> 2. Record owner decisions for legacy-memory lifecycle semantics.
-> 3. Produce the synthetic-fixture, read-only adapter proposal and conformance matrix.
-> 4. Reconcile branch ancestry and run fresh CI when appropriate; do not merge without explicit approval.
+> 1. Pull and validate the A9 crypto helper on Node.js 22.
+> 2. Add browser/Android cross-platform vectors and normalize Android signatures to the one wire format.
+> 3. Design the emulator-only challenge store and atomic replay protection.
+> 4. Continue legacy-memory and read-only adapter design without live data changes.
 >
 > ---
 >
