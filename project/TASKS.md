@@ -1,16 +1,20 @@
-> **ACTIVE TASK QUEUE — 2026-11-02**  
+> **ACTIVE TASK QUEUE — 2026-11-06**  
 > Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). This block supersedes earlier active-queue summaries; historical checklists below remain evidence records.
 >
 > ## Current phase — Cognitive Core v0 integration boundary
 > - [x] Cognitive Core v0, memory policy, read-only legacy mapper, adapter contract and reference-adapter tests are implemented on this development branch.
-> - [x] Owner-local validation on code head `62b9c2521189e52dabab3027e5e3bdf967079fe7`: 32/32 targeted Node tests, shared typecheck and web build passed; CI run [41338217980](https://github.com/mdanasaaq-design/Awwab/actions/runs/41338217980) passed all six jobs.
-> - [x] Add a 2,000-character per-record limit to backend memory-context preview, matching the existing MemoryPanel/Firestore contract (commit `bbc9cc3`).
-> - [x] Add callable emulator regressions for malformed/unsupported memory records, control-character sanitization, oversized records and authenticated-owner scoping (commits `d1593b0`, `8856070`).
-> - [ ] Run fresh CI on the latest implementation commits; earlier run 41338217980 predates these changes.
-> - [ ] Run owner-local callable emulator tests after syncing the latest branch.
-> - [ ] Resolve AWW-022 proof-of-possession. The 2026-11-02 design proposal is not an implementation; keep the known-spoof characterization tests and high-assurance actions blocked.
+> - [x] Owner-local full validation on Node.js 22.23.4 at branch head `290c02f8807d97e889f3432c991bfd40b0029a8c`: shared typecheck, Functions typecheck/build, web typecheck/build, 27 cognitive/memory tests, 15 Firestore Rules emulator tests and 13 callable emulator tests passed (55 tests total).
+> - [x] Add a repeatable root command, `npm run validate:local`, covering the exact checks above; add the generated Functions `lib/` directory to the root ignore rules.
+> - [ ] Run fresh CI on the latest implementation commits; local validation does not replace CI.
+> - [ ] Resolve AWW-022 proof-of-possession. The design proposal is not an implementation; keep known-spoof characterization tests and high-assurance actions blocked.
 > - [ ] Decide legacy ambiguous types, non-expiring temporary-memory behavior, archive/delete semantics and correction/concurrency UX.
 > - [ ] Design a read-only Firestore adapter prototype using synthetic emulator fixtures only. No live reads/writes, schema change, Rules change, migration or MemoryPanel integration.
+>
+> ## Validation notes
+> - Vite build completed with warnings: Readability CommonJS/ESM interop, bundle chunk above 500 kB, and ineffective dynamic import of `device.ts`. Build still passed.
+> - Emulator output included expected permission-denied cases from negative Rules tests. Callable characterization tests still demonstrate the unresolved callerDeviceId spoofing issue; passing tests do not resolve AWW-022.
+> - Firebase CLI reported App Check is not configured for the emulator test environment. No enforcement change was made.
+> - Branch comparison against `main` currently reports 351 commits ahead and 2 behind. Reconcile ancestry before any merge; no merge is authorized.
 >
 > ## Gates retained
 > - Assistant generation remains disabled until Awwab's own random-init checkpoint passes held-out capability/safety evaluation.
@@ -20,12 +24,13 @@
 > - Live Firestore Rules state remains unverified; no Rules deployment without approval.
 >
 > ## Next sequence
-> 1. Fresh CI and owner-local callable test validation for the memory-preview bound/regressions.
-> 2. Review proof-of-possession design and record platform/recovery decisions; do not deploy.
-> 3. Record owner decisions for legacy-memory lifecycle semantics.
-> 4. Produce the synthetic-fixture, read-only adapter proposal and conformance matrix.
+> 1. Review proof-of-possession design and record platform/recovery decisions; do not deploy.
+> 2. Record owner decisions for legacy-memory lifecycle semantics.
+> 3. Produce the synthetic-fixture, read-only adapter proposal and conformance matrix.
+> 4. Reconcile branch ancestry and run fresh CI when appropriate; do not merge without explicit approval.
 >
 > ---
+>
 >
 >
 > **ACTIVE TASK QUEUE — 2026-10-31 (supersedes older unchecked historical lists below)**  
