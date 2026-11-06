@@ -1,3 +1,32 @@
+## Repository structure and Claude handoff audit — 2026-11-06
+
+The complete tracked Git tree on `opensource-reuse-strategy` was inspected (183 entries; GitHub reported the tree was not truncated). The repository is organized as a monorepo with web, Android shell, Firebase Functions, shared package, Model Lab, tests, docs and project records.
+
+### Confirmed structural gaps
+
+- Android has no committed Gradle wrapper files; the app remains a minimal Compose shell and its build/device acceptance is unverified.
+- There is no dedicated Windows desktop application workspace.
+- Assistant generation remains disabled and no capable Awwab-trained model checkpoint exists.
+- Cognitive/memory modules are not a complete integrated conversational runtime.
+- A9 device-proof crypto code is isolated; challenge lifecycle, replay protection, platform key management and protected-callable integration remain incomplete. AWW-022 stays P0/open.
+- Firebase Functions are not deployed on the current Spark plan. No billing upgrade or alternative cloud service is authorized.
+- Historical Markdown notes contain older phase/task narratives. Preserve them as historical evidence, but use the current source-of-truth precedence documented in root `CLAUDE.md`.
+
+### Documentation and handoff changes
+
+- Added root `CLAUDE.md` with project boundaries, current reality, development workflow, approval gates, validation expectations and required completion reporting.
+- Refreshed `README.md` to describe the real current state and point to controlling documents.
+- Rewrote `docs/repository-structure.md` to match the observed tree and explicitly list missing infrastructure rather than implying it exists.
+- Updated Current Status, Tasks, New Chat Handoff and this audit to record the owner workflow change: Claude builds; ChatGPT maintains GitHub documentation/coordination.
+- No application source, dependency manifest, lockfile, Firebase configuration, Rules, live data or cloud resources were changed. No validation or deployment was run for this documentation pass.
+
+### Follow-up sequence for Claude
+
+1. Read root `CLAUDE.md` and the controlling documents before touching source.
+2. Resolve the latest A9 validation status; keep AWW-022 blocked until end-to-end proof-of-possession is complete and independently reviewed.
+3. Prepare a bounded Android Gradle-wrapper/build reproducibility task; do not invent wrapper files.
+4. Decide whether a Windows desktop client is actually required now; do not create an empty app workspace.
+5. Build only against approved product priorities, with tests and synchronized documentation.
 # Awwab Pending Work Audit
 
 **Audit date:** 2026-10-31  
