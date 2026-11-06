@@ -19,3 +19,6 @@ local.properties
 .idea/
 .gradle/
 .vscode/
+
+# TypeScript-compiled Firebase Functions output
+/backend/functions/lib/
