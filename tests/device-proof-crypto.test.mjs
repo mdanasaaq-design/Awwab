@@ -78,6 +78,7 @@ test("P-256 signatures verify only for the exact canonical message", () => {
   const signed = createSignedMessage(message);
   assert.equal(verifyDeviceProofSignature({ ...signed, message }), true);
   assert.equal(verifyDeviceProofSignature({ ...signed, message: message + "x" }), false);
+  assert.equal(verifyDeviceProofSignature({ ...signed, message: "unrelated-protocol\\n" + message }), false);
 });
 
 test("signature verification rejects malformed, wrong-curve and wrong-length inputs", () => {
