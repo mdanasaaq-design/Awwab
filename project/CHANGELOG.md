@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-11-06 — Functions region alignment and pending-device cap
+
+### Application code
+- Configured all nine Cloud Functions callables to use `asia-south1`, matching the Firestore database region, and configured the web Functions client to use the same region.
+- Added a per-user limit of 10 pending devices. The count is checked inside the existing registration transaction; known devices can still check in at the limit.
+- Preserved the existing transactional registration and atomic audit-event implementation already present on this branch.
+
+### Tests
+- Updated the callable emulator base URL to `asia-south1`.
+- Added callable emulator coverage for the pending-device limit, known-device check-ins at the limit, and isolation between users.
+- The existing concurrent duplicate-registration test already covers transactional registration and one-registration/four-check-in audit behavior.
+
+### Validation status
+- Typecheck, build and emulator tests have not been run for this commit.
+- No deployment, Firebase Rules change, billing change or cloud-resource creation was performed.
+
 ## 2026-10-27 — Repository organization and status refresh
 
 ### Documentation and repository hygiene
