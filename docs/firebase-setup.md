@@ -81,12 +81,12 @@ References:
 
 ## Live project finding — 2026-10-27
 
-The Awwab project has a default Firestore Native database in asia-south1, but the Functions list is empty. A Functions deployment attempt was blocked because the project must be on Blaze. The owner chose to remain on the current plan. Do not repeat deployment attempts, upgrade billing, deploy Rules, or create alternative cloud resources until the architecture comparison and explicit approval are complete. Cloudflare Workers is a candidate to evaluate, not a selected backend. The local extracted-copy region edits have not been reconciled with GitHub main. See [Master Plan](../project/MASTER_PLAN.md).
+The Awwab project has a default Firestore Native database in asia-south1, but the Functions list is empty. A Functions deployment attempt was blocked because the project must be on Blaze. The owner chose to remain on the current plan. Do not repeat deployment attempts, upgrade billing, deploy Rules, or create alternative cloud resources until the architecture comparison and explicit approval are complete. Cloudflare Workers is a candidate to evaluate, not a selected backend. The local extracted-copy region edits have not been reconciled with GitHub main. See [Master Plan](../project/SELF_DEVELOPMENT_MASTER_PLAN.md).
 
 
 ---
 
-> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/SELF_DEVELOPMENT_MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
 
 
 ## Reuse programme and Firebase boundary (2026-10-30)
