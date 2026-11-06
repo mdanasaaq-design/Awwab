@@ -10,6 +10,13 @@ if (getApps().length === 0) {
 
 const db = getFirestore();
 
+// Keep every callable in the same region as the Firestore database (Mumbai).
+// Web and other clients must explicitly use this same region.
+const CALLABLE_OPTIONS = { region: "asia-south1" } as const;
+
+// Bound per-user pending-device records and their associated audit writes.
+const MAX_PENDING_DEVICES = 10;
+
 type DevicePlatform = "web" | "android";
 type DeviceStatus = "pending" | "trusted" | "revoked";
 
@@ -74,53 +81,92 @@ async function requireTrustedCaller(uid: string, deviceId: string) {
   return snapshot;
 }
 
-export const health = onCall(() => ({
+export const health = onCall(CALLABLE_OPTIONS, () => ({
   ok: true,
   service: "awwab-functions",
   version: "0.1.0",
 }));
 
-export const registerDevice = onCall(async (request) => {
+export const registerDevice = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const parsed = parseDeviceInput(request.data);
   const userRef = db.doc(`users/${uid}`);
   const deviceRef = userRef.collection("devices").doc(parsed.deviceId);
-  const existing = await deviceRef.get();
+  const activityRef = db.collection(`users/${uid}/activity`).doc();
+  let resultStatus: DeviceStatus = "pending";
 
-  if (existing.exists) {
-    const status = existing.get("status") as DeviceStatus | undefined;
-    if (status === "revoked") {
-      throw new HttpsError("permission-denied", "This device has been revoked and cannot self-reactivate.");
-    }
+  // Device state and its audit event commit together. A transaction retry turns
+  // concurrent duplicate registrations into an idempotent refresh instead of
+  // an ALREADY_EXISTS error or a success response without a matching audit row.
+  await db.runTransaction(async (transaction) => {
+    const existing = await transaction.get(deviceRef);
+    const timestamp = FieldValue.serverTimestamp();
 
-    await deviceRef.set(
-      {
-        lastSeenAt: FieldValue.serverTimestamp(),
+    if (existing.exists) {
+      const status = existing.get("status") as DeviceStatus | undefined;
+      if (status === "revoked") {
+        throw new HttpsError("permission-denied", "This device has been revoked and cannot self-reactivate.");
+      }
+
+      resultStatus = status ?? "pending";
+      transaction.update(deviceRef, {
+        lastSeenAt: timestamp,
         appVersion: parsed.appVersion,
         deviceName: parsed.deviceName,
-      },
-      { merge: true },
+      });
+      transaction.create(activityRef, {
+        eventType: "security",
+        actorType: "user",
+        deviceId: parsed.deviceId,
+        tool: "device-management",
+        action: "device_seen",
+        targetType: "device",
+        targetReference: parsed.deviceId,
+        outcome: "success",
+        createdAt: timestamp,
+      });
+      return;
+    }
+
+    // Count pending devices inside this transaction so concurrent new-device
+    // registrations for one account cannot exceed the per-user limit.
+    const pendingDevices = await transaction.get(
+      userRef.collection("devices").where("status", "==", "pending").limit(MAX_PENDING_DEVICES),
     );
+    if (pendingDevices.size >= MAX_PENDING_DEVICES) {
+      throw new HttpsError(
+        "resource-exhausted",
+        "Too many devices are waiting for approval. Approve or revoke a pending device first.",
+      );
+    }
 
-    await writeActivity(uid, parsed.deviceId, "device_seen", "success");
-    return { ok: true, deviceId: parsed.deviceId, status: status ?? "pending" };
-  }
-
-  await deviceRef.create({
-    platform: parsed.platform,
-    appVersion: parsed.appVersion,
-    deviceName: parsed.deviceName,
-    status: "pending",
-    createdAt: FieldValue.serverTimestamp(),
-    lastSeenAt: FieldValue.serverTimestamp(),
-    notificationTokenStatus: "not_registered",
+    resultStatus = "pending";
+    transaction.create(deviceRef, {
+      platform: parsed.platform,
+      appVersion: parsed.appVersion,
+      deviceName: parsed.deviceName,
+      status: "pending",
+      createdAt: timestamp,
+      lastSeenAt: timestamp,
+      notificationTokenStatus: "not_registered",
+    });
+    transaction.create(activityRef, {
+      eventType: "security",
+      actorType: "user",
+      deviceId: parsed.deviceId,
+      tool: "device-management",
+      action: "device_registered",
+      targetType: "device",
+      targetReference: parsed.deviceId,
+      outcome: "success",
+      createdAt: timestamp,
+    });
   });
 
-  await writeActivity(uid, parsed.deviceId, "device_registered", "success");
-  return { ok: true, deviceId: parsed.deviceId, status: "pending" };
+  return { ok: true, deviceId: parsed.deviceId, status: resultStatus };
 });
 
-export const bootstrapFirstDevice = onCall(async (request) => {
+export const bootstrapFirstDevice = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const parsed = parseDeviceInput(request.data);
   const devicesRef = db.collection(`users/${uid}/devices`);
@@ -170,7 +216,7 @@ export const bootstrapFirstDevice = onCall(async (request) => {
   return { ok: true, deviceId: parsed.deviceId, status: "trusted" };
 });
 
-export const listDevices = onCall(async (request) => {
+export const listDevices = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const callerDeviceId = requireDeviceId((request.data as Record<string, unknown> | undefined)?.deviceId);
   await requireTrustedCaller(uid, callerDeviceId);
@@ -190,7 +236,7 @@ export const listDevices = onCall(async (request) => {
   return { ok: true, callerDeviceId, devices };
 });
 
-export const approveDevice = onCall(async (request) => {
+export const approveDevice = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const data = (request.data ?? {}) as Record<string, unknown>;
   const callerDeviceId = requireDeviceId(data.callerDeviceId);
@@ -243,7 +289,7 @@ export const approveDevice = onCall(async (request) => {
   return { ok: true, deviceId: targetDeviceId, status: "trusted" };
 });
 
-export const revokeDevice = onCall(async (request) => {
+export const revokeDevice = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const data = (request.data ?? {}) as Record<string, unknown>;
   const callerDeviceId = requireDeviceId(data.callerDeviceId);
@@ -303,23 +349,28 @@ export const revokeDevice = onCall(async (request) => {
   return { ok: true, deviceId: targetDeviceId, status: "revoked" };
 });
 
-export const ensureUserProfile = onCall(async (request) => {
+export const ensureUserProfile = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const userRef = db.doc(`users/${uid}`);
-  const existing = await userRef.get();
-
   const email = request.auth?.token.email;
   const displayName = request.auth?.token.name;
 
-  if (!existing.exists) {
-    await userRef.create({
-      email: typeof email === "string" ? email.slice(0, 320) : null,
-      displayName: typeof displayName === "string" ? displayName.slice(0, 100) : null,
-      createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-  } else {
-    await userRef.set(
+  // Read and create/update in one transaction so concurrent sign-ins cannot
+  // race through a stale existence check and surface an ALREADY_EXISTS error.
+  await db.runTransaction(async (transaction) => {
+    const existing = await transaction.get(userRef);
+    if (!existing.exists) {
+      transaction.create(userRef, {
+        email: typeof email === "string" ? email.slice(0, 320) : null,
+        displayName: typeof displayName === "string" ? displayName.slice(0, 100) : null,
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return;
+    }
+
+    transaction.set(
+      userRef,
       {
         email: typeof email === "string" ? email.slice(0, 320) : existing.get("email") ?? null,
         displayName:
@@ -328,7 +379,7 @@ export const ensureUserProfile = onCall(async (request) => {
       },
       { merge: true },
     );
-  }
+  });
 
   return { ok: true, uid };
 });
@@ -344,6 +395,7 @@ const MEMORY_TYPES = new Set([
 ]);
 const MEMORY_CONTEXT_MAX_RECORDS = 50;
 const MEMORY_CONTEXT_MAX_CHARS = 6000;
+const MEMORY_CONTEXT_MAX_RECORD_CHARS = 2000;
 
 /**
  * Fetch a bounded, owner-scoped set of user-confirmed memory records for a
@@ -370,7 +422,9 @@ async function loadAssistantMemoryContextForTrustedDevice(uid: string, callerDev
       if (typeof expiry.toMillis !== "function" || expiry.toMillis() <= now) continue;
     }
     const content = value.content.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim();
-    if (!content || content.length > remainingChars) continue;
+    // Match the legacy MemoryPanel/Firestore Rules per-record content bound.
+    // Admin-seeded or malformed records must not bypass the 2,000-char limit.
+    if (!content || content.length > MEMORY_CONTEXT_MAX_RECORD_CHARS || content.length > remainingChars) continue;
     memories.push({
       id: doc.id, type: value.type, content, sourceKind: value.sourceKind,
       updatedAt: typeof value.updatedAt?.toDate === "function" ? value.updatedAt.toDate().toISOString() : null,
@@ -387,7 +441,7 @@ async function loadAssistantMemoryContextForTrustedDevice(uid: string, callerDev
   };
 }
 
-export const getAssistantMemoryContext = onCall(async (request) => {
+export const getAssistantMemoryContext = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const data = (request.data ?? {}) as Record<string, unknown>;
   const callerDeviceId = requireDeviceId(data.deviceId);
@@ -401,7 +455,7 @@ export const getAssistantMemoryContext = onCall(async (request) => {
  * Assistant generation is intentionally unavailable until Awwab's own model
  * is trained. This callable never configures or invokes an external provider.
  */
-export const runAssistant = onCall(async (request) => {
+export const runAssistant = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const data = (request.data ?? {}) as Record<string, unknown>;
   const callerDeviceId = requireDeviceId(data.deviceId);
@@ -431,22 +485,3 @@ export const runAssistant = onCall(async (request) => {
   }
 });
 
-async function writeActivity(
-  uid: string,
-  deviceId: string,
-  action: string,
-  outcome: string,
-  targetReference = deviceId,
-) {
-  await db.collection(`users/${uid}/activity`).add({
-    eventType: "security",
-    actorType: "user",
-    deviceId,
-    tool: "device-management",
-    action,
-    targetType: "device",
-    targetReference,
-    outcome,
-    createdAt: FieldValue.serverTimestamp(),
-  });
-}

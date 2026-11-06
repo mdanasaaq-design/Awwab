@@ -1,91 +1,38 @@
 # Awwab Roadmap
 
-**Last reviewed:** 2026-10-27  
-**Detailed plan:** [Project Phase Plan](../project/PHASE_PLAN.md)  
-**Current status:** [Current Status](../project/CURRENT_STATUS.md)  
-**Issue and risk register:** [Issues and Risks](../project/ISSUES_AND_RISKS.md)
+**Current roadmap:** [Awwab Self-Development Master Plan](../project/SELF_DEVELOPMENT_MASTER_PLAN.md).  
+**Open work:** [Pending Work Audit](../project/PENDING_WORK_AUDIT.md).
 
-## Strategy
+## Strategic objective
 
-Build the smallest trustworthy system that progressively becomes more capable. The product priority is to refine the web command center first, then harden the foundation before connecting real assistant execution or privileged integrations.
+Build an independent Awwab cognitive architecture and Awwab-owned model, then give Awwab a safe ability to develop, test and prepare future versions under owner control. Build working capabilities in substantial phases; do not spend long periods on speculative infrastructure.
 
-The current web shell is not the finished assistant. The assistant runtime is disconnected, and several workspace sections are placeholders. Do not mistake visual navigation or a successful build for end-to-end product readiness.
+## Ordered phases
 
-## Phase 0 — Planning and evidence baseline
+| Phase | Focus | Completion outcome |
+|---|---|---|
+| 0 | Source/evidence/docs baseline | One accurate status, backlog, risk register and handoff |
+| 1 | Cognitive Core v0 | Identity, typed memory, goals, context selection and experience records |
+| 2 | Model Lab viability | Actual random-init checkpoint and measured held-out capability |
+| 3 | Reasoning and plan-only assistant | Awwab model connected to validated structured planning; no side effects |
+| 4 | Perception and development tools | Read-only repository understanding and safe local runner design |
+| 5 | Awwab Developer | Isolated code edits, tests, debugging and reviewable patches |
+| 6 | Version/evolution manager | Candidate comparison, reproducibility, rollback and owner-approved promotion |
+| 7 | Multi-agent orchestration | Specialized role profiles with isolated contexts and measurable collaboration |
+| 8 | Controlled autonomy | Durable, bounded, cancellable owner-assigned work |
+| 9 | Android, multimodal and release | Validated mobile capabilities and separate release approval |
 
-Align current status, tasks, risk register, and acceptance criteria with the latest repository and observed validation. Distinguish local results from CI results and unverified behavior.
+## Delivery rules
 
-**Exit:** Status and backlog are accurate; each phase has acceptance criteria; no unexecuted validation is marked complete.
+- First make one agent work; only then create multiple specialized roles.
+- Awwab's mind persists independently of model checkpoints.
+- Awwab uses only its own randomly initialized/trained model; no external AI APIs or third-party pretrained weights.
+- Reuse small deterministic open-source modules after exact-file licence/security review.
+- Prefer local owner-controlled development execution before hosted tools because Firebase Functions are not deployed on Spark and no alternate backend is approved.
+- Keep the stable branch untouched by experiments. All edits happen in isolated workspaces with tests and a diff.
+- No agent self-approves, merges, deploys, changes billing, alters live Rules, or accesses secrets.
+- $0, no downloads, no cloud resources and no deployment remain hard constraints without separate approval.
 
-## Phase 1 — Web command-center UX (first product implementation phase)
+## Release gate
 
-Deliver an information-dense, calm, powerful, keyboard-friendly interface with clear hierarchy and honest capability states.
-
-Focus:
-- navigation, page hierarchy, visual hierarchy, typography, spacing, and status language
-- responsive behavior and keyboard navigation
-- accessible focus, semantic controls, contrast, scalable text, and reduced motion
-- consistent loading, empty, unavailable, error, success, and confirmation states
-- a purposeful design for Assistant, Projects, Tasks, Research, Automations, Activity, and Settings
-
-Do not connect privileged actions or fake live data in this phase.
-
-**Exit:** Owner accepts the UX direction and the interface meets written usability/accessibility criteria.
-
-## Phase 2 — Foundation security and environment validation
-
-Harden profile field ownership, device enrollment/revocation concurrency, shared request/response contracts, callable authorization, Firestore Rules, and development/production separation. Add backend callable tests and validate the real authentication/device lifecycle in a dedicated development environment.
-
-**Exit:** Security-sensitive invariants are tested; emulator and development-environment results are recorded; unresolved critical risks are closed or explicitly accepted.
-
-## Phase 3 — Assistant Core v0
-
-Add an authenticated request pipeline, provider-neutral model interface, scoped context selection, structured plans, allowlisted tools, deterministic policy, approvals, bounded execution, verification, and audit traces.
-
-**Exit:** A small set of safe tasks completes end-to-end with verifiable outcomes, tests, and no critical safety regressions.
-
-## Phase 4 — Personal context and research
-
-Add provenance-aware memory, user controls, permission-scoped retrieval, source-backed research, citations, uncertainty handling, and prompt-injection isolation.
-
-**Exit:** Memory and research evaluation meets agreed privacy, factuality, citation, and safety thresholds.
-
-## Phase 5 — Productivity and project intelligence
-
-Connect tasks, Today, reminders, goals, projects, repository context, decisions, GitHub issues/PRs, and approved development workflows.
-
-**Exit:** Each shipped workflow is backed by real state and can prove success, failure, and recovery.
-
-## Phase 6 — Tool platform, automation, and proactivity
-
-Add versioned tool contracts, scopes, risk classification, budgets, idempotency, durable jobs, cancellation, kill switch, bounded retries, explainable suggestions, and notification controls. Assess MCP only when it solves a concrete interoperability problem.
-
-**Exit:** Automations are bounded, permissioned, auditable, cancellable, and verifiable.
-
-## Phase 7 — Android and multimodal
-
-Establish reproducible Android build/test validation; integrate Auth/device trust and the shared assistant pipeline; then add notifications, approvals, voice, files, and images where user value and safety justify them.
-
-**Exit:** Each shipped mobile capability passes device-level tests and the same server-side security gates as web.
-
-## Phase 8 — Release readiness and deployment
-
-Complete production separation, least-privilege IAM, secrets, billing controls, monitoring, backups/recovery, rollback, privacy/retention, security review, and release regression.
-
-**Exit:** All applicable checks have observed evidence and the owner explicitly authorizes the specific production deployment.
-
-## Cross-phase release gate
-
-A phase is complete only when:
-- acceptance criteria are met
-- relevant automated/manual tests have observed results
-- security and failure paths are reviewed
-- documentation and decision records are updated
-- limitations and remaining risks are explicit
-
-No unrestricted autonomous execution, financial actions, arbitrary code execution, or production deployment is allowed by roadmap status alone.
-
-
-## 2026-10-27 plan correction: backend billing blocker
-
-The Firebase project has a default Firestore Native database in asia-south1, but no Cloud Functions are deployed. A live Functions deployment attempt stopped because the project must be on Blaze. The owner chose to stay on the current plan. Therefore Cloudflare Workers or another free-tier backend is a research candidate only, not an adopted architecture. Do not create resources, migrate data, change live Rules, or deploy while comparing options. See [Master Plan](../project/MASTER_PLAN.md) for the detailed decision process and ordered execution plan.
+A phase is done only with code, appropriate automated/manual tests, security/failure review, documentation, commit-linked evidence and explicit limitations. A successful build or a diagram alone is not completion.

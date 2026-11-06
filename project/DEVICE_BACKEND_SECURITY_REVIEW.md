@@ -52,3 +52,35 @@ These paths should receive explicit retry/idempotency tests and carefully scoped
 ## Cost and deployment guardrail
 
 This review and prototype require no paid service or cloud resource. Do not enable Firebase Blaze, deploy Cloud Functions, create a Cloudflare Worker, or change production rules as part of this work.
+
+
+## Implementation and decision update — 2026-10-30
+
+### Confirmed caller-ID spoofing behavior
+
+A new callable-emulator security-characterization test creates two independent Firebase Auth sessions for the same account. Session A bootstraps the first device; session B registers a pending device and then calls `approveDevice` while supplying session A's trusted device ID as `callerDeviceId`. The current callable accepts the approval.
+
+This reproduces the high-priority finding: the callable proves account identity but does not prove possession of the private key or browser profile associated with the claimed device. The device ID is an identifier, not an authenticator. The test is intentionally named and documented as a known limitation; it must not be counted as a security pass.
+
+### Reliability fixes implemented
+
+- `registerDevice` now uses a Firestore transaction for the device record and corresponding audit event. Concurrent registrations of the same ID become idempotent refreshes rather than racing a read-then-create path.
+- `ensureUserProfile` now reads and creates/updates the profile in one transaction, avoiding concurrent sign-in initialization races.
+- Emulator coverage now exercises five simultaneous registrations for one device ID and concurrent profile initialization. Registration and its audit event are asserted together.
+- The Settings UI now explicitly says the current device records verify the signed-in account, not cryptographic possession of the browser.
+
+### Architecture decision
+
+**NO-GO for production device trust and privileged device approval/revocation.** The current callable protocol remains account-session authorization plus a caller-supplied device identifier. Do not describe it as strong device binding, hardware identity, or proof of physical-device possession. The existing Ed25519 challenge model remains a local-only protocol prototype; it is not wired into the web app or Firebase Functions.
+
+The owner requires a strict $0 operating constraint and the current Firebase project is on Spark. Cloud Functions deployment requires a billing-plan change to Blaze, which is not authorized. No alternative server path has been proven to provide atomic privileged Firestore access, secret isolation, token verification, rate limiting, and a hard no-billing ceiling for this account. Therefore no second backend provider, database, service account, or cloud resource is being added.
+
+Keep Firebase Auth and Firestore as the existing identity/data foundation. Keep Functions source as the intended privileged boundary, but treat it as undeployed source code. Do not deploy it, enable billing, or claim device approval/revocation is secure until a server-verifiable proof-of-possession implementation is integrated and independently reviewed.
+
+### Evidence and remaining boundary
+
+- Transactional backend change: `8441553f131118a71d21b567ffb0408e0752a528`.
+- Callable tests: `73cdbc1a7a50a85728b8d34d4e147bb5ead15b4d`.
+- Settings disclosure: `5592ff4fd9a42b21cfa28104c745096bcc1d27dc`.
+- Full CI is required for the current phase head. Emulator results validate source behavior only; they do not prove deployed Firebase behavior or billing eligibility.
+- The UI disclosure is a transparency measure, not a security mitigation. The callable spoofing limitation remains open and must block any claim that device approval is high-assurance.

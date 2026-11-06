@@ -5,6 +5,7 @@ import { observeAuth, signIn, signOutAwwab } from "./auth";
 import { firebaseConfigured } from "./firebase";
 import { MemoryPanel } from "./MemoryPanel";
 import { ResearchPanel } from "./ResearchPanel";
+import { ActivityPanel, ProjectsPanel, TasksPanel } from "./WorkspaceDataPanel";
 
 const sections = [
   { id: "assistant", label: "Assistant", glyph: "⌘", group: "WORKSPACE" },
@@ -583,7 +584,7 @@ export function App() {
                   <span>WORKSPACE DATA</span>
                 </div>
                 <strong className="overview-value status-pending">Partially connected</strong>
-                <p>Memory management and live Wikipedia source lookup are available. Projects, tasks, and assistant retrieval remain disconnected.</p>
+                <p>Projects, tasks, memory management, live source lookup, and read-only activity history are available in this development build. Assistant retrieval and automations remain disconnected.</p>
               </article>
             </section>
 
@@ -609,7 +610,7 @@ export function App() {
                       <strong>{item.title}</strong>
                       <small>{item.description}</small>
                     </span>
-                    <span className="workspace-row-status">{item.id === "research" || item.id === "memories" ? "AVAILABLE" : "NOT CONNECTED"}</span>
+                    <span className="workspace-row-status">"AVAILABLE"</span>
                     <span className="workspace-row-arrow" aria-hidden="true">↗</span>
                   </button>
                 ))}
@@ -627,7 +628,40 @@ export function App() {
           </div>
         )}
 
-        {activeSection !== "assistant" && activeSection !== "settings" && activeSection !== "memories" && activeSection !== "research" && (
+        {activeSection === "projects" && (
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
+            <div className="page-intro">
+              <p className="eyebrow">WORKSPACE / PROJECTS</p>
+              <h1>Projects, with the context intact.</h1>
+              <p className="page-description">Create and maintain your projects, descriptions, and active/archive state. Data is scoped to your signed-in account.</p>
+            </div>
+            <ProjectsPanel key={user.uid} uid={user.uid} />
+          </div>
+        )}
+
+        {activeSection === "tasks" && (
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
+            <div className="page-intro">
+              <p className="eyebrow">WORKSPACE / TASKS</p>
+              <h1>A clear view of what needs doing.</h1>
+              <p className="page-description">Create tasks, set priorities and due dates, and track progress. Every change is saved to your account workspace.</p>
+            </div>
+            <TasksPanel key={user.uid} uid={user.uid} />
+          </div>
+        )}
+
+                {activeSection === "activity" && (
+          <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
+            <div className="page-intro">
+              <p className="eyebrow">SYSTEM / ACTIVITY</p>
+              <h1>A record of what Awwab actually did.</h1>
+              <p className="page-description">Review recent events recorded by the trusted backend. This history is read-only and shows only recorded outcomes.</p>
+            </div>
+            <ActivityPanel key={user.uid} uid={user.uid} />
+          </div>
+        )}
+
+{activeSection !== "assistant" && activeSection !== "settings" && activeSection !== "memories" && activeSection !== "research" && activeSection !== "projects" && activeSection !== "tasks" && activeSection !== "activity" && (
           <div className="page-content secondary-page" id="main-content" tabIndex={-1}>
             <div className="page-intro">
               <p className="eyebrow">{sectionCopy[activeSection].eyebrow}</p>
@@ -679,6 +713,7 @@ export function App() {
                   <p className="eyebrow">SECURITY</p>
                   <h2>Trusted devices</h2>
                   <p className="settings-description">Approve new devices or revoke access you no longer trust.</p>
+                  <p className="muted" role="note">Important: device records currently verify the signed-in account, not cryptographic possession of this browser. Approval and revocation are not yet a high-assurance device-security boundary.</p>
                 </div>
                 <button className="secondary" type="button" disabled={devicesLoading} onClick={() => void refreshDevices()}>{devicesLoading ? "Refreshing…" : "Refresh list"}</button>
               </div>

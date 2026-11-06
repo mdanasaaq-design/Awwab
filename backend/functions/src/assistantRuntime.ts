@@ -163,10 +163,17 @@ function validateMemoryContext(context: AssistantMemoryContext): AssistantMemory
   return { ...context, memories, totalChars };
 }
 
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  const actual = Object.keys(value);
+  return actual.length === expected.length && expected.every((key) => Object.hasOwn(value, key));
+}
+
 function validateProviderResponse(value: unknown): AssistantProviderResponse {
   if (
     !value ||
     typeof value !== "object" ||
+    Array.isArray(value) ||
+    !hasExactKeys(value as Record<string, unknown>, ["summary", "steps"]) ||
     typeof (value as AssistantProviderResponse).summary !== "string" ||
     !(value as AssistantProviderResponse).summary.trim() ||
     (value as AssistantProviderResponse).summary.length > MAX_SUMMARY_CHARS ||
@@ -176,17 +183,23 @@ function validateProviderResponse(value: unknown): AssistantProviderResponse {
     throw new AssistantRuntimeError("invalid_provider_response", "The provider returned an invalid plan.");
   }
 
-  const steps = (value as AssistantProviderResponse).steps.map((step, index) => {
+  const seenIds = new Set<string>();
+  const steps = (value as AssistantProviderResponse).steps.map((step) => {
     if (
       !step ||
+      typeof step !== "object" ||
+      Array.isArray(step) ||
+      !hasExactKeys(step as unknown as Record<string, unknown>, ["id", "description"]) ||
       typeof step.id !== "string" ||
       !/^[A-Za-z0-9_-]{1,64}$/.test(step.id) ||
+      seenIds.has(step.id) ||
       typeof step.description !== "string" ||
       !step.description.trim() ||
       step.description.length > MAX_STEP_CHARS
     ) {
       throw new AssistantRuntimeError("invalid_provider_response", "The provider returned an invalid plan step.");
     }
+    seenIds.add(step.id);
     return { id: step.id, description: step.description.trim() };
   });
 

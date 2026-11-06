@@ -46,8 +46,9 @@ Fields: `name`, `description`, `repositoryReferences`, `status`, `tags`, `create
 - Required client fields: `name`, `status`, `createdAt`, `updatedAt`.
 - Name is 1–160 characters; description is optional and at most 4,000 characters.
 - Status is `active` or `archived`.
-- Tags and repository references are optional lists bounded to 20 entries.
+- Tags and repository references are optional lists, each bounded to 20 entries. The current Rules do not validate each element's type or length; treat these lists as untrusted metadata and do not feed them into backend actions.
 - Create timestamps must use server timestamps; `createdAt` is immutable and `updatedAt` must be a server timestamp on update.
+- Projects are archived/restored rather than hard-deleted. Rules deny client project deletion so tasks cannot be left with dangling project references.
 
 ## Task
 
@@ -58,9 +59,12 @@ Client-writable fields: `title`, `description`, `status`, `priority`, `dueAt`, `
 - Status is `todo`, `in_progress`, `done`, `blocked`, or `cancelled`; priority is `low`, `medium`, `high`, or `urgent`.
 - Client-created tasks must use `source: "user"`; source cannot be changed later.
 - Create timestamps must use server timestamps; `createdAt` is immutable and `updatedAt` must be a server timestamp on update.
+- Client-created tasks start in `todo`; `completedAt` must be null or omitted until completion.
+- A task in `done` state must have a timestamp `completedAt`. Transitioning into `done` sets it to `request.time`; edits to an already-done task preserve the original completion time. Leaving `done` clears it to null.
+- A task may omit `projectId` or set it to null. A non-null value must be a string naming an existing project under the same user's `/users/{uid}/projects` collection; create and update are both checked by `exists()` in Rules. Client project deletion is denied; use archive/restore to preserve references.
 - `recurrence` is not client-writable until its schema and allowed transitions are defined.
 
-Tasks should preserve provenance between user commitments and AI suggestions. List element validation, project/task cross-document consistency, and detailed status-transition policy remain follow-ups; no backend executor may trust these fields until those contracts are enforced.
+Tasks should preserve provenance between user commitments and AI suggestions. Same-user project-reference integrity, non-deletable project lifecycle, and completion timestamp consistency are implemented on the development branch and covered by emulator tests; the matching Rules are not deployed to Firebase. List element validation and a more granular status-transition policy remain follow-ups; no backend executor may trust unvalidated metadata until those contracts are enforced.
 
 ## Conversation/message
 
@@ -138,9 +142,10 @@ Audit history is backend-controlled and append-oriented.
 ## Firestore client mutation matrix
 
 - **Backend-write-only:** root profile, devices, conversations/messages, automations, preferences, approvals, activity, notifications content, jobs, connections, and the system bootstrap guard.
-- **Owner-readable/deletable:** memories are owner-readable and owner-deletable; memory creation/updates are backend-controlled until provenance and classification validation is implemented.
+- **Owner read/delete plus constrained create/update:** memories are owner-readable and owner-deletable; create is limited to `user_explicit`, while update requires `user_corrected`, with strict schema, sensitivity and confirmation checks.
 - **Owner read plus narrow update:** notifications are owner-readable and the client may change only the boolean `read` field.
-- **Owner CRUD for now:** projects and tasks remain owner CRUD, but their field-level schemas and allowed state transitions still require a separate hardening pass. Backend automation must not treat client-written fields as trusted until that contract is enforced.
+- **Projects:** owner read/create/update; hard delete denied. Archive/restore is the supported lifecycle.
+- **Tasks:** owner read/create/update/delete with field allowlists, immutable provenance, owner-scoped project references, and completion timestamp consistency. Fine-grained status-transition policy and unvalidated list metadata remain follow-ups. Backend automation must not treat client-written fields as trusted beyond the enforced contract.
 - **No client access:** jobs, connections, and system guard paths rely on the default-deny Rules.
 
 This matrix is enforced by `firestore.rules`; Rules tests are the executable source for each allowed and denied mutation.
@@ -157,3 +162,64 @@ The `/users/{uid}/system/firstDeviceBootstrap` document is a backend-only concur
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Memory algorithm reuse (2026-10-30)
+
+Awwab may adapt deterministic memory candidate merge, deduplication, conflict and temporal-provenance algorithms from Mem0/Graphiti. These algorithms must map onto the existing Awwab user-scoped Firestore hierarchy and preserve explicit confirmation, sensitivity, provenance, expiry, correction and deletion controls. Do not import provider adapters or vector stores as a side effect. See [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Task/project reference security update — 2026-10-30
+
+- `validTask(data, uid)` now requires every non-null `projectId` to resolve under `/users/{uid}/projects/{projectId}`. Both task create and update paths pass the owning UID into the validator.
+- Emulator regressions cover a valid same-owner project, null project, missing project, cross-user project, and create/update reference changes.
+- This is a repository-branch change only. CI is pending for commit `6284409`; live Firestore Rules have not been deployed. Keep task-to-project linking disabled in the UI until review/merge and explicit live Rules deployment.
+
+
+## Workspace lifecycle and state-integrity hardening — 2026-10-30
+
+- Project hard deletion is denied in Rules and removed from the workspace UI; archive/restore preserves task references.
+- Task completion state is internally consistent: new tasks start `todo`; `done` requires `completedAt`; entering `done` stamps server request time; edits preserve the timestamp; reopening clears it.
+- Emulator tests cover denied project deletion, successful read after denied deletion, valid completion, edits to completed tasks, forged completion timestamps, reopening, and invalid completion state.
+- This is branch-only until review, merge and explicit Rules deployment.
+
+
+## Device registration and audit transaction contract — 2026-10-30
+
+- Device registration now reads and creates/updates the user-scoped device document inside a Firestore transaction.
+- The matching `device_registered` or `device_seen` activity event is created in the same transaction as the device mutation. Concurrent retries for one device ID should result in one initial registration event and subsequent seen events, not an `ALREADY_EXISTS` race.
+- User profile initialization also reads and creates/updates the profile inside one transaction to avoid concurrent first-sign-in races.
+- The device ID remains a caller-supplied identifier. It is not a proof of possession. A second authenticated session for the same UID can claim a trusted ID in the current callable protocol. See [the device backend security review](../project/DEVICE_BACKEND_SECURITY_REVIEW.md).
+- The local Ed25519 challenge prototype is not connected to this data model. Do not use device status as a high-assurance authorization boundary until server-side proof-of-possession and atomic challenge consumption are implemented.
+- These changes are branch-only source/emulator work. Firebase Functions remain undeployed on Spark; no billing change or deployment occurred.
+
+
+## Cognitive state model proposal — 2026-10-31
+
+These are proposed logical records, not approved Firestore writes or a migration. Preserve the existing user-scoped hierarchy and validate live Rules before relying on client writes.
+
+- **IdentityProfile:** version, purpose, owner-controlled principles, capability declarations and limitations.
+- **Goal:** owner, objective, priority, constraints, status, parent goal, progress and evidence references.
+- **WorkingContext:** short-lived request/task context with expiry and bounded context budget.
+- **ExperienceRecord:** event type, request/job ID, timestamp, observed result, evidence references, confidence and correction status.
+- **MemoryItem:** kind (episodic/semantic/procedural/development), provenance, sensitivity, confidence, validity/expiry, visibility, confirmation and correction/deletion metadata.
+- **Plan/Job:** typed steps, dependencies, status transitions, attempts, budgets, cancellation, approval references and verification evidence.
+- **AgentRun:** role profile version, task ownership, isolated workspace, allowed capabilities, input/output references, budget and terminal status.
+- **VersionCandidate:** code commit, model checkpoint/version, agent profile, data manifest, evaluation suite/results, review state and rollback reference.
+
+Do not conflate saved memory with training data; an agent profile with a separately trained model; a code commit with a model checkpoint; model confidence with authorization; or a tool return with verified external state. Any persistence change requires owner-scoped rules, field allowlists, retention/deletion behavior, migration/backup review and explicit deployment approval.
+
+
+## Cognitive Core v0 logical records — 2026-11-01
+
+The new deterministic module defines these versioned application-level records separately from the existing Firestore memory UI schema:
+
+- **IdentityProfile:** schema version, identity ID/version, purpose, principles, boundaries and timestamps.
+- **MemoryRecord:** owner ID, one of five memory kinds, content, source kind/reference, confidence, sensitivity, created/updated/expiry timestamps, visibility, owner confirmation and lifecycle status.
+- **GoalRecord:** owner ID, title/description, parent goal, priority, status, constraints, progress, source and timestamps.
+- **ExperienceRecord:** owner ID, event kind, summary, optional goal/task/plan/action references, evidence references, outcome, verification, confidence and timestamp.
+- **MemoryContext:** owner/query, selected records with score/reason/provenance, excluded record IDs with reasons, character usage/budget and an untrusted-data notice.
+
+These contracts are currently implemented in a dependency-free shared module with an in-memory reference store. They are **not a Firestore schema or migration**. Existing user-entered memory documents and UI remain unchanged. No live data is read or written by this module. Any durable adapter must define owner-scoped access, Rules tests, expiry, correction/deletion/export and retention before integration.
+
+Context selection is deterministic lexical overlap, not semantic/vector search. Sensitive records are excluded by default; unconfirmed and hidden records are excluded; working memory must expire; observed/imported memories require provenance references. Context content is always untrusted data, not instructions or permissions.

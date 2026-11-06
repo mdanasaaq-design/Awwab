@@ -113,6 +113,30 @@ test("malformed provider output is rejected instead of being treated as a plan",
   );
 });
 
+test("provider plans reject extra fields and duplicate step IDs", async () => {
+  const invalidResponses = [
+    { summary: "Plan", steps: [], debug: "unexpected metadata" },
+    { summary: "Plan", steps: [{ id: "step", description: "Review", tool: "delete-account" }] },
+    {
+      summary: "Plan",
+      steps: [
+        { id: "duplicate", description: "First step" },
+        { id: "duplicate", description: "Second step" },
+      ],
+    },
+  ];
+
+  for (const response of invalidResponses) {
+    await assert.rejects(
+      runAssistantRequest(request(), {
+        provider: { id: "untrusted-provider", async generate() { return response; } },
+      }),
+      (error) => error instanceof AssistantRuntimeError &&
+        error.code === "invalid_provider_response",
+    );
+  }
+});
+
 test("cancellation is honored before loading memory or calling the provider", async () => {
   const controller = new AbortController();
   controller.abort();

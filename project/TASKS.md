@@ -1,3 +1,94 @@
+> **OWNER WORKFLOW UPDATE — 2026-11-06**
+> Claude is the primary implementation/build assistant. ChatGPT is limited to GitHub-side coordination, documentation/status/handoff updates, review support and exact pull/deploy instructions when requested. Do not start new implementation work through ChatGPT unless the owner changes this direction.
+>
+> **Repository organization follow-up:** root `CLAUDE.md` is now the required development guide. Read it before assigning work to Claude. The latest A9 validation is still pending; do not treat this documentation cleanup as validation.
+>
+> ---
+>
+> **ACTIVE TASK QUEUE — 2026-11-06**  
+> Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). This block supersedes earlier active-queue summaries; historical checklists below remain evidence records.
+>
+> ## Current phase — AWW-022 proof-of-possession, A9
+> - [x] Review official browser Web Crypto and Android Keystore documentation; select ECDSA P-256/SHA-256 as a provisional cross-platform candidate, not a device-tested or independently approved profile.
+> - [x] Define a single prototype wire format: DER SPKI public key, 64-byte IEEE-P1363 signature, base64url signature encoding; Android DER-to-P1363 normalization remains a client requirement.
+> - [x] Add isolated server-side challenge canonicalization, strict P-256 SPKI import, SHA-256 canonical-payload hashing and signature verification helpers in `backend/functions/src/deviceProof.ts`.
+> - [x] Add focused crypto regression tests and include them in `npm run validate:local`.
+> - [ ] Pull the A9 commits and run `npm run validate:local` on Node.js 22; record actual typecheck/build/test output before calling the helper validated.
+> - [x] Add Node Web Crypto P-256 signature compatibility coverage and a test-only DER-to-P1363 normalization reference test.
+> - [ ] Verify the same fixed vectors in a real supported browser and on Android Keystore devices; test DER normalization in Android client code before claiming platform interoperability.
+> - [ ] Specify and test the server-side challenge issuance and atomic one-time consumption model against emulator-only fixtures.
+> - [ ] Implement the full protected-callable matrix, invert the spoofing characterization test, and prove replay/concurrency/revocation/rotation/recovery behavior.
+> - [ ] Keep AWW-022 open and high-assurance actions disabled until every protected callable is proof-gated and the secure hard-$0 runtime is independently reviewed and approved.
+>
+> ## Other active work
+> - [ ] Decide legacy-memory ambiguous types, non-expiring temporary-memory behavior, archive/delete semantics and correction/concurrency UX.
+> - [ ] Design a read-only Firestore adapter prototype using synthetic emulator fixtures only. No live reads/writes, schema change, Rules change, migration or MemoryPanel integration.
+> - [ ] Reconcile branch ancestry and run fresh CI when appropriate; do not merge without explicit owner approval.
+>
+> ## Validation notes
+> - A8 owner-observed validation remains evidence only for its tested baseline: 55 automated tests passed before the A9 source slice was added.
+> - A9 crypto tests are committed but have not yet been run locally by the owner; do not combine them with A8's 55 passing tests as if already executed.
+> - Existing Vite warnings remain: Readability CommonJS/ESM interop, bundle chunk above 500 kB, and ineffective dynamic import of `device.ts`.
+> - Existing callable tests still characterize callerDeviceId spoofing; they do not resolve AWW-022. Emulator App Check is not configured.
+>
+> ## Gates retained
+> - Assistant generation remains disabled until Awwab's own random-init checkpoint passes held-out capability/safety evaluation.
+> - High-assurance device actions remain disabled: AWW-022 callerDeviceId spoofing is unresolved.
+> - Privileged backend operations remain blocked until a secure hard-$0 runtime is proven and explicitly approved.
+> - PR #22 → PR #23 ancestry and exact main baseline must be reconciled before any merge; no merge authorized.
+> - Live Firestore Rules state remains unverified; no Rules deployment without approval.
+>
+> ## Next sequence
+> 1. Pull and validate the A9 crypto helper on Node.js 22.
+> 2. Add browser/Android cross-platform vectors and normalize Android signatures to the one wire format.
+> 3. Design the emulator-only challenge store and atomic replay protection.
+> 4. Continue legacy-memory and read-only adapter design without live data changes.
+>
+> ---
+>
+>
+>
+> **ACTIVE TASK QUEUE — 2026-10-31 (supersedes older unchecked historical lists below)**  
+> Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). Full work inventory: [Pending Work Audit](PENDING_WORK_AUDIT.md). Historical checklists below are retained as records and must not be treated as the active queue without revalidation.
+>
+> ## P0 — blockers / gates
+> - [ ] Keep assistant generation disabled until an Awwab-owned random-init checkpoint passes held-out capability/safety evaluation.
+> - [ ] Keep high-assurance device actions disabled: AWW-022 callerDeviceId spoofing remains confirmed; no production device trust claim.
+> - [ ] Keep privileged backend operations blocked until a hard-$0 secure runtime is proven and explicitly approved; no Blaze upgrade or hosted resource creation.
+> - [ ] Reconcile PR #22 → PR #23 branch chain and exact main ancestry before any merge; no merge is authorized by this plan.
+> - [ ] Verify live Firestore Rules state read-only; no Rules deployment without approval.
+>
+> ## P1 — next implementation phase: Cognitive Core v0
+> - [ ] Define versioned Awwab identity/constitution contracts.
+> - [ ] Define working, episodic, semantic, procedural and development memory types.
+> - [ ] Define owner-controlled goals/subgoals, priority, constraints and progress.
+> - [ ] Implement deterministic context selection with provenance, sensitivity filters and context budgets.
+> - [ ] Add evidence-linked experience/decision records and reflection contracts.
+> - [ ] Add deterministic tests for ownership, expiry, correction/deletion, conflicts, relevance and context budgets.
+> - [ ] Preserve existing memory UI/data; do not silently auto-inject or train on saved memories.
+>
+> ## P1 — Model Lab readiness (separate approval gate)
+> - [ ] Decide local PyTorch environment and run tiny smoke tests only after owner approval.
+> - [ ] Define a lawful, provenance-recorded, owner-controlled training corpus and held-out evaluation plan.
+> - [ ] Add reproducibility, checkpoint resume, structured-task, instruction-following, safety and resource benchmarks.
+> - [ ] Train/evaluate an actual random-init checkpoint only after explicit resource/data approval.
+>
+> ## P1 — after Cognitive Core and model gates
+> - [ ] Build read-only repository inventory/indexer and GitHub inspection.
+> - [ ] Evaluate a local Windows/Termux development runner; no hosted backend assumption.
+> - [ ] Add sandboxed file edit, Git worktree, allowlisted test execution, cancellation and redacted audit.
+> - [ ] Prove one Developer agent end-to-end on a low-risk issue and produce a reviewable diff.
+> - [ ] Add version candidate metadata, comparison, reproducibility and rollback.
+>
+> ## P2 — later
+> - [ ] Add specialist agent profiles and sequential coordination; parallelize only after measured benefit.
+> - [ ] Add durable scheduled autonomy with budgets, cancellation, expiry and kill switch.
+> - [ ] Continue selected open-source reuse R2–R7 after exact-file licence/security review.
+> - [ ] Complete manual browser/accessibility/mobile acceptance and Android build/device validation.
+> - [ ] Revisit device-key proof only when a secure $0 server execution path exists or the owner explicitly changes constraints.
+>
+> ---
+>
 # Awwab Tasks
 
 **Last reviewed:** 2026-10-28  
@@ -286,3 +377,142 @@ See [Master Plan](MASTER_PLAN.md) for full step-by-step acceptance criteria and 
 - [ ] Obtain explicit owner approval before creating any account, resource, secret, or deployment.
 
 **Important:** Phase 3 research/decision is complete; backend implementation/provisioning acceptance is not. Existing backend acceptance-gate items above remain unchecked.
+
+
+## Open-source reuse programme (added 2026-10-30)
+
+- [ ] R1: inspect exact Mozilla Readability commit, source files, Apache-2.0 notices and tests; integrate a pure article parser into Research.
+- [ ] R2: inspect LangGraph.js and port only the minimal deterministic workflow/checkpoint primitives Awwab needs.
+- [ ] R3: inspect Mem0 deterministic merge/deduplication logic and Graphiti temporal provenance patterns; preserve Awwab consent and Firestore ownership.
+- [ ] R4: implement a local read-only Playwright adapter with a narrow allowlist and sandbox.
+- [ ] R5: compare LitGPT/nanoGPT training code and port selected random-init training/checkpoint optimizations; no pretrained weights.
+- [ ] R6: adapt selected MarkItDown document parsing for explicitly supported file types.
+- [ ] R7: add Promptfoo-inspired local red-team/evaluation fixtures and minimal OpenTelemetry only if useful.
+
+See [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md) for source links, licences, exclusions, implementation order and acceptance criteria. Do not start an item before exact-file licence and dependency review.
+
+
+## Task/project reference security — 2026-10-30
+
+- [x] Pass the owner UID into task validation on both create and update.
+- [x] Require every non-null task `projectId` to exist under that same user's project collection.
+- [x] Add emulator coverage for same-owner, null, missing, cross-user and update-path references.
+- [ ] Confirm all six CI jobs pass on current branch head `6284409d460d861e0bad5f1148284819e4b957ea` (run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) pending at documentation time).
+- [ ] Review and approve the Rules change before merge.
+- [ ] Deploy matching Rules only after explicit owner authorization; keep UI project linking disabled until then.
+
+
+### Task/project Rules test correction — 2026-10-30
+
+- [x] Diagnose CI failure: update rule omitted the newly required `uid` validator argument.
+- [x] Correct update rule to call `validTask(request.resource.data, uid)` in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1`.
+- [ ] Re-run all CI jobs on the corrected PR head and verify the Firestore Rules emulator suite.
+
+
+## Workspace Security and Data Integrity phase — 2026-10-30
+
+- [x] Deny hard deletion of projects in Firestore Rules.
+- [x] Remove project delete action from the UI; retain archive/restore.
+- [x] Require task completion timestamps to match `done` state.
+- [x] Stamp completion with server request time, preserve it during completed-task edits, and clear it when reopening.
+- [x] Add emulator regressions for project deletion and task completion lifecycle.
+- [ ] Run and pass all six CI jobs on the latest branch head.
+- [ ] Review/merge/deploy Rules only after explicit owner approval; keep project linking disabled until then.
+
+
+### Workspace Rules compatibility fix — 2026-10-30
+
+- [x] Diagnose failure for legacy non-done tasks without `completedAt`.
+- [x] Allow the completion field to be omitted or null for non-done tasks while still requiring it for `done`.
+- [ ] Re-run all CI jobs on latest head and verify the Rules emulator suite.
+
+
+### Workspace Security and Data Integrity — validation result
+
+- [x] All six CI jobs passed on tested head `60ca4f9aacf76239ea57082e70a5483974067402` in [run 41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092).
+- [x] Firestore Rules emulator and backend callable emulator jobs passed.
+- [ ] Manual browser acceptance remains outstanding.
+- [ ] Review/merge/deploy Rules only after explicit owner approval; project linking remains disabled until then.
+
+
+## Backend Independence and Trusted Device Architecture — 2026-10-30
+
+- [x] Review Firebase Auth, Firestore, Functions v2 and deployment constraints.
+- [x] Confirm caller-supplied trusted device ID is not proof of possession with a two-session emulator characterization test.
+- [x] Make device registration + activity event transactional and idempotent under concurrent retries.
+- [x] Make profile initialization transactional under concurrent first sign-in.
+- [x] Add callable emulator tests for registration races, audit consistency and profile initialization races.
+- [x] Add Settings disclosure explaining current device trust limitation.
+- [x] Record architecture decision: retain Firebase Auth + Firestore; no second backend or billing change.
+- [x] Record explicit NO-GO for production trusted-device security until device-key proof and a hard-$0 server path are verified.
+- [ ] Implement and independently review server-side device-key proof, challenge consumption, recovery and rotation when an approved backend runtime is available.
+- [ ] Revisit the $0 runtime gate only with explicit owner approval; no Blaze upgrade or deployment is authorized.
+
+
+### Backend Independence and Trusted Device — validation result
+
+- [x] All six CI jobs passed in [run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634) on head `1e0ef8537ab5481c8842292510fffe2d1092903f`.
+- [x] CI runs the device lifecycle and Ed25519 key-proof local model tests; both passed.
+- [x] Backend callable emulator suite passed, including concurrency/idempotency tests and the explicit known-limitation spoofing test.
+- [x] Web build, Functions/shared checks, Firestore Rules, memory/research, and Model Lab jobs passed.
+- [ ] Production trusted-device proof-of-possession remains blocked; do not treat this phase as production security approval.
+
+
+## Phase 1 progress — 2026-11-01
+
+<details>
+<summary>Initial Cognitive Core v0 slice (implementation started)</summary>
+
+- [x] Add dependency-free shared cognitive-core module and TypeScript declarations.
+- [x] Define versioned identity profile contract.
+- [x] Define five memory kinds and provenance/sensitivity/expiry/confirmation controls.
+- [x] Add owner-scoped in-memory reference store with correction/deletion.
+- [x] Add goal/subgoal lifecycle, progress and cycle guards.
+- [x] Add evidence-linked experience records.
+- [x] Add deterministic lexical context selection with exclusion reasons and hard budgets.
+- [x] Add dedicated Node test suite and CI step.
+- [ ] Verify latest CI run and fix any failures.
+- [ ] Expand tests for memory conflicts, retention and context relevance edge cases.
+- [ ] Specify identity version evolution and storage adapter contracts.
+- [ ] Review whether existing Memory UI can safely consume the new contracts; no live integration until Rules are verified.
+
+</details>
+
+
+## Cognitive Core v0 validation result — 2026-11-01
+
+- [x] Verify CI on code head `05fbe89f018e238fce89ff1257cb29665565b68b`: [run 41305026578](https://github.com/mdanasaaq-design/Awwab/actions/runs/41305026578), all six jobs passed; Cognitive Core suite 13/13.
+- [ ] Expand tests for memory conflict handling, retention and context relevance edge cases.
+- [ ] Specify the storage adapter contract and verify owner-scoped persistence requirements before implementing a durable adapter.
+- [ ] Define identity change/review policy beyond sequential immutable version history.
+- [ ] Review safe integration with existing Memory UI; do not enable live writes until Rules are verified.
+
+
+### Cognitive memory boundary and policy prototype — 2026-11-01
+
+- [x] Specify the owner-scoped async storage adapter surface, optimistic version checks and atomic conflict-resolution requirement in [Cognitive Memory Storage Contract](../docs/cognitive-memory-storage-contract.md).
+- [x] Add runtime adapter-shape assertion (shape only; not a security or transaction proof).
+- [x] Add owner-selected conflict-resolution command builder; no automatic contradiction inference or writes.
+- [x] Add deterministic expiry classification; expired data is excluded from context but never auto-hard-deleted.
+- [x] Add policy regression tests and CI coverage.
+- [x] Verify CI on code head `17abc62c794c0381731e662c0f942fd9d32264cf`: [run 41306843643](https://github.com/mdanasaaq-design/Awwab/actions/runs/41306843643), all six jobs passed; policy + Cognitive Core tests passed.
+- [ ] Implement adapter conformance tests before selecting any durable store.
+- [ ] Review existing Memory UI/schema and Firestore Rules compatibility; no live integration or writes until approved.
+
+
+### Existing Memory UI compatibility review — 2026-11-01
+
+- [x] Inspect `apps/web/src/MemoryPanel.tsx` and current `firestore.rules` memory contract.
+- [x] Document the proposed field/type/provenance/timestamp mapping and incompatibilities in [Cognitive Memory Compatibility](../docs/cognitive-memory-compatibility.md).
+- [ ] Build a read-only mapper over synthetic fixtures and reject ambiguous type conversions.
+- [ ] Add round-trip and adapter conformance tests before considering integration.
+- [ ] Review Rules compatibility and obtain explicit approval before any schema/Rules/live-data change.
+ 
+### Cognitive memory compatibility mapper — 2026-11-01
+- [x] Implement a pure, read-only mapper for unambiguous existing MemoryPanel records.
+- [x] Reject ambiguous goal/project types and non-expiring temporary context rather than guessing.
+- [x] Preserve owner scope, source provenance, confirmation, sensitivity, confidence, visibility, expiry and original legacy type.
+- [x] Add synthetic round-trip/rejection tests and CI coverage.
+- [ ] Run and inspect fresh CI for this mapper; do not claim validation until it completes.
+- [ ] Add adapter conformance tests and review Firestore Rules before proposing any integration.
+- [ ] Keep MemoryPanel/Firestore integration, schema changes, migrations and live writes disabled pending separate approval.

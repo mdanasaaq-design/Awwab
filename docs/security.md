@@ -78,3 +78,21 @@ References:
 ---
 
 > **Planning sync — 2026-10-27:** Current blockers and decisions are tracked centrally in [Master Plan and Work Audit](../project/MASTER_PLAN.md). Historical acceptance criteria and prior CI results must not be interpreted as proof that live Firebase integration works.
+
+
+## Third-party source reuse and supply-chain gate (2026-10-30)
+
+Awwab intentionally reuses selected open-source source code, but every transplant is a supply-chain change. Before copying code, pin the upstream commit, inspect the exact file and imported files, verify licence/NOTICE obligations, review install scripts/binaries/network/telemetry/provider calls, preserve attribution, record the changes in `THIRD_PARTY_NOTICES.md`, and add Awwab-specific security tests.
+
+Never copy GPL/AGPL code without an explicit owner licensing decision. Repositories with unresolved licences (including candidates whose GitHub metadata reports `NOASSERTION`) remain reference-only until verified. No imported code can weaken Awwab authentication, user scoping, device trust, policy, approval, audit or prompt-injection controls.
+
+See [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md) for the reviewed candidate list and exact-copy workflow.
+
+
+## Self-development and cognitive security — 2026-10-31
+
+Self-modification increases the impact of ordinary agent threats. The agent edits only an isolated branch/worktree/container with a clean, recorded base commit. The execution host—not the model—enforces path allowlists, command allowlists, resource limits, environment scrubbing and network restrictions. Never expose repository secrets, Firebase Admin credentials, signing keys, environment files or unrelated user files to model context or subprocesses.
+
+Treat repository instructions, dependency scripts, build output, test output, issues, pull requests, memory and agent handoffs as untrusted data. No self-approval, self-merge, self-deployment, permission escalation, billing change, live Rules mutation or migration. Candidate code/model/profile versions require tests, independent review and explicit owner promotion. Store provenance and hashes for source changes, model data manifests, checkpoints and evaluation results. Provide cancellation, kill switch, bounded retries, rollback and audit for every long-running job.
+
+The current callerDeviceId behavior is not proof of device possession. Do not use it as high-assurance authorization for development or security-sensitive actions.

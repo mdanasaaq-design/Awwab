@@ -1,3 +1,59 @@
+> **LATEST OWNER WORKFLOW — 2026-11-06**
+> - Owner has chosen Claude as the primary builder/developer.
+> - ChatGPT's role is now GitHub-only coordination: update requested files directly on GitHub, maintain documentation/status/task/handoff records, help review Claude's proposed work, and provide exact pull/deploy commands when asked. Do not independently implement product features.
+> - Root [`CLAUDE.md`](../CLAUDE.md) was added as the repository-level Claude guide. Claude should read it and the source-of-truth files listed there before changing code.
+> - Repository structure and README were audited/refreshed. Known gaps remain: Android minimal shell/no Gradle wrapper; no dedicated Windows desktop app; no capable trained model; assistant generation disabled; cognitive/memory integration incomplete; AWW-022 unresolved.
+> - This cleanup changed documentation only. No code validation, deployment, billing change, merge, live Rules/data change or cloud-resource creation was performed.
+> - Latest A9 crypto helper still requires owner-local validation using Node.js 22 and `npm run validate:local`; do not claim it passed until actual output is supplied.
+>
+> ---
+>
+> **LATEST HANDOFF — 2026-11-02**  
+> Active branch: `opensource-reuse-strategy`; PR #23 remains draft/open/unmerged and targets PR #22's branch; do not merge either PR.
+>
+> **Cognitive Core / memory-preview continuation:** the previous validated code head `62b9c2521189e52dabab3027e5e3bdf967079fe7` passed 32/32 targeted Node tests, shared typecheck, web build, and CI run [41338217980](https://github.com/mdanasaaq-design/Awwab/actions/runs/41338217980) passed all six jobs. That evidence predates the latest memory-preview changes below.
+>
+> **Latest branch-only implementation:**
+> - `bbc9cc3` — backend memory-context preview now enforces the legacy 2,000-character per-record bound in addition to the existing 50-record / 6,000-character aggregate limits.
+> - `d1593b0` and `8856070` — callable emulator regressions cover malformed expiry, unsupported memory type/provenance, blank content, control-character sanitization, oversized records and authenticated-owner scoping. The existing second-session spoof test remains intentionally characterization-only.
+> - `3c4e44d` — refreshes the active task queue and validation gates.
+>
+> **Validation status:** fresh CI and owner-local callable emulator tests for these latest changes are pending. Do not claim the earlier CI run validates them. The new test fixtures use emulator-admin synthetic data only.
+>
+> **Next bounded work:** (1) run fresh CI and owner-local callable tests; (2) review the 2026-11-02 [device proof-of-possession proposal](../docs/device-proof-of-possession-design.md) and record platform/recovery decisions without deploying; (3) decide legacy ambiguous-type, temporary-expiry, archive/delete and correction/concurrency semantics; (4) prepare a read-only Firestore adapter proposal and conformance matrix using synthetic fixtures only.
+>
+> **Hard constraints:** strict $0; Awwab-owned random-init model only; no external AI APIs/pretrained weights/hosted agent runtime; no Blaze upgrade/new cloud resources; no merge, migration, Rules/Functions/Hosting deployment, secrets, or live data mutation without explicit owner approval. Keep assistant generation disabled and high-assurance device actions blocked while AWW-022 remains unresolved. Do not connect durable storage or wire MemoryPanel.
+>
+> **LATEST HANDOFF — 2026-11-01**  
+> Active branch: `opensource-reuse-strategy`; latest recorded implementation commit before this handoff refresh: `f324bb50ba492e5baffc04d6636a6cb604964c1d`. PR #23 remains draft/open/unmerged and targets PR #22's branch; do not merge either PR.  
+> Read first: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), [Pending Work Audit](PENDING_WORK_AUDIT.md), [Current Status](CURRENT_STATUS.md), [Tasks](TASKS.md), and [Issues and Risks](ISSUES_AND_RISKS.md).  
+>
+> **Current progress:** Cognitive Core v0 initial code, policy layer, legacy compatibility mapper and v1 memory adapter type contract are on the branch. Owner locally verified the previous head `4663db1`: 27 tests passed, shared typecheck passed, web build passed. New adapter-contract code passed all six CI jobs in run [41337613099](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337613099), including 32/32 memory/research tests. Identity revision policy then passed all six jobs in run [41337973262](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337973262); owner-local validation of the latest branch remains pending.
+>
+> **Next bounded work:** pull the latest branch and run the adapter contract/type fixture, reference-adapter tests, and Cognitive Core tests locally. Then expand correction/retention edge cases and review MemoryPanel/Rules before proposing any integration. The reference tests cover only a test fixture, not a durable adapter. Identity approval metadata is a caller declaration, not authentication proof. Do not connect a durable store, alter Firestore, or write user data.
+>
+> **Hard constraints:** strict $0; Awwab-owned random-init model only; no external AI APIs/pretrained weights/hosted agent runtime; no Blaze upgrade/new cloud resources; no merge, migration, Rules/Functions/Hosting deployment, secrets, or live data mutation without explicit owner approval. Keep assistant generation disabled and high-assurance device actions blocked while AWW-022 remains unresolved.
+>
+> ---
+>
+> **LATEST HANDOFF — 2026-10-31**  
+> We completed a repository-wide Markdown audit and consolidated the direction around **Awwab Self-Development**. Read these first:
+> 1. [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md) — controlling architecture, phases and acceptance criteria.
+> 2. [Pending Work Audit](PENDING_WORK_AUDIT.md) — completed work, pending work, P0 blockers and 65-file Markdown inventory.
+> 3. [Current Status](CURRENT_STATUS.md) — current implementation/validation state.
+> 4. [Tasks](TASKS.md) — active work queue.
+> 5. [Issues and Risks](ISSUES_AND_RISKS.md) — current security and delivery blockers.
+>
+> **Next implementation phase:** Cognitive Core v0 (identity/constitution, typed memory, goals, context selection and evidence-linked experience/reflection). Do not start multiple agents or unrestricted self-modification first.
+>
+> **Hard constraints:** Awwab's own model only, random initialization; no external AI APIs, third-party pretrained weights, hosted agent runtimes, teacher distillation or silent fallback. Strict $0; no paid services, billing upgrade, new cloud resource, secrets, large downloads, migration, merge or deployment without explicit approval.
+>
+> **Current blockers:** model untrained/generation disabled; Firebase Functions undeployed on Spark; AWW-022 callerDeviceId spoofing confirmed P0; live Firestore Rules not verified; PR #22/#23 draft/open/unmerged; manual browser and Android validation outstanding.
+>
+> **No application code was changed in the planning update.** The documentation branch is `opensource-reuse-strategy`; preserve draft PRs and do not merge/deploy.
+>
+> ---
+>
 # New Chat Handoff — Awwab
 
 **Updated:** 2026-10-27  
@@ -102,3 +158,163 @@ Do not jump directly to unrestricted tool execution. First complete the already 
 - Acceptance criteria are recorded in [Phase 1H Command Center Overview](PHASE_1H_COMMAND_CENTER_OVERVIEW.md); task and status records are updated.
 - GitHub Actions run [40684572657](https://github.com/mdanasaaq-design/Awwab/actions/runs/40684572657) subsequently passed all four jobs, including web typecheck/build and both Firebase emulator suites. Browser/manual review remains pending.
 - No deployment, Rules change, billing upgrade, or backend migration was performed.
+
+
+## Owner direction correction — open-source code reuse (2026-10-30)
+
+The owner explicitly wants us to take useful source code from public GitHub projects, adapt it, and integrate it directly into Awwab. Do not repeat the earlier instruction that all external projects are reference-only. Awwab remains independently owned; this is code reuse, not a request to run another company's agent or use its AI model.
+
+- Read [Open-Source Reuse Catalogue and Integration Plan](../docs/OPEN_SOURCE_REUSE_CATALOG.md) first.
+- New planning branch: `opensource-reuse-strategy`, based on `d81779e9996c69b88e6c140ea473eb4b603c4a17`.
+- PR #22 remains draft/open; latest run [40872007847](https://github.com/mdanasaaq-design/Awwab/actions/runs/40872007847) passed all six jobs on its head.
+- First code task: inspect exact Mozilla Readability source commit/files/licence, then integrate the pure article parser into Research with tests and attribution.
+- Next: LangGraph.js state/checkpoint primitives; Mem0 memory algorithms; Playwright local browser adapter; LitGPT/nanoGPT training improvements; MarkItDown parser patterns; Promptfoo evaluation.
+- No third-party pretrained weights, AI APIs, hosted agents, teacher distillation or remote fallback.
+- Every copied file requires exact-file licence/security review and a `THIRD_PARTY_NOTICES.md` entry. Avoid GPL/AGPL and unresolved licences pending a separate owner decision.
+- Do not deploy, merge, enable billing, create cloud resources, download model/data weights or use paid APIs without explicit approval.
+
+When resuming, inspect the current branch head and CI, then begin R1 rather than restarting the research phase.
+
+
+## A5 continuation — workspace CRUD implementation (2026-10-30)
+
+- Active development branch: `opensource-reuse-strategy`; open draft PR #23 targets `phase-4-memory-research-safety`, which itself is an unmerged draft PR #22 against `main`.
+- The branch contains the accumulated Phase 4 and v1.0 work beyond `main`; re-check the exact comparison before any merge. Do not merge either PR without explicit owner approval.
+- Added `apps/web/src/WorkspaceDataPanel.tsx`: Firestore-backed project CRUD (create/edit/archive/restore/delete) and task CRUD (create, priority/due date, status filter/update, delete). App routes Projects and Tasks to these panels; responsive styles added.
+- Task-to-project links remain disabled because current active Rules only check that projectId is a string, not that it references a project owned by the same user.
+- Latest workspace code commits: `1b19052` (panel), `2e4209a` (App integration), `6bc18ee` (styles), `41606e7` (remove duplicate placeholder rendering).
+- **Validation pending:** latest CI run is not visible through the available GitHub run lookup; no local typecheck/build or emulator/browser run has been performed for this slice. Do not claim it passes until observed.
+- No production deploy, Firestore Rules deploy, billing change, cloud resource creation, or merge was performed.
+- Assistant generation remains unavailable because Awwab's own model has not yet been trained. Automations/activity remain placeholders; memory/research need manual browser acceptance. Continue with validation and a UI review before starting another broad feature.
+
+
+### Activity view follow-up — 2026-10-30
+
+- Added `ActivityPanel` to `apps/web/src/WorkspaceDataPanel.tsx`, reading the latest 100 events from the signed-in user's activity collection; connected it in `App.tsx` and styled event timestamps.
+- Updated command-center copy so project/task/research/memory/activity sections are labelled available; assistant generation and automations remain unavailable.
+- Activity is read-only and may be empty until a backend that records events is available. No event writes, Rules changes, backend deployment or production deployment were added.
+- Latest observed commit before documentation sync: `e68b50b` for workspace status copy; activity implementation commits: `b3a0b47`, `e606ba2`, `5b4ff07`.
+
+
+### Workspace acceptance follow-up — 2026-10-30
+
+- Tasks also support editing title, description, priority, and due date; status transitions and deletion remain available.
+- Review Firestore rules compatibility in `tests/firestore.rules.test.js`: project create/archive/update and task create/status update/delete contracts are covered by the existing emulator suite. The UI's task fields (`dueAt`, nullable `projectId`, `completedAt`) match the current rule schema.
+- No same-user task-to-project link is offered because current rules do not enforce reference ownership.
+- **Automated validation passed:** CI run [41068393446](https://github.com/mdanasaaq-design/Awwab/actions/runs/41068393446) passed all six jobs on code commit `4782136a6eb487b57effb28fae866fa6288a9293`, including web typecheck/build and Firestore/callable emulator suites. Subsequent commits are documentation-only. Browser acceptance and live Firebase Rules status remain outstanding.
+
+
+## Latest continuation point — 2026-10-30
+
+- Active branch: `opensource-reuse-strategy`; open draft PR #23 targets `phase-4-memory-research-safety` (PR #22 is also draft). Neither PR is merged.
+- Latest bounded change: same-user task/project reference validation in `firestore.rules` and emulator regressions in `tests/firestore.rules.test.js`.
+- Commits: `156a2391d53b046db7f030d7018a26afa2b179ed` (Rules), `6284409d460d861e0bad5f1148284819e4b957ea` (tests).
+- CI run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) is pending; inspect all six jobs before marking this slice validated.
+- Keep task/project linking disabled until the branch Rules change is reviewed, merged and explicitly deployed to the target Firebase project. Do not deploy or merge without explicit owner approval.
+
+
+### Latest Rules test correction — 2026-10-30
+
+- First run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) failed because the task update rule still called `validTask` with one argument. The emulator error identified the missing `uid` parameter.
+- Corrected update to pass `uid` in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1`.
+- Re-run the complete CI suite on the current PR head before claiming success. Keep project linking disabled until reviewed/merged Rules are explicitly deployed. No merge/deploy authorized.
+
+
+## Workspace Security and Data Integrity — current continuation point (2026-10-30)
+
+- Active branch: `opensource-reuse-strategy`; PR #23 remains draft/open and unmerged.
+- Added project lifecycle protection: Rules deny project hard deletion; UI now offers archive/restore only. This prevents dangling task references.
+- Added task completion invariants: create starts `todo`; `done` requires `completedAt`; transition into done uses request time; completed-task edits preserve completion time; reopening clears it.
+- Emulator tests added for project deletion denial and completion state/timestamp behavior.
+- Commits: Rules `52721d3`, tests `85d7430`, UI `44944a4`.
+- Prior head `2278f744` passed all six jobs in CI run [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336). Current changes need fresh full CI.
+- No merge, deployment, migration or billing change. Keep project linking disabled until the final Rules are reviewed, merged and explicitly deployed.
+
+
+### Latest workspace Rules correction — 2026-10-30
+
+- Run [41070451570](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070451570) failed Rules tests because legacy/non-done tasks may omit `completedAt`; the update condition accessed the missing field directly.
+- Updated the non-done condition to accept an omitted or null field. `done` still requires a timestamp; transition into done must set request time.
+- Fix commit: `9adcf652c466358934896e206f51e8695e507e12`. Fresh full CI on the latest head is pending.
+
+
+### Workspace Security phase — verification result (2026-10-30)
+
+- Full CI passed all six jobs in [41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092) on tested head `60ca4f9aacf76239ea57082e70a5483974067402`.
+- Firestore Rules emulator tests and backend callable emulator tests passed, along with web build, Functions/shared checks, Phase 4 policy, and Model Lab checks.
+- Automated branch validation is complete. Still not done: manual browser acceptance, live Firebase Rules status verification, merge, and explicit live Rules deployment.
+- No merge/deploy/migration/billing change. PR #23 remains draft.
+
+
+## Backend Independence and Trusted Device Architecture — continuation point (2026-10-30)
+
+- Active branch remains `opensource-reuse-strategy`; PR #23 remains draft/open/unmerged unless updated separately.
+- Backend source change `8441553`: device registration and activity event now share one transaction; profile initialization is transactional.
+- Callable tests `73cdbc1`: concurrent duplicate registration/audit consistency, concurrent profile initialization, and explicit caller-ID spoofing characterization.
+- Settings disclosure `5592ff4`: explains that device records currently verify account session, not cryptographic possession of the browser.
+- Confirmed high-priority issue: second authenticated session for same UID can claim a trusted `callerDeviceId` and approve a pending device. The Ed25519 challenge mock is local-only and not wired in.
+- Architecture decision: keep Firebase Auth + Firestore; do not add another backend/database/provider. Cloud Functions v2 are not deployed on Spark; no Blaze upgrade or deployment is authorized under $0 constraint.
+- Phase outcome is source/reliability complete but **NO-GO for production trusted-device security** until a server-verifiable proof-of-possession protocol and atomic challenge consumption are implemented and a verified hard-$0 server path exists.
+- Latest full CI must be checked on the final head. No merge, deployment, migration, service account, or billing change.
+
+
+### Backend Independence and Trusted Device — verification result (2026-10-30)
+
+- All six CI jobs passed in [run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634) on tested head `1e0ef8537ab5481c8842292510fffe2d1092903f`.
+- CI includes and passed the device lifecycle + Ed25519 key-proof local model suites.
+- Backend callable emulator tests passed concurrent registration/profile initialization and the caller-ID spoofing characterization. The latter confirms the known P0 limitation; it is not a security pass.
+- Phase outcome: reliability fixes and architecture review complete; production trusted-device security remains NO-GO. Keep Firebase Auth + Firestore; no second backend, Blaze upgrade, or deployment.
+
+
+## Documentation consolidation completion — 2026-10-31
+
+The self-development plan and pending-work audit are now in the repository. Start the next session by reading [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), [Pending Work Audit](PENDING_WORK_AUDIT.md), [Current Status](CURRENT_STATUS.md), and [Tasks](TASKS.md). The active first implementation phase is Cognitive Core v0. The old R1-first task is superseded because Readability is already integrated. No application code was changed and no CI rerun was performed for this docs-only update. Preserve PR #22/#23 as draft/unmerged; no merge, deployment, billing, cloud resource or migration is authorized.
+
+
+## Exact branch handoff — 2026-10-31
+
+The final documentation handoff starts from branch `opensource-reuse-strategy`. The status update immediately preceding this handoff is commit `8979ee84fcab3542258a8856fd2747804729d980`; this handoff update follows it. Fetch the branch head before continuing. The final planning changes are documentation-only and do not authorize implementation, merge, CI/deployment, billing, cloud resources, or migration. Next implementation phase remains Cognitive Core v0.
+
+
+## Phase 1 continuation — 2026-11-01
+
+Phase 1 has started. Read [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), [Tasks](TASKS.md), [Current Status](CURRENT_STATUS.md), and [Pending Work Audit](PENDING_WORK_AUDIT.md). The first shared Cognitive Core v0 module is `packages/shared/src/cognitive-core.mjs`; declarations are in `cognitive-core.d.mts`, export path is `@awwab/shared/cognitive-core`, and tests are `tests/cognitive-core.test.mjs`. CI includes the new test command. First check the latest PR CI run and fix any failures before extending the module. The store is in-memory only; do not claim durable memory or connect it to Firestore until Rules and adapter contracts are reviewed. No model, Firebase write, deployment, merge or billing change was made.
+
+
+## Phase 1 latest validated checkpoint — 2026-11-01
+
+- Cognitive Core code head `05fbe89f018e238fce89ff1257cb29665565b68b` passed all six CI jobs in [run 41305026578](https://github.com/mdanasaaq-design/Awwab/actions/runs/41305026578); dedicated Cognitive Core tests passed 13/13.
+- The module remains dependency-free and in-memory only. No Firestore adapter, live memory integration, model inference or autonomous tools exist yet.
+- Continue with memory conflict/retention/context edge cases, formal storage adapter contract, identity change policy and review of existing Memory UI integration. Preserve live Rules and deployment approval gates.
+- Latest CI evidence is tied to the code commit above. Documentation commits after it, if any, do not change that code validation claim.
+
+
+## A8 — Owner-local validation checkpoint — 2026-11-06
+
+- Verified repository branch `opensource-reuse-strategy` at `290c02f8807d97e889f3432c991bfd40b0029a8c`; the owner's local `git status -sb` showed the branch synchronized with `origin/opensource-reuse-strategy` before this documentation/configuration update.
+- Environment: Windows PowerShell, Node.js `v22.23.4`; Functions target Node.js 22.
+- Passed: `npm run shared:typecheck`, `npm run functions:typecheck`, `npm run functions:build`, `npm run web:typecheck`, and `npm run web:build`.
+- Passed tests: 27 cognitive/memory tests, 15 Firestore Rules emulator tests, 13 callable Functions emulator tests; 55 total, zero failures.
+- Vite warnings remain for Mozilla Readability CommonJS/ESM interop, a chunk above 500 kB, and ineffective dynamic import of `device.ts`. The web build succeeded despite these warnings.
+- Negative Firestore tests emit expected permission-denied messages. Callable tests continue to characterize the callerDeviceId spoofing issue; **AWW-022 remains unresolved**. App Check is not configured in this emulator test environment.
+- Added root `npm run validate:local` to repeat the exact validated checks and added `/backend/functions/lib/` to root `.gitignore`; compiled output is generated from TypeScript and is not committed.
+- GitHub comparison against `main` reports this branch 351 commits ahead and 2 behind at the time of review. Reconcile exact ancestry before any merge; do not merge PRs without explicit owner approval.
+- No deployment, billing change, merge, migration, live data mutation, or production configuration change was performed.
+- Continue with AWW-022 proof-of-possession platform/recovery decisions, legacy-memory lifecycle decisions, and a synthetic-fixture read-only adapter proposal. Keep assistant generation and high-assurance device actions disabled.
+
+
+## A9 — device proof-of-possession crypto boundary (2026-11-06)
+
+- Active branch: `opensource-reuse-strategy`; continue from the latest branch head, not the older A8 code baseline.
+- A8 local validation was owner-observed on Node.js 22.23.4 before A9 files were added: 55 automated tests passed. It does not validate A9.
+- Official source review supports ECDSA P-256/SHA-256 as a provisional common profile: browser Web Crypto supports ECDSA and SPKI public-key export; Android Keystore documents EC P-256 signing and per-key hardware security-level inspection.
+- Added `backend/functions/src/deviceProof.ts`: strict fixed-position challenge serializer with `awwab-device-proof-v1` domain prefix, 120-second maximum challenge lifetime, operation allowlist, canonical-payload SHA-256 helper, P-256 SPKI parser and P1363 signature verifier.
+- Added `tests/device-proof-crypto.test.mjs`; root `npm run validate:local` runs this test after Functions build.
+- Wire format candidate: DER SPKI public key in standard base64; 64-byte IEEE-P1363 signature in base64url. Browser Web Crypto uses the fixed-width signature format. Android `SHA256withECDSA` returns DER and requires an explicit DER-to-P1363 client conversion; no dual-format server fallback.
+- **Not integrated:** no callable uses the helper; no challenge issue/consume flow, Firestore transaction, enrollment, web IndexedDB key storage, Android Keystore client, key rotation/recovery, replay protection or full protected-callable coverage exists.
+- **AWW-022 remains open**. Existing caller-ID spoofing is still possible. Keep high-assurance operations disabled.
+- **Next owner action:** `git pull --ff-only origin opensource-reuse-strategy`, then `npm run validate:local` in `C:\Users\rexy2\Awwab`. Record the actual results; do not call the A9 slice validated before that.
+- Next implementation sequence: add browser/Android fixed vectors and DER normalization tests; design emulator-only challenge storage and atomic replay consumption; only then integrate all protected callables.
+- No production deployment, Blaze upgrade, new cloud resource, secret, migration, live Rules change, merge or live data mutation was performed or authorized.
+
+- Follow-up A9 test expansion: the crypto suite now checks Node Web Crypto's P-256 signature output against the server verifier and includes a test-only strict DER-to-P1363 normalization reference. This does not replace real browser or Android Keystore device tests; those remain open.

@@ -1,90 +1,84 @@
 # Awwab
 
-Awwab is a personal AI operating assistant intended to help with planning, research, memory, projects, tools, automation, and follow-through under user control.
+Awwab is an independent personal AI system under owner control. Its long-term goal is a persistent cognitive architecture, an Awwab-owned model trained from random initialization, useful tools, and a safe self-development lifecycle.
 
-## Current reality
+> **Current reality (2026-11-06):** This repository is a substantial development foundation, not a finished or production-ready AI assistant. Assistant generation remains disabled; the Awwab model has no capable trained checkpoint; Android is a minimal shell; Firebase Functions are not deployed on the current Spark plan; and the AWW-022 device proof-of-possession issue remains unresolved.
 
-**Implementation maturity:** Early foundation; assistant capabilities are not production-complete.  
-**Next product phase:** Refine the web command center first, then harden the foundation.  
-**Hosting:** Live Hosting has an existing release (last listed release: 2026-10-16); temporary preview channel `awwab-check` was refreshed on 2026-10-27. No production deployment was performed as part of the repository-organization pass.
+## Start here
 
-The web interface includes sign-in and device-management UI. The assistant runtime is not connected, and the composer remains disabled. Projects, tasks, research, automations, and activity are placeholders without live data.
+- [Claude development guide](CLAUDE.md) — required working rules and current project boundaries.
+- [Current status](project/CURRENT_STATUS.md) — implementation and validation evidence.
+- [Tasks](project/TASKS.md) — active work queue.
+- [Self-Development Master Plan](project/SELF_DEVELOPMENT_MASTER_PLAN.md) — controlling product roadmap.
+- [Pending Work Audit](project/PENDING_WORK_AUDIT.md) — gaps and audit findings.
+- [Issues and Risks](project/ISSUES_AND_RISKS.md) — blockers and release gates.
+- [New Chat Handoff](project/NEW_CHAT_HANDOFF.md) — latest continuation state.
+- [Repository structure](docs/repository-structure.md) — where code, tests and documents belong.
 
-Use these terms consistently:
-- **Implemented** — present in the repository.
-- **Validated** — exercised with observed evidence.
-- **Planned** — designed but not implemented.
-- **Proposed** — an option requiring a decision.
-- **Blocked** — waiting on an external dependency or decision.
+## Repository layout
 
-A successful build proves the checked code compiles and bundles; it does not prove production security or end-to-end behavior.
+```text
+Awwab/
+├── .github/                 # GitHub workflows
+├── apps/
+│   ├── web/                 # React + TypeScript + Vite client
+│   └── android/             # Kotlin + Jetpack Compose shell
+├── backend/functions/       # Firebase Functions (Node.js 22)
+├── packages/shared/         # Shared contracts and cognitive/memory modules
+├── model-lab/               # Awwab-owned random-init model/training scaffold
+├── tests/                   # Unit, emulator and contract tests
+├── docs/                    # Stable architecture, product and engineering docs
+├── project/                 # Plans, tasks, decisions, risks and evidence
+├── firebase.json            # Firebase CLI configuration
+├── firestore.rules          # Firestore authorization rules
+├── firestore.indexes.json   # Firestore index declarations
+├── package.json             # npm workspaces and root scripts
+├── package-lock.json        # Locked npm dependency graph
+├── .firebaserc.example      # Placeholder-only Firebase alias template
+├── .gitignore               # Local secrets and generated files are excluded
+├── CLAUDE.md                # Claude's repository-level development guide
+└── README.md
+```
 
-## Product promise
+## Product and model boundaries
 
-Awwab should understand outcomes, recover relevant context, plan multi-step work, use least-privilege tools, ask for approval before sensitive actions, verify important results, explain failures, and offer useful follow-through without becoming noisy.
+- Awwab remains a standalone product with its own policies, data boundaries and model.
+- No external AI APIs, third-party pretrained weights, hosted agent runtimes, teacher-model distillation or silent remote fallback.
+- Deterministic open-source engineering code may be reused only after exact-file licence, dependency, security, attribution and test review.
+- User conversations are not training data without separate explicit opt-in and privacy/deletion controls.
+- The strict budget is $0 unless the owner explicitly approves a specific cost.
 
-## Target clients
+## Current capabilities and limitations
 
-- **Web/laptop:** primary command center for conversation, research, projects, tasks, approvals, automation, and developer workflows.
-- **Android:** first-class mobile assistant for quick actions, voice/text, notifications, Today, and approvals.
-- **Future surfaces:** voice-first and desktop/system integrations only when they provide real value.
+The branch contains a web application foundation, Firebase sign-in integration, memory and research interfaces/code, project/task workspace code, shared cognitive/memory modules, Firebase Functions source, emulator tests and a from-scratch Model Lab scaffold.
 
-## Non-negotiable principles
+These components are not equivalent to a complete assistant:
+- Assistant generation is disabled because no capable Awwab model is trained and integrated.
+- Cognitive and memory modules are not yet a complete integrated conversational runtime.
+- Model Lab code is a scaffold; synthetic smoke tests do not establish model quality.
+- Android is a minimal Compose shell and has not passed a reproducible build/device acceptance gate.
+- There is no dedicated Windows desktop application workspace.
+- A9's device-proof crypto helper is isolated; challenge issuance/atomic consumption and protected-callable integration are still missing. AWW-022 remains open.
+- Firebase emulator tests do not prove live Firebase configuration, Rules deployment or production readiness.
 
-- Security before autonomy; user control over consequential actions.
-- Least privilege; no secrets in clients or source control.
-- Never claim success without evidence.
-- Never treat model confidence as authorization.
-- Treat retrieved content and tool output as untrusted data.
-- Prefer deterministic code for permissions and state transitions.
-- Make important decisions observable and auditable.
-- Build incrementally and optimize for user value, reliability, and maintainability.
+## Development and validation
 
-## Planning source of truth
+Requirements:
+- Node.js 22 for the root npm workspaces and Firebase Functions.
+- Python 3.11+ and PyTorch 2.x only for Model Lab training/inference.
+- Android build prerequisites are not yet fully documented or reproducible; see [Android README](apps/android/README.md).
 
-- [Master Plan and Work Audit](project/MASTER_PLAN.md) — current audit of planned vs completed work, backend billing blocker, detailed phased sequence, acceptance gates, and explicit no-deploy constraints.
+From the repository root:
 
-## Documentation map
+```sh
+npm ci
+npm run validate:local
+```
 
-### Product and architecture
-- [Product requirements](docs/prd.md)
-- [Architecture](docs/architecture.md)
-- [Agent system](docs/agent-system.md)
-- [Capabilities and permissions](docs/capabilities.md)
-- [AI strategy](docs/ai-strategy.md)
+The validation command runs shared/Functions checks, the A9 crypto tests, web checks, cognitive/memory tests and Firebase emulator suites. Do not assume it passed on a new commit until its output is observed. The previously recorded A8 result of 55 passing tests predates A9.
 
-### Security and data
-- [Security model](docs/security.md)
-- [Threat model](docs/threat-model.md)
-- [Data model](docs/data-model.md)
-- [Authentication and session model](docs/auth-session.md)
-- [Engineering rules](docs/rules.md)
+For Firebase local setup, see [Firebase setup](docs/firebase-setup.md). Do not deploy, change billing, create cloud resources, alter live Rules/data, or merge without explicit owner approval.
 
-### Design, validation, and operations
-- [Design direction](docs/design.md)
-- [Testing strategy](docs/testing.md)
-- [Evaluation framework](docs/evaluation.md)
-- [Firebase setup](docs/firebase-setup.md)
-- [Repository structure and naming conventions](docs/repository-structure.md)
-- [Windows desktop cleanup and synchronization](docs/desktop-cleanup.md)
-- [Roadmap](docs/roadmap.md)
+## Development workflow
 
-### Agent runtime research and handoff
-- [Standalone agent-runtime research and decision](docs/agent-runtime-research.md)
-- [New-chat handoff and next bounded task](project/NEW_CHAT_HANDOFF.md)
-
-### Project tracking
-- [Current status](project/CURRENT_STATUS.md)
-- [Detailed phase plan](project/PHASE_PLAN.md)
-- [Tasks](project/TASKS.md)
-- [Issues and risks](project/ISSUES_AND_RISKS.md)
-- [Architecture decisions](project/DECISIONS.md)
-
-## Current next steps
-
-1. Read the [Master Plan and Work Audit](project/MASTER_PLAN.md) before starting new implementation.
-2. Reconcile the extracted ZIP and actual Git clone; do not assume local edits exist on GitHub.
-3. Finish manual command-center UX acceptance checks and record evidence.
-4. Keep Firebase on the current plan; Cloud Functions deployment is blocked by the Blaze requirement. Do not retry deployment or provision an alternative backend until the architecture comparison is approved.
-5. Implement no new assistant execution until the backend, authentication, device trust, data ownership, and test gates pass.
-6. Treat production release as a separate phase requiring explicit owner authorization.
+Inspect → plan a bounded change → implement → test → review security/licences → update documentation → report evidence. See [CLAUDE.md](CLAUDE.md) for the complete development and approval rules.

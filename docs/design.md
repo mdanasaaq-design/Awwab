@@ -76,3 +76,15 @@ Avoid fake terminal aesthetics, excessive animation and dashboards that expose i
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Reuse-first engineering (2026-10-30)
+
+Open-source code reuse is an implementation strategy, not a visual/product direction change. Keep Awwab's own command-center identity, information density, keyboard-first interaction, clear states and restrained visual language. Imported components must be adapted to Awwab's UX rather than exposing upstream project interfaces. See [the reuse catalogue](OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Self-development command-center direction — 2026-10-31
+
+The command center should eventually expose a transparent development workspace without turning the product into a generic coding dashboard. Planned views include active goal/task, agent role and run status, repository/base commit, proposed plan, approved scope, changed-file diff, test/evaluation evidence, blockers, candidate version comparison and rollback status.
+
+Keep the interface information-dense, keyboard-friendly and truthful. Show distinct states for planned, running, waiting for owner approval, failed, verified, candidate-ready and released. Never show a candidate as stable or imply a deployment occurred before the host confirms it. These are future UX requirements; no self-development UI is implemented by this documentation update.

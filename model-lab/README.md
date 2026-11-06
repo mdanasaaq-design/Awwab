@@ -66,3 +66,17 @@ Checkpoints are local PyTorch artifacts and should only be loaded if trusted. Th
 - This first pass does not provide a large licensed corpus, instruction tuning, RL, safety training, or competitive reasoning.
 - Training data quality, held-out evaluation, safety, latency, RAM, battery, and Android/Termux support remain future gates.
 - The application does not yet load these checkpoints. Integration into the assistant is a later phase after local tests and measured evaluation.
+
+
+## Reusing open-source training engineering (2026-10-30)
+
+Awwab may adapt selected training-engineering code from [LitGPT](https://github.com/Lightning-AI/litgpt) (Apache-2.0) and [nanoGPT](https://github.com/karpathy/nanoGPT) (MIT): random-initialization model building blocks, batching, optimizer/training-loop improvements, checkpoint resume, sampling and evaluation utilities. Exact files and upstream commits must be reviewed and recorded before copying.
+
+**The model-independence rule is unchanged:** do not use their pretrained model weights, model downloads, fine-tuning starting checkpoints, external AI APIs or teacher-model distillation. Awwab's model must initialize its own weights randomly. Reusing software engineering and tensor/training algorithms is allowed; reusing another model's learned weights is not.
+
+The source review and staged plan are in [../docs/OPEN_SOURCE_REUSE_CATALOG.md](../docs/OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Next role in Awwab self-development — 2026-10-31
+
+Model Lab is the source of Awwab's own learned reasoning capability, but the current scaffold has no trained checkpoint and the application does not load it. The Cognitive Core can be built first using deterministic contracts and tests. Model Lab viability is a separate gate: approve the local PyTorch environment, verify training/checkpoint/inference mechanics, define lawful provenance-backed data and held-out evaluations, then train from random initialization only when resources/data are approved. Synthetic data proves pipeline mechanics, not useful assistant reasoning. Never add external model APIs, pretrained weights, teacher distillation, automatic downloads or a silent fallback.

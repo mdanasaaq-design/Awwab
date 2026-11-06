@@ -1,3 +1,21 @@
+> **CURRENT RISK SNAPSHOT — 2026-10-31**  
+> Use [Pending Work Audit](PENDING_WORK_AUDIT.md) and [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md) as the current work source. Historical risk entries below are retained for traceability and must be revalidated before reuse.
+>
+> | ID | Priority | Current risk | Status / required control |
+> |---|---|---|---|
+> | AWW-022 | P0 | Caller-supplied callerDeviceId is not proof of device possession; a second session for the same UID can impersonate a trusted ID | Confirmed by emulator characterization; no production high-assurance device trust or privileged action authorization |
+> | AWW-017 | P0/P1 | Firebase Functions deployment requires Blaze on current path; project remains Spark/$0 | No Functions deployed; do not upgrade or create alternate hosted resources without approval |
+> | AWW-MODEL-001 | P0 | Awwab model is untrained; generation disabled | Model Lab scaffold only; no capability claim before random-init training and held-out evaluation |
+> | AWW-SELF-001 | P1 | Self-development code execution could damage stable source or expose secrets | No developer agent yet; require isolated worktree, sandbox, allowlists, no secrets, tests and owner review |
+> | AWW-SELF-002 | P1 | Model/repository prompt injection could alter plans or tool use | Treat repository, memory, web, model, terminal and agent outputs as untrusted; deterministic policy only |
+> | AWW-SELF-003 | P1 | Multiple agents can amplify errors/conflicts | Defer multi-agent until one Developer agent is evaluated; typed handoffs and isolated permissions |
+> | AWW-SELF-004 | P1 | Version/model/data provenance may be lost during self-evolution | Version code, model, agent profile, data manifest and evaluation suite separately |
+> | AWW-SELF-005 | P1 | Unbounded autonomous loops may consume resources or continue after cancellation | Require budgets, retry caps, cancellation, expiry and kill switch |
+> | AWW-LIVE-001 | P1 | Branch Firestore Rules tests do not prove live project Rules are deployed | Read-only verification first; deployment requires explicit owner approval |
+> | AWW-PR-001 | P1 | PR #22 and #23 are layered draft branches and not merged into main | Reconcile ancestry and fresh CI before any merge; owner approval required |
+>
+> ---
+>
 # Awwab Issues and Risks
 
 **Last reviewed:** 2026-10-18  
@@ -276,3 +294,97 @@
 - Approval mutation and its audit event are atomic. Regression test covers attempts by a revoked caller to approve and revoke a pending device.
 - CI passed all four jobs on commit `317e742b368d3f37e0948270978c50096e858974`: https://github.com/mdanasaaq-design/Awwab/actions/runs/40685807443
 - Scope limitation: emulator coverage is not a live deployment test; backend Functions are still not deployed to the Firebase project.
+
+
+## New reuse-programme risks (2026-10-30)
+
+### AWW-REUSE-001 — Upstream source/licence mismatch
+- **Priority:** P1
+- **Type:** Supply-chain / legal
+- **Status:** Mitigation defined; no source imported yet.
+- **Risk:** Repository-level licence labels can hide per-directory, generated, vendored, model, dataset or submodule licence differences.
+- **Mitigation:** Pin exact commit and inspect every copied file/import; retain notices; record in `THIRD_PARTY_NOTICES.md`; defer GPL/AGPL and unresolved licence sources.
+- **Acceptance:** Every copied source path has a reviewed licence record and automated/manual dependency/security checks.
+
+### AWW-REUSE-002 — Upstream agent code may introduce external model calls
+- **Priority:** P0
+- **Type:** Independence / privacy
+- **Status:** Open; no source imported yet.
+- **Risk:** Agent frameworks often bundle provider adapters, telemetry, hosted APIs or pretrained model paths.
+- **Mitigation:** Copy deterministic components only; remove provider adapters and network defaults; add no-network tests; retain Awwab's random-init model boundary.
+- **Acceptance:** Imported modules pass source review and tests proving no external AI provider/model fallback.
+
+### AWW-REUSE-003 — Research article extraction cannot bypass browser CORS
+- **Priority:** P1
+- **Type:** Architecture / security
+- **Status:** Open; discovered during R1 source inspection.
+- **Risk:** Mozilla Readability parses a DOM document but does not fetch URLs. Browser cross-origin fetch restrictions still apply; adding the parser alone does not enable arbitrary website extraction.
+- **Mitigation:** Keep parser pure; separately design safe URL fetch/allowlist and local or backend fetch boundary. No CORS proxy or private-network fetch.
+- **Acceptance:** URL fetching and parsing are separately tested; block localhost/private/link-local destinations and redirects to them; cap response size/time; preserve source URL/provenance.
+
+
+### AWW-020 — Task project references could point outside the user's project set
+
+- **Priority:** P1
+- **Type:** Data integrity / authorization boundary
+- **Status:** Same-user reference validation passed all six CI jobs on head `2278f744`; subsequent lifecycle hardening is implemented on `opensource-reuse-strategy` and awaiting fresh CI. Nothing is deployed.
+- **Risk:** A task could contain a dangling or cross-user project ID, creating misleading associations and unsafe future backend assumptions.
+- **Mitigation:** Task validation receives the owning UID and checks the referenced document exists beneath that user's `/projects` path. Create and update both enforce the condition; null/omitted references remain valid.
+- **Regression coverage:** valid same-owner reference, null, missing project, cross-user project, valid update, and invalid missing/cross-user updates.
+- **Evidence:** original reference fix Rules `156a239` + tests `6284409`; UID correction `3b5405e`; all-six-job CI pass [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336) on head `2278f744`; lifecycle hardening Rules `52721d3`, tests `85d7430`, UI `44944a4` awaits fresh CI.
+- **Hard limit:** repository branch changes do not alter live Firebase Rules. Keep project linking disabled until review, merge and explicit Rules deployment. No deployment was performed.
+
+
+### AWW-021 — Project deletion can orphan task references and completion metadata can contradict task status
+
+- **Priority:** P1
+- **Type:** Workspace integrity / authorization boundary
+- **Status:** Mitigation implemented on `opensource-reuse-strategy`; fresh CI pending; not deployed.
+- **Risk:** Hard-deleting a project could leave tasks with dangling `projectId` values. Task `status` and `completedAt` could previously disagree or a client could forge completion times.
+- **Mitigation:** Deny project deletion in Rules and remove the delete control from the UI; use archive/restore. Require `completedAt` exactly when status is `done`; entering done must use `request.time`, edits preserve the existing completion timestamp, and reopening clears it.
+- **Regression coverage:** project delete denied and project remains readable; valid completion; edit while completed; forged completion timestamp denied; reopening clears completion; done without timestamp denied.
+- **Evidence:** Rules `52721d3`, tests `85d7430`, UI `44944a4`; CI for this latest phase pending.
+- **Boundary:** no live Rules deployment or merge. Keep project linking disabled until the reviewed Rules are merged and explicitly deployed.
+
+
+### AWW-021 validation update — 2026-10-30
+
+- First CI attempt [41070451570](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070451570) failed because the new non-done update condition assumed legacy task documents always contained `completedAt`. The emulator confirmed that an absent field causes a Rules evaluation error.
+- Corrected to allow `completedAt` to be omitted or null unless the task is `done`; the `done` state still requires a timestamp. Fix: `9adcf652c466358934896e206f51e8695e507e12`.
+- Fresh full CI remains required before closure; no live Rules deployment or merge.
+
+
+### AWW-021 validation result — 2026-10-30
+
+- All six CI jobs passed in [run 41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092) on tested head `60ca4f9aacf76239ea57082e70a5483974067402`, including Firestore Rules emulator tests.
+- Branch mitigation is automated-test validated. Live Rules are not deployed; manual browser acceptance and owner approval for merge/deployment remain open. Do not treat this as a live production control until deployed.
+
+
+### AWW-022 — Caller-supplied device ID is not proof of device possession
+
+- **Priority:** P0 — release/security gate
+- **Type:** Device authorization / account-session compromise boundary
+- **Status:** Confirmed by callable emulator characterization test; not fixed in the live protocol; no deployment.
+- **Finding:** `listDevices`, `approveDevice`, `revokeDevice`, memory context and assistant callables accept a client-supplied device identifier and check a user-scoped device record's status. A second authenticated session for the same UID can claim a known trusted ID. The backend authenticates the account, not possession of the enrolled device key.
+- **Evidence:** tests `known limitation: a second account session can claim a trusted caller device ID` and `known limitation: a second account session can preview memory by claiming a trusted device ID` in `tests/functions.callable.test.js`; both are passing vulnerability-characterization tests, not security passes. The local key-challenge concept is not wired into the client or Functions.
+- **Design proposal:** [Device proof-of-possession design](../docs/device-proof-of-possession-design.md) describes challenge binding, atomic consumption, replay prevention, key rotation/recovery, platform limits and the $0 deployment gate. It is not approved or implemented.
+- **Impact:** device approval/revocation must not be treated as high-assurance or proof of a physical device. A second session can defeat the intended pending-device approval boundary.
+- **Mitigation/status:** Settings discloses the limitation. Keep current Firebase Auth + Firestore; do not deploy or enable Blaze. Production remains NO-GO until an independently reviewed server-verifiable proof-of-possession flow and atomic challenge consumption are integrated.
+- **$0 gate:** no alternate backend/provider has been proven to guarantee verified Firebase tokens, secret isolation, atomic Firestore operations, abuse controls and a hard $0 ceiling for this account. No cloud resources or billing changes authorized.
+
+### AWW-023 — Registration and profile initialization retry races
+
+- **Priority:** P2
+- **Type:** Backend reliability / idempotency
+- **Status:** Mitigated in development branch; full CI pending.
+- **Finding:** read-then-create flows could race under concurrent sign-in/registration attempts; device registration audit writes were separate from device state mutation.
+- **Fix:** `registerDevice` now transactionally creates/updates the device and matching activity event; `ensureUserProfile` now transactionally reads and creates/updates the user profile.
+- **Coverage:** concurrent same-ID registration verifies all calls succeed, one `device_registered` event and subsequent `device_seen` events; concurrent profile initialization verifies all calls succeed.
+- **Evidence:** backend commit `8441553`, test commit `73cdbc1`; CI pending.
+
+
+### AWW-022 / AWW-023 — validation update (2026-10-30)
+
+- AWW-023 transactional registration/profile fixes passed the backend callable emulator suite in [run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634).
+- AWW-022 caller-ID spoofing remains confirmed by the intentionally passing characterization test. It is not mitigated by this run. Device-key proof is still not wired into the production client/backend, and current Functions remain undeployed.
+- All six CI jobs passed on tested head `1e0ef8537ab5481c8842292510fffe2d1092903f`. This is source/emulator evidence only.

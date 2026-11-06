@@ -1,20 +1,24 @@
+> **2026-10-31 — superseding current master plan:** The current controlling roadmap is [Awwab Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md), with the exhaustive pending-work register in [Pending Work Audit](PENDING_WORK_AUDIT.md). The objective is now to build Awwab's persistent cognitive architecture and then its safe self-development/evolution capability. The former “R1 Readability is the first code task” recommendation is obsolete: R1 is already implemented and integrated into the fixed Wikipedia research path. The old plan below is retained as historical evidence; use the new master plan for all new execution and the active queue in `project/TASKS.md`.
+>
+> ---
+>
 # Awwab Master Plan and Work Audit
 
-**Reviewed:** 2026-10-27  
+**Reviewed:** 2026-10-30  
 **Repository:** [mdanasaaq-design/Awwab](https://github.com/mdanasaaq-design/Awwab)  
-**Planning status:** Audit and sequencing only; no application code or deployment is authorized by this document.  
+**Planning status:** Active v1.0 implementation on draft PR #23, dependent on draft PR #22; no merge or production deployment is authorized.  
 **Canonical trackers:** [Current status](CURRENT_STATUS.md) · [Phase plan](PHASE_PLAN.md) · [Tasks](TASKS.md) · [Risks](ISSUES_AND_RISKS.md) · [Decisions](DECISIONS.md)
 
 ## 1. Owner direction and non-negotiables
 
-1. Build Awwab as a standalone personal assistant; external agent projects are research references only.
+1. Build Awwab as a standalone personal assistant. Selected deterministic engineering source code may be copied/adapted after exact-file licence, security, attribution, and test review; Awwab retains its own product, permissions, data boundaries, and independently trained model.
 2. Refine the web command center first, then harden the foundation, then connect assistant capabilities behind tested gates.
 3. Use a command-center visual direction: information-dense, powerful, keyboard-friendly, calm and deliberate; avoid generic “vibe-coded” UI.
 4. Plan bounded work and acceptance criteria before implementation. Audit what was planned, what actually changed, and what evidence exists.
 5. Keep the current Firebase project on its existing plan. Do not upgrade to Blaze, add billing commitments, or start paid services without explicit owner approval.
 6. No production Hosting deployment, Firestore Rules deployment, Cloud Functions deployment, data migration, or live security-policy change without explicit authorization.
 7. Never claim success based only on a build; distinguish implemented, locally validated, CI validated, live validated, blocked, and not tested.
-8. Do not copy third-party code or install an agent framework as a side effect of research.
+8. Do not add broad agent frameworks or third-party learned weights as a side effect of research. Reuse only bounded, reviewed components recorded in the open-source reuse catalogue.
 
 ## 2. Executive audit: observed reality as of 2026-10-27
 
@@ -73,7 +77,7 @@ Do not place Firebase Admin credentials in the browser, commit secrets, use a br
 | Device lifecycle | Backend source and emulator tests exist in repository history; live registration failed because callable endpoints were absent | Implement/test a viable no-Blaze backend plan, then run real Auth/device lifecycle end-to-end |
 | App Check | Client initialization optional; enforcement not enabled/validated | Validate provider/token in a development environment before any enforcement decision |
 | Assistant Core | Plan-only architecture is documented; no connected runtime | Finish UX/foundation/environment gates; later implement plan-only endpoint with no side effects |
-| Workspace data | Placeholder UI | Connect only after data ownership and backend path are verified |
+| Workspace data | User-controlled memory, research, project CRUD, task CRUD, and read-only activity UI implemented on draft PR #23; CI passed on code revision | Manual browser acceptance; verify live Rules; add same-user project-reference validation before linking tasks to projects |
 | Android | Minimal shell | Reproducible build, auth/device trust, lifecycle and device tests later |
 | Production release | Not ready; no deployment authorized | Release checklist, cost/monitoring/recovery/security evidence and explicit approval |
 
@@ -198,7 +202,7 @@ This phase now includes the backend architecture decision required by the no-Bla
 
 ## 7. Current next action
 
-**Documentation and source reconciliation only.** Finish synchronizing Markdown, then inspect the actual Git clone versus the ZIP-edited copy. The next application-code change is not authorized until the architecture comparison and Phase 1 acceptance plan are reviewed. The immediate backend deployment is blocked by the current Firebase plan and must not be retried as a workaround.
+**Continue Awwab v1.0 implementation and acceptance on the existing development branch.** Current branch `opensource-reuse-strategy` contains the accumulated Phase 4 and v1.0 work beyond `main`; re-check the exact comparison before any merge. draft PR #23 targets `phase-4-memory-research-safety` (draft PR #22), which targets `main`. Do not merge either PR without explicit owner approval. Latest workspace code passed all six CI jobs in [run 41068393446](https://github.com/mdanasaaq-design/Awwab/actions/runs/41068393446). Next: manual browser acceptance, verify live Firestore Rules status, resolve the no-Blaze backend architecture, then continue with safe task/project reference validation and remaining product capabilities. Assistant generation remains disabled until Awwab's own model is trained and evaluated. No production deployment, Rules deployment, billing upgrade, migration, or paid resource creation is authorized.
 
 
 ## Phase 0 live GitHub audit — 2026-10-28
@@ -234,3 +238,122 @@ The lockfile backup is already verified. If local synchronization is needed, run
 - Added [Backend Architecture Options](BACKEND_ARCHITECTURE_OPTIONS.md), comparing staying on Spark/deferred live device management, a Cloudflare Worker API with existing Firebase Auth/Firestore, and Supabase Edge Functions/Postgres/Auth.
 - **No architecture is selected.** Keep the existing Firebase project unchanged and do not upgrade billing, create accounts/resources, migrate data, or deploy alternate infrastructure without explicit owner approval.
 - Cloudflare Workers Free currently lists 100,000 requests/day and 10 ms CPU per request; Supabase Free currently lists 500,000 Edge Function invocations/month and 500 MB database per project. These are vendor-published quotas, not guarantees of free operation or proof that Awwab's security requirements are met. Source links and the required security proof are in the comparison document.
+
+
+## 2026-10-30 strategy correction — reuse open-source code inside Awwab
+
+The owner clarified the intended approach: do not merely study other agent repositories; select useful source code, adapt it, and incorporate it into Awwab so the project can move faster. Earlier statements in this plan that prohibited copying all third-party code are superseded.
+
+Awwab remains independent at the product and intelligence level:
+- Awwab owns the product, UI, contracts, data boundaries, permissions, approvals, tools, audit and model weights.
+- Reused code supplies bounded engineering components (workflow state, browser mechanics, parsers, memory algorithms, training optimizations, evaluation and tracing).
+- No third-party pretrained weights, teacher distillation, external AI API, hosted agent runtime or silent remote fallback.
+- Every copied file needs exact-commit/file licence review, attribution, dependency/security review, tests and a `THIRD_PARTY_NOTICES.md` entry.
+- GPL/AGPL and unresolved-licence sources are excluded until a separate licensing decision.
+
+The authoritative candidate matrix, what to copy, what to avoid, and phased acceptance criteria are in [Open-Source Reuse Catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md).
+
+### New implementation order
+
+1. R1 — Mozilla Readability pure parser integration for Research.
+2. R2 — minimal LangGraph.js-derived workflow/checkpoint primitives.
+3. R3 — Mem0/Graphiti-derived memory merge, conflict and temporal provenance improvements.
+4. R4 — local read-only Playwright browser adapter, with explicit sandbox and domain/action allowlists.
+5. R5 — LitGPT/nanoGPT-derived training optimizations with random initialization only.
+6. R6 — local document parsing adapted from selected MarkItDown code.
+7. R7 — Promptfoo-derived evaluation fixtures and minimal OpenTelemetry.
+
+The first code task is R1 source inspection and bounded parser integration. This does not authorize a crawler, CORS bypass, private-network fetching, external service, dependency sprawl or production deployment.
+
+### Latest verification snapshot
+
+On 2026-10-30, GitHub Actions run [40872007847](https://github.com/mdanasaaq-design/Awwab/actions/runs/40872007847) passed all six jobs on `d81779e9996c69b88e6c140ea473eb4b603c4a17`. PR #22 remains open/draft. This new documentation branch is separate; no merge/deploy has occurred.
+
+
+## A5 v1.0 implementation snapshot — 2026-10-30
+
+### Implemented on the draft development branch
+- Sign-in and command-center shell, device-management UI, user-controlled Firestore memory, Wikipedia/Crossref research, and Mozilla Readability article extraction.
+- Project create/edit/archive/restore/delete workflows.
+- Task create/edit/status/filter/delete workflows with priority and due date.
+- Read-only activity register showing up to 100 backend-recorded events.
+- Strict provider plan-response validation and the independent Model Lab scaffold.
+
+### Automated evidence
+- GitHub Actions [run 41068393446](https://github.com/mdanasaaq-design/Awwab/actions/runs/41068393446) passed all six jobs on code commit `4782136a6eb487b57effb28fae866fa6288a9293`, including web typecheck/build, Functions/shared typecheck/build, Firestore Rules emulator tests, callable emulator tests, assistant runtime/parser tests, and Model Lab standard-library/provenance tests.
+- Later changes after that code commit were documentation-only. Browser and live Firebase acceptance are not covered by CI.
+
+### Still blocks a real v1.0 release
+- Awwab's own model has not been trained from random initialization or evaluated for useful conversational capability; generation is disabled.
+- Cloud Functions are not deployed under the current Firebase plan. Device lifecycle and activity logging are therefore not proven live. Do not upgrade billing or deploy without separate approval.
+- Verify the live Firestore Rules before relying on project/task/memory writes. Emulator success is not proof that live Rules match the repository.
+- Automations are not implemented. Task-to-project linking remains disabled until the owner-scoped reference Rules change is reviewed, merged, and explicitly deployed; branch implementation and emulator regressions are present, but current CI is pending.
+- Manual browser acceptance, accessibility review, mobile review, Android build/device acceptance, and release/rollback checks remain outstanding.
+
+### Owner constraints
+- Preserve Firebase Auth and Firestore unless an alternate backend is explicitly approved.
+- Keep the $0 budget; no paid APIs, third-party pretrained weights, model downloads, or cloud resources.
+- Keep Awwab independent. Reuse code only with pinned upstream commits, licences, attribution, and tests.
+- No merge, production Hosting deployment, Firestore Rules deployment, Functions deployment, migration, or billing change without explicit approval.
+
+
+### Task/project reference security slice — 2026-10-30
+
+- Added same-user project existence validation to task create/update Rules; null or omitted references remain allowed.
+- Added emulator cases for valid same-owner, null, missing, cross-user, and update-path references.
+- Rules commit: `156a2391d53b046db7f030d7018a26afa2b179ed`; test commit: `6284409d460d861e0bad5f1148284819e4b957ea`.
+- CI run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) is pending. This change is not validated until the complete workflow passes.
+- Keep task/project linking disabled until the Rules change is reviewed, merged and explicitly deployed. No deployment or merge was performed.
+
+
+### Task/project Rules follow-up — CI correction (2026-10-30)
+
+The first full run [41069341725](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069341725) caught a missing UID argument on the task update path (`validTask` expected two arguments). The create path passed; update did not. Corrected update to pass `uid` in commit `3b5405e147ca64ff9f5af1951a9154bceed2efa1`. Do not mark this security slice validated until a fresh full CI run passes on the corrected PR head. No deployment or merge.
+
+
+### Workspace Security and Data Integrity phase — 2026-10-30
+
+- Deny hard deletion of projects in Firestore Rules and remove project delete from the UI; archive/restore preserves references.
+- Enforce task completion timestamp consistency and server-time completion transitions.
+- Add emulator regressions for denied project deletion and completion lifecycle.
+- Commits: Rules `52721d3`, tests `85d7430`, UI `44944a4`.
+- CI for the preceding head `2278f744` passed all six jobs in [41069754336](https://github.com/mdanasaaq-design/Awwab/actions/runs/41069754336); the current phase commits require a new complete CI run before closure.
+- Preserve no-merge/no-deploy boundary. Do not enable project linking until matching Rules are reviewed, merged and explicitly deployed.
+
+
+### Workspace Security CI correction — 2026-10-30
+
+The first full run [41070451570](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070451570) caught a compatibility defect: existing non-done tasks without a `completedAt` field failed ordinary updates. Rules now allow the field to be omitted or null unless status is `done`. Fix committed as `9adcf652c466358934896e206f51e8695e507e12`. Require a fresh complete CI pass before closing this phase.
+
+
+### Workspace Security and Data Integrity — validation result (2026-10-30)
+
+All six GitHub Actions jobs passed in [run 41070757092](https://github.com/mdanasaaq-design/Awwab/actions/runs/41070757092) on tested head `60ca4f9aacf76239ea57082e70a5483974067402`. This includes the Firestore Rules emulator suite and backend callable emulator suite. The phase is automated-validation complete on the development branch; browser acceptance and live Rules verification/deployment remain separate gates. No merge or deployment.
+
+
+## Backend Independence and Trusted Device Architecture — 2026-10-30
+
+### Implemented on development branch
+- Made device registration and its activity event transactional and retry-idempotent.
+- Made user profile initialization transactional.
+- Added callable-emulator coverage for concurrent same-device registration, concurrent profile initialization, and a second authenticated session claiming another trusted device ID.
+- Added an explicit Settings disclosure about the current account-session-only device trust boundary.
+- Retained Firebase Auth + Firestore; did not add a second provider, database, service account or cloud resource.
+
+### Architecture/security decision
+- The current `callerDeviceId` is caller-supplied and is not cryptographic proof of device possession. The emulator characterization test reproduces successful approval by a second session for the same UID.
+- The local Ed25519 challenge model is not wired into the app/backend and is not a production mitigation.
+- Firebase Functions v2 remain undeployed on Spark. Enabling Blaze is not authorized under the $0 constraint.
+- No alternative backend has been proven to satisfy verified Firebase identity, secret isolation, atomic Firestore mutations, replay/rate protection and a guaranteed hard-$0 ceiling for this account.
+
+**Outcome:** architecture/source review and reliability fixes are complete; production trusted-device capability is **NO-GO**. Do not deploy, change billing, or describe device approval/revocation as high-assurance until a reviewed server-verifiable key proof and acceptable runtime exist.
+
+
+### Backend Independence and Trusted Device — automated validation result
+
+All six jobs passed in [CI run 41072625634](https://github.com/mdanasaaq-design/Awwab/actions/runs/41072625634) on tested head `1e0ef8537ab5481c8842292510fffe2d1092903f`. The Phase 4 job now includes local device lifecycle and Ed25519 key-proof model tests. Callable emulator tests passed with concurrent registration/profile checks and the known caller-ID spoofing characterization. This validates the source and local models; it does not resolve the spoofing issue or prove live deployment/$0 operation. Production trusted-device security remains NO-GO.
+
+
+## Planning consolidation result — 2026-10-31
+
+The controlling plan and pending-work audit are now committed as `project/SELF_DEVELOPMENT_MASTER_PLAN.md` and `project/PENDING_WORK_AUDIT.md`. The active next phase is Cognitive Core v0, not R1. The repository-wide audit covered 65 pre-existing Markdown files; two new plan/audit files were added. Historical phase evidence and vendor licence documents remain intact. No application code or live resource changed. Documentation-only changes were not sent through a full CI rerun.

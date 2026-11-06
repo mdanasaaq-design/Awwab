@@ -1,3 +1,7 @@
+> **2026-10-31 planning reset:** This document's older phase sequence and append-only checklists are historical. The controlling phase order is now [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md): Cognitive Core v0 → Model Lab viability → plan-only reasoning → repository perception/development tools → one Developer agent → version/evolution manager → multi-agent orchestration → controlled autonomy → Android/multimodal/release. See [Pending Work Audit](PENDING_WORK_AUDIT.md) for current blockers and [TASKS.md](TASKS.md) for the active queue. Do not restart R1; it is implemented.
+>
+> ---
+>
 # Awwab Phase Plan
 
 **Status:** Planning baseline  
@@ -255,3 +259,18 @@ Every shipped change must have:
 ## 2026-10-27 execution correction
 
 The current Firebase project has Firestore in Mumbai but no deployed Cloud Functions. A Functions deployment attempt was blocked by the Blaze requirement, and the owner chose not to upgrade. Keep the existing Firebase architecture as the baseline while comparing no-Blaze backend alternatives; Cloudflare Workers is not selected. Local extracted-copy builds passed, but the region edits have not been reconciled to GitHub main. Do not treat local build success as live integration evidence. Follow [Master Plan](MASTER_PLAN.md) for the detailed new order: source reconciliation, manual UX acceptance, architecture comparison, security/contract closure, plan-only Assistant Core, then later capabilities and release.
+
+
+## Reuse-first implementation programme (2026-10-30)
+
+The owner has clarified that Awwab should copy/adapt useful public source code into Awwab rather than treating all projects as reference-only. This supersedes the older planning rule against source copying, but does not relax the independent-model decision.
+
+- R1: Mozilla Readability parser for research extraction.
+- R2: LangGraph.js state/checkpoint primitives.
+- R3: Mem0 and Graphiti memory algorithms/schema patterns.
+- R4: Playwright local browser adapter with read-only scope first.
+- R5: LitGPT/nanoGPT from-scratch training improvements only.
+- R6: MarkItDown-derived local document parsing.
+- R7: Promptfoo-inspired local evaluation and optional OpenTelemetry.
+
+Each phase is gated by exact-file licence review, pinned upstream commit, attribution, dependency/security inspection, Awwab-owned interfaces and regression tests. See [OPEN_SOURCE_REUSE_CATALOG.md](../docs/OPEN_SOURCE_REUSE_CATALOG.md). No full external agent product or pretrained model is adopted.

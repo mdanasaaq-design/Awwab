@@ -81,9 +81,19 @@ References:
 
 ## Live project finding — 2026-10-27
 
-The Awwab project has a default Firestore Native database in asia-south1, but the Functions list is empty. A Functions deployment attempt was blocked because the project must be on Blaze. The owner chose to remain on the current plan. Do not repeat deployment attempts, upgrade billing, deploy Rules, or create alternative cloud resources until the architecture comparison and explicit approval are complete. Cloudflare Workers is a candidate to evaluate, not a selected backend. The local extracted-copy region edits have not been reconciled with GitHub main. See [Master Plan](../project/MASTER_PLAN.md).
+The Awwab project has a default Firestore Native database in asia-south1, but the Functions list is empty. A Functions deployment attempt was blocked because the project must be on Blaze. The owner chose to remain on the current plan. Do not repeat deployment attempts, upgrade billing, deploy Rules, or create alternative cloud resources until the architecture comparison and explicit approval are complete. Cloudflare Workers is a candidate to evaluate, not a selected backend. The local extracted-copy region edits have not been reconciled with GitHub main. See [Master Plan](../project/SELF_DEVELOPMENT_MASTER_PLAN.md).
 
 
 ---
 
-> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/SELF_DEVELOPMENT_MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Reuse programme and Firebase boundary (2026-10-30)
+
+The open-source reuse plan does not authorize a Firebase plan upgrade, Functions deployment, new cloud resource, service account, migration or secret configuration. Imported code is reviewed and integrated in the repository first; backend hosting decisions remain governed by [the backend architecture gate](../project/BACKEND_ARCHITECTURE_OPTIONS.md). See [the source reuse catalogue](OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Self-development runtime boundary — 2026-10-31
+
+Firebase Authentication and Firestore remain the existing baseline. Firebase Functions are not deployed on the current Spark plan; do not upgrade to Blaze, retry deployment, create an alternate hosted backend, add secrets, or provision cloud resources without separate owner approval. For the first self-development toolchain, evaluate a local owner-controlled Windows/Termux runner rather than assuming hosted execution. Local execution still requires explicit filesystem/command allowlists, sandboxing, secret isolation, cancellation, audit and owner confirmation. This documentation does not authorize Firebase Rules/Hosting/Functions deployment or any live configuration change.

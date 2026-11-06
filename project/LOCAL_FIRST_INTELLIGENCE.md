@@ -25,3 +25,8 @@ Do **not** implement the following as Awwab's intelligence engine:
 The active Assistant Core path now uses an Awwab-owned model interface that reports `not_trained` and fails closed. It does not call a remote model API. The UI clearly labels generation as unavailable until Awwab's own model has been implemented, trained from random initialization, and evaluated.
 
 The next stage is to design and implement Awwab Model Lab: tokenizer, small randomly initialized model, reproducible training/evaluation, checkpoint handling, and local inference. That work is separate from this Stage 1 boundary change. Do not claim the model is trained until a checkpoint has actually been trained, saved, loaded, and evaluated.
+
+
+## Current reuse clarification (2026-10-30)
+
+Although third-party pretrained models remain prohibited as Awwab's intelligence engine, the owner has clarified that deterministic open-source software code may be copied/adapted into Awwab. Reuse agent orchestration, memory algorithms, browser automation, parsing, evaluation and training infrastructure where useful; do not reuse learned model weights, teacher distillation or external AI APIs. This archived proposal remains superseded for model choice, but its blanket implication that all external code must remain reference-only is no longer current. See [AWWAB_INDEPENDENT_AI_DECISION.md](AWWAB_INDEPENDENT_AI_DECISION.md) and [the reuse catalogue](../docs/OPEN_SOURCE_REUSE_CATALOG.md).

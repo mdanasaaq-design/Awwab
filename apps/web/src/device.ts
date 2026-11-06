@@ -14,6 +14,8 @@ import { auth, firebaseApp } from "./firebase";
 export type { DeviceRecord } from "@awwab/shared/contracts";
 
 const STORAGE_KEY = "awwab.deviceId";
+// Must match CALLABLE_OPTIONS.region in backend/functions/src/index.ts.
+const FUNCTIONS_REGION = "asia-south1";
 
 function getDeviceId(): string {
   const existing = window.localStorage.getItem(STORAGE_KEY);
@@ -34,7 +36,7 @@ function getAwwabFunctions(): Functions | null {
   if (!firebaseApp || !auth?.currentUser) {
     return null;
   }
-  return getFunctions(firebaseApp);
+  return getFunctions(firebaseApp, FUNCTIONS_REGION);
 }
 
 export async function registerWebDevice() {

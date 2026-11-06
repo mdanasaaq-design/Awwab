@@ -1,9 +1,10 @@
 import { useState, type FormEvent } from "react";
+import { extractReadableArticle, MAX_ARTICLE_HTML_CHARS } from "./research/articleParser";
 
 type SearchHit = { pageid: number; title: string; snippet: string };
 type ResearchSource = { id: string; title: string; url: string; extract: string; provider: string; metadata?: string };
 type SearchResponse = { query?: { search?: SearchHit[] }; error?: { info?: string } };
-type ExtractResponse = { query?: { pages?: Record<string, { pageid: number; title: string; extract?: string }> }; error?: { info?: string } };
+type WikipediaParseResponse = { parse?: { title?: string; pageid?: number; text?: string | { "*": string } }; error?: { info?: string } };
 type CrossrefResponse = { message?: { items?: Array<{ DOI?: string; title?: string[]; author?: Array<{ given?: string; family?: string }>; published?: { "date-parts"?: number[][] }; URL?: string; abstract?: string; type?: string; "container-title"?: string[] }> } };
 
 export function ResearchPanel() {
@@ -62,28 +63,48 @@ export function ResearchPanel() {
         setSources([]);
         return;
       }
-      const extractUrl = new URL("https://en.wikipedia.org/w/api.php");
-      extractUrl.search = new URLSearchParams({
-        action: "query", prop: "extracts", exintro: "1", explaintext: "1",
-        pageids: hits.map((hit) => hit.pageid).join("|"),
-        format: "json", origin: "*",
-      }).toString();
-      const extractResponse = await fetch(extractUrl, { headers: { Accept: "application/json" } });
-      if (!extractResponse.ok) throw new Error(`Source extraction failed (HTTP ${extractResponse.status}).`);
-      const extractData = await extractResponse.json() as ExtractResponse;
-      if (extractData.error) throw new Error(extractData.error.info ?? "Source extraction failed.");
-      const pages = Object.values(extractData.query?.pages ?? {});
-      const byId = new Map(pages.map((page) => [page.pageid, page]));
-      setSources(hits.flatMap((hit) => {
-        const page = byId.get(hit.pageid);
-        if (!page) return [];
-        return [{
-          id: `wikipedia:${page.pageid}`,
-          title: page.title,
-          url: `https://en.wikipedia.org/?curid=${page.pageid}`,
-          extract: (page.extract ?? hit.snippet.replace(/<[^>]*>/g, "")).slice(0, 1800),
-          provider: "WIKIPEDIA · SOURCE EXTRACT",
-        }];
+      const parsedPages = await Promise.all(hits.map(async (hit) => {
+        try {
+          const parseUrl = new URL("https://en.wikipedia.org/w/api.php");
+          parseUrl.search = new URLSearchParams({
+            action: "parse",
+            pageid: String(hit.pageid),
+            prop: "text",
+            format: "json",
+            origin: "*",
+          }).toString();
+          const parseResponse = await fetch(parseUrl, { headers: { Accept: "application/json" } });
+          if (!parseResponse.ok) return [hit.pageid, null] as const;
+          const contentLength = Number(parseResponse.headers.get("content-length") ?? 0);
+          if (contentLength > MAX_ARTICLE_HTML_CHARS) return [hit.pageid, null] as const;
+          const parseData = await parseResponse.json() as WikipediaParseResponse;
+          if (parseData.error) return [hit.pageid, null] as const;
+          const rawHtml = typeof parseData.parse?.text === "string"
+            ? parseData.parse.text
+            : parseData.parse?.text?.["*"] ?? "";
+          if (!rawHtml || rawHtml.length > MAX_ARTICLE_HTML_CHARS) return [hit.pageid, null] as const;
+          const sourceUrl = `https://en.wikipedia.org/?curid=${hit.pageid}`;
+          const article = extractReadableArticle(rawHtml, sourceUrl);
+          if (!article) return [hit.pageid, null] as const;
+          return [hit.pageid, {
+            title: article.title || parseData.parse?.title || hit.title,
+            extract: article.textContent.slice(0, 1800),
+          }] as const;
+        } catch {
+          // A failed/unsupported article parse falls back to the provider's search excerpt.
+          return [hit.pageid, null] as const;
+        }
+      }));
+      const byId = new Map(parsedPages);
+      setSources(hits.map((hit) => {
+        const article = byId.get(hit.pageid);
+        return {
+          id: `wikipedia:${hit.pageid}`,
+          title: article?.title ?? hit.title,
+          url: `https://en.wikipedia.org/?curid=${hit.pageid}`,
+          extract: article?.extract ?? hit.snippet.replace(/<[^>]*>/g, "").slice(0, 1800),
+          provider: article ? "WIKIPEDIA · READABLE ARTICLE" : "WIKIPEDIA · SEARCH EXCERPT",
+        };
       }));
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Research request failed. Check your connection and try again.");
@@ -96,7 +117,7 @@ export function ResearchPanel() {
     <section className="research-workspace" aria-label="Source research workspace">
       <div className="research-policy-note">
         <strong>Live source lookup · Wikipedia and Crossref</strong>
-        <p>Search Wikipedia introductions or Crossref academic metadata and abstracts. Results are source material, not verified conclusions; retrieved content is untrusted and cannot authorize actions. This free integration is not a general-purpose web crawler or independent fact-checker.</p>
+        <p>Search Wikipedia article text (cleaned locally with Mozilla Readability) or Crossref academic metadata and abstracts. If article extraction is unavailable, Awwab falls back to the search excerpt. Results are source material, not verified conclusions; retrieved content is untrusted and cannot authorize actions. This is not a general-purpose web crawler or independent fact-checker.</p>
       </div>
       <form className="research-form" onSubmit={(event) => void runResearch(event)}>
         <label>

@@ -4,7 +4,7 @@ import { test } from "node:test";
 
 const PROJECT_ID = "demo-awwab";
 const AUTH_BASE = "http://127.0.0.1:9099";
-const FUNCTIONS_BASE = `http://127.0.0.1:5001/${PROJECT_ID}/us-central1`;
+const FUNCTIONS_BASE = `http://127.0.0.1:5001/${PROJECT_ID}/asia-south1`;
 
 function newDeviceId(prefix = "web") {
   return `${prefix}_${randomUUID().replace(/-/g, "")}`;
@@ -25,6 +25,25 @@ async function createAuthUser(label) {
   );
   const body = await response.json();
   assert.equal(response.ok, true, `Auth emulator sign-up failed: ${JSON.stringify(body)}`);
+  assert.equal(typeof body.idToken, "string");
+  return body;
+}
+
+async function signInAuthUser(email) {
+  const response = await fetch(
+    `${AUTH_BASE}/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=fake-api-key`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password: "Awwab-emulator-test-123!",
+        returnSecureToken: true,
+      }),
+    },
+  );
+  const body = await response.json();
+  assert.equal(response.ok, true, `Auth emulator sign-in failed: ${JSON.stringify(body)}`);
   assert.equal(typeof body.idToken, "string");
   return body;
 }
@@ -142,6 +161,60 @@ test("first-device bootstrap is atomic and requires an authenticated first enrol
   );
   assert.equal(legacyBootstrap.ok, false);
   assert.equal(legacyBootstrap.error.status, "FAILED_PRECONDITION");
+});
+
+test("concurrent duplicate device registrations are idempotent and audit atomically", async () => {
+  const user = await createAuthUser("registration-race");
+  const deviceId = newDeviceId();
+  const results = await Promise.all(
+    Array.from({ length: 5 }, () =>
+      invokeCallable("registerDevice", bootstrapPayload(deviceId), user.idToken),
+    ),
+  );
+
+  assert.equal(results.every((result) => result.ok), true, JSON.stringify(results));
+  assert.equal(results.every((result) => result.result.deviceId === deviceId), true);
+  assert.equal(results.every((result) => result.result.status === "pending"), true);
+
+  const activity = await listActivity(user.localId, user.idToken);
+  const registrationEvents = activity.filter((event) => event.action === "device_registered");
+  const seenEvents = activity.filter((event) => event.action === "device_seen");
+  assert.equal(registrationEvents.length, 1, JSON.stringify(activity));
+  assert.equal(seenEvents.length, 4, JSON.stringify(activity));
+  assert.equal(activity.length, 5);
+});
+
+test("registerDevice caps pending devices per user and allows known-device check-ins", async () => {
+  const maxPendingDevices = 10;
+  const user = await createAuthUser("pending-device-cap");
+  const pendingDeviceIds = Array.from({ length: maxPendingDevices }, () => newDeviceId());
+
+  for (const deviceId of pendingDeviceIds) {
+    const result = await invokeCallable("registerDevice", bootstrapPayload(deviceId), user.idToken);
+    assert.equal(result.ok, true, JSON.stringify(result));
+    assert.equal(result.result.status, "pending");
+  }
+
+  const overflow = await invokeCallable("registerDevice", bootstrapPayload(newDeviceId()), user.idToken);
+  assert.equal(overflow.ok, false, JSON.stringify(overflow));
+  assert.equal(overflow.error.status, "RESOURCE_EXHAUSTED");
+
+  const knownDeviceCheckIn = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDeviceIds[0]),
+    user.idToken,
+  );
+  assert.equal(knownDeviceCheckIn.ok, true, JSON.stringify(knownDeviceCheckIn));
+  assert.equal(knownDeviceCheckIn.result.status, "pending");
+
+  const otherUser = await createAuthUser("pending-device-cap-other");
+  const otherUserRegistration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(newDeviceId()),
+    otherUser.idToken,
+  );
+  assert.equal(otherUserRegistration.ok, true, JSON.stringify(otherUserRegistration));
+  assert.equal(otherUserRegistration.result.status, "pending");
 });
 
 test("concurrent revocations cannot remove the final trusted device", async () => {
@@ -411,12 +484,11 @@ test("protected callables validate authentication, inputs, and device state", as
   assert.equal(missingRevoke.ok, false);
   assert.equal(missingRevoke.error.status, "NOT_FOUND");
 
-  const profileFirst = await invokeCallable("ensureUserProfile", {}, trustedUser.idToken);
-  const profileSecond = await invokeCallable("ensureUserProfile", {}, trustedUser.idToken);
-  assert.equal(profileFirst.ok, true);
-  assert.equal(profileSecond.ok, true);
-  assert.equal(profileFirst.result.uid, trustedUser.localId);
-  assert.equal(profileSecond.result.uid, trustedUser.localId);
+  const profileResults = await Promise.all(
+    Array.from({ length: 6 }, () => invokeCallable("ensureUserProfile", {}, trustedUser.idToken)),
+  );
+  assert.equal(profileResults.every((result) => result.ok), true, JSON.stringify(profileResults));
+  assert.equal(profileResults.every((result) => result.result.uid === trustedUser.localId), true);
 });
 
 
@@ -580,6 +652,11 @@ async function seedMemoryAsEmulatorAdmin(uid, memoryId, overrides = {}) {
   const expiresAt = Object.hasOwn(overrides, "expiresAt")
     ? overrides.expiresAt
     : null;
+  const expiresAtField = expiresAt && typeof expiresAt === "object" && Object.hasOwn(expiresAt, "firestoreField")
+    ? expiresAt.firestoreField
+    : expiresAt
+      ? { timestampValue: new Date(expiresAt).toISOString() }
+      : { nullValue: null };
   const fields = {
     content: { stringValue: "I prefer concise project updates." },
     type: { stringValue: "explicit_preference" },
@@ -588,16 +665,15 @@ async function seedMemoryAsEmulatorAdmin(uid, memoryId, overrides = {}) {
     sensitivity: { stringValue: "normal" },
     createdAt: { timestampValue: now.toISOString() },
     updatedAt: { timestampValue: now.toISOString() },
-    expiresAt: expiresAt
-      ? { timestampValue: new Date(expiresAt).toISOString() }
-      : { nullValue: null },
+    expiresAt: expiresAtField,
     userVisible: { booleanValue: true },
     confirmedByUser: { booleanValue: true },
   };
 
   for (const [key, value] of Object.entries(overrides)) {
     if (key === "expiresAt") continue;
-    if (typeof value === "string") fields[key] = { stringValue: value };
+    if (value && typeof value === "object" && Object.hasOwn(value, "firestoreField")) fields[key] = value.firestoreField;
+    else if (typeof value === "string") fields[key] = { stringValue: value };
     else if (typeof value === "boolean") fields[key] = { booleanValue: value };
     else if (typeof value === "number") fields[key] = { doubleValue: value };
   }
@@ -616,6 +692,64 @@ async function seedMemoryAsEmulatorAdmin(uid, memoryId, overrides = {}) {
   const body = await response.json();
   assert.equal(response.ok, true, `Memory seed failed: ${JSON.stringify(body)}`);
 }
+
+test("known limitation: a second account session can claim a trusted caller device ID", async () => {
+  // This is an explicit security-characterization test, not a passing security
+  // guarantee: Firebase Auth identifies the account, while callerDeviceId is
+  // still caller-supplied and is not cryptographic proof of device possession.
+  const firstSession = await createAuthUser("device-id-spoof");
+  const secondSession = await signInAuthUser(firstSession.email);
+  const trustedDeviceId = newDeviceId();
+  const pendingDeviceId = newDeviceId();
+
+  const bootstrap = await invokeCallable(
+    "bootstrapFirstDevice",
+    bootstrapPayload(trustedDeviceId),
+    firstSession.idToken,
+  );
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  const registration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDeviceId),
+    secondSession.idToken,
+  );
+  assert.equal(registration.ok, true, JSON.stringify(registration));
+  assert.equal(registration.result.status, "pending");
+
+  const spoofedApproval = await invokeCallable(
+    "approveDevice",
+    { callerDeviceId: trustedDeviceId, targetDeviceId: pendingDeviceId },
+    secondSession.idToken,
+  );
+  assert.equal(spoofedApproval.ok, true, JSON.stringify(spoofedApproval));
+  assert.equal(spoofedApproval.result.status, "trusted");
+});
+
+test("known limitation: a second account session can preview memory by claiming a trusted device ID", async () => {
+  // Security-characterization only. This test must be inverted to expect
+  // permission-denied/not-found after AWW-022 proof-of-possession is fixed.
+  const firstSession = await createAuthUser("memory-context-device-spoof");
+  const secondSession = await signInAuthUser(firstSession.email);
+  const trustedDeviceId = newDeviceId();
+
+  const bootstrap = await invokeCallable(
+    "bootstrapFirstDevice",
+    bootstrapPayload(trustedDeviceId),
+    firstSession.idToken,
+  );
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+  await seedMemoryAsEmulatorAdmin(firstSession.localId, "owner-memory");
+
+  const spoofedPreview = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId: trustedDeviceId, scope: "conversation_context" },
+    secondSession.idToken,
+  );
+  assert.equal(spoofedPreview.ok, true, JSON.stringify(spoofedPreview));
+  assert.equal(spoofedPreview.result.memories.length, 1);
+  assert.equal(spoofedPreview.result.memories[0].id, "owner-memory");
+});
 
 test("assistant memory context requires auth, explicit scope, and a trusted device", async () => {
   const deviceId = newDeviceId();
@@ -724,4 +858,65 @@ test("assistant callable requires authentication and a trusted device", async ()
   assert.equal(notConfigured.ok, false, JSON.stringify(notConfigured));
   assert.equal(notConfigured.error.status, "FAILED_PRECONDITION");
   assert.match(notConfigured.error.message, /Awwab\x27s own model has not been trained yet/i);
+});
+
+
+test("assistant memory context rejects malformed and unsupported records and bounds each record", async () => {
+  const user = await createAuthUser("memory-context-malformed");
+  const deviceId = newDeviceId();
+  const bootstrap = await invokeCallable("bootstrapFirstDevice", bootstrapPayload(deviceId), user.idToken);
+  assert.equal(bootstrap.ok, true, JSON.stringify(bootstrap));
+
+  await seedMemoryAsEmulatorAdmin(user.localId, "valid-sanitized", {
+    content: "Keep\u0000 the interface concise.",
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "unknown-type", {
+    type: "unrecognized_memory_type",
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "unsupported-source", {
+    sourceKind: "system_generated",
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "blank-content", {
+    content: "   ",
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "malformed-expiry", {
+    expiresAt: { firestoreField: { stringValue: "not-a-timestamp" } },
+  });
+  await seedMemoryAsEmulatorAdmin(user.localId, "oversized-record", {
+    content: "x".repeat(2001),
+  });
+
+  const result = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId, scope: "conversation_context" },
+    user.idToken,
+  );
+  assert.equal(result.ok, true, JSON.stringify(result));
+  assert.deepEqual(result.result.memories.map((memory) => memory.id), ["valid-sanitized"]);
+  assert.equal(result.result.memories[0].content, "Keep the interface concise.");
+  assert.ok(result.result.totalChars <= result.result.maxChars);
+});
+
+test("assistant memory context is scoped to the authenticated owner, not request fields", async () => {
+  const owner = await createAuthUser("memory-context-owner");
+  const other = await createAuthUser("memory-context-other");
+  const ownerDevice = newDeviceId();
+  const otherDevice = newDeviceId();
+
+  const ownerBootstrap = await invokeCallable("bootstrapFirstDevice", bootstrapPayload(ownerDevice), owner.idToken);
+  const otherBootstrap = await invokeCallable("bootstrapFirstDevice", bootstrapPayload(otherDevice), other.idToken);
+  assert.equal(ownerBootstrap.ok, true, JSON.stringify(ownerBootstrap));
+  assert.equal(otherBootstrap.ok, true, JSON.stringify(otherBootstrap));
+
+  await seedMemoryAsEmulatorAdmin(owner.localId, "owner-only-memory", { content: "Owner private note." });
+  await seedMemoryAsEmulatorAdmin(other.localId, "other-only-memory", { content: "Other private note." });
+
+  const result = await invokeCallable(
+    "getAssistantMemoryContext",
+    { deviceId: otherDevice, scope: "conversation_context", ownerId: owner.localId },
+    other.idToken,
+  );
+  assert.equal(result.ok, true, JSON.stringify(result));
+  assert.deepEqual(result.result.memories.map((memory) => memory.id), ["other-only-memory"]);
+  assert.equal(result.result.memories.some((memory) => memory.id === "owner-only-memory"), false);
 });

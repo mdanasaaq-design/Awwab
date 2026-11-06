@@ -1,59 +1,109 @@
 # Repository Structure
 
-This document defines the canonical layout of the Awwab repository. Keep the repository root focused on workspace and Firebase configuration; place product code, shared contracts, tests, documentation, and project tracking in their dedicated areas.
+**Last audited:** 2026-11-06  
+**Active branch reviewed:** `opensource-reuse-strategy`
 
-## Top-level layout
+This document describes the structure that actually exists on the reviewed branch and defines where future work belongs. It is not a promise that every planned capability is implemented.
+
+## Existing repository layout
 
 ```text
 Awwab/
-├── .github/workflows/       # CI and repository automation
+├── .github/
+│   └── workflows/                 # GitHub Actions workflows
 ├── apps/
-│   ├── web/                 # React + TypeScript + Vite web client
-│   └── android/             # Native Android application (Kotlin)
+│   ├── web/                        # React + TypeScript + Vite web client
+│   │   └── src/
+│   │       ├── research/           # Research parsing modules
+│   │       └── vendor/mozilla/     # Attributed Mozilla Readability source
+│   └── android/                    # Kotlin + Jetpack Compose shell
+│       └── app/src/main/           # Android manifest, Kotlin source and resources
 ├── backend/
-│   └── functions/           # Firebase Cloud Functions (Node.js 22)
+│   └── functions/                  # Firebase Functions source (Node.js 22)
 ├── packages/
-│   └── shared/              # Cross-client/server TypeScript contracts
-├── docs/                    # Product, architecture, security, setup, and testing docs
-├── project/                 # Current status, tasks, plans, phase records, decisions, risks
-├── tests/                   # Emulator-backed rules and callable tests
-├── firebase.json            # Firebase CLI configuration
-├── firestore.rules          # Firestore authorization rules
-├── firestore.indexes.json   # Firestore index declarations
-├── package.json             # Workspace scripts and package manager configuration
-├── package-lock.json        # Reproducible npm dependency lock
-├── .firebaserc.example      # Safe Firebase alias template; local .firebaserc is ignored
-└── README.md                # Project entry point
+│   └── shared/                     # Shared contracts and cognitive/memory modules
+├── model-lab/                      # Random-init model, tokenizer, training/eval scaffold
+│   ├── data/                       # Data instructions; generated datasets stay local
+│   └── tests/                      # Model Lab tests
+├── tests/
+│   ├── fixtures/                   # Synthetic test fixtures
+│   └── types/                      # Type-level contract tests
+├── docs/                           # Stable architecture, product and engineering docs
+├── project/
+│   └── prototypes/                 # Explicitly labelled local reference/test prototypes
+├── firebase.json                   # Firebase CLI configuration
+├── firestore.rules                 # Firestore authorization rules
+├── firestore.indexes.json          # Firestore index declarations
+├── package.json                    # npm workspaces and root scripts
+├── package-lock.json               # Reproducible npm dependency lock
+├── .firebaserc.example             # Placeholder-only Firebase alias template
+├── .gitignore                      # Local secrets and generated files are excluded
+├── CLAUDE.md                       # Repository-level Claude development guide
+└── README.md                       # Project entry point
 ```
+
+## Workspace responsibilities
+
+| Path | Responsibility | Current boundary |
+|---|---|---|
+| `apps/web/` | Browser client and web UX | React/TypeScript/Vite foundation; not a complete assistant |
+| `apps/android/` | Native Android client | Minimal Compose shell; build/device integration unverified |
+| `backend/functions/` | Privileged server operations | Firebase Functions source; not deployed on current Spark plan |
+| `packages/shared/` | Cross-workspace contracts and deterministic shared logic | Initial cognitive/memory modules; integration is incomplete |
+| `model-lab/` | Awwab-owned model research/training | Random-init scaffold; no capable trained checkpoint |
+| `tests/` | Unit, emulator, contract and regression tests | Emulator success does not prove live-service behavior |
+| `docs/` | Stable reference documentation | Architecture, product, security, setup, testing and reuse |
+| `project/` | Changeable project state and evidence | Plans, tasks, decisions, risks, phase records and handoffs |
+
+## Known structural gaps — do not hide these
+
+1. **Android build reproducibility:** the reviewed tree has no committed Gradle wrapper (`gradlew`, `gradlew.bat`, or `gradle/wrapper/`). The Android source is a minimal shell. Add a wrapper only through a bounded, reproducible Gradle setup and verify it with compatible JDK/Android SDK tooling.
+2. **Windows desktop client:** there is no dedicated desktop application workspace. A Windows computer is currently a development environment, not evidence of a Windows desktop app.
+3. **Assistant runtime:** the assistant UI/runtime is not a complete working conversational assistant; generation remains disabled.
+4. **Model:** Model Lab is a training scaffold, not a capable model. No trained checkpoint is committed.
+5. **Cognitive integration:** shared cognitive/memory modules exist, but durable storage and complete web/backend/model integration are not established.
+6. **Device security:** A9's proof verifier is isolated. Challenge issuance, atomic one-time consumption, platform key lifecycle and protected-callable integration are missing; AWW-022 remains open.
+7. **Firebase hosting/runtime:** Functions are not deployed on the current Spark plan. Do not solve this by enabling billing or creating a different cloud service without explicit owner approval.
+
+These are tracked gaps, not reasons to create empty placeholder directories.
 
 ## Placement rules
 
-- Put runtime/application code under the owning app or backend workspace, not in the repository root.
-- Put reusable cross-workspace contracts in `packages/shared/src/`; keep client-only types in the client that owns them.
-- Put Firebase Rules and index declarations at the root because `firebase.json` references them there.
-- Put emulator tests in `tests/`; do not mix generated build output, dependencies, local credentials, or test artifacts into source directories.
-- Put stable product and engineering references in `docs/`. Put change-by-change status, acceptance records, decisions, and risks in `project/`.
-- Keep phase records together in `project/` and use the existing `PHASE_*` prefix so each record's phase and sequence are obvious.
-- Keep documentation links relative to the file containing them and update links when a document is renamed.
-- Preserve existing source/config paths unless there is a concrete benefit to changing them: build scripts, Firebase configuration, Android package paths, imports, and docs may depend on those names.
+- Keep root limited to repository-wide configuration, scripts, security policy files and entry-point docs.
+- Put user-facing clients under `apps/<client>/`.
+- Put server-side privileged logic under `backend/<service>/`.
+- Put reusable cross-client/server contracts and deterministic shared modules under `packages/shared/` until a concrete scale or ownership need justifies another package.
+- Put app-specific code in its owning app; do not move it into shared code merely to reduce file count.
+- Put emulator/unit/contract tests in `tests/` or the owning package's test directory when that package already has a clear convention.
+- Put stable engineering/product references in `docs/`; put changing execution state, decisions, acceptance evidence and risks in `project/`.
+- Keep third-party source isolated/identifiable and record exact upstream project, commit, source paths, licence, changes and attribution in `THIRD_PARTY_NOTICES.md`.
+- Keep generated build output, dependencies, datasets, model checkpoints, credentials and test artifacts out of Git unless a specific small fixture is intentionally reviewed.
+- Preserve existing paths unless a bounded migration includes updated imports, config, tests, documentation and a verified rollback.
 
 ## Naming conventions
 
-- React/TypeScript source: descriptive `camelCase.ts` for modules and `PascalCase.tsx` for React components where applicable.
-- CSS: descriptive lowercase names such as `styles.css` and `navigation.css`.
-- General reference docs in `docs/`: lowercase kebab-case, e.g. `firebase-setup.md`.
-- Project tracking documents: uppercase descriptive names for canonical records (e.g. `CURRENT_STATUS.md`, `PHASE_PLAN.md`, `TASKS.md`, `ISSUES_AND_RISKS.md`); phase records keep the `PHASE_<sequence>_<topic>.md` convention.
-- Configuration files retain the names required by their tools (for example `package.json`, `tsconfig.json`, `firebase.json`, and `firestore.rules`).
+- React components: `PascalCase.tsx`; general TypeScript modules: descriptive `camelCase.ts`.
+- CSS: descriptive lowercase names.
+- Stable docs: lowercase kebab-case in `docs/`.
+- Project control records: descriptive uppercase names such as `CURRENT_STATUS.md`, `TASKS.md`, `ISSUES_AND_RISKS.md`.
+- Preserve tool-required filenames such as `package.json`, `tsconfig.json`, `firebase.json` and `firestore.rules`.
 
-## Safety and hygiene
+## Secrets and generated files
 
-- Never commit `.env.local`, `.firebaserc`, signing keys, API secrets, or generated output.
-- `.env.example` and `.firebaserc.example` may contain placeholders only, never working credentials.
-- Keep `package-lock.json` in sync with workspace manifest changes by using npm rather than editing the lockfile manually.
-- Do not claim a build, test, preview check, or production deployment passed unless the output was observed and recorded.
-- Preview Hosting deployments are not production releases. Production deployment remains a separate, explicitly authorized action.
+- Never commit `.env.local`, `.env`, `.firebaserc`, service-account credentials, signing keys, keystores, or private credentials.
+- `.env.example` and `.firebaserc.example` must contain placeholders only.
+- Keep npm lockfiles synchronized through npm commands; do not hand-edit lockfile dependency graphs.
+- Model datasets and checkpoints remain local unless a separately reviewed, explicitly approved fixture is small, licensed and safe to publish.
+- Do not print secrets in logs, test output, documentation, issues or chat.
 
+## Documentation source of truth
 
----
+- [Claude development guide](../CLAUDE.md): development-agent operating rules.
+- [Self-Development Master Plan](../project/SELF_DEVELOPMENT_MASTER_PLAN.md): controlling product architecture and roadmap.
+- [Current Status](../project/CURRENT_STATUS.md): implementation and validation snapshot.
+- [Tasks](../project/TASKS.md): active queue.
+- [Pending Work Audit](../project/PENDING_WORK_AUDIT.md): gaps and audit findings.
+- [Issues and Risks](../project/ISSUES_AND_RISKS.md): unresolved blockers.
+- [New Chat Handoff](../project/NEW_CHAT_HANDOFF.md): continuation instructions.
 
-> **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+Do not use historical references to `project/MASTER_PLAN.md` as the current roadmap; use `project/SELF_DEVELOPMENT_MASTER_PLAN.md`.

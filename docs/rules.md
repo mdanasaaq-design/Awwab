@@ -63,3 +63,30 @@ A feature is done only when implementation exists, security is defined, importan
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Open-source code reuse rules (2026-10-30)
+
+22. Reuse mature public source code when it materially accelerates Awwab, but pin the upstream commit and inspect exact files/licences first.
+23. Preserve upstream copyright, LICENSE and NOTICE obligations; register every transplant in `THIRD_PARTY_NOTICES.md`.
+24. Copy/adapt bounded modules rather than whole agent products by default.
+25. Strip hosted-agent, external model/API, telemetry and unrelated provider paths.
+26. Imported code cannot own identity, authorization, user data scope, approval, risk, budget or success verification.
+27. GPL/AGPL and unresolved-licence code require a separate owner licensing decision.
+28. Awwab's own model weights must remain randomly initialized; no third-party pretrained weights or teacher distillation.
+29. Add no-network and security regression tests for each transplant.
+See [OPEN_SOURCE_REUSE_CATALOG.md](OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Self-development rules — 2026-10-31
+
+- Never modify the stable branch directly; use a clean isolated branch/worktree.
+- Record the base commit and approved file/command scope before execution.
+- No arbitrary shell, network, secrets, broad filesystem access or privilege escalation.
+- Read-only repository understanding precedes write/execute capability.
+- Every proposed change produces a diff, targeted tests, full required checks and an evidence report.
+- Stop after bounded retries; report unresolved failures rather than hiding them.
+- Keep code version, model checkpoint, agent profile, data manifest and evaluation suite versioned separately.
+- Agents may prepare candidates; only the owner approves merge, release, deployment, billing, Rules, secrets and migrations.
+- Multi-agent execution is deferred until one agent passes the complete isolated development acceptance test.
+- Update the active backlog and handoff at the end of each substantial phase.

@@ -72,3 +72,22 @@ References:
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Imported-code boundary (2026-10-30)
+
+Reused agent/browser/memory libraries never authenticate a user or establish device trust. They receive only the minimum already-authorized context from Awwab and cannot read tokens, mint identity claims, approve actions or alter device state. Awwab's Firebase Auth and device authorization contracts remain authoritative. See [the reuse catalogue](OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Device identity limitation — 2026-10-30
+
+Firebase Authentication establishes the signed-in account. The current device management callable also accepts a client-supplied device ID and checks the corresponding user-scoped Firestore record's status. This is **not** proof that the caller possesses the enrolled browser/device key. A callable-emulator test confirms that a second authenticated session for the same UID can claim a trusted device ID and approve a pending device.
+
+Do not use the current status check as high-assurance device-bound authorization. The local Ed25519 challenge prototype is not integrated into the app or deployed backend. Settings discloses this limitation. Device-key proof, recovery/rotation and atomic replay protection remain production blockers.
+
+Cloud Functions are source-only on the current Spark project; no billing upgrade or deployment is authorized. Keep Firebase Auth as account identity and do not claim the current device list proves physical-device identity.
+
+
+## Device-trust limitation and self-development boundary — 2026-10-31
+
+The current callable protocol accepts a client-supplied callerDeviceId and does not prove possession of a device private key. A second authenticated session for the same UID can claim a trusted ID; this is a confirmed P0 limitation. Current device records must not authorize high-assurance self-development operations, secret access, approvals, or privileged external actions. A local owner-controlled development runner must enforce its own OS/user boundary and explicit local confirmation until a reviewed server-verifiable device-key protocol and an approved hard-$0 server path exist. Do not treat the local Ed25519 mock as production authentication.

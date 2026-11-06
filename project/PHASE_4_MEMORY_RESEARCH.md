@@ -85,3 +85,48 @@ The Firestore rules suite requires the configured local Firestore emulator. The 
 Awwab's first independent model workbench is now in `model-lab/`: versioned byte-level tokenizer, JSONL data provenance checks, randomly initialized causal decoder-only Transformer, reproducible small-corpus training script, atomic versioned local checkpoints, local autoregressive inference, and next-token loss/perplexity evaluation. It contains no pretrained weights or external AI provider. A small synthetic fixture can be generated locally; no fixture corpus, checkpoint, or model weights are committed.
 
 The CI workflow checks Python syntax and standard-library tokenizer/data tests without installing PyTorch, downloading datasets, or running training. PyTorch-backed training, checkpoint round-trip, generation, and actual quality evaluation remain unverified until an explicit local dependency setup and smoke test. The production assistant remains disabled and does not load these checkpoints. Do not claim Awwab has a trained assistant until an actual checkpoint has been trained from random initialization, evaluated, and later integrated under a separate phase.
+
+
+## Open-source reuse direction — 2026-10-30
+
+The owner has clarified that Awwab should incorporate selected public source code rather than only study external projects. This is compatible with the independent-model decision: reuse deterministic engineering, not third-party learned weights or external AI APIs.
+
+Potential Phase 4 improvements:
+- Mozilla Readability parser for article extraction, with source provenance and no network inside the parser.
+- Mem0-derived memory merge/deduplication/conflict algorithms, adapted to Awwab's explicit-confirmation and Firestore ownership model.
+- Graphiti temporal fact/provenance patterns only if current memory schema needs evolving facts.
+- Promptfoo-inspired local regression/adversarial tests, without remote model-provider calls.
+
+No code was copied in this documentation pass. The full source/licence matrix and R1–R7 plan are in [OPEN_SOURCE_REUSE_CATALOG.md](../docs/OPEN_SOURCE_REUSE_CATALOG.md). Existing memory controls and current Wikipedia/Crossref behavior must remain intact during integration.
+
+
+## Reuse programme update — R1 parser foundation (2026-10-30)
+
+Mozilla Readability has now been vendored from a pinned upstream commit under Apache-2.0, with the licence retained and attribution recorded in `THIRD_PARTY_NOTICES.md`. Awwab has a pure parser wrapper with bounded HTML/text sizes and HTTP(S) source attribution. The current ResearchPanel has not yet been wired to it. Safe fetching, CORS behavior, redirect/private-network protections, parser fixture validation and end-to-end UI testing remain required before claiming article extraction is available.
+
+
+### Research parser integration update — 2026-10-30
+
+The existing Wikipedia path now fetches HTML only from the fixed CORS-enabled Wikipedia parse API endpoint and cleans it locally with the vendored Mozilla Readability parser. The UI receives plain text, and it falls back to the original provider search excerpt when extraction fails or is too short. Crossref is unchanged. This is not arbitrary URL crawling. CI has passed parser adapter/provenance tests and web build/typecheck for the implementation commit; manual browser validation and the remaining CI jobs are still required.
+
+
+## Assistant plan-schema hardening — 2026-10-30
+
+- Tightened the provider-response boundary in `backend/functions/src/assistantRuntime.ts`: reject non-object/array payloads, unexpected top-level or step fields, malformed step IDs, and duplicate step IDs.
+- Added regression coverage for unexpected provider metadata, injected step fields, and duplicate identifiers in `tests/assistant-runtime.test.mjs`.
+- Changes are on the open-source reuse branch in commits `2ef5666` and `b069548`. CI for these latest commits has not yet been observed; earlier six-job success does not validate this follow-up.
+- This remains a plan-only, no-tools, no-side-effects boundary. It does not connect a trained model or enable assistant generation.
+
+
+## Self-development memory direction — 2026-10-31
+
+The existing Memory workspace is user-controlled storage and explicit context preview; it is not yet a complete cognitive memory system or an automatically wired conversation memory. Preserve those consent controls. The next memory design should distinguish:
+- working memory (temporary active request/task context);
+- episodic memory (evidence-linked events and outcomes);
+- semantic memory (verified facts and relationships with provenance/freshness);
+- procedural memory (tested repeatable procedures);
+- development memory (architecture, decisions, commits, test evidence and failed attempts).
+
+Add goal/subgoal tracking and deterministic context selection with sensitivity filtering, relevance and hard context budgets. Do not silently promote model guesses to durable memory. Do not use saved conversations as training data without separate explicit opt-in. Keep current Firestore rules/ownership and live deployment limitations; no schema migration or Rules deployment is implied.
+
+The controlling implementation order is now Cognitive Core v0, followed by Model Lab viability and plan-only reasoning. See [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md).

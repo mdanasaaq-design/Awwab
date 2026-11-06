@@ -67,3 +67,25 @@ The model never grants itself permission.
 ---
 
 > **Planning sync — 2026-10-27:** This document describes a capability, design or acceptance contract; it does not prove the capability is live. See the [Awwab Master Plan and Work Audit](../project/MASTER_PLAN.md) for current evidence, the Firebase Blaze blocker, source-reconciliation steps and the ordered implementation gates.
+
+
+## Reuse policy for capability implementation (2026-10-30)
+
+Capability code may be adapted from reviewed open-source projects: browser mechanics from Playwright, article extraction from Mozilla Readability, memory algorithms from Mem0/Graphiti, workflow state from LangGraph.js, and test/evaluation utilities from Promptfoo. Awwab's own capability registry, scope checks, risk classifications, approval UX, ownership checks and audit remain authoritative.
+
+Do not expose a reused library's entire tool surface automatically. Register each imported operation individually with Awwab-owned schemas, least-privilege scopes, limits and verification. See [the reuse catalogue](OPEN_SOURCE_REUSE_CATALOG.md).
+
+
+## Self-development capability scopes — 2026-10-31
+
+Add these as distinct, least-privilege capabilities when implemented; they are not currently enabled:
+- `repository.read`: inspect repository metadata, files, history, manifests and CI.
+- `repository.diff.prepare`: create a candidate diff in an isolated branch/worktree.
+- `filesystem.read`: read only approved workspace paths.
+- `filesystem.write.sandbox`: edit only approved paths inside an isolated workspace.
+- `terminal.test.run`: run allowlisted build, lint, typecheck and test commands with time/resource limits.
+- `version.candidate.create`: record code/model/profile version metadata and evaluation evidence.
+- `version.compare`: compare a candidate against stable benchmarks.
+- `version.rollback.prepare`: prepare and verify rollback; production rollback still needs owner approval.
+
+Never add generic `shell.execute.anything`, unrestricted filesystem scope, secret-read scope, self-approval, merge, deploy or billing capability. Scope is enforced by deterministic policy and the execution host, not model output. Current device records are not high-assurance proof of device possession.

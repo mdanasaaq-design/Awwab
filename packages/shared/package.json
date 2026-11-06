@@ -1,1 +1,21 @@
-{"name":"@awwab/shared","private":true,"version":"0.1.0","type":"module","exports":{"./contracts":"./src/contracts.ts"}}
+{
+  "name": "@awwab/shared",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./contracts": "./src/contracts.ts",
+    "./cognitive-core": {
+      "types": "./src/cognitive-core.d.mts",
+      "import": "./src/cognitive-core.mjs"
+    },
+    "./cognitive-memory-policy": {
+      "types": "./src/cognitive-memory-policy.d.mts",
+      "import": "./src/cognitive-memory-policy.mjs"
+    },
+    "./cognitive-memory-compatibility": {
+      "types": "./src/cognitive-memory-compatibility.d.mts",
+      "import": "./src/cognitive-memory-compatibility.mjs"
+    }
+  }
+}
