@@ -152,7 +152,7 @@ function importP256PublicKey(spkiBase64: string): KeyObject | null {
 export function verifyDeviceProofSignature(input: DeviceProofVerificationInput): boolean {
   if (!input || typeof input !== "object" ||
       typeof input.message !== "string" ||
-      !input.message.startsWith(`${DEVICE_PROOF_PROTOCOL}\\n`) ||
+      !input.message.startsWith(`${DEVICE_PROOF_PROTOCOL}\n`) ||
       Buffer.byteLength(input.message, "utf8") > 32_768) return false;
 
   const key = importP256PublicKey(input.publicKeySpkiBase64);
