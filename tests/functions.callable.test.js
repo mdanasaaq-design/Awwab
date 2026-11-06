@@ -4,7 +4,7 @@ import { test } from "node:test";
 
 const PROJECT_ID = "demo-awwab";
 const AUTH_BASE = "http://127.0.0.1:9099";
-const FUNCTIONS_BASE = `http://127.0.0.1:5001/${PROJECT_ID}/us-central1`;
+const FUNCTIONS_BASE = `http://127.0.0.1:5001/${PROJECT_ID}/asia-south1`;
 
 function newDeviceId(prefix = "web") {
   return `${prefix}_${randomUUID().replace(/-/g, "")}`;
@@ -182,6 +182,39 @@ test("concurrent duplicate device registrations are idempotent and audit atomica
   assert.equal(registrationEvents.length, 1, JSON.stringify(activity));
   assert.equal(seenEvents.length, 4, JSON.stringify(activity));
   assert.equal(activity.length, 5);
+});
+
+test("registerDevice caps pending devices per user and allows known-device check-ins", async () => {
+  const maxPendingDevices = 10;
+  const user = await createAuthUser("pending-device-cap");
+  const pendingDeviceIds = Array.from({ length: maxPendingDevices }, () => newDeviceId());
+
+  for (const deviceId of pendingDeviceIds) {
+    const result = await invokeCallable("registerDevice", bootstrapPayload(deviceId), user.idToken);
+    assert.equal(result.ok, true, JSON.stringify(result));
+    assert.equal(result.result.status, "pending");
+  }
+
+  const overflow = await invokeCallable("registerDevice", bootstrapPayload(newDeviceId()), user.idToken);
+  assert.equal(overflow.ok, false, JSON.stringify(overflow));
+  assert.equal(overflow.error.status, "RESOURCE_EXHAUSTED");
+
+  const knownDeviceCheckIn = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(pendingDeviceIds[0]),
+    user.idToken,
+  );
+  assert.equal(knownDeviceCheckIn.ok, true, JSON.stringify(knownDeviceCheckIn));
+  assert.equal(knownDeviceCheckIn.result.status, "pending");
+
+  const otherUser = await createAuthUser("pending-device-cap-other");
+  const otherUserRegistration = await invokeCallable(
+    "registerDevice",
+    bootstrapPayload(newDeviceId()),
+    otherUser.idToken,
+  );
+  assert.equal(otherUserRegistration.ok, true, JSON.stringify(otherUserRegistration));
+  assert.equal(otherUserRegistration.result.status, "pending");
 });
 
 test("concurrent revocations cannot remove the final trusted device", async () => {
