@@ -216,3 +216,10 @@
 - Clarified that the approval declaration is not authentication proof; production approval must be bound to a trusted owner session.
 - CI run [41337973262](https://github.com/mdanasaaq-design/Awwab/actions/runs/41337973262) passed all six jobs.
 - Latest branch still requires owner-local validation.
+
+## 2026-11-06 — Scoped Node.js test module configuration
+
+- Added `tests/package.json` with `"private": true` and `"type": "module"` so Node treats the ESM test files under `tests/` as ES modules without changing the root package scope.
+- Confirmed the two test files named in the local Node warning, `tests/firestore.rules.test.js` and `tests/functions.callable.test.js`, use ESM imports.
+- This is a narrowly scoped warning fix; no application runtime, dependency, workspace, Firebase, Rules, billing or deployment configuration changed.
+- Local verification is pending. The Node module-type warning is not marked resolved until the user reruns the affected test commands and confirms the warning is absent.
