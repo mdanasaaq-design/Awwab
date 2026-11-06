@@ -10,6 +10,13 @@ if (getApps().length === 0) {
 
 const db = getFirestore();
 
+// Keep every callable in the same region as the Firestore database (Mumbai).
+// Web and other clients must explicitly use this same region.
+const CALLABLE_OPTIONS = { region: "asia-south1" } as const;
+
+// Bound per-user pending-device records and their associated audit writes.
+const MAX_PENDING_DEVICES = 10;
+
 type DevicePlatform = "web" | "android";
 type DeviceStatus = "pending" | "trusted" | "revoked";
 
@@ -74,13 +81,13 @@ async function requireTrustedCaller(uid: string, deviceId: string) {
   return snapshot;
 }
 
-export const health = onCall(() => ({
+export const health = onCall(CALLABLE_OPTIONS, () => ({
   ok: true,
   service: "awwab-functions",
   version: "0.1.0",
 }));
 
-export const registerDevice = onCall(async (request) => {
+export const registerDevice = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const parsed = parseDeviceInput(request.data);
   const userRef = db.doc(`users/${uid}`);
@@ -121,6 +128,18 @@ export const registerDevice = onCall(async (request) => {
       return;
     }
 
+    // Count pending devices inside this transaction so concurrent new-device
+    // registrations for one account cannot exceed the per-user limit.
+    const pendingDevices = await transaction.get(
+      userRef.collection("devices").where("status", "==", "pending").limit(MAX_PENDING_DEVICES),
+    );
+    if (pendingDevices.size >= MAX_PENDING_DEVICES) {
+      throw new HttpsError(
+        "resource-exhausted",
+        "Too many devices are waiting for approval. Approve or revoke a pending device first.",
+      );
+    }
+
     resultStatus = "pending";
     transaction.create(deviceRef, {
       platform: parsed.platform,
@@ -147,7 +166,7 @@ export const registerDevice = onCall(async (request) => {
   return { ok: true, deviceId: parsed.deviceId, status: resultStatus };
 });
 
-export const bootstrapFirstDevice = onCall(async (request) => {
+export const bootstrapFirstDevice = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const parsed = parseDeviceInput(request.data);
   const devicesRef = db.collection(`users/${uid}/devices`);
@@ -197,7 +216,7 @@ export const bootstrapFirstDevice = onCall(async (request) => {
   return { ok: true, deviceId: parsed.deviceId, status: "trusted" };
 });
 
-export const listDevices = onCall(async (request) => {
+export const listDevices = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const callerDeviceId = requireDeviceId((request.data as Record<string, unknown> | undefined)?.deviceId);
   await requireTrustedCaller(uid, callerDeviceId);
@@ -217,7 +236,7 @@ export const listDevices = onCall(async (request) => {
   return { ok: true, callerDeviceId, devices };
 });
 
-export const approveDevice = onCall(async (request) => {
+export const approveDevice = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const data = (request.data ?? {}) as Record<string, unknown>;
   const callerDeviceId = requireDeviceId(data.callerDeviceId);
@@ -270,7 +289,7 @@ export const approveDevice = onCall(async (request) => {
   return { ok: true, deviceId: targetDeviceId, status: "trusted" };
 });
 
-export const revokeDevice = onCall(async (request) => {
+export const revokeDevice = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const data = (request.data ?? {}) as Record<string, unknown>;
   const callerDeviceId = requireDeviceId(data.callerDeviceId);
@@ -330,7 +349,7 @@ export const revokeDevice = onCall(async (request) => {
   return { ok: true, deviceId: targetDeviceId, status: "revoked" };
 });
 
-export const ensureUserProfile = onCall(async (request) => {
+export const ensureUserProfile = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const userRef = db.doc(`users/${uid}`);
   const email = request.auth?.token.email;
@@ -422,7 +441,7 @@ async function loadAssistantMemoryContextForTrustedDevice(uid: string, callerDev
   };
 }
 
-export const getAssistantMemoryContext = onCall(async (request) => {
+export const getAssistantMemoryContext = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const data = (request.data ?? {}) as Record<string, unknown>;
   const callerDeviceId = requireDeviceId(data.deviceId);
@@ -436,7 +455,7 @@ export const getAssistantMemoryContext = onCall(async (request) => {
  * Assistant generation is intentionally unavailable until Awwab's own model
  * is trained. This callable never configures or invokes an external provider.
  */
-export const runAssistant = onCall(async (request) => {
+export const runAssistant = onCall(CALLABLE_OPTIONS, async (request) => {
   const uid = requireAuth(request);
   const data = (request.data ?? {}) as Record<string, unknown>;
   const callerDeviceId = requireDeviceId(data.deviceId);
