@@ -13,7 +13,7 @@
     "firebase:emulators": "firebase emulators:start --project demo-awwab",
     "firebase:rules:test": "firebase emulators:exec --only firestore --project demo-awwab \"node --test tests/firestore.rules.test.js\"",
     "firebase:callable:test": "firebase emulators:exec --only auth,firestore,functions --project demo-awwab \"node --test tests/functions.callable.test.js\"",
-    "validate:local": "npm run shared:typecheck && npm run functions:typecheck && npm run functions:build && npm run web:typecheck && npm run web:build && node --test tests/cognitive-memory-compatibility.test.mjs tests/cognitive-core.test.mjs tests/cognitive-memory-policy.test.mjs && npm run firebase:rules:test && npm run firebase:callable:test"
+    "validate:local": "npm run shared:typecheck && npm run functions:typecheck && npm run functions:build && node --test tests/device-proof-crypto.test.mjs && npm run web:typecheck && npm run web:build && node --test tests/cognitive-memory-compatibility.test.mjs tests/cognitive-core.test.mjs tests/cognitive-memory-policy.test.mjs && npm run firebase:rules:test && npm run firebase:callable:test"
   },
   "engines": {
     "node": "22"
