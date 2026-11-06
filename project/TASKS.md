@@ -1,3 +1,10 @@
+> **OWNER WORKFLOW UPDATE — 2026-11-06**
+> Claude is the primary implementation/build assistant. ChatGPT is limited to GitHub-side coordination, documentation/status/handoff updates, review support and exact pull/deploy instructions when requested. Do not start new implementation work through ChatGPT unless the owner changes this direction.
+>
+> **Repository organization follow-up:** root `CLAUDE.md` is now the required development guide. Read it before assigning work to Claude. The latest A9 validation is still pending; do not treat this documentation cleanup as validation.
+>
+> ---
+>
 > **ACTIVE TASK QUEUE — 2026-11-06**  
 > Controlling plan: [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER_PLAN.md). This block supersedes earlier active-queue summaries; historical checklists below remain evidence records.
 >
