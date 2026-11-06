@@ -306,3 +306,5 @@ Phase 1 has started. Read [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER
 - **Next owner action:** `git pull --ff-only origin opensource-reuse-strategy`, then `npm run validate:local` in `C:\Users\rexy2\Awwab`. Record the actual results; do not call the A9 slice validated before that.
 - Next implementation sequence: add browser/Android fixed vectors and DER normalization tests; design emulator-only challenge storage and atomic replay consumption; only then integrate all protected callables.
 - No production deployment, Blaze upgrade, new cloud resource, secret, migration, live Rules change, merge or live data mutation was performed or authorized.
+
+- Follow-up A9 test expansion: the crypto suite now checks Node Web Crypto's P-256 signature output against the server verifier and includes a test-only strict DER-to-P1363 normalization reference. This does not replace real browser or Android Keystore device tests; those remain open.
