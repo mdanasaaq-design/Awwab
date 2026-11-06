@@ -277,3 +277,17 @@ Phase 1 has started. Read [Self-Development Master Plan](SELF_DEVELOPMENT_MASTER
 - The module remains dependency-free and in-memory only. No Firestore adapter, live memory integration, model inference or autonomous tools exist yet.
 - Continue with memory conflict/retention/context edge cases, formal storage adapter contract, identity change policy and review of existing Memory UI integration. Preserve live Rules and deployment approval gates.
 - Latest CI evidence is tied to the code commit above. Documentation commits after it, if any, do not change that code validation claim.
+
+
+## A8 — Owner-local validation checkpoint — 2026-11-06
+
+- Verified repository branch `opensource-reuse-strategy` at `290c02f8807d97e889f3432c991bfd40b0029a8c`; the owner's local `git status -sb` showed the branch synchronized with `origin/opensource-reuse-strategy` before this documentation/configuration update.
+- Environment: Windows PowerShell, Node.js `v22.23.4`; Functions target Node.js 22.
+- Passed: `npm run shared:typecheck`, `npm run functions:typecheck`, `npm run functions:build`, `npm run web:typecheck`, and `npm run web:build`.
+- Passed tests: 27 cognitive/memory tests, 15 Firestore Rules emulator tests, 13 callable Functions emulator tests; 55 total, zero failures.
+- Vite warnings remain for Mozilla Readability CommonJS/ESM interop, a chunk above 500 kB, and ineffective dynamic import of `device.ts`. The web build succeeded despite these warnings.
+- Negative Firestore tests emit expected permission-denied messages. Callable tests continue to characterize the callerDeviceId spoofing issue; **AWW-022 remains unresolved**. App Check is not configured in this emulator test environment.
+- Added root `npm run validate:local` to repeat the exact validated checks and added `/backend/functions/lib/` to root `.gitignore`; compiled output is generated from TypeScript and is not committed.
+- GitHub comparison against `main` reports this branch 351 commits ahead and 2 behind at the time of review. Reconcile exact ancestry before any merge; do not merge PRs without explicit owner approval.
+- No deployment, billing change, merge, migration, live data mutation, or production configuration change was performed.
+- Continue with AWW-022 proof-of-possession platform/recovery decisions, legacy-memory lifecycle decisions, and a synthetic-fixture read-only adapter proposal. Keep assistant generation and high-assurance device actions disabled.
