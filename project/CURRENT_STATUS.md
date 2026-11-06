@@ -1,3 +1,13 @@
+> **REPOSITORY / HANDOFF UPDATE — 2026-11-06**
+> - Repository organization audit completed against the complete Git tree on `opensource-reuse-strategy` (183 tracked entries; tree was not truncated).
+> - Added root [`CLAUDE.md`](../CLAUDE.md) as the repository-level development guide; refreshed README and canonical repository-structure documentation.
+> - The actual project remains incomplete: assistant generation disabled; model untrained; Android is a minimal shell with no committed Gradle wrapper; no dedicated Windows desktop client; cognitive/memory integration incomplete; AWW-022 unresolved.
+> - **Workflow change:** Claude is the primary builder. ChatGPT's Awwab role is limited to GitHub coordination, documentation/status/handoff maintenance, review assistance and exact pull/deploy instructions when requested. Do not independently start feature implementation.
+> - No application source, dependency manifest, lockfile, Firebase configuration, Rules, live data, billing, deployment or merge was changed in this repository-organization pass.
+> - No build, typecheck, emulator, browser, Android-device or model training validation was run for this documentation pass.
+>
+> ---
+>
 > **CURRENT CONTROLLING SNAPSHOT — A9 / 2026-11-06**
 > Repository: `mdanasaaq-design/Awwab`; development branch: `opensource-reuse-strategy`.
 > **Current phase:** AWW-022 device proof-of-possession. A provisional ECDSA P-256/SHA-256 profile is supported by official browser Web Crypto and Android Keystore documentation. This is source research, not device-matrix testing or independent cryptographic approval.
